@@ -1,0 +1,2 @@
+String serverToken =
+    "key=AAAA0Q8A13Y:APA91bGQT4tNJmwA_XpVHMAGx0b3dqQM34B1Hc9f_TUc-QdvV1Cylnumr1WjPGzX-BIUfCQytwnFRPB4gqdlelPHn_q5nWJkegOZWRWtkCJbcHX5rk87hnxgzIOWtFbVzVjIi1vqsYvg";

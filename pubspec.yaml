@@ -1,0 +1,110 @@
+name: bizmodo_emenu
+description: A new Flutter application.
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.10+13
+
+environment:
+  sdk: '>=2.12.0 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.3
+  animation_wrappers: ^0.0.4
+  flutter_bloc: ^8.0.1
+  flutter_phoenix: ^1.0.0
+  shared_preferences: ^2.0.13
+  get: ^4.6.5
+  http: ^0.13.5
+  logger:
+  fluttertoast: ^8.1.1
+  get_storage: ^2.0.3
+  whatsapp: ^2.0.0
+  url_launcher: ^6.1.6
+  image_picker:
+  cached_network_image: ^3.2.2
+  socket_io_client: ^2.0.0
+#  flutter_locales: ^2.0.2
+  intl: ^0.17.0
+  pdf: ^3.1.0
+  path_provider: ^2.0.1
+  open_file: ^3.1.0
+  printing: ^5.9.3
+  dotted_line: ^3.1.0
+  google_fonts: ^2.1.0
+  flutter_polyline_points: ^1.0.0
+  google_maps_flutter: ^2.0.6
+  equatable: ^2.0.3
+  google_nav_bar: ^5.0.6
+  omni_datetime_picker: ^1.0.2
+  dropdown_button2: ^1.9.2
+  app_settings: ^4.2.0
+  firebase_core: ^2.10.0
+  firebase_messaging: ^14.4.1
+  flutter_local_notifications: 12.0.4
+  overlay_support: ^2.1.0
+
+  #  tablemi.com
+#  ping_discover_network: ^0.2.0+1
+#  esc_pos_printer: ^4.1.0
+#
+#  network_tools: ^3.0.0+3
+#  pos_printer_manager: ^0.0.5
+#
+#  printing: ^5.9.3
+
+  # buy_this_app:
+  #   git:
+  #     url: git@gitlab.com:verbosetech-flutter/buy-this-app-package.git
+  #     ref: master
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.11.0
+  change_app_package_name: ^1.1.0
+#  flutter_launcher_name: ^0.0.1
+
+# Run bottom command in terminal to change the application package name throughout the project
+#  flutter pub run change_app_package_name:main com.new.package.name
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/bizmodo_icons/appIcon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  windows:
+    generate: true
+    image_path: "assets/bizmodo_icons/appIcon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: true
+    image_path: "assets/bizmodo_icons/appIcon.png"
+#  flutter pub run flutter_launcher_icons:main
+
+flutter_launcher_name:
+  name: "BizModo eMenu"
+#  flutter pub run flutter_launcher_name:main
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - assets/ItemCategory/
+    - assets/
+    - assets/food items/
+    - assets/bizmodo_icons/
+
+  fonts:
+    - family: ProductSans
+      fonts:
+        - asset: assets/fonts/ProductSans-Bold.ttf
+        - asset: assets/fonts/ProductSans-Regular.ttf
+

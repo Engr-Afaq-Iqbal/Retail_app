@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "897899878262",
+    "project_id": "bizmodo",
+    "storage_bucket": "bizmodo.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897899878262:android:77696bda5608af4bb00c57",
+        "android_client_info": {
+          "package_name": "com.bizmodo_emenu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "897899878262-lo12ei4tkg2kgss8jt53fd15hj5k1rnd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzp0g_123neOKGfYRAgILOBbi8NtiopY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "897899878262-169338vt5na1onknu58fa96v60r10ntq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
