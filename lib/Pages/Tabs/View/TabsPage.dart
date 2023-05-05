@@ -38,8 +38,7 @@ class _TabsPageState extends State<TabsPage> {
         },
         child: Scaffold(
           /// if selected nav bar index is 3 which means setting selected, the app bar will hide.
-          appBar: _bottomNavBarCtrlObj.selectedNavBarIndex !=
-                  (_bottomNavBarCtrlObj.bottomNavBarData.length - 1)
+          appBar: _bottomNavBarCtrlObj.selectedNavBarIndex != (0)
               ? AppBar(
                   centerTitle: true,
                   title: FadedScaleAnimation(

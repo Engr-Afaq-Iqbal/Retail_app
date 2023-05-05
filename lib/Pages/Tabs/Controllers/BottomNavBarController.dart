@@ -6,7 +6,7 @@ import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Booking/tab_bar_booking.dart';
 import '/Pages/Orders/View/OrdersTabPage.dart';
 import '/Pages/Table/TablesPage.dart';
-import '/Pages/Tabs/View/order_type_selection.dart';
+import '../../HomePageRetail/homepageRetail.dart';
 
 class BottomNavBarController extends GetxController {
   int _selectedNavBarIndex = 0;
@@ -26,7 +26,8 @@ class BottomNavBarController extends GetxController {
         print('Order Type Selection page');
         // Get.to(() => OrderTypeSelection());
       },
-      page: OrderTypeSelection(),
+      //page: OrderTypeSelection(),
+      page: HomePageRetail(),
     ),
     NavBarModel(
       icon: Icons.shopping_bag_outlined,

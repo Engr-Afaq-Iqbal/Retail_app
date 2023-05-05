@@ -1,5 +1,6 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:flutter/material.dart';
+
+import '../../../Config/DateTimeFormat.dart';
 
 class AmountInfo extends StatelessWidget {
   final String? amount;
@@ -18,18 +19,14 @@ class AmountInfo extends StatelessWidget {
         SizedBox(width: 5),
         Text(
           AppFormat.doubleToStringUpTo2(amount) ?? '-',
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(fontSize: 11.7, letterSpacing: 0.06, color: Colors.black),
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+              fontSize: 11.7, letterSpacing: 0.06, color: Colors.black),
         ),
         SizedBox(width: 5),
         Text(
           status ?? '',
-          style: Theme.of(context)
-              .textTheme
-              .headline6!
-              .copyWith(fontSize: 11.7, letterSpacing: 0.06, color: Colors.black),
+          style: Theme.of(context).textTheme.headline6!.copyWith(
+              fontSize: 11.7, letterSpacing: 0.06, color: Colors.black),
         ),
       ],
     );
