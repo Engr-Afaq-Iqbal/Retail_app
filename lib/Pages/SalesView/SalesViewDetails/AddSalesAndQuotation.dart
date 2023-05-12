@@ -6,23 +6,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../Components/custom_circular_button.dart';
-import '../../Components/textfield.dart';
-import '../../Config/DateTimeFormat.dart';
-import '../../Theme/colors.dart';
-import '../../Theme/style.dart';
+import '../../../Components/custom_circular_button.dart';
+import '../../../Components/textfield.dart';
+import '../../../Config/DateTimeFormat.dart';
+import '../../../Theme/colors.dart';
+import '../../../Theme/style.dart';
 
-import 'discount.dart';
-import 'SearchSaleProducts.dart';
+import '../discount.dart';
+import '../SearchSaleProducts.dart';
 
-class AddSales extends StatefulWidget {
-  const AddSales({Key? key}) : super(key: key);
+class AddSalesAndQuotation extends StatefulWidget {
+  bool? isSale;
+  AddSalesAndQuotation({Key? key, this.isSale = true}) : super(key: key);
 
   @override
-  State<AddSales> createState() => _AddSalesState();
+  State<AddSalesAndQuotation> createState() => _AddSalesAndQuotationState();
 }
 
-class _AddSalesState extends State<AddSales> {
+class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
   AllSalesController allSalesCtrlObj = Get.find<AllSalesController>();
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -155,48 +156,49 @@ class _AddSalesState extends State<AddSales> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Status:*'),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'Please Select',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items: allSalesCtrlObj.statusList().map((e) {
-                          return DropdownMenuItem(value: e, child: Text(e));
-                        }).toList(),
-                        value: allSalesCtrlObj.statusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
-                          setState(() {
-                            allSalesCtrlObj.statusValue = value;
-                          });
-                        },
-                        buttonHeight: height * 0.06,
-                        buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
+                if (widget.isSale == true)
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Status:*'),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                'Please Select',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: txtFieldHintColor,
+                                ),
+                              )),
+                          items: allSalesCtrlObj.statusList().map((e) {
+                            return DropdownMenuItem(value: e, child: Text(e));
+                          }).toList(),
+                          value: allSalesCtrlObj.statusValue,
+                          dropdownDirection: DropdownDirection.textDirection,
+                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                          onChanged: (String? value) {
+                            setState(() {
+                              allSalesCtrlObj.statusValue = value;
+                            });
+                          },
+                          buttonHeight: height * 0.06,
+                          buttonWidth: width * 0.43,
+                          buttonDecoration: BoxDecoration(
+                              border: Border.all(width: 1, color: primaryColor),
+                              borderRadius: BorderRadius.circular(15),
+                              color: kWhiteColor),
+                          itemHeight: 40,
+                          itemPadding: EdgeInsets.zero,
+                          itemHighlightColor: primaryColor,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -299,26 +301,28 @@ class _AddSalesState extends State<AddSales> {
                             );
                           },
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        CustomButton(
-                          title: Text(
-                            'Payments',
-                            style: TextStyle(color: kWhiteColor),
+                        if (widget.isSale == true)
+                          SizedBox(
+                            width: 5,
                           ),
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                //title: title != null ? Text(title) : null,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 0),
-                                content: PaymentFields(),
-                              ),
-                            );
-                          },
-                        ),
+                        if (widget.isSale == true)
+                          CustomButton(
+                            title: Text(
+                              'Payments',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  //title: title != null ? Text(title) : null,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 0),
+                                  content: PaymentFields(),
+                                ),
+                              );
+                            },
+                          ),
                       ],
                     ),
                     Row(

@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../Controllers/AllSalesController/allSalesController.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
 
-class OrdersTabPage extends StatefulWidget {
-  const OrdersTabPage({Key? key}) : super(key: key);
+class SalesTabPage extends StatefulWidget {
+  const SalesTabPage({Key? key}) : super(key: key);
   @override
-  _OrdersTabPageState createState() => _OrdersTabPageState();
+  _SalesTabPageState createState() => _SalesTabPageState();
 }
 
-class _OrdersTabPageState extends State<OrdersTabPage> {
-  final OrderController _orderCtrlObj = Get.find<OrderController>();
+class _SalesTabPageState extends State<SalesTabPage> {
+  final AllSalesController _orderCtrlObj = Get.find<AllSalesController>();
   @override
   initState() {
-    loadOrdersData();
+    // loadOrdersData();
     super.initState();
   }
 
-  loadOrdersData() async {
-    if (_orderCtrlObj.allSaleOrdersPage == 1) {
-      _orderCtrlObj.isFirstLoadRunning = true;
-      await _orderCtrlObj.fetchSaleOrders(_orderCtrlObj.allSaleOrdersPage);
-      _orderCtrlObj.isFirstLoadRunning = false;
-    }
-  }
+  // loadOrdersData() async {
+  //   if (_orderCtrlObj.allSaleOrdersPage == 1) {
+  //     _orderCtrlObj.isFirstLoadRunning = true;
+  //     await _orderCtrlObj.fetchSaleOrders(_orderCtrlObj.allSaleOrdersPage);
+  //     _orderCtrlObj.isFirstLoadRunning = false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Stock Transfer'),
+        title: Text('Sales'),
       ),
       body: DefaultTabController(
-        length: StockTransferController.stockTabsList().length,
+        length: AllSalesController.stockTabsList().length,
         child: Padding(
           padding: EdgeInsets.only(top: 0),
           child: Column(
@@ -43,8 +43,7 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 child: TabBar(
-                  tabs:
-                      StockTransferController.stockTabsList().map((_orderTab) {
+                  tabs: AllSalesController.stockTabsList().map((_orderTab) {
                     return Tab(text: _orderTab.label);
                   }).toList(),
                 ),
@@ -52,7 +51,7 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
               Expanded(
                 // child: OrdersListPage(),
                 child: TabBarView(
-                  children: StockTransferController.stockTabsList()
+                  children: AllSalesController.stockTabsList()
                       .map((_orderTab) => _orderTab.page)
                       .toList(),
                 ),

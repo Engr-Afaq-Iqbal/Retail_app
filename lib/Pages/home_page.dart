@@ -271,7 +271,7 @@ class _HomePageState extends State<HomePage> {
                                       gridDelegate:
                                           SliverGridDelegateWithFixedCrossAxisCount(
                                         crossAxisCount: isPortrait
-                                            ? 2
+                                            ? 1
                                             : MediaQuery.of(context)
                                                         .size
                                                         .width >
@@ -280,7 +280,7 @@ class _HomePageState extends State<HomePage> {
                                                 : 4,
                                         crossAxisSpacing: 10,
                                         mainAxisSpacing: 10,
-                                        childAspectRatio: 0.7,
+                                        childAspectRatio: 2.5,
                                       ),
                                       itemBuilder: (context, index) {
                                         // ProductModel item = allProdCtrlObj
@@ -318,164 +318,164 @@ class _HomePageState extends State<HomePage> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Expanded(
-                                                      child: Stack(
-                                                        children: [
-                                                          // product image
-
-                                                          CachedNetworkImage(
-                                                            imageUrl: productModelObjs[
-                                                                        index]
-                                                                    .imageUrl ??
-                                                                "",
-                                                            imageBuilder: (context,
-                                                                    imageProvider) =>
-                                                                Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                image:
-                                                                    DecorationImage(
-                                                                  image:
-                                                                      imageProvider,
-                                                                  fit: BoxFit
-                                                                      .cover,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                progressIndicator(
-                                                                    width: 10,
-                                                                    height: 10),
-                                                            errorWidget:
-                                                                (context, url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
-                                                          ),
-
-                                                          // product shade effect if item in cart
-                                                          GetBuilder(
-                                                            builder:
-                                                                (ProductCartController
-                                                                    prodCartCtrlObj) {
-                                                              return prodCartCtrlObj
-                                                                      .isItemInCart(
-                                                                          productModelObjs[index]
-                                                                              .id)
-                                                                  ? Opacity(
-                                                                      opacity:
-                                                                          0.8,
-                                                                      child:
-                                                                          Container(
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          borderRadius:
-                                                                              BorderRadius.vertical(top: Radius.circular(10)),
-                                                                          gradient: LinearGradient(
-                                                                              begin: Alignment.bottomCenter,
-                                                                              end: Alignment.center,
-                                                                              colors: [
-                                                                                Theme.of(context).primaryColor,
-                                                                                Colors.transparent,
-                                                                              ],
-                                                                              stops: [
-                                                                                0.2,
-                                                                                0.75,
-                                                                              ]),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  : SizedBox
-                                                                      .shrink();
-                                                            },
-                                                          ),
-                                                          // counts of and item if in cart
-                                                          GetBuilder(builder:
-                                                              (ProductCartController
-                                                                  prodCartCtrlObj) {
-                                                            return prodCartCtrlObj
-                                                                    .isItemInCart(
-                                                                        productModelObjs[index]
-                                                                            .id)
-                                                                ? Align(
-                                                                    alignment:
-                                                                        Alignment
-                                                                            .bottomCenter,
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                              .symmetric(
-                                                                          horizontal:
-                                                                              0.0),
-                                                                      child:
-                                                                          Container(
-                                                                        padding: EdgeInsets.symmetric(
-                                                                            vertical:
-                                                                                6,
-                                                                            horizontal:
-                                                                                6),
-                                                                        child:
-                                                                            Row(
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          children: [
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                if (prodCartCtrlObj.countItemInCart(productModelObjs[index].id).compareTo('1') == 0) {
-                                                                                  print('in if function');
-                                                                                  setState(() {
-                                                                                    // prodCartCtrlObj
-                                                                                    //     .deleteFromProdPage(
-                                                                                    //         item);
-                                                                                  });
-                                                                                  // prodCartCtrlObj.itemCartList
-                                                                                  //     .clear();
-                                                                                } else {
-                                                                                  prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: false);
-                                                                                }
-                                                                              },
-                                                                              child: Icon(Icons.remove, color: Colors.white, size: 16),
-                                                                            ),
-
-                                                                            SizedBox(width: 8),
-                                                                            CircleAvatar(
-                                                                              radius: 10,
-                                                                              backgroundColor: primaryColor,
-                                                                              child: Text(
-                                                                                prodCartCtrlObj.countItemInCart(productModelObjs[index].id),
-                                                                                style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10, color: kWhiteColor),
-                                                                              ),
-                                                                            ),
-                                                                            SizedBox(width: 8),
-                                                                            GestureDetector(
-                                                                              onTap: () {
-                                                                                setState(() {
-                                                                                  prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: true);
-                                                                                  //   foodItems[index].count++;
-                                                                                });
-                                                                              },
-                                                                              child: Icon(Icons.add, color: Colors.white, size: 16),
-                                                                            ),
-                                                                            // GestureDetector(
-                                                                            //   onTap: () {
-                                                                            //     setState(() {
-                                                                            //       foodItems[index].count++;
-                                                                            //     });
-                                                                            //   },
-                                                                            //   child: Icon(Icons.add, color: Colors.white, size: 16),
-                                                                            // ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                : SizedBox
-                                                                    .shrink();
-                                                          }),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                    // Expanded(
+                                                    //   child: Stack(
+                                                    //     children: [
+                                                    //       // product image
+                                                    //
+                                                    //       CachedNetworkImage(
+                                                    //         imageUrl: productModelObjs[
+                                                    //                     index]
+                                                    //                 .imageUrl ??
+                                                    //             "",
+                                                    //         imageBuilder: (context,
+                                                    //                 imageProvider) =>
+                                                    //             Container(
+                                                    //           decoration:
+                                                    //               BoxDecoration(
+                                                    //             image:
+                                                    //                 DecorationImage(
+                                                    //               image:
+                                                    //                   imageProvider,
+                                                    //               fit: BoxFit
+                                                    //                   .cover,
+                                                    //             ),
+                                                    //           ),
+                                                    //         ),
+                                                    //         placeholder: (context,
+                                                    //                 url) =>
+                                                    //             progressIndicator(
+                                                    //                 width: 10,
+                                                    //                 height: 10),
+                                                    //         errorWidget:
+                                                    //             (context, url,
+                                                    //                     error) =>
+                                                    //                 Icon(Icons
+                                                    //                     .error),
+                                                    //       ),
+                                                    //
+                                                    //       // product shade effect if item in cart
+                                                    //       GetBuilder(
+                                                    //         builder:
+                                                    //             (ProductCartController
+                                                    //                 prodCartCtrlObj) {
+                                                    //           return prodCartCtrlObj
+                                                    //                   .isItemInCart(
+                                                    //                       productModelObjs[index]
+                                                    //                           .id)
+                                                    //               ? Opacity(
+                                                    //                   opacity:
+                                                    //                       0.8,
+                                                    //                   child:
+                                                    //                       Container(
+                                                    //                     decoration:
+                                                    //                         BoxDecoration(
+                                                    //                       borderRadius:
+                                                    //                           BorderRadius.vertical(top: Radius.circular(10)),
+                                                    //                       gradient: LinearGradient(
+                                                    //                           begin: Alignment.bottomCenter,
+                                                    //                           end: Alignment.center,
+                                                    //                           colors: [
+                                                    //                             Theme.of(context).primaryColor,
+                                                    //                             Colors.transparent,
+                                                    //                           ],
+                                                    //                           stops: [
+                                                    //                             0.2,
+                                                    //                             0.75,
+                                                    //                           ]),
+                                                    //                     ),
+                                                    //                   ),
+                                                    //                 )
+                                                    //               : SizedBox
+                                                    //                   .shrink();
+                                                    //         },
+                                                    //       ),
+                                                    //       // counts of and item if in cart
+                                                    //       GetBuilder(builder:
+                                                    //           (ProductCartController
+                                                    //               prodCartCtrlObj) {
+                                                    //         return prodCartCtrlObj
+                                                    //                 .isItemInCart(
+                                                    //                     productModelObjs[index]
+                                                    //                         .id)
+                                                    //             ? Align(
+                                                    //                 alignment:
+                                                    //                     Alignment
+                                                    //                         .bottomCenter,
+                                                    //                 child:
+                                                    //                     Padding(
+                                                    //                   padding: const EdgeInsets
+                                                    //                           .symmetric(
+                                                    //                       horizontal:
+                                                    //                           0.0),
+                                                    //                   child:
+                                                    //                       Container(
+                                                    //                     padding: EdgeInsets.symmetric(
+                                                    //                         vertical:
+                                                    //                             6,
+                                                    //                         horizontal:
+                                                    //                             6),
+                                                    //                     child:
+                                                    //                         Row(
+                                                    //                       mainAxisSize:
+                                                    //                           MainAxisSize.min,
+                                                    //                       children: [
+                                                    //                         GestureDetector(
+                                                    //                           onTap: () {
+                                                    //                             if (prodCartCtrlObj.countItemInCart(productModelObjs[index].id).compareTo('1') == 0) {
+                                                    //                               print('in if function');
+                                                    //                               setState(() {
+                                                    //                                 // prodCartCtrlObj
+                                                    //                                 //     .deleteFromProdPage(
+                                                    //                                 //         item);
+                                                    //                               });
+                                                    //                               // prodCartCtrlObj.itemCartList
+                                                    //                               //     .clear();
+                                                    //                             } else {
+                                                    //                               prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: false);
+                                                    //                             }
+                                                    //                           },
+                                                    //                           child: Icon(Icons.remove, color: Colors.white, size: 16),
+                                                    //                         ),
+                                                    //
+                                                    //                         SizedBox(width: 8),
+                                                    //                         CircleAvatar(
+                                                    //                           radius: 10,
+                                                    //                           backgroundColor: primaryColor,
+                                                    //                           child: Text(
+                                                    //                             prodCartCtrlObj.countItemInCart(productModelObjs[index].id),
+                                                    //                             style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10, color: kWhiteColor),
+                                                    //                           ),
+                                                    //                         ),
+                                                    //                         SizedBox(width: 8),
+                                                    //                         GestureDetector(
+                                                    //                           onTap: () {
+                                                    //                             setState(() {
+                                                    //                               prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: true);
+                                                    //                               //   foodItems[index].count++;
+                                                    //                             });
+                                                    //                           },
+                                                    //                           child: Icon(Icons.add, color: Colors.white, size: 16),
+                                                    //                         ),
+                                                    //                         // GestureDetector(
+                                                    //                         //   onTap: () {
+                                                    //                         //     setState(() {
+                                                    //                         //       foodItems[index].count++;
+                                                    //                         //     });
+                                                    //                         //   },
+                                                    //                         //   child: Icon(Icons.add, color: Colors.white, size: 16),
+                                                    //                         // ),
+                                                    //                       ],
+                                                    //                     ),
+                                                    //                   ),
+                                                    //                 ),
+                                                    //               )
+                                                    //             : SizedBox
+                                                    //                 .shrink();
+                                                    //       }),
+                                                    //     ],
+                                                    //   ),
+                                                    // ),
                                                     const SizedBox(height: 10),
 
                                                     /// TODO: need to show the quantity
@@ -523,6 +523,84 @@ class _HomePageState extends State<HomePage> {
                                                                           FontWeight
                                                                               .bold),
                                                             ),
+                                                            GetBuilder(builder:
+                                                                (ProductCartController
+                                                                    prodCartCtrlObj) {
+                                                              return prodCartCtrlObj
+                                                                      .isItemInCart(
+                                                                          productModelObjs[index]
+                                                                              .id)
+                                                                  ? Align(
+                                                                      alignment:
+                                                                          Alignment
+                                                                              .bottomCenter,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.symmetric(horizontal: 0.0),
+                                                                        child:
+                                                                            Container(
+                                                                          padding: EdgeInsets.symmetric(
+                                                                              vertical: 6,
+                                                                              horizontal: 6),
+                                                                          child:
+                                                                              Row(
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  if (prodCartCtrlObj.countItemInCart(productModelObjs[index].id).compareTo('1') == 0) {
+                                                                                    print('in if function');
+                                                                                    setState(() {
+                                                                                      // prodCartCtrlObj
+                                                                                      //     .deleteFromProdPage(
+                                                                                      //         item);
+                                                                                    });
+                                                                                    // prodCartCtrlObj.itemCartList
+                                                                                    //     .clear();
+                                                                                  } else {
+                                                                                    prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: false);
+                                                                                  }
+                                                                                },
+                                                                                child: Icon(Icons.remove, color: blackColor, size: 16),
+                                                                              ),
+
+                                                                              SizedBox(width: 8),
+                                                                              CircleAvatar(
+                                                                                radius: 10,
+                                                                                backgroundColor: primaryColor,
+                                                                                child: Text(
+                                                                                  prodCartCtrlObj.countItemInCart(productModelObjs[index].id),
+                                                                                  style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 10, color: kWhiteColor),
+                                                                                ),
+                                                                              ),
+                                                                              SizedBox(width: 8),
+                                                                              GestureDetector(
+                                                                                onTap: () {
+                                                                                  setState(() {
+                                                                                    prodCartCtrlObj.updateCart(productModelObjs[index], isAdd: true);
+                                                                                    //   foodItems[index].count++;
+                                                                                  });
+                                                                                },
+                                                                                child: Icon(Icons.add, color: blackColor, size: 16),
+                                                                              ),
+                                                                              // GestureDetector(
+                                                                              //   onTap: () {
+                                                                              //     setState(() {
+                                                                              //       foodItems[index].count++;
+                                                                              //     });
+                                                                              //   },
+                                                                              //   child: Icon(Icons.add, color: Colors.white, size: 16),
+                                                                              // ),
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : SizedBox
+                                                                      .shrink();
+                                                            }),
                                                             Text(
                                                               double.parse(
                                                                     '${productModelObjs[index].productVariations.first.variations.first.sellPriceIncTax}',
@@ -543,7 +621,6 @@ class _HomePageState extends State<HomePage> {
                                                           ],
                                                         ),
                                                       ),
-                                                    const SizedBox(height: 10),
                                                   ],
                                                 ),
 

@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import 'addSaleReturn.dart';
 
 class Return extends StatefulWidget {
   const Return({Key? key}) : super(key: key);
@@ -46,7 +47,7 @@ class _ReturnState extends State<Return> {
         //         context: context,
         //         builder: (context) {
         //           return Container(
-        //             child: CreateStockTransfer(),
+        //             child: AddSaleReturn(),
         //           );
         //         },
         //       );

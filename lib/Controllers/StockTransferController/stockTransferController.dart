@@ -3,11 +3,19 @@ import 'package:get/get.dart';
 
 import '../../Config/utils.dart';
 
+import '../../Models/NavBarModel.dart';
 import '../../Models/ViewStockTransferModel/viewStockTransferModel.dart';
 
+import '../../Pages/Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
+import '../../Pages/Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
+
+enum OrderTabsPage {
+  ActiveOrders,
+  PastOrders,
+}
 
 class StockTransferController extends GetxController {
   TextEditingController dateCtrl = TextEditingController();
@@ -19,6 +27,21 @@ class StockTransferController extends GetxController {
   bool isFirstLoadRunning = true;
   bool hasNextPage = true;
   RxBool isLoadMoreRunning = false.obs;
+
+  static List<NavBarModel> stockTabsList() => [
+        NavBarModel(
+          identifier: OrderTabsPage.ActiveOrders,
+          icon: 'Icons.order',
+          label: 'Stock Transfer',
+          page: ViewStockTransfer(), //StockTransfer(),
+        ),
+        NavBarModel(
+          identifier: OrderTabsPage.PastOrders,
+          icon: 'Icons.order',
+          label: 'Stock Adjustment',
+          page: ViewStockAdjustment(),
+        ),
+      ];
 
   List<String> stockSearchHeader = [
     'Product',

@@ -10,7 +10,10 @@ import '../Orders/View/OrdersTabPage.dart';
 
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
-import '../SalesView/SalesView.dart';
+import '../SalesView/SalesTabPage.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
+import '../Upload/upload.dart';
+import '../home_page.dart';
 import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {
@@ -29,7 +32,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
     FontAwesomeIcons.print,
     FontAwesomeIcons.arrowUpRightDots,
     FontAwesomeIcons.boxesStacked,
-    FontAwesomeIcons.personWalking
+    FontAwesomeIcons.personWalking,
+    FontAwesomeIcons.upload
   ];
 
   List<String> names = [
@@ -53,6 +57,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
     'Sales',
     'Stock',
     'Customer Visits',
+    'Upload'
   ];
 
   @override
@@ -65,7 +70,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
           children: [
             CurvedContainer(),
             Container(
-              height: MediaQuery.of(context).size.height * 0.19,
+              height: MediaQuery.of(context).size.height * 0.29,
               width: MediaQuery.of(context).size.width * 0.85,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
@@ -94,7 +99,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           onPressed: () {
                             // handle icon tap
                             if (index == 0) {
-                              Get.to(AddItem());
+                              //Get.to(AddItem());
+                              Get.to(HomePage());
                             }
                             if (index == 2) {
                               Get.to(CustomerSearch());
@@ -106,13 +112,16 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               Get.to(Receipts());
                             }
                             if (index == 5) {
-                              Get.to(SalesView());
+                              Get.to(SalesTabPage());
                             }
                             if (index == 6) {
                               Get.to(OrdersTabPage());
                             }
                             if (index == 7) {
                               Get.to(CustomerVisits());
+                            }
+                            if (index == 8) {
+                              Get.to(Upload());
                             }
                           },
                         ),

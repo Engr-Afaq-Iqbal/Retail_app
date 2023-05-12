@@ -1,6 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../Models/NavBarModel.dart';
+import '../../Pages/Orders/Controller/OrderController.dart';
+import '../../Pages/SalesView/ListQuotations/listQuotations.dart';
+import '../../Pages/SalesView/SalesViewDetails/SalesView.dart';
+
+enum SalesTabsPage {
+  Sales,
+  Quotation,
+}
+
 class AllSalesController extends GetxController {
   String? paytermStatusValue;
   String? statusValue;
@@ -9,6 +19,22 @@ class AllSalesController extends GetxController {
   String? paymentAccountStatusValue;
   TextEditingController searchCtrl = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
+
+  static List<NavBarModel> stockTabsList() => [
+        NavBarModel(
+          identifier: SalesTabsPage.Sales,
+          icon: 'Icons.order',
+          label: 'All Sales',
+          page: SalesView(), //StockTransfer(),
+        ),
+        NavBarModel(
+          identifier: SalesTabsPage.Quotation,
+          icon: 'Icons.order',
+          label: 'List Quotations',
+          page: ListQuotations(),
+        ),
+      ];
+
   List<String> payTermList() {
     List<String> options = ['Months', 'Days'];
     // for (int i = 0;

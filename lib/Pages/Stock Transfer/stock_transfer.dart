@@ -14,7 +14,7 @@ class StockTransfer extends StatefulWidget {
 
 class _StockTransferState extends State<StockTransfer> {
   TextEditingController dateCtrl = TextEditingController();
-  TextEditingController refCtrl = TextEditingController()
+  TextEditingController refCtrl = TextEditingController();
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
