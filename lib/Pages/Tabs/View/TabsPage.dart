@@ -62,7 +62,7 @@ class _TabsPageState extends State<TabsPage> {
           body: _bottomNavBarCtrlObj
               .bottomNavBarData[_bottomNavBarCtrlObj.selectedNavBarIndex].page,
           bottomNavigationBar: GNav(
-            gap: 5,
+            gap: 2,
             tabBackgroundColor: Colors.grey.withOpacity(0.2),
             activeColor: primaryColor,
             tabMargin: const EdgeInsets.all(5),

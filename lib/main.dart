@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
+import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ import '/Controllers/ContactController/ContactController.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Controllers/TableSelectionController/table_management_controller.dart';
+import 'Controllers/AllSalesController/allSalesController.dart';
 import 'Controllers/Booking Controller/BookingController.dart';
 import 'Controllers/ListUserController/ListUserController.dart';
 import 'Controllers/Notifications/NotificationsController.dart';
@@ -105,6 +108,9 @@ void initializeControllers() {
   Get.put(BookingController());
   Get.put(ServiceStaffController());
   Get.put(ListUserController());
+  Get.put(StockTransferController());
+  Get.put(CustomerVisitsController());
+  Get.put(AllSalesController());
 }
 
 class BizModoEMenu extends StatefulWidget {

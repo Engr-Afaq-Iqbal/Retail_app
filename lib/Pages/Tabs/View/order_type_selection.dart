@@ -1,5 +1,5 @@
 import 'package:bizmodo_emenu/Pages/Tabs/View/packingCharges.dart';
-import 'package:bizmodo_emenu/Pages/Tabs/View/shippingCharge.dart';
+import 'package:bizmodo_emenu/Pages/SalesView/shippingCharge.dart';
 import 'package:bizmodo_emenu/Pages/cart/cart_page.dart';
 import 'package:bizmodo_emenu/Pages/order_type/search_customer_page.dart';
 import 'package:firebase_core/firebase_core.dart';

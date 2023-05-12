@@ -13,7 +13,7 @@ import '/Theme/style.dart';
 import '../../Controllers/TableSelectionController/table_management_controller.dart';
 import '../../Controllers/Tax Controller/TaxController.dart';
 import '../Table/TablesPage.dart';
-import '../Tabs/View/discount.dart';
+import '../SalesView/discount.dart';
 import 'CartItemTile.dart';
 import 'OrderedCart/OrderedItemsCartPage.dart';
 // import '../print_page.dart';

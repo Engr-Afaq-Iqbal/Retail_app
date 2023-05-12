@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
+import '../../Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '/Config/app_config.dart';
 import '/Config/enums.dart';
 import '/Config/utils.dart';
@@ -12,8 +14,6 @@ import '/Controllers/TableSelectionController/table_management_controller.dart';
 import '/Models/NavBarModel.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
-import '/Pages/Orders/View/ActiveOrders/ActiveOrdersTab.dart';
-import '/Pages/Orders/View/PastOrders/PastOrdersTab.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
 import '/Services/storage_services.dart';
@@ -25,18 +25,18 @@ enum OrderTabsPage {
 
 class OrderController extends GetxController {
   // Order Tabs List (Active Orders and Past Orders)
-  static List<NavBarModel> orderTabsList() => [
+  static List<NavBarModel> stockTabsList() => [
         NavBarModel(
           identifier: OrderTabsPage.ActiveOrders,
           icon: 'Icons.order',
-          label: 'new_orders'.tr,
-          page: ActiveOrdersTab(),
+          label: 'Stock Transfer',
+          page: ViewStockTransfer(), //StockTransfer(),
         ),
         NavBarModel(
           identifier: OrderTabsPage.PastOrders,
           icon: 'Icons.order',
-          label: 'past_orders'.tr,
-          page: PastOrdersTab(),
+          label: 'Stock Adjustment',
+          page: ViewStockAdjustment(),
         ),
       ];
 

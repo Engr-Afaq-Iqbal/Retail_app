@@ -5,7 +5,13 @@ import 'package:get/get.dart';
 
 import '../../const/CurvedContainer.dart';
 import '../AddItem/additem.dart';
-import '../Stock Transfer/stock_transfer.dart';
+import '../CustomesVisit/customersVisit.dart';
+import '../Orders/View/OrdersTabPage.dart';
+
+import '../Receipts/receipts.dart';
+import '../Return/return.dart';
+import '../SalesView/SalesView.dart';
+import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {
   const HomePageRetail({Key? key}) : super(key: key);
@@ -23,7 +29,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
     FontAwesomeIcons.print,
     FontAwesomeIcons.arrowUpRightDots,
     FontAwesomeIcons.boxesStacked,
-    FontAwesomeIcons.upload
+    FontAwesomeIcons.personWalking
   ];
 
   List<String> names = [
@@ -39,14 +45,14 @@ class _HomePageRetailState extends State<HomePageRetail> {
   ];
 
   List<String> iconsNames = [
-    'Store',
+    'Items',
     'Customer',
-    'Supply',
+    'Create Order',
     'Return',
     'Receipt',
     'Sales',
     'Stock',
-    'Upload',
+    'Customer Visits',
   ];
 
   @override
@@ -90,14 +96,31 @@ class _HomePageRetailState extends State<HomePageRetail> {
                             if (index == 0) {
                               Get.to(AddItem());
                             }
+                            if (index == 2) {
+                              Get.to(CustomerSearch());
+                            }
+                            if (index == 3) {
+                              Get.to(Return());
+                            }
+                            if (index == 4) {
+                              Get.to(Receipts());
+                            }
+                            if (index == 5) {
+                              Get.to(SalesView());
+                            }
                             if (index == 6) {
-                              Get.to(StockTransfer());
+                              Get.to(OrdersTabPage());
+                            }
+                            if (index == 7) {
+                              Get.to(CustomerVisits());
                             }
                           },
                         ),
                         Text(
                           iconsNames[index],
-                          style: TextStyle(color: blackColor),
+                          style: TextStyle(color: blackColor, fontSize: 9),
+                          softWrap: true,
+                          textAlign: TextAlign.center,
                         ),
                       ],
                     ),

@@ -22,7 +22,7 @@ class CurvedContainer extends StatelessWidget {
                 children: [
                   Container(
                       //height: 150,
-                      width: MediaQuery.of(context).size.width * 0.7,
+                      width: MediaQuery.of(context).size.width * 0.82,
                       // width: isPortrait ? 200 : 300,
                       padding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -45,10 +45,13 @@ class CurvedContainer extends StatelessWidget {
                     Icons.notification_add_outlined,
                     color: kWhiteColor,
                   ),
-                  Icon(
-                    Icons.add,
-                    color: kWhiteColor,
+                  SizedBox(
+                    width: 5,
                   )
+                  // Icon(
+                  //   Icons.add,
+                  //   color: kWhiteColor,
+                  // )
                 ],
               ),
               Row(

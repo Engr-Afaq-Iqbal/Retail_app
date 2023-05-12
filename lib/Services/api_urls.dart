@@ -59,4 +59,7 @@ class ApiUrls {
 
   ///Notification marked as complete Api
   static String notificationMarkedApi = "connector/api/notification/marked";
+
+  ///View Stock Transfer Api
+  static String viewStockTransfer = "connector/api/stock-transfer";
 }

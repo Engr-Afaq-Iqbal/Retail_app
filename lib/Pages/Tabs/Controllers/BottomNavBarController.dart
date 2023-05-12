@@ -29,33 +29,33 @@ class BottomNavBarController extends GetxController {
       //page: OrderTypeSelection(),
       page: HomePageRetail(),
     ),
-    NavBarModel(
-      icon: Icons.shopping_bag_outlined,
-      label: 'orders',
-      onTap: () {
-        print('Order Page');
-        // Get.to(() => OrdersMain());
-      },
-      page: OrdersTabPage(),
-    ),
-    NavBarModel(
-      icon: Icons.table_restaurant_outlined,
-      label: 'table_drop',
-      onTap: () {
-        print('Table page');
-        // Get.to(() => TablePage());
-      },
-      page: TablesPage(isForBookedTables: true),
-    ),
-    NavBarModel(
-      icon: Icons.event_note_outlined,
-      label: 'booking_tab',
-      onTap: () {
-        print('Booking page');
-        // Get.to(() => TablePage());
-      },
-      page: BookingTabs(),
-    ),
+    // NavBarModel(
+    //   icon: Icons.shopping_bag_outlined,
+    //   label: 'orders',
+    //   onTap: () {
+    //     print('Order Page');
+    //     // Get.to(() => OrdersMain());
+    //   },
+    //   page: OrdersTabPage(),
+    // ),
+    // NavBarModel(
+    //   icon: Icons.table_restaurant_outlined,
+    //   label: 'table_drop',
+    //   onTap: () {
+    //     print('Table page');
+    //     // Get.to(() => TablePage());
+    //   },
+    //   page: TablesPage(isForBookedTables: true),
+    // ),
+    // NavBarModel(
+    //   icon: Icons.event_note_outlined,
+    //   label: 'booking_tab',
+    //   onTap: () {
+    //     print('Booking page');
+    //     // Get.to(() => TablePage());
+    //   },
+    //   page: BookingTabs(),
+    // ),
     NavBarModel(
       icon: Icons.menu,
       label: 'menu_drop',

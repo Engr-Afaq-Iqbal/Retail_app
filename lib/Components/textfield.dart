@@ -88,10 +88,10 @@ class _AppFormFieldState extends State<AppFormField> {
             fontWeight: FontWeight.w400,
             color: Color(0xFFA8ADB7),
           ),
-          labelStyle: const TextStyle(
+          labelStyle: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w400,
-            color: Color(0xFFA8ADB7),
+            color: txtFieldHintColor,
           ),
           prefixIcon: (widget.prefixIcon != null)
               ? widget.prefixIcon

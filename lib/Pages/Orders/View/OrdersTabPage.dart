@@ -27,9 +27,12 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: DefaultTabController(
-        length: OrderController.orderTabsList().length,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Stock Transfer'),
+      ),
+      body: DefaultTabController(
+        length: OrderController.stockTabsList().length,
         child: Padding(
           padding: EdgeInsets.only(top: 0),
           child: Column(
@@ -39,7 +42,7 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
                 width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 child: TabBar(
-                  tabs: OrderController.orderTabsList().map((_orderTab) {
+                  tabs: OrderController.stockTabsList().map((_orderTab) {
                     return Tab(text: _orderTab.label);
                   }).toList(),
                 ),
@@ -47,8 +50,9 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
               Expanded(
                 // child: OrdersListPage(),
                 child: TabBarView(
-                  children:
-                      OrderController.orderTabsList().map((_orderTab) => _orderTab.page).toList(),
+                  children: OrderController.stockTabsList()
+                      .map((_orderTab) => _orderTab.page)
+                      .toList(),
                 ),
               )
             ],

@@ -19,7 +19,9 @@ Color kTextColor = Color(0xff6a6c74);
 Color kMainTextColor = Color(0xff000000);
 Color partialColor = Color(0xFF11cdef);
 Color dueColor = Color(0xFFffc107);
+Color orangeColor = Color(0xffffa025);
 Color paidColor = Color(0xFF98D973);
+Color txtFieldHintColor = Color(0xFFA8ADB7);
 
 /// Returns MaterialColor from Color
 MaterialColor createMaterialColor(Color color) {
