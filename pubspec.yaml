@@ -44,8 +44,8 @@ dependencies:
   omni_datetime_picker: ^1.0.2
   dropdown_button2: ^1.9.2
   app_settings: ^4.2.0
-  firebase_core: ^2.10.0
-  firebase_messaging: ^14.4.1
+  #firebase_core: ^2.10.0
+  #firebase_messaging: ^14.4.1
   flutter_local_notifications: 12.0.4
   overlay_support: ^2.1.0
   font_awesome_flutter: ^10.4.0

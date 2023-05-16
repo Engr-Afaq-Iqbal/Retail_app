@@ -46,15 +46,9 @@ class _ViwStockTileState extends State<ViwStockTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    AppFormat.dateDDMMYY(
-                        widget.stockTransferCtrlObj.viewStockTransferMoodel !=
-                                null
-                            ? widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel!
-                                .data[widget.index]
-                                .transactionDate
-                            : DateTime.now()),
+                    widget.stockTransferCtrlObj.viewStockTransferMoodel
+                            ?.data[widget.index].status.capitalizeFirst ??
+                        '',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
@@ -86,20 +80,6 @@ class _ViwStockTileState extends State<ViwStockTile> {
                                 .viewStockTransferMoodel
                                 ?.data[widget.index]
                                 .refNo ??
-                            '',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium!
-                            .copyWith(fontSize: 14),
-                      ),
-                      orderInfoRow(
-                        context,
-                        text1: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .status
-                                .capitalizeFirst ??
                             '',
                         text1Style: Theme.of(context)
                             .textTheme
@@ -165,6 +145,37 @@ class _ViwStockTileState extends State<ViwStockTile> {
                     ],
                   ),
 
+                  Row(
+                    children: [
+                      orderInfoRow(
+                        context,
+                        text1: 'Date: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 12),
+                        text2: AppFormat.dateDDMMYY(widget.stockTransferCtrlObj
+                                    .viewStockTransferMoodel !=
+                                null
+                            ? widget
+                                .stockTransferCtrlObj
+                                .viewStockTransferMoodel!
+                                .data[widget.index]
+                                .transactionDate
+                            : DateTime.now()),
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Color(0xffffa025),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
+                      ),
+                    ],
+                  ),
+
                   //  if (viewStocksModel?.additionalNotes)
                   Row(
                     // mainAxisAlignment:
@@ -223,14 +234,20 @@ class _ViwStockTileState extends State<ViwStockTile> {
                       ),
                     ],
                   ),
-                  Divider(color: Theme.of(context).cardColor, thickness: 1.0),
-                  Text(
-                    'Note: ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headlineMedium!
-                        .copyWith(fontSize: 12),
-                  )
+                  if (widget.stockTransferCtrlObj.viewStockTransferMoodel
+                          ?.data[widget.index].additionalNotes !=
+                      null)
+                    Divider(color: Theme.of(context).cardColor, thickness: 1.0),
+                  if (widget.stockTransferCtrlObj.viewStockTransferMoodel
+                          ?.data[widget.index].additionalNotes !=
+                      null)
+                    Text(
+                      'Note: ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 12),
+                    )
                 ],
               ),
             ),

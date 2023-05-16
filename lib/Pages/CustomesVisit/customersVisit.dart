@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
 import '../Stocks/ViewStockTransfer/createStockTransfer.dart';
 import 'VIewCustomerVisit/viewCustomerVisit.dart';
 import 'createCustomerVisit.dart';
@@ -19,13 +20,13 @@ class CustomerVisits extends StatefulWidget {
 }
 
 class _CustomerVisitsState extends State<CustomerVisits> {
-  StockTransferController stockTranCtrlObj =
-      Get.find<StockTransferController>();
+  CustomerVisitsController customerVisitController =
+      Get.find<CustomerVisitsController>();
 
   @override
   void initState() {
     // TODO: implement initState
-    stockTranCtrlObj.fetchStockTransfersList();
+    customerVisitController.fetchCustomerVisitsList();
     super.initState();
   }
 
@@ -44,8 +45,8 @@ class _CustomerVisitsState extends State<CustomerVisits> {
                 isScrollControlled: true,
                 context: context,
                 builder: (context) {
-                  return GetBuilder<StockTransferController>(
-                      builder: (StockTransferController stockTransferCtrlObj) {
+                  return GetBuilder<CustomerVisitsController>(
+                      builder: (CustomerVisitsController stockTransferCtrlObj) {
                     return Container(
                       child: CreateCustomerVisits(),
                     );
@@ -53,38 +54,34 @@ class _CustomerVisitsState extends State<CustomerVisits> {
                 },
               );
             }),
-        body: GetBuilder<StockTransferController>(
-            builder: (StockTransferController stockTransferCtrlObj) {
-          return (stockTransferCtrlObj.viewStockTransferMoodel?.data == null)
-              ? progressIndicator()
-              : ListView.builder(
+        body: GetBuilder<CustomerVisitsController>(
+            builder: (CustomerVisitsController customerVisitsCtrlObj) {
+          if (customerVisitsCtrlObj.customerVisitsListModel != null) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await customerVisitsCtrlObj.fetchCustomerVisitsList();
+              },
+              child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(bottom: 100),
-                  itemCount: stockTransferCtrlObj
-                          .viewStockTransferMoodel?.data.length ??
+                  itemCount: customerVisitsCtrlObj
+                          .customerVisitsListModel?.data.length ??
                       0,
                   itemBuilder: (context, index) {
                     return IntrinsicHeight(
                       child: GestureDetector(
                           onTap: () {
                             Get.to(ViewCustomerVisit());
-                            // showModalBottomSheet(
-                            //   isScrollControlled: true,
-                            //   context: context,
-                            //   builder: (context) {
-                            //     return GetBuilder<StockTransferController>(
-                            //         builder: (StockTransferController
-                            //             stockTransferCtrlObj) {
-                            //       return Container(
-                            //         child: ViewCustomerVisit(),
-                            //       );
-                            //     });
-                            //   },
-                            // );
                           },
-                          child: CustomerVisitTile()),
+                          child: CustomerVisitTile(
+                            index: index,
+                            customerVisitsCtrlObj: customerVisitsCtrlObj,
+                          )),
                     );
-                  });
+                  }),
+            );
+          } else
+            return progressIndicator();
         }));
   }
 }

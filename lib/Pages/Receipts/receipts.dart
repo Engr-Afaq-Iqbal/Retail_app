@@ -35,6 +35,23 @@ class _ReceiptsState extends State<Receipts> {
         appBar: AppBar(
           title: Text('Issue Receipts'),
           actions: [
+            GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.filter_alt_outlined,
+                color: blackColor,
+              ),
+            ),
+            SizedBox(
+              width: 3,
+            ),
+            GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.search_outlined,
+                color: blackColor,
+              ),
+            ),
             Padding(
               // height: 20,
               // width: 20,

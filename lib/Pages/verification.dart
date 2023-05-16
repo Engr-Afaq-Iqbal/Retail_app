@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import '/Components/colorButton.dart';
 import '/Components/textfield.dart';
-import '/Pages/home_page.dart';
+import 'ProductsPage/home_page.dart';
 
 class Verification extends StatelessWidget {
   @override
@@ -74,7 +74,8 @@ class Verification extends StatelessWidget {
                 Spacer(),
                 GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => HomePage()));
                     },
                     child: Row(
                       children: [

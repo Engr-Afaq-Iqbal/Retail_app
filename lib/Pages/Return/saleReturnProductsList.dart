@@ -1,22 +1,21 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Components/textfield.dart';
-import '../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../Controllers/SalesReturnController/saleReturnController.dart';
 import '../../Theme/colors.dart';
 import '../../Theme/style.dart';
 
-class SearchStockProducts extends StatefulWidget {
-  const SearchStockProducts({Key? key}) : super(key: key);
+class SaleReturnProductList extends StatefulWidget {
+  const SaleReturnProductList({Key? key}) : super(key: key);
 
   @override
-  State<SearchStockProducts> createState() => _SearchStockProductsState();
+  State<SaleReturnProductList> createState() => _SaleReturnProductListState();
 }
 
-class _SearchStockProductsState extends State<SearchStockProducts> {
-  StockTransferController stockTranCtrlObj =
-      Get.find<StockTransferController>();
+class _SaleReturnProductListState extends State<SaleReturnProductList> {
+  final SaleReturnController saleReturnCtrlObj =
+      Get.find<SaleReturnController>();
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -44,41 +43,29 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
                     children: [
                       Expanded(
                         flex: 3,
-                        child: AppFormField(
-                          controller: stockTranCtrlObj.productNameCtrl,
-                          padding: EdgeInsets.only(right: 10),
-                          isOutlineBorder: false,
-                          isColor:
-                              index.isEven ? kWhiteColor : Colors.transparent,
-                          // labelText: 'Product Name',
+                        child: Text(
+                          'Rita Juice 250mg',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '10',
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          '10',
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Expanded(
                         flex: 1,
                         child: AppFormField(
-                          controller: stockTranCtrlObj.qtyCtrl,
-                          padding: EdgeInsets.only(right: 5),
-                          isOutlineBorder: false,
-                          isColor:
-                              index.isEven ? kWhiteColor : Colors.transparent,
-                          // labelText: 'Qty',
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: AppFormField(
-                          controller: stockTranCtrlObj.priceCtrl,
-                          padding: EdgeInsets.only(right: 5),
-                          isOutlineBorder: false,
-                          isColor:
-                              index.isEven ? kWhiteColor : Colors.transparent,
-                          // labelText: 'Price',
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: AppFormField(
-                          controller: stockTranCtrlObj.totalCtrl,
+                          controller: saleReturnCtrlObj.returnQtyCtrl,
                           padding: EdgeInsets.only(right: 5),
                           isOutlineBorder: false,
                           isColor:
@@ -88,18 +75,17 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
                       )
                     ],
                   ),
+                  SizedBox(
+                    height: 5,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         flex: 3,
-                        child: AppFormField(
-                          controller: stockTranCtrlObj.remarksCtrl,
-                          padding: EdgeInsets.only(right: 10),
-                          labelText: 'Remarks',
-                          isOutlineBorder: false,
-                          isColor:
-                              index.isEven ? kWhiteColor : Colors.transparent,
+                        child: Text(
+                          'Subtotal:- 100',
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Icon(
@@ -108,12 +94,6 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
                       )
                     ],
                   ),
-                  // SizedBox(
-                  //   height: 5,
-                  // ),
-                  // Divider(
-                  //
-                  // ),
                 ],
               ),
             );

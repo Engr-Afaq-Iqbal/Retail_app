@@ -2,6 +2,8 @@ import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
 import 'package:bizmodo_emenu/Pages/Return/returnTile.dart';
+import 'package:bizmodo_emenu/Pages/Return/saleReturn.dart';
+import 'package:bizmodo_emenu/Pages/Return/searchSalesReturn.dart';
 import '../../../Pages/Stocks/ViewStockTransfer/viewStockTransferTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,7 @@ import 'package:get/get.dart';
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../Tabs/View/packingCharges.dart';
 import 'addSaleReturn.dart';
 
 class Return extends StatefulWidget {
@@ -37,56 +40,33 @@ class _ReturnState extends State<Return> {
         appBar: AppBar(
           title: Text('Return'),
         ),
-        // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        // floatingActionButton: FloatingActionButton.small(
-        //     child: Icon(Icons.add),
-        //     backgroundColor: primaryColor.withOpacity(0.5),
-        //     onPressed: () {
-        //       showModalBottomSheet(
-        //         isScrollControlled: true,
-        //         context: context,
-        //         builder: (context) {
-        //           return Container(
-        //             child: AddSaleReturn(),
-        //           );
-        //         },
-        //       );
-        //     }),
-        body: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: ListView.builder(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 100),
-                  itemCount: 7,
-                  itemBuilder: (context, index) {
-                    return IntrinsicHeight(
-                      child: ReturnTile(),
-                    );
-                  }),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  'Total (AED) = 0.00',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: FloatingActionButton.small(
+            child: Icon(Icons.add),
+            backgroundColor: primaryColor.withOpacity(0.5),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                  content: SearchSalesReturn(),
                 ),
-                CustomButton(
-                  onTap: () {},
-                  title: Text(
-                    'RETURN',
-                    style: TextStyle(color: kWhiteColor),
-                  ),
+              );
+            }),
+        body: ListView.builder(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 100),
+            itemCount: 7,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Get.to(SalesReturn());
+                },
+                child: IntrinsicHeight(
+                  child: ReturnTile(),
                 ),
-              ],
-            ),
-          ],
-        ));
+              );
+            }));
   }
 }

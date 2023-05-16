@@ -73,94 +73,29 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headings(txt: 'Add Sale'),
-            Divider(),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Pay term:'),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'Please Select',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items: allSalesCtrlObj.payTermList().map((e) {
-                          return DropdownMenuItem(value: e, child: Text(e));
-                        }).toList(),
-                        value: allSalesCtrlObj.paytermStatusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
-                          setState(() {
-                            allSalesCtrlObj.paytermStatusValue = value;
-                          });
-                        },
-                        buttonHeight: height * 0.06,
-                        buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Sale Date:'),
-                    AppFormField(
-                      width: width * 0.43,
-                      readOnly: true,
-                      controller: allSalesCtrlObj.dateCtrl,
-                      labelText: 'Select Date',
-                      prefixIcon: Icon(Icons.calendar_month),
-                      onTap: () {
-                        setState(() {
-                          _showDatePicker();
-
-                          //_show(context);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (widget.isSale == true)
+    return Scaffold(
+      appBar: AppBar(
+        title: widget.isSale == true ? Text('Add Sale') : Text('Add Quotation'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              headings(txt: 'Add Sale'),
+              Divider(),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      headings(txt: 'Status:*'),
+                      headings(txt: 'Pay term:'),
                       DropdownButtonHideUnderline(
                         child: DropdownButton2(
                           isExpanded: true,
@@ -174,16 +109,16 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                   color: txtFieldHintColor,
                                 ),
                               )),
-                          items: allSalesCtrlObj.statusList().map((e) {
+                          items: allSalesCtrlObj.payTermList().map((e) {
                             return DropdownMenuItem(value: e, child: Text(e));
                           }).toList(),
-                          value: allSalesCtrlObj.statusValue,
+                          value: allSalesCtrlObj.paytermStatusValue,
                           dropdownDirection: DropdownDirection.textDirection,
                           dropdownPadding: EdgeInsets.only(left: 5, right: 5),
                           buttonPadding: EdgeInsets.only(left: 15, right: 15),
                           onChanged: (String? value) {
                             setState(() {
-                              allSalesCtrlObj.statusValue = value;
+                              allSalesCtrlObj.paytermStatusValue = value;
                             });
                           },
                           buttonHeight: height * 0.06,
@@ -199,116 +134,202 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                       ),
                     ],
                   ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Invoice Schema:'),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'Please Select',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items: allSalesCtrlObj.invoiceSchemaList().map((e) {
-                          return DropdownMenuItem(value: e, child: Text(e));
-                        }).toList(),
-                        value: allSalesCtrlObj.invoiceSchemaStatusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Sale Date:'),
+                      AppFormField(
+                        width: width * 0.43,
+                        readOnly: true,
+                        controller: allSalesCtrlObj.dateCtrl,
+                        labelText: 'Select Date',
+                        prefixIcon: Icon(Icons.calendar_month),
+                        onTap: () {
                           setState(() {
-                            allSalesCtrlObj.invoiceSchemaStatusValue = value;
+                            _showDatePicker();
+
+                            //_show(context);
                           });
                         },
-                        buttonHeight: height * 0.06,
-                        buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            SearchSaleProducts(),
-            SizedBox(
-              height: 15,
-            ),
-            IntrinsicHeight(
-              child: Container(
-                width: width,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kWhiteColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (widget.isSale == true)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomButton(
-                          title: Text(
-                            'Disount',
-                            style: TextStyle(color: kWhiteColor),
+                        headings(txt: 'Status:*'),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'Please Select',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: txtFieldHintColor,
+                                  ),
+                                )),
+                            items: allSalesCtrlObj.statusList().map((e) {
+                              return DropdownMenuItem(value: e, child: Text(e));
+                            }).toList(),
+                            value: allSalesCtrlObj.statusValue,
+                            dropdownDirection: DropdownDirection.textDirection,
+                            dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                            buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                            onChanged: (String? value) {
+                              setState(() {
+                                allSalesCtrlObj.statusValue = value;
+                              });
+                            },
+                            buttonHeight: height * 0.06,
+                            buttonWidth: width * 0.43,
+                            buttonDecoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1, color: primaryColor),
+                                borderRadius: BorderRadius.circular(15),
+                                color: kWhiteColor),
+                            itemHeight: 40,
+                            itemPadding: EdgeInsets.zero,
+                            itemHighlightColor: primaryColor,
                           ),
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                //title: title != null ? Text(title) : null,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 0),
-                                content: Discount(),
-                              ),
-                            );
+                        ),
+                      ],
+                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Invoice Schema:'),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                'Please Select',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: txtFieldHintColor,
+                                ),
+                              )),
+                          items: allSalesCtrlObj.invoiceSchemaList().map((e) {
+                            return DropdownMenuItem(value: e, child: Text(e));
+                          }).toList(),
+                          value: allSalesCtrlObj.invoiceSchemaStatusValue,
+                          dropdownDirection: DropdownDirection.textDirection,
+                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                          onChanged: (String? value) {
+                            setState(() {
+                              allSalesCtrlObj.invoiceSchemaStatusValue = value;
+                            });
                           },
+                          buttonHeight: height * 0.06,
+                          buttonWidth: width * 0.43,
+                          buttonDecoration: BoxDecoration(
+                              border: Border.all(width: 1, color: primaryColor),
+                              borderRadius: BorderRadius.circular(15),
+                              color: kWhiteColor),
+                          itemHeight: 40,
+                          itemPadding: EdgeInsets.zero,
+                          itemHighlightColor: primaryColor,
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        CustomButton(
-                          title: Text(
-                            'Sipping',
-                            style: TextStyle(color: kWhiteColor),
-                          ),
-                          onTap: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                //title: title != null ? Text(title) : null,
-                                contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 15, horizontal: 0),
-                                content: ShippingCharge(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  width: width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: kWhiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Search Products'),
+                      AppFormField(
+                        controller: allSalesCtrlObj.searchCtrl,
+                        labelText: 'Search products for stock',
+                      ),
+                      Container(
+                        height: 50,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        color: primaryColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Product Name',
+                                style: TextStyle(color: kWhiteColor),
                               ),
-                            );
-                          },
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'QTY',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Price',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Total',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                            )
+                          ],
                         ),
-                        if (widget.isSale == true)
-                          SizedBox(
-                            width: 5,
-                          ),
-                        if (widget.isSale == true)
+                      ),
+                      SearchSaleProducts(),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  width: width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: kWhiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           CustomButton(
                             title: Text(
-                              'Payments',
+                              'Discount',
                               style: TextStyle(color: kWhiteColor),
                             ),
                             onTap: () {
@@ -318,44 +339,87 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                   //title: title != null ? Text(title) : null,
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 15, horizontal: 0),
-                                  content: PaymentFields(),
+                                  content: Discount(),
                                 ),
                               );
                             },
                           ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomButton(
-                          title: Text(
-                            'Save',
-                            style: TextStyle(color: kWhiteColor),
+                          SizedBox(
+                            width: 5,
                           ),
-                          onTap: () {},
-                          bgColor: primaryColor,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        CustomButton(
-                          title: Text(
-                            'Save & Print',
-                            style: TextStyle(color: kWhiteColor),
+                          CustomButton(
+                            title: Text(
+                              'Shipping',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  //title: title != null ? Text(title) : null,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 0),
+                                  content: ShippingCharge(),
+                                ),
+                              );
+                            },
                           ),
-                          onTap: () {
-                            Get.back();
-                          },
-                          bgColor: primaryColor,
-                        )
-                      ],
-                    )
-                  ],
+                          if (widget.isSale == true)
+                            SizedBox(
+                              width: 5,
+                            ),
+                          if (widget.isSale == true)
+                            CustomButton(
+                              title: Text(
+                                'Checkout',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    //title: title != null ? Text(title) : null,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 15, horizontal: 0),
+                                    content: PaymentFields(),
+                                  ),
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomButton(
+                            title: Text(
+                              'Save',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {},
+                            bgColor: primaryColor,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomButton(
+                            title: Text(
+                              'Save & Print',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {
+                              Get.back();
+                            },
+                            bgColor: primaryColor,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

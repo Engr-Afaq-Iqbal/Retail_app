@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Config/utils.dart';
@@ -16,12 +17,12 @@ class Upload extends StatefulWidget {
 
 class _UploadState extends State<Upload> {
   File? image;
-  String frontPath = 'No file chosen';
+  String frontPath = 'no_file_choosen'.tr;
   Future pickContactImage() async {
     try {
       //final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+          await ImagePicker().pickImage(source: ImageSource.camera);
       int? fileSizeInBytes = await image?.length();
       double fileSizeInKB = fileSizeInBytes! / 1024;
       double fileSizeInMB = fileSizeInKB / 1024;
@@ -34,9 +35,9 @@ class _UploadState extends State<Upload> {
           this.image = imageTemporary;
         });
       } else if (fileSizeInMB > 1) {
-        return showToast("File size is greater than 1MB");
+        return showToast('file_size_isGreater'.tr);
       } else {
-        return showToast("No Image picked");
+        return showToast('no_image_picked'.tr);
       }
     } on PlatformException catch (ex) {
       print('Failed to pick Image: $ex');
@@ -47,7 +48,7 @@ class _UploadState extends State<Upload> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Upload'),
+        title: Text('upload'.tr),
       ),
       body: Container(
         padding: EdgeInsets.all(20),
@@ -55,7 +56,7 @@ class _UploadState extends State<Upload> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Selected Customer:',
+              'selected_customer'.tr + ':',
               style: appBarHeaderStyle,
             ),
             Text('Walk-in'),

@@ -21,17 +21,22 @@ class _ListQuotationsState extends State<ListQuotations> {
             child: Icon(Icons.add),
             backgroundColor: primaryColor.withOpacity(0.5),
             onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return Container(
-                    child: AddSalesAndQuotation(
-                      isSale: false,
-                    ),
-                  );
-                },
+              Get.to(
+                AddSalesAndQuotation(
+                  isSale: false,
+                ),
               );
+              // showModalBottomSheet(
+              //   isScrollControlled: true,
+              //   context: context,
+              //   builder: (context) {
+              //     return Container(
+              //       child: AddSalesAndQuotation(
+              //         isSale: false,
+              //       ),
+              //     );
+              //   },
+              // );
             }),
         body: ListView.builder(
             physics: AlwaysScrollableScrollPhysics(),

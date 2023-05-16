@@ -23,6 +23,11 @@ class StockTransferController extends GetxController {
   TextEditingController additionalNotes = TextEditingController();
   TextEditingController totalAmountRecCtrl = TextEditingController(text: '0');
   TextEditingController reasonCtrl = TextEditingController();
+  TextEditingController productNameCtrl = TextEditingController();
+  TextEditingController qtyCtrl = TextEditingController();
+  TextEditingController priceCtrl = TextEditingController();
+  TextEditingController totalCtrl = TextEditingController();
+  TextEditingController remarksCtrl = TextEditingController();
   int allSaleOrdersPage = 1;
   bool isFirstLoadRunning = true;
   bool hasNextPage = true;

@@ -1,9 +1,8 @@
 import 'dart:io';
 
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
+import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -23,7 +22,9 @@ import 'Controllers/Booking Controller/BookingController.dart';
 import 'Controllers/ListUserController/ListUserController.dart';
 import 'Controllers/Notifications/NotificationsController.dart';
 import 'Controllers/OrderController/order_type_controller.dart';
+import 'Controllers/ProductsRetailController/productsRetailsController.dart';
 import 'Controllers/ServiceStaffController/ServiceStaffController.dart';
+import 'Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import 'Controllers/Tax Controller/TaxController.dart';
 import 'Locale/Languages/translation.dart';
 import 'Locale/language_cubit.dart';
@@ -46,7 +47,7 @@ class MyHttpOverrides extends HttpOverrides {
 void main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  //await Firebase.initializeApp();
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   String currLang = sharedPreferences.getString("localeLanguage") ?? 'en';
   String currCountryCode =
@@ -55,24 +56,24 @@ void main() async {
   await GetStorage.init();
   initializeControllers();
   // NotificationServices.initialize();
-  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgoundHandler);
-  try {
-    socketService = SocketService();
-  } catch (_e) {
-    debugPrint('Error: main -> socket => $_e');
-  }
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgoundHandler);
+  // try {
+  //   socketService = SocketService();
+  // } catch (_e) {
+  //   debugPrint('Error: main -> socket => $_e');
+  // }
 
-  RemoteMessage? initialMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
-  if (initialMessage != null) {
-    print(initialMessage);
-    PushNotification notification = PushNotification(
-      title: initialMessage.notification?.title,
-      body: initialMessage.notification?.body,
-      dataTitle: initialMessage.data['title'],
-      dataBody: initialMessage.data['body'],
-    );
-  }
+  // RemoteMessage? initialMessage =
+  //     await FirebaseMessaging.instance.getInitialMessage();
+  // if (initialMessage != null) {
+  //   print(initialMessage);
+  //   PushNotification notification = PushNotification(
+  //     title: initialMessage.notification?.title,
+  //     body: initialMessage.notification?.body,
+  //     dataTitle: initialMessage.data['title'],
+  //     dataBody: initialMessage.data['body'],
+  //   );
+  // }
 
   runApp(
     Phoenix(
@@ -88,11 +89,11 @@ void main() async {
   );
 }
 
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgoundHandler(RemoteMessage message) async {
-  //await Firebase.initializeApp();
-  print("Handling a background message : ${message.messageId}");
-}
+// @pragma('vm:entry-point')
+// Future<void> firebaseMessagingBackgoundHandler(RemoteMessage message) async {
+//   //await Firebase.initializeApp();
+//   print("Handling a background message : ${message.messageId}");
+// }
 
 void initializeControllers() {
   Get.put(AuthController());
@@ -111,6 +112,9 @@ void initializeControllers() {
   Get.put(StockTransferController());
   Get.put(CustomerVisitsController());
   Get.put(AllSalesController());
+  Get.put(ProductsRetailController());
+  Get.put(SaleReturnController());
+  Get.put(StockAdjustmentController());
 }
 
 class BizModoEMenu extends StatefulWidget {

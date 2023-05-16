@@ -74,136 +74,194 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headings(txt: 'Stock Adjustment'),
-            Divider(),
-            SizedBox(
-              height: 10,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Date:*'),
-                    AppFormField(
-                      width: width * 0.43,
-                      readOnly: true,
-                      controller: stockTranCtrlObj.dateCtrl,
-                      labelText: 'Select Date',
-                      prefixIcon: Icon(Icons.calendar_month),
-                      onTap: () {
-                        setState(() {
-                          _showDatePicker();
-
-                          //_show(context);
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Adjustment Type:*'),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'Please Select',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items:
-                            stockTranCtrlObj.getAdjustmentTypeList().map((e) {
-                          return DropdownMenuItem(value: e, child: Text(e));
-                        }).toList(),
-                        value: statusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Create Stock Adjustment'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Date:*'),
+                      AppFormField(
+                        width: width * 0.43,
+                        readOnly: true,
+                        controller: stockTranCtrlObj.dateCtrl,
+                        labelText: 'Select Date',
+                        prefixIcon: Icon(Icons.calendar_month),
+                        onTap: () {
                           setState(() {
-                            statusValue = value;
+                            _showDatePicker();
+
+                            //_show(context);
                           });
                         },
-                        buttonHeight: height * 0.06,
-                        buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            SearchStockProducts(),
-            SizedBox(
-              height: 15,
-            ),
-            IntrinsicHeight(
-              child: Container(
-                width: width,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kWhiteColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(txt: 'Total amount recovered:'),
-                    AppFormField(
-                      controller: stockTranCtrlObj.totalAmountRecCtrl,
-                    ),
-                    headings(txt: 'Reason:'),
-                    AppFormField(
-                      controller: stockTranCtrlObj.reasonCtrl,
-                      labelText: 'Reason',
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Adjustment Type:*'),
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                'Please Select',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                  color: txtFieldHintColor,
+                                ),
+                              )),
+                          items:
+                              stockTranCtrlObj.getAdjustmentTypeList().map((e) {
+                            return DropdownMenuItem(value: e, child: Text(e));
+                          }).toList(),
+                          value: statusValue,
+                          dropdownDirection: DropdownDirection.textDirection,
+                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                          onChanged: (String? value) {
+                            setState(() {
+                              statusValue = value;
+                            });
+                          },
+                          buttonHeight: height * 0.06,
+                          buttonWidth: width * 0.43,
+                          buttonDecoration: BoxDecoration(
+                              border: Border.all(width: 1, color: primaryColor),
+                              borderRadius: BorderRadius.circular(15),
+                              color: kWhiteColor),
+                          itemHeight: 40,
+                          itemPadding: EdgeInsets.zero,
+                          itemHighlightColor: primaryColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  width: width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: kWhiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Search Products'),
+                      AppFormField(
+                        controller: stockTranCtrlObj.additionalNotes,
+                        labelText: 'Search products for stock',
+                      ),
+                      Container(
+                        height: 50,
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        color: primaryColor,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CustomButton(
-                              title: Text(
-                                'Save',
+                            Expanded(
+                              flex: 3,
+                              child: Text(
+                                'Product Name',
                                 style: TextStyle(color: kWhiteColor),
                               ),
-                              onTap: () {},
-                              bgColor: primaryColor,
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'QTY',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Price',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Text(
+                                'Total',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
                             )
                           ],
-                        )
-                      ],
-                    )
-                  ],
+                        ),
+                      ),
+                      SearchStockProducts(),
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                height: 15,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  width: width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: kWhiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      headings(txt: 'Total amount recovered:'),
+                      AppFormField(
+                        controller: stockTranCtrlObj.totalAmountRecCtrl,
+                      ),
+                      headings(txt: 'Reason:'),
+                      AppFormField(
+                        controller: stockTranCtrlObj.reasonCtrl,
+                        labelText: 'Reason',
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              CustomButton(
+                                title: Text(
+                                  'Save',
+                                  style: TextStyle(color: kWhiteColor),
+                                ),
+                                onTap: () {},
+                                bgColor: primaryColor,
+                              )
+                            ],
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

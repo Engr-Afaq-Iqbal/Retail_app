@@ -57,6 +57,21 @@ class ContactController extends GetxController {
     });
   }
 
+  Future<ContactModel?> fetchCustomerList(int? per_page) async {
+    return await ApiServices.getMethod(
+      feedUrl: '${ApiUrls.contactApi}?type=customer&per_page=$per_page',
+    ).then((_res) {
+      if (_res == null) return null;
+      customerContacts = contactModelFromJson(_res);
+      update();
+      return customerContacts;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      debugPrint('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
   // fetch all sale orders list
   Future<bool?> fetchCustomerName(int _page) async {
     print('========================================');

@@ -5,6 +5,9 @@ import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
 import '../../Components/counter_with_add_remove_button.dart';
+import '../../Config/const.dart';
+import '../Orders/Components/AmountInfo.dart';
+import '../Orders/Components/CustomerInfo.dart';
 
 class ReturnTile extends StatefulWidget {
   ReturnTile({
@@ -46,7 +49,7 @@ class _ReturnTileState extends State<ReturnTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    'Brand: ',
+                    'Due',
                     style: Theme.of(context).textTheme.caption!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
@@ -55,18 +58,6 @@ class _ReturnTileState extends State<ReturnTile> {
                         //         null
                         //     ? Colors.white
                         //     : Colors.black,
-                        ),
-                  ),
-                  Text(
-                    'Rita',
-                    style: Theme.of(context).textTheme.caption!.copyWith(
-                          fontSize: 11.7,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xffffa025),
-                          // viewStocksModel?.transactionDate !=
-                          //         null
-                          //     ? Colors.white
-                          //     : Colors.black,
                         ),
                   ),
                 ],
@@ -85,78 +76,73 @@ class _ReturnTileState extends State<ReturnTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Rita Red - 240ML',
+                        text1: 'Invoice No. CN2023/0006',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headline4!
                             .copyWith(fontSize: 14),
                       ),
-                      CounterWithAddRemoveButton(
-                        removeTabFun: () {
-                          if (quantity > 0) {
-                            setState(() {
-                              quantity = quantity - 1;
-                              print(quantity);
-                            });
-                            // prodCartCtrlObj.removeItemQuantity(product);
-                          } else if (quantity == 1) {
-                            //prodCartCtrlObj.deleteFromCart(product);
-                          }
-                        },
-                        counter: '${quantity}',
-                        addTabFun: () {
-                          setState(() {
-                            quantity = quantity + 1;
-                            print(quantity);
-                          });
-
-                          // if (quantity != 0) {
-                          //   // prodCartCtrlObj.addItemQuantity(product);
-                          // }
-                        },
+                      // CounterWithAddRemoveButton(
+                      //   removeTabFun: () {
+                      //     if (quantity > 0) {
+                      //       setState(() {
+                      //         quantity = quantity - 1;
+                      //         print(quantity);
+                      //       });
+                      //       // prodCartCtrlObj.removeItemQuantity(product);
+                      //     } else if (quantity == 1) {
+                      //       //prodCartCtrlObj.deleteFromCart(product);
+                      //     }
+                      //   },
+                      //   counter: '${quantity}',
+                      //   addTabFun: () {
+                      //     setState(() {
+                      //       quantity = quantity + 1;
+                      //       print(quantity);
+                      //     });
+                      //
+                      //     // if (quantity != 0) {
+                      //     //   // prodCartCtrlObj.addItemQuantity(product);
+                      //     // }
+                      //   },
+                      // ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      orderInfoRow(
+                        context,
+                        text1: 'Parent Sale: INV88157',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(fontSize: 12),
                       ),
                     ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      CustomerInfo('Walkin', DateTime.now()),
+                      //if (pastOrder.totalAmountRecovered != null)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 5,
                   ),
                   Row(
                     // mainAxisAlignment:
                     //     MainAxisAlignment.spaceBetween,
                     children: [
-                      orderInfoRow(
-                        context,
-                        text1: 'Unit: ',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 12),
-                        text2: 'PCS',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
+                      AmountInfo(
+                        amount: '3.68',
+                        status: 'Total Amount',
                       ),
-                    ],
-                  ),
-                  Divider(color: Theme.of(context).cardColor, thickness: 1.0),
-                  Row(
-                    children: [
-                      orderInfoRow(
-                        context,
-                        text1: 'Reason: ',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 12),
-                        text2: 'None',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      AmountInfo(
+                        amount: (double.parse('${0}') - double.parse('${0}'))
+                            .toString(),
+                        status: 'due'.tr,
                       ),
                     ],
                   ),

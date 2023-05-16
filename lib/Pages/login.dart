@@ -21,7 +21,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final AuthController authCtrl = Get.find<AuthController>();
-  NotificationServices notificationServices = NotificationServices();
+  //NotificationServices notificationServices = NotificationServices();
 
   final formKey = GlobalKey<FormState>();
 
@@ -139,21 +139,21 @@ class _LoginPageState extends State<LoginPage> {
 
                           socketService!.emitUser();
 
-                          notificationServices.requestNotificationPermission();
-                          notificationServices.firebaseInit();
-                          notificationServices
-                              .getDeviceToken()
-                              .then((value) async {
-                            print('Token Value');
-                            print(value);
-                            authCtrl.token = value;
-                            bool? tokenStoring =
-                                await authCtrl.sendTokenToServer();
-                            if (!tokenStoring!) {
-                              stopProgress();
-                              return;
-                            }
-                          });
+                          // notificationServices.requestNotificationPermission();
+                          // notificationServices.firebaseInit();
+                          // notificationServices
+                          //     .getDeviceToken()
+                          //     .then((value) async {
+                          //   print('Token Value');
+                          //   print(value);
+                          //   authCtrl.token = value;
+                          //   bool? tokenStoring =
+                          //       await authCtrl.sendTokenToServer();
+                          //   if (!tokenStoring!) {
+                          //     stopProgress();
+                          //     return;
+                          //   }
+                          // });
 
                           // Get.offAll(OrderTypeSelection());
                           Get.offAll(TabsPage());

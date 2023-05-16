@@ -4,6 +4,9 @@ import 'package:get/get.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Config/const.dart';
+import '../Orders/Components/AmountInfo.dart';
+import '../Orders/Components/CustomerInfo.dart';
 
 class ReceiptsTile extends StatefulWidget {
   ReceiptsTile({
@@ -45,7 +48,7 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    AppFormat.dateYYMMDD(DateTime.now()) ?? '',
+                    'Paid',
                     style: Theme.of(context).textTheme.caption!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
@@ -72,7 +75,7 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: '1122235665432345',
+                        text1: 'INV88789',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headline4!
@@ -89,6 +92,36 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                             });
                           },
                         ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomerInfo('Walkin', DateTime.now()),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      orderInfoRow(
+                        context,
+                        text1: 'Doc No.: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(fontSize: 14),
+                        text2: '1122235665432345',
+                        text2Style:
+                            Theme.of(context).textTheme.headline4!.copyWith(
+                                  color: Color(0xffffa025),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                  letterSpacing: 0.06,
+                                ),
                       ),
                     ],
                   ),
@@ -112,26 +145,10 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                                   letterSpacing: 0.06,
                                 ),
                       ),
-                    ],
-                  ),
-                  Divider(color: Theme.of(context).cardColor, thickness: 1.0),
-                  Row(
-                    children: [
-                      orderInfoRow(
-                        context,
-                        text1: 'Amount: ',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 12),
-                        text2: '543',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      AmountInfo(
+                        amount: '543',
+                        status: 'Amount',
                       ),
                     ],
                   ),

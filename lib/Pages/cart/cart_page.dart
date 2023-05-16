@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '/Components/custom_circular_button.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
-import '/Pages/home_page.dart';
+import '../ProductsPage/home_page.dart';
 import '/Theme/style.dart';
 import '../../Controllers/TableSelectionController/table_management_controller.dart';
 import '../../Controllers/Tax Controller/TaxController.dart';

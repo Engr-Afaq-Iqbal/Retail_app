@@ -1,4 +1,5 @@
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
+import '../../../Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import '../../../Pages/Stocks/ViewStockAdjustment/viewStockAdjustmentTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,13 +18,13 @@ class ViewStockAdjustment extends StatefulWidget {
 }
 
 class _ViewStockAdjustmentState extends State<ViewStockAdjustment> {
-  StockTransferController stockTranCtrlObj =
-      Get.find<StockTransferController>();
+  StockAdjustmentController stockAdjustmentCtrlObj =
+      Get.find<StockAdjustmentController>();
 
   @override
   void initState() {
     // TODO: implement initState
-    stockTranCtrlObj.fetchStockTransfersList();
+    stockAdjustmentCtrlObj.fetchStockAdjustmentList();
     super.initState();
   }
 
@@ -37,34 +38,32 @@ class _ViewStockAdjustmentState extends State<ViewStockAdjustment> {
             child: Icon(Icons.add),
             backgroundColor: primaryColor.withOpacity(0.5),
             onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return Container(
-                    child: CreateStockAdjustment(),
-                  );
-                },
-              );
+              Get.to(CreateStockAdjustment());
             }),
-        body: GetBuilder<StockTransferController>(
-            builder: (StockTransferController stockTransferCtrlObj) {
-          return (stockTransferCtrlObj.viewStockTransferMoodel?.data == null)
-              ? progressIndicator()
-              : ListView.builder(
+        body: GetBuilder<StockAdjustmentController>(
+            builder: (StockAdjustmentController stockAdjustmentCtrlObj) {
+          if (stockAdjustmentCtrlObj.viewStockAdjustmentModel != null) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await stockAdjustmentCtrlObj.fetchStockAdjustmentList();
+              },
+              child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(bottom: 100),
-                  itemCount: stockTransferCtrlObj
-                          .viewStockTransferMoodel?.data.length ??
+                  itemCount: stockAdjustmentCtrlObj
+                          .viewStockAdjustmentModel?.data.length ??
                       0,
                   itemBuilder: (context, index) {
                     return IntrinsicHeight(
                       child: ViwStockAdjustmentTile(
                         index: index,
-                        stockTransferCtrlObj: stockTransferCtrlObj,
+                        stockAdjustmentCtrlObj: stockAdjustmentCtrlObj,
                       ),
                     );
-                  });
+                  }),
+            );
+          } else
+            return progressIndicator();
         }));
   }
 }

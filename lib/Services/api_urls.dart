@@ -62,4 +62,16 @@ class ApiUrls {
 
   ///View Stock Transfer Api
   static String viewStockTransfer = "connector/api/stock-transfer";
+
+  ///View Stock Transfer Api
+  static String viewStockAdjustment = "connector/api/stock-adjustment";
+
+  ///Customer Visits List
+  static String viewCustomerVisits = "connector/api/visit";
+
+  ///Create Customer Visits
+  static String createCustomerVisits = "connector/api/visit/store";
+
+  ///Delete Customer Visits
+  static String deleteCustomerVisits = "connector/api/visit/destroy/";
 }

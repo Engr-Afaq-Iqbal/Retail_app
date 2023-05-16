@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '/Config/enums.dart';
 import '/Config/utils.dart';
 import '/Models/TableManagementModel/table_management_model.dart';
-import '/Pages/home_page.dart';
+import '../../Pages/ProductsPage/home_page.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
 import '/Services/storage_services.dart';

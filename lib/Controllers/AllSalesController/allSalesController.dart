@@ -19,6 +19,11 @@ class AllSalesController extends GetxController {
   String? paymentAccountStatusValue;
   TextEditingController searchCtrl = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
+  TextEditingController productNameCtrl = TextEditingController();
+  TextEditingController qtyCtrl = TextEditingController();
+  TextEditingController priceCtrl = TextEditingController();
+  TextEditingController totalCtrl = TextEditingController();
+  TextEditingController remarksCtrl = TextEditingController();
 
   static List<NavBarModel> stockTabsList() => [
         NavBarModel(

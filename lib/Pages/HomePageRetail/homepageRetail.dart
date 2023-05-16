@@ -13,7 +13,7 @@ import '../Return/return.dart';
 import '../SalesView/SalesTabPage.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
-import '../home_page.dart';
+import '../ProductsPage/home_page.dart';
 import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {
@@ -81,8 +81,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
                 physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4, // number of columns
-                  mainAxisSpacing: 5.0, // space between rows
-                  crossAxisSpacing: 5.0, // space between columns
+                  mainAxisSpacing: 2.0, // space between rows
+                  crossAxisSpacing: 0.0, // space between columns
                   childAspectRatio: 1.0, // width/height ratio of items
                 ),
                 itemCount: iconList.length,
@@ -125,11 +125,13 @@ class _HomePageRetailState extends State<HomePageRetail> {
                             }
                           },
                         ),
-                        Text(
-                          iconsNames[index],
-                          style: TextStyle(color: blackColor, fontSize: 9),
-                          softWrap: true,
-                          textAlign: TextAlign.center,
+                        Expanded(
+                          child: Text(
+                            iconsNames[index],
+                            style: TextStyle(color: blackColor, fontSize: 11),
+                            softWrap: true,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),

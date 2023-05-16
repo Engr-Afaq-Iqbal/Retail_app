@@ -1,6 +1,6 @@
 import 'package:bizmodo_emenu/Pages/Booking/searchCustomer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
@@ -28,9 +28,9 @@ class BottomWidget extends StatefulWidget {
   _BottomWidgetState createState() => _BottomWidgetState();
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("Handling a background message codewaa: ${message.messageId}");
-}
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   print("Handling a background message codewaa: ${message.messageId}");
+// }
 
 class _BottomWidgetState extends State<BottomWidget> {
   int forIndex = 0;

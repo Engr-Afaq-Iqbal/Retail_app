@@ -30,6 +30,7 @@ class AppFormField extends StatefulWidget {
   final int? maxLength;
   final double? width;
   final bool fontWeight;
+  final Color? isColor;
 
   const AppFormField(
       {Key? key,
@@ -58,6 +59,7 @@ class AppFormField extends StatefulWidget {
       this.onEditingComp,
       this.maxLength,
       this.width,
+      this.isColor,
       this.fontWeight = true})
       : super(key: key);
   @override
@@ -93,6 +95,7 @@ class _AppFormFieldState extends State<AppFormField> {
             fontWeight: FontWeight.w400,
             color: txtFieldHintColor,
           ),
+          fillColor: widget.isColor != null ? widget.isColor : kWhiteColor,
           prefixIcon: (widget.prefixIcon != null)
               ? widget.prefixIcon
               : (widget.icon != null)

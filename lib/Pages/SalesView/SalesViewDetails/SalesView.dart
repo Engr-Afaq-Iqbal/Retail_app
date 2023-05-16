@@ -21,17 +21,22 @@ class _SalesViewState extends State<SalesView> {
             child: Icon(Icons.add),
             backgroundColor: primaryColor.withOpacity(0.5),
             onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return Container(
-                    child: AddSalesAndQuotation(
-                      isSale: true,
-                    ),
-                  );
-                },
+              Get.to(
+                AddSalesAndQuotation(
+                  isSale: true,
+                ),
               );
+              // showModalBottomSheet(
+              //   isScrollControlled: true,
+              //   context: context,
+              //   builder: (context) {
+              //     return Container(
+              //       child: AddSalesAndQuotation(
+              //         isSale: true,
+              //       ),
+              //     );
+              //   },
+              // );
             }),
         // appBar: AppBar(
         //   title: Text('Sales'),

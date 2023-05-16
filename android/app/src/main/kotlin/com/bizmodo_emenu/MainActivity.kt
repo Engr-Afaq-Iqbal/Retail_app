@@ -1,4 +1,4 @@
-package com.bizmodo_emenu
+package com.bizmodo_retail
 
 import io.flutter.embedding.android.FlutterActivity
 

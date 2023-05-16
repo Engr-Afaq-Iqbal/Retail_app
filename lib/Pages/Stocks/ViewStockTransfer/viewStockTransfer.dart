@@ -1,4 +1,3 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import '../../../Pages/Stocks/ViewStockTransfer/viewStockTransferTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,21 +33,16 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
             child: Icon(Icons.add),
             backgroundColor: primaryColor.withOpacity(0.5),
             onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (context) {
-                  return Container(
-                    child: CreateStockTransfer(),
-                  );
-                },
-              );
+              Get.to(CreateStockTransfer());
             }),
         body: GetBuilder<StockTransferController>(
             builder: (StockTransferController stockTransferCtrlObj) {
-          return (stockTransferCtrlObj.viewStockTransferMoodel?.data == null)
-              ? progressIndicator()
-              : ListView.builder(
+          if (stockTransferCtrlObj.viewStockTransferMoodel != null) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await stockTranCtrlObj.fetchStockTransfersList();
+              },
+              child: ListView.builder(
                   physics: AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(bottom: 100),
                   itemCount: stockTransferCtrlObj
@@ -61,7 +55,10 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
                         stockTransferCtrlObj: stockTransferCtrlObj,
                       ),
                     );
-                  });
+                  }),
+            );
+          } else
+            return progressIndicator();
         }));
   }
 }

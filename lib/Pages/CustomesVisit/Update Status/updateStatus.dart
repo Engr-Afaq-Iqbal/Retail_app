@@ -52,203 +52,203 @@ class _UpdateStatusState extends State<UpdateStatus> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headings(txt: 'Update Status (#2022/0001)'),
-            Divider(),
-            SizedBox(
-              height: 10,
-            ),
-            headings(txt: 'Did you meet with the contact?'),
-            GetBuilder<CustomerVisitsController>(
-                builder: (CustomerVisitsController customerVisitsCtrlObj) {
-              return Row(
-                children: [
-                  Expanded(
-                    // height: 20,
-                    // width: M,
-                    child: CheckboxListTile(
-                        value: customerVisitsCtrlObj.meetYes,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            customerVisitsCtrlObj.meetYes = value!;
-                            customerVisitsCtrlObj.meetNo = false;
-                            customerVisitsCtrlObj.update();
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(
-                          'Yes',
-                          style: TextStyle(color: blackColor),
-                        )),
-                  ),
-                  Expanded(
-                    // height: 20,
-                    // width: 20,
-                    child: CheckboxListTile(
-                        value: customerVisitsCtrlObj.meetNo,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            customerVisitsCtrlObj.meetNo = value!;
-                            customerVisitsCtrlObj.meetYes = false;
-                            customerVisitsCtrlObj.update();
-                          });
-                        },
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(
-                          'No',
-                          style: TextStyle(color: blackColor),
-                        )),
-                  ),
-                ],
-              );
-            }),
-            if (custVisitsCtrlObj.meetNo == true)
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Update Status (#2022/0001)'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              headings(txt: 'Did you meet with the contact?'),
+              GetBuilder<CustomerVisitsController>(
+                  builder: (CustomerVisitsController customerVisitsCtrlObj) {
+                return Row(
+                  children: [
+                    Expanded(
+                      // height: 20,
+                      // width: M,
+                      child: CheckboxListTile(
+                          value: customerVisitsCtrlObj.meetYes,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              customerVisitsCtrlObj.meetYes = value!;
+                              customerVisitsCtrlObj.meetNo = false;
+                              customerVisitsCtrlObj.update();
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Text(
+                            'Yes',
+                            style: TextStyle(color: blackColor),
+                          )),
+                    ),
+                    Expanded(
+                      // height: 20,
+                      // width: 20,
+                      child: CheckboxListTile(
+                          value: customerVisitsCtrlObj.meetNo,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              customerVisitsCtrlObj.meetNo = value!;
+                              customerVisitsCtrlObj.meetYes = false;
+                              customerVisitsCtrlObj.update();
+                            });
+                          },
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Text(
+                            'No',
+                            style: TextStyle(color: blackColor),
+                          )),
+                    ),
+                  ],
+                );
+              }),
+              if (custVisitsCtrlObj.meetNo == true)
+                Row(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        headings(txt: 'Reason:'),
+                        AppFormField(
+                          width: width * 0.885,
+                          controller: custVisitsCtrlObj.meetNoReason,
+                          labelText: 'Please Select',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              //if (custVisitsCtrlObj.valueSecond == true)
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      headings(txt: 'Reason:'),
-                      AppFormField(
-                        width: width * 0.885,
-                        controller: custVisitsCtrlObj.meetNoReason,
-                        labelText: 'Please Select',
+                      headings(
+                          txt: 'Take photo of the contact or visited place:*'),
+                      Row(
+                        children: [
+                          CustomButton(
+                            title: Text(
+                              'Choose File',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            height: 20,
+                            borderRadius: 5,
+                            onTap: () {
+                              pickContactImage();
+                            },
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            frontPath,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            //if (custVisitsCtrlObj.valueSecond == true)
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    headings(
-                        txt: 'Take photo of the contact or visited place:*'),
-                    Row(
-                      children: [
-                        CustomButton(
-                          title: Text(
-                            'Choose File',
-                            style: TextStyle(color: kWhiteColor),
-                          ),
-                          height: 20,
-                          borderRadius: 5,
-                          onTap: () {
-                            pickContactImage();
-                          },
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          frontPath,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                headings(txt: 'Visited On:'),
-                SizedBox(
-                  width: 5,
-                ),
-                Text('05/11/2023 08:21')
-              ],
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            MeetDetailsView(),
-            SizedBox(
-              height: 15,
-            ),
-            IntrinsicHeight(
-              child: Container(
-                width: width,
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: kWhiteColor,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        headings(txt: 'Visited address:'),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        CustomButton(
-                          title: Text(
-                            'Get current location',
-                            style: TextStyle(color: kWhiteColor),
-                          ),
-                          height: 20,
-                          borderRadius: 5,
-                          onTap: () {},
-                        )
-                      ],
-                    ),
-                    Text('Southwest 17th Way, Christian Gardens'),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    headings(txt: 'Discussions with the contact:'),
-                    AppFormField(
-                      controller: custVisitsCtrlObj.discussionCtrl,
-                      labelText: '',
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        CustomButton(
-                          title: Text(
-                            'Update',
-                            style: TextStyle(color: kWhiteColor),
-                          ),
-                          onTap: () {},
-                          bgColor: primaryColor,
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        CustomButton(
-                          title: Text(
-                            'Close',
-                            style: TextStyle(color: kWhiteColor),
-                          ),
-                          onTap: () {
-                            Get.back();
-                          },
-                          bgColor: buttonColor,
-                        )
-                      ],
-                    )
-                  ],
-                ),
+              SizedBox(
+                height: 15,
               ),
-            )
-          ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  headings(txt: 'Visited On:'),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text('05/11/2023 08:21')
+                ],
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              MeetDetailsView(),
+              SizedBox(
+                height: 15,
+              ),
+              IntrinsicHeight(
+                child: Container(
+                  width: width,
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: kWhiteColor,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          headings(txt: 'Visited address:'),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomButton(
+                            title: Text(
+                              'Get current location',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            height: 20,
+                            borderRadius: 5,
+                            onTap: () {},
+                          )
+                        ],
+                      ),
+                      Text('Southwest 17th Way, Christian Gardens'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      headings(txt: 'Discussions with the contact:'),
+                      AppFormField(
+                        controller: custVisitsCtrlObj.discussionCtrl,
+                        labelText: '',
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CustomButton(
+                            title: Text(
+                              'Update',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {},
+                            bgColor: primaryColor,
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          CustomButton(
+                            title: Text(
+                              'Close',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            onTap: () {
+                              Get.back();
+                            },
+                            bgColor: buttonColor,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

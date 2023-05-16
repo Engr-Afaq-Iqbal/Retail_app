@@ -354,6 +354,11 @@ Map<String, String> english() {
     'unit_price': 'Unit Price',
     'sub_total_after_discount': 'Sub Total After Discount',
     'Delivery': 'Delivery',
-    'persons': 'Persons'
+    'persons': 'Persons',
+    'no_file_choosen': 'No file chosen',
+    'file_size_isGreater': 'File size is greater than 1MB',
+    'no_image_picked': 'No Image picked',
+    'upload': 'Upload',
+    'selected_customer': 'Selected Customer',
   };
 }

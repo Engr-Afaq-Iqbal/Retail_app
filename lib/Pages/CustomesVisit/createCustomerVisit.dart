@@ -1,5 +1,8 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:bizmodo_emenu/Config/utils.dart';
+import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
+import 'package:bizmodo_emenu/Controllers/ListUserController/ListUserController.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +25,8 @@ class CreateCustomerVisits extends StatefulWidget {
 class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
   CustomerVisitsController customerVisitsCtrlObj =
       Get.find<CustomerVisitsController>();
+  ListUserController listUserCtrl = Get.find<ListUserController>();
+  ContactController contactCtrl = Get.find<ContactController>();
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -68,6 +73,14 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    listUserCtrl.fetchListUsers();
+    contactCtrl.fetchCustomerList(30);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -96,6 +109,9 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                           setState(() {
                             creatsVisitsCtrlObj.valuefirst = value!;
                             creatsVisitsCtrlObj.valueSecond = false;
+                            creatsVisitsCtrlObj.contactStatusValue = null;
+                            creatsVisitsCtrlObj.companyCtrl.clear();
+                            creatsVisitsCtrlObj.visitAddressCtrl.clear();
                             creatsVisitsCtrlObj.update();
                           });
                         },
@@ -114,6 +130,9 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                           setState(() {
                             creatsVisitsCtrlObj.valueSecond = value!;
                             creatsVisitsCtrlObj.valuefirst = false;
+                            creatsVisitsCtrlObj.contactStatusValue = null;
+                            creatsVisitsCtrlObj.companyCtrl.clear();
+                            creatsVisitsCtrlObj.visitAddressCtrl.clear();
                             creatsVisitsCtrlObj.update();
                           });
                         },
@@ -133,11 +152,57 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       headings(txt: 'Contact:'),
-                      AppFormField(
-                        width: width * 0.885,
-                        controller: customerVisitsCtrlObj.contactCtrl,
-                        labelText: 'Please Select',
-                      ),
+                      GetBuilder<ContactController>(
+                          builder: (ContactController contactCtrll) {
+                        if (contactCtrll.customerContacts != null)
+                          return DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Align(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Text(
+                                    'Please Select',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: txtFieldHintColor,
+                                    ),
+                                  )),
+                              items: customerVisitsCtrlObj
+                                  .contactList(contactCtrl)
+                                  .map((e) {
+                                return DropdownMenuItem(
+                                    value: e, child: Text(e));
+                              }).toList(),
+                              value: customerVisitsCtrlObj.contactStatusValue,
+                              dropdownDirection:
+                                  DropdownDirection.textDirection,
+                              dropdownMaxHeight: height * 0.4,
+                              dropdownPadding:
+                                  EdgeInsets.only(left: 5, right: 5),
+                              buttonPadding:
+                                  EdgeInsets.only(left: 15, right: 15),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  customerVisitsCtrlObj.contactStatusValue =
+                                      value;
+                                });
+                              },
+                              buttonHeight: height * 0.06,
+                              buttonWidth: width * 0.885,
+                              buttonDecoration: BoxDecoration(
+                                  border:
+                                      Border.all(width: 1, color: primaryColor),
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: kWhiteColor),
+                              itemHeight: 40,
+                              itemPadding: EdgeInsets.zero,
+                              itemHighlightColor: primaryColor,
+                            ),
+                          );
+                        else
+                          return progressIndicator();
+                      }),
                     ],
                   ),
                 ],
@@ -153,7 +218,6 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                       headings(txt: 'Person/Company:'),
                       AppFormField(
                         width: width * 0.43,
-                        readOnly: true,
                         controller: customerVisitsCtrlObj.companyCtrl,
                         labelText: '',
                       ),
@@ -165,7 +229,6 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                       headings(txt: 'Visit Address:'),
                       AppFormField(
                         width: width * 0.43,
-                        readOnly: true,
                         controller: customerVisitsCtrlObj.visitAddressCtrl,
                         labelText: '',
                       ),
@@ -173,6 +236,9 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                   ),
                 ],
               ),
+            SizedBox(
+              height: 15,
+            ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -201,42 +267,57 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     headings(txt: 'Assigned To:*'),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'Please Select',
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items: customerVisitsCtrlObj.assignedToList().map((e) {
-                          return DropdownMenuItem(value: e, child: Text(e));
-                        }).toList(),
-                        value: customerVisitsCtrlObj.statusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
-                          setState(() {
-                            customerVisitsCtrlObj.statusValue = value;
-                          });
-                        },
-                        buttonHeight: height * 0.06,
-                        buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
-                      ),
-                    ),
+                    GetBuilder<ListUserController>(
+                        builder: (ListUserController listUserCtrll) {
+                      if (listUserCtrll.listuserModel != null)
+                        return DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'Please Select',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: txtFieldHintColor,
+                                  ),
+                                )),
+                            items: customerVisitsCtrlObj
+                                .assignedToList(listUserCtrll)
+                                .map((e) {
+                              return DropdownMenuItem(
+                                  value: e,
+                                  child: Text(
+                                    e,
+                                    style: TextStyle(fontSize: 14),
+                                  ));
+                            }).toList(),
+                            value: customerVisitsCtrlObj.statusValue,
+                            dropdownDirection: DropdownDirection.textDirection,
+                            dropdownMaxHeight: height * 0.2,
+                            dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                            buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                            onChanged: (String? value) {
+                              setState(() {
+                                customerVisitsCtrlObj.statusValue = value;
+                              });
+                            },
+                            buttonHeight: height * 0.06,
+                            buttonWidth: width * 0.43,
+                            buttonDecoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1, color: primaryColor),
+                                borderRadius: BorderRadius.circular(15),
+                                color: kWhiteColor),
+                            itemHeight: 40,
+                            itemPadding: EdgeInsets.zero,
+                            itemHighlightColor: primaryColor,
+                          ),
+                        );
+                      else
+                        return progressIndicator();
+                    }),
                   ],
                 ),
               ],
@@ -257,42 +338,35 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                   children: [
                     headings(txt: 'Purpose of visiting:'),
                     AppFormField(
-                      controller: customerVisitsCtrlObj.additionalNotes,
+                      controller: customerVisitsCtrlObj.purposeOfVisitingCtrl,
                       labelText: '',
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            headings(txt: 'Total Amount: 0.00'),
-                            Row(
-                              children: [
-                                CustomButton(
-                                  title: Text(
-                                    'Save',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                  onTap: () {},
-                                  bgColor: primaryColor,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                CustomButton(
-                                  title: Text(
-                                    'Close',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                  onTap: () {
-                                    Get.back();
-                                  },
-                                  bgColor: buttonColor,
-                                )
-                              ],
-                            ),
-                          ],
+                        CustomButton(
+                          title: Text(
+                            'Save',
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                          onTap: () {
+                            showProgress();
+                            customerVisitsCtrlObj.createCustomerVisits();
+                          },
+                          bgColor: primaryColor,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        CustomButton(
+                          title: Text(
+                            'Close',
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                          onTap: () {
+                            Get.back();
+                          },
+                          bgColor: buttonColor,
                         )
                       ],
                     )

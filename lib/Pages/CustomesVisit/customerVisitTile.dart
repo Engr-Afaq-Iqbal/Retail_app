@@ -1,14 +1,21 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
+import '../../Theme/style.dart';
 import 'Update Status/updateStatus.dart';
 import 'createCustomerVisit.dart';
 
 class CustomerVisitTile extends StatefulWidget {
-  CustomerVisitTile({Key? key, required}) : super(key: key);
+  int index;
+  CustomerVisitsController customerVisitsCtrlObj;
+  CustomerVisitTile(
+      {Key? key, required this.index, required this.customerVisitsCtrlObj})
+      : super(key: key);
 
   @override
   State<CustomerVisitTile> createState() => _CustomerVisitTileState();
@@ -44,7 +51,9 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    'Met with customer',
+                    widget.customerVisitsCtrlObj.customerVisitsListModel
+                            ?.data[widget.index].status.capitalizeFirst ??
+                        '',
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
@@ -71,7 +80,8 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Visit ID: 2022/0001',
+                        text1:
+                            'Visit ID: ${widget.customerVisitsCtrlObj.customerVisitsListModel?.data[widget.index].id ?? ''}',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -88,7 +98,12 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 11.7),
-                        text2: '2022-12-29 21:48:14',
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .visitedOn ??
+                            '- -',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -111,7 +126,13 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 11.7),
-                        text2: 'Jay',
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .contactId
+                                .toString() ??
+                            '',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -155,7 +176,12 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 12),
-                        text2: 'Southwest 17th Way, Christian Gardens',
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .visitingAddress ??
+                            '',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -209,7 +235,19 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                         title: Text(
                           '',
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          AppStyles.deleteConfirmationDialog(confirmBtnAct: () {
+                            widget.customerVisitsCtrlObj
+                                .deleteCustomerVisitsList(
+                                    id: widget
+                                        .customerVisitsCtrlObj
+                                        .customerVisitsListModel
+                                        ?.data[widget.index]
+                                        .id
+                                        .toString());
+                            widget.customerVisitsCtrlObj.update();
+                          });
+                        },
                         bgColor: buttonColor,
                       ),
                       SizedBox(
@@ -225,19 +263,7 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                           '',
                         ),
                         onTap: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            context: context,
-                            builder: (context) {
-                              return GetBuilder<StockTransferController>(
-                                  builder: (StockTransferController
-                                      stockTransferCtrlObj) {
-                                return Container(
-                                  child: UpdateStatus(),
-                                );
-                              });
-                            },
-                          );
+                          Get.to(UpdateStatus());
                         },
                         bgColor: orangeColor.withOpacity(0.9),
                       ),

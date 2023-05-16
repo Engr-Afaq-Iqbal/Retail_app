@@ -1,15 +1,16 @@
+import 'package:bizmodo_emenu/Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Config/DateTimeFormat.dart';
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../../Config/const.dart';
 import '../../../Theme/colors.dart';
 
 class ViwStockAdjustmentTile extends StatefulWidget {
-  StockTransferController stockTransferCtrlObj;
+  StockAdjustmentController stockAdjustmentCtrlObj;
   int index;
   ViwStockAdjustmentTile(
-      {Key? key, required this.stockTransferCtrlObj, required this.index})
+      {Key? key, required this.stockAdjustmentCtrlObj, required this.index})
       : super(key: key);
 
   @override
@@ -20,7 +21,6 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //  height: 100,
       decoration: BoxDecoration(
         border: Border.symmetric(
             horizontal: BorderSide(color: Colors.white, width: 5)),
@@ -32,7 +32,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               height: 35,
-              width: 140,
+              //width: 120,
               decoration: BoxDecoration(
                 color: primaryColor.withOpacity(0.1),
                 borderRadius: BorderRadius.only(
@@ -46,17 +46,14 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    AppFormat.dateDDMMYY(widget.stockTransferCtrlObj
-                                    .viewStockTransferMoodel !=
-                                null
-                            ? widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel!
-                                .data[widget.index]
-                                .transactionDate
-                            : DateTime.now()) ??
+                    widget
+                            .stockAdjustmentCtrlObj
+                            .viewStockAdjustmentModel
+                            ?.data[widget.index]
+                            .adjustmentType
+                            .capitalizeFirst ??
                         '',
-                    style: Theme.of(context).textTheme.caption!.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
                         color: Colors.black
@@ -83,22 +80,14 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                       orderInfoRow(
                         context,
                         text1: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
+                                .stockAdjustmentCtrlObj
+                                .viewStockAdjustmentModel
                                 ?.data[widget.index]
                                 .refNo ??
                             '',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 14),
-                      ),
-                      orderInfoRow(
-                        context,
-                        text1: 'Normal',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 14),
                       ),
                     ],
@@ -110,92 +99,119 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                         text1: 'Location: ',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 11.7),
                         text2: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
+                                .stockAdjustmentCtrlObj
+                                .viewStockAdjustmentModel
                                 ?.data[widget.index]
-                                .locationFrom ??
+                                .locationName ??
                             '',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11.7,
-                                  letterSpacing: 0.06,
-                                ),
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Color(0xffffa025),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.7,
+                              letterSpacing: 0.06,
+                            ),
                       ),
-                      Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          height: 12,
-                          width: 1,
-                          color: Colors.black),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      orderInfoRow(
+                        context,
+                        text1: 'Trans. Date: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 12),
+                        text2: AppFormat.dateDDMMYY(widget
+                                    .stockAdjustmentCtrlObj
+                                    .viewStockAdjustmentModel !=
+                                null
+                            ? widget
+                                .stockAdjustmentCtrlObj
+                                .viewStockAdjustmentModel!
+                                .data[widget.index]
+                                .transactionDate
+                            : DateTime.now()),
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Color(0xffffa025),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
+                      ),
                     ],
                   ),
-
-                  //  if (viewStocksModel?.additionalNotes)
                   Row(
-                    // mainAxisAlignment:
-                    //     MainAxisAlignment.spaceBetween,
                     children: [
                       orderInfoRow(
                         context,
                         text1: 'Total Amount: ',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 12),
                         text2: AppFormat.doubleToStringUpTo2(widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .shippingCharges) ??
-                            '',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
-                      ),
-                      Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          height: 12,
-                          width: 1,
-                          color: Colors.black),
-                      orderInfoRow(
-                        context,
-                        text1: 'Total amount received: ',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 12),
-                        text2: AppFormat.doubleToStringUpTo2(widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
+                                .stockAdjustmentCtrlObj
+                                .viewStockAdjustmentModel
                                 ?.data[widget.index]
                                 .finalTotal) ??
                             '',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Color(0xffffa025),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
+                      ),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      orderInfoRow(
+                        context,
+                        text1: 'Amount received: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 12),
+                        text2: AppFormat.doubleToStringUpTo2(widget
+                                .stockAdjustmentCtrlObj
+                                .viewStockAdjustmentModel
+                                ?.data[widget.index]
+                                .finalTotal) ??
+                            '',
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: Color(0xffffa025),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
                       ),
                     ],
                   ),
-                  Divider(color: Theme.of(context).cardColor, thickness: 1.0),
-                  Text(
-                    'Reason: ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4!
-                        .copyWith(fontSize: 12),
-                  )
+                  if (widget.stockAdjustmentCtrlObj.viewStockAdjustmentModel
+                          ?.data[widget.index].additionalNotes ==
+                      null)
+                    Divider(color: Theme.of(context).cardColor, thickness: 1.0),
+                  if (widget.stockAdjustmentCtrlObj.viewStockAdjustmentModel
+                          ?.data[widget.index].additionalNotes ==
+                      null)
+                    Text(
+                      'Reason: ${widget.stockAdjustmentCtrlObj.viewStockAdjustmentModel?.data[widget.index].additionalNotes ?? '- -'}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium!
+                          .copyWith(fontSize: 12),
+                    )
                 ],
               ),
             ),
@@ -222,7 +238,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
               Text(
                 text1 ?? '',
                 style: text1Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -231,7 +247,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
               Text(
                 (text2 != null && text2.isNotEmpty) ? text2.capitalize! : '',
                 style: text2Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),

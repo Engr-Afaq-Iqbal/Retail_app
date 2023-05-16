@@ -21,123 +21,103 @@ class _SearchSaleProductsState extends State<SearchSaleProducts> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    return IntrinsicHeight(
-      child: Container(
-        width: width,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: kWhiteColor,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            headings(txt: 'Search Products'),
-            AppFormField(
-              width: width,
-              controller: allSalesCtrlObj.searchCtrl,
-              labelText: 'Search Product for Stock Adjustment',
-              prefixIcon: Icon(Icons.search),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: AlwaysScrollableScrollPhysics(),
-                  child: DataTable(
-                    //sortAscending: ascending,
-                    sortColumnIndex: 1,
-                    columnSpacing: 10,
-                    showBottomBorder: false,
-                    dividerThickness: 0,
-
-                    headingRowColor: MaterialStateProperty.all(primaryColor),
-
-                    //border: TableBorder.symmetric(inside: BorderSide(color: Colors.white),outside: BorderSide(color: Colors.black)),
-                    columns: allSalesCtrlObj.salesSearchHeader
-                        .map(
-                          (e) => DataColumn2(
-                            label: Text('${e}'.tr,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
-                            size: ColumnSize.L,
-                            //onSort: (int i, bool asc) {},
-                          ),
-                        )
-                        .toList(),
-                    rows: List<DataRow>.generate(
-                      1,
-                      (index) {
-                        return DataRow2(
-                          color: index.isEven
-                              ? MaterialStateProperty.all(Colors.white)
-                              : MaterialStateProperty.all(
-                                  Colors.grey.withOpacity(0.05)),
-                          cells: [
-                            ///Products
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Sub Location
-                            DataCell(
-                              Text(
-                                '',
-                              ),
-                            ),
-
-                            ///Quantity
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Unit Price
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Subtotal
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Remarks
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Remarks
-                            DataCell(
-                              Text(''),
-                            ),
-
-                            ///Remarks
-                            DataCell(
-                              Text(''),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.2,
+      child: ListView.builder(
+          padding:
+              EdgeInsetsDirectional.only(top: 5, bottom: 5, start: 10, end: 10),
+          physics: BouncingScrollPhysics(),
+          shrinkWrap: true,
+          scrollDirection: Axis.vertical,
+          itemCount: 2,
+          itemBuilder: (context, index) {
+            return Container(
+              margin: EdgeInsets.only(
+                bottom: 5,
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                headingsWithText(heading: 'Items:', txt: '0.00'),
-                SizedBox(
-                  width: 5,
-                ),
-                headingsWithText(heading: 'Total:', txt: '0.00'),
-              ],
-            )
-          ],
-        ),
-      ),
+              padding: EdgeInsets.symmetric(horizontal: 5),
+              color: index.isEven ? kWhiteColor : primaryColor.withOpacity(0.1),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: AppFormField(
+                          controller: allSalesCtrlObj.productNameCtrl,
+                          padding: EdgeInsets.only(right: 10),
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                          // labelText: 'Product Name',
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: AppFormField(
+                          controller: allSalesCtrlObj.qtyCtrl,
+                          padding: EdgeInsets.only(right: 5),
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                          // labelText: 'Qty',
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: AppFormField(
+                          controller: allSalesCtrlObj.priceCtrl,
+                          padding: EdgeInsets.only(right: 5),
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                          // labelText: 'Price',
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: AppFormField(
+                          controller: allSalesCtrlObj.totalCtrl,
+                          padding: EdgeInsets.only(right: 5),
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                          // labelText: '1',
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: AppFormField(
+                          controller: allSalesCtrlObj.remarksCtrl,
+                          padding: EdgeInsets.only(right: 150),
+                          labelText: 'Discount',
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                        ),
+                      ),
+                      Icon(
+                        Icons.cancel_outlined,
+                        color: buttonColor,
+                      )
+                    ],
+                  ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ),
+                  // Divider(
+                  //
+                  // ),
+                ],
+              ),
+            );
+          }),
     );
   }
 
