@@ -21,7 +21,7 @@ class _SaleReturnProductListState extends State<SaleReturnProductList> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.25,
       child: ListView.builder(
           padding:
               EdgeInsetsDirectional.only(top: 5, bottom: 5, start: 10, end: 10),
@@ -43,9 +43,13 @@ class _SaleReturnProductListState extends State<SaleReturnProductList> {
                     children: [
                       Expanded(
                         flex: 3,
-                        child: Text(
-                          'Rita Juice 250mg',
-                          overflow: TextOverflow.ellipsis,
+                        child: AppFormField(
+                          controller: saleReturnCtrlObj.productNameCtrl,
+                          padding: EdgeInsets.only(right: 5),
+                          isOutlineBorder: false,
+                          isColor:
+                              index.isEven ? kWhiteColor : Colors.transparent,
+                          // labelText: '1',
                         ),
                       ),
                       Expanded(

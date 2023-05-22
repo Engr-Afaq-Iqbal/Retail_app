@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 
 import '../../../Components/custom_circular_button.dart';
 import '../../../Components/textfield.dart';
-import '../../../Controllers/ProductController/product_cart_controller.dart';
 import '../../../Theme/colors.dart';
+import '../../Config/utils.dart';
 
 class SearchSalesReturn extends StatefulWidget {
   SearchSalesReturn({
@@ -68,6 +68,26 @@ class _SearchSalesReturnState extends State<SearchSalesReturn> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Container(
+                padding: EdgeInsets.only(top: 20),
+                width: MediaQuery.of(context).size.width * 0.25,
+                child: CustomButton(
+                    onTap: () {
+                      showProgress();
+                      saleReturnCtrlObj.fetchSalesReturnList(
+                          global_search:
+                              saleReturnCtrlObj.searchSalesReturn.text);
+                      // if (saleReturnCtrlObj.isTrue == true) {
+                      //
+                      // }
+                    },
+                    btnTxt: 'Search',
+                    bgColor: primaryColor,
+                    borderRadius: 10),
+              ),
+              SizedBox(
+                width: 5,
+              ),
               Container(
                 padding: EdgeInsets.only(top: 20),
                 width: MediaQuery.of(context).size.width * 0.25,

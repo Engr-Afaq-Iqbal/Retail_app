@@ -1,18 +1,18 @@
+import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Config/DateTimeFormat.dart';
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
-import '../../Components/counter_with_add_remove_button.dart';
 import '../../Config/const.dart';
+import '../../Controllers/SalesReturnController/saleReturnController.dart';
 import '../Orders/Components/AmountInfo.dart';
 import '../Orders/Components/CustomerInfo.dart';
 
 class ReturnTile extends StatefulWidget {
-  ReturnTile({
-    Key? key,
-  }) : super(key: key);
+  SaleReturnController saleReturnCtrlObj;
+  int index;
+  ReturnTile({Key? key, required this.index, required this.saleReturnCtrlObj})
+      : super(key: key);
 
   @override
   State<ReturnTile> createState() => _ReturnTileState();
@@ -49,7 +49,8 @@ class _ReturnTileState extends State<ReturnTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    'Due',
+                    widget.saleReturnCtrlObj.saleReturnListModel!
+                        .data![widget.index].paymentStatus.capitalizeFirst!,
                     style: Theme.of(context).textTheme.caption!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
@@ -76,7 +77,8 @@ class _ReturnTileState extends State<ReturnTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Invoice No. CN2023/0006',
+                        text1:
+                            'Invoice No.: ${widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].invoiceNo}',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headline4!
@@ -112,7 +114,8 @@ class _ReturnTileState extends State<ReturnTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Parent Sale: INV88157',
+                        text1:
+                            'Parent Sale: ${widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].parentSale}',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headline4!
@@ -123,7 +126,10 @@ class _ReturnTileState extends State<ReturnTile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CustomerInfo('Walkin', DateTime.now()),
+                      CustomerInfo(
+                          '${widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].name}',
+                          widget.saleReturnCtrlObj.saleReturnListModel!
+                              .data![widget.index].transactionDate),
                       //if (pastOrder.totalAmountRecovered != null)
                     ],
                   ),
@@ -135,13 +141,14 @@ class _ReturnTileState extends State<ReturnTile> {
                     //     MainAxisAlignment.spaceBetween,
                     children: [
                       AmountInfo(
-                        amount: '3.68',
+                        amount:
+                            '${AppFormat.doubleToStringUpTo2(widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].finalTotal)}',
                         status: 'Total Amount',
                       ),
                       AppConst.dividerLine(height: 12, width: 1),
                       AmountInfo(
-                        amount: (double.parse('${0}') - double.parse('${0}'))
-                            .toString(),
+                        amount:
+                            '${AppFormat.doubleToStringUpTo2(widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].due.toString())}',
                         status: 'due'.tr,
                       ),
                     ],

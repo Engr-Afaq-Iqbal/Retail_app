@@ -1,10 +1,11 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Config/const.dart';
+import '../../Config/utils.dart';
 import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
 import '../../Theme/style.dart';
 import 'Update Status/updateStatus.dart';
@@ -93,32 +94,24 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Checked In: ',
+                        text1: 'Assigned to: ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
-                            .copyWith(fontSize: 11.7),
-                        text2: widget
-                                .customerVisitsCtrlObj
-                                .customerVisitsListModel
-                                ?.data[widget.index]
-                                .visitedOn ??
-                            '- -',
+                            .copyWith(fontSize: 12),
+                        text2:
+                            '${widget.customerVisitsCtrlObj.customerVisitsListModel?.data[widget.index].firstName ?? ''} ${widget.customerVisitsCtrlObj.customerVisitsListModel?.data[widget.index].lastName ?? ''}',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
                             .copyWith(
                               color: orangeColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: 11.7,
+                              fontSize: 12,
                               letterSpacing: 0.06,
                             ),
                       ),
-                      Container(
-                          margin: EdgeInsets.symmetric(horizontal: 10),
-                          height: 12,
-                          width: 1,
-                          color: Colors.black),
+                      AppConst.dividerLine(height: 12, width: 1),
                       orderInfoRow(
                         context,
                         text1: 'Contact: ',
@@ -149,19 +142,48 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Assigned to: ',
+                        text1: 'Visit On: ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
-                            .copyWith(fontSize: 12),
-                        text2: 'Mr Super Admin',
+                            .copyWith(fontSize: 11.7),
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .visitOn ??
+                            '- -',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
                             .copyWith(
                               color: orangeColor,
                               fontWeight: FontWeight.bold,
-                              fontSize: 12,
+                              fontSize: 11.7,
+                              letterSpacing: 0.06,
+                            ),
+                      ),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      orderInfoRow(
+                        context,
+                        text1: 'Visited On: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 11.7),
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .visitedOn ??
+                            '- -',
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: orangeColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 11.7,
                               letterSpacing: 0.06,
                             ),
                       ),
@@ -171,7 +193,7 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Address: ',
+                        text1: 'Visiting Address: ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -181,6 +203,30 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                                 .customerVisitsListModel
                                 ?.data[widget.index]
                                 .visitingAddress ??
+                            '',
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: blackColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
+                      ),
+                      AppConst.dividerLine(height: 12, width: 1),
+                      orderInfoRow(
+                        context,
+                        text1: 'Visited Address: ',
+                        text1Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(fontSize: 12),
+                        text2: widget
+                                .customerVisitsCtrlObj
+                                .customerVisitsListModel
+                                ?.data[widget.index]
+                                .visitedAddress ??
                             '',
                         text2Style: Theme.of(context)
                             .textTheme
@@ -216,7 +262,11 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                                   builder: (StockTransferController
                                       stockTransferCtrlObj) {
                                 return Container(
-                                  child: CreateCustomerVisits(),
+                                  child: CreateCustomerVisits(
+                                    custVisitCtrl: widget.customerVisitsCtrlObj,
+                                    index: widget.index,
+                                    editCustVisit: true,
+                                  ),
                                 );
                               });
                             },
@@ -263,7 +313,10 @@ class _CustomerVisitTileState extends State<CustomerVisitTile> {
                           '',
                         ),
                         onTap: () {
-                          Get.to(UpdateStatus());
+                          showProgress();
+                          Get.to(UpdateStatus(
+                              customerVisitsCtrl: widget.customerVisitsCtrlObj,
+                              index: widget.index));
                         },
                         bgColor: orangeColor.withOpacity(0.9),
                       ),

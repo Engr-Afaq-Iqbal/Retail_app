@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
 import 'package:bizmodo_emenu/Controllers/ListUserController/ListUserController.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +8,6 @@ import '../../Config/utils.dart';
 import '../../Models/CustomerVisits/customerVisitListModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
-import '../../Services/storage_services.dart';
-import 'package:http/http.dart' as http;
 
 class CustomerVisitsController extends GetxController {
   bool valuefirst = false;
@@ -17,6 +16,9 @@ class CustomerVisitsController extends GetxController {
   bool meetNo = false;
   String? statusValue;
   String? contactStatusValue;
+  String meetWithStatus = ' 1';
+  String frontPath = 'No file chosen';
+  File? image;
   TextEditingController meetNoReason = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController searchCtrl = TextEditingController();
@@ -28,6 +30,8 @@ class CustomerVisitsController extends GetxController {
   TextEditingController meetWithCtrl = TextEditingController();
   TextEditingController mobileNbrCtrl = TextEditingController();
   TextEditingController designationCtrl = TextEditingController();
+  TextEditingController visitedOnCtrl = TextEditingController();
+  TextEditingController idCtrl = TextEditingController();
   List<String> assignedToList(ListUserController listUserCtrl) {
     List<String> options = [];
     if (listUserCtrl.listuserModel != null) {
@@ -82,6 +86,7 @@ class CustomerVisitsController extends GetxController {
     });
   }
 
+  ///Create Customer Visits
   Future<bool?> createCustomerVisits() async {
     Map<String, String> _field = {
       "visiting": "1",
@@ -110,25 +115,36 @@ class CustomerVisitsController extends GetxController {
     });
   }
 
-  Future<bool?> updateCustomerVisits() async {
+  ///Update Customer Visits Status
+  Future<bool?> updateCustomerVisitsStatus() async {
     Map<String, String> _field = {
-      "visiting": "1",
-      "contact_id": "793",
-      "company": "${companyCtrl.text}",
-      "visiting_address": "${visitAddressCtrl.text}",
-      "user_id": "65",
-      "visit_on": "${dateCtrl.text}",
-      "purpose_of_visiting": "${purposeOfVisitingCtrl.text}"
+      "meet_with_status": "${meetWithStatus}",
+      "reason_to_not_meet_contact": "${meetNoReason.text}",
+      "photo": "${image}",
+      "meet_with": "afaq",
+      "meet_with_mobileno": "123",
+      "meet_with_designation": "office",
+      "meet_with2": "",
+      "meet_with_mobileno2": "",
+      "meet_with_designation2": "",
+      "meet_with3": "",
+      "meet_with_mobileno3": "",
+      "meet_with_designation3": "",
+      "visited_address_latitude": "31.4703872",
+      "visited_address_longitude": "74.2588416",
+      "visited_address": "536 Fatima Rd,",
+      "comments": "${discussionCtrl.text}",
+      "id": "${idCtrl.text}",
     };
 
     return await ApiServices.postMethod(
-            feedUrl: ApiUrls.createCustomerVisits, fields: _field)
+            feedUrl: ApiUrls.updateCustomerVisitsStatusApi, fields: _field)
         .then((_res) {
       if (_res == null) return null;
       stopProgress();
       clearAllFields();
       Get.back();
-      print('Create Customer: ');
+      print('Status Update: ');
       print(_res);
       return true;
     }).onError((error, stackTrace) {
@@ -138,7 +154,37 @@ class CustomerVisitsController extends GetxController {
     });
   }
 
-  ///
+  ///Update Customer Visits
+  Future<bool?> updateCustomerVisits() async {
+    Map<String, String> _field = {
+      "id": "${idCtrl.text}",
+      "visiting": "1",
+      "contact_id": "794",
+      "company": "${companyCtrl.text}",
+      "visiting_address": "${visitAddressCtrl.text}",
+      "user_id": "65",
+      "visit_on": "${dateCtrl.text}",
+      "purpose_of_visiting": "${purposeOfVisitingCtrl.text}"
+    };
+
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.updateCustomerVisitApi, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+      stopProgress();
+      clearAllFields();
+      Get.back();
+      print('Customer Visit Updated: ');
+      print(_res);
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
+  ///DeleteCustomerVisits
   Future deleteCustomerVisitsList({String? pageUrl, String? id}) async {
     await ApiServices.getMethod(
             feedUrl: pageUrl ?? '${ApiUrls.deleteCustomerVisits}$id')
@@ -163,5 +209,13 @@ class CustomerVisitsController extends GetxController {
     purposeOfVisitingCtrl.clear();
     valuefirst = false;
     valueSecond = false;
+  }
+
+  clearAllStatusUpdateFields() {
+    visitedOnCtrl.clear();
+    discussionCtrl.clear();
+    meetNoReason.clear();
+    idCtrl.clear();
+    frontPath = '';
   }
 }

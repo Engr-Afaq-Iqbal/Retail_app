@@ -51,6 +51,7 @@ dependencies:
   font_awesome_flutter: ^10.4.0
   data_table_2: ^2.3.11
 
+
   #  tablemi.com
 #  ping_discover_network: ^0.2.0+1
 #  esc_pos_printer: ^4.1.0

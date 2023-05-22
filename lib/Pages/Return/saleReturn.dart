@@ -2,7 +2,6 @@ import 'package:bizmodo_emenu/Components/textfield.dart';
 import 'package:bizmodo_emenu/Pages/Return/saleReturnProductsList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../Components/custom_circular_button.dart';
@@ -12,7 +11,10 @@ import '../../Theme/colors.dart';
 import '../SalesView/discount.dart';
 
 class SalesReturn extends StatefulWidget {
-  const SalesReturn({Key? key}) : super(key: key);
+  SaleReturnController saleReturnCtrl;
+  int index;
+  SalesReturn({Key? key, required this.saleReturnCtrl, required this.index})
+      : super(key: key);
 
   @override
   State<SalesReturn> createState() => _SalesReturnState();
@@ -68,6 +70,16 @@ class _SalesReturnState extends State<SalesReturn> {
   }
 
   @override
+  void initState() {
+    saleReturnCtrlObj.invoiceNbrCtrl.text =
+        '${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].invoiceNo}';
+    saleReturnCtrlObj.transactionIdCtrl.text =
+        '${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].id}';
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -79,9 +91,12 @@ class _SalesReturnState extends State<SalesReturn> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Invoice No: INV88189'),
-              Text('Customer Name: Afaq'),
-              Text('Date: 05/03/2023'),
+              Text(
+                  'Invoice No: ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].invoiceNo}'),
+              Text(
+                  'Customer Name:  ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].name}'),
+              Text(
+                  'Date:  ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].transactionDate}'),
               AppFormField(
                 width: MediaQuery.of(context).size.width * 0.43,
                 readOnly: true,
@@ -91,7 +106,6 @@ class _SalesReturnState extends State<SalesReturn> {
                 onTap: () {
                   setState(() {
                     _showDatePicker();
-
                     //_show(context);
                   });
                 },
@@ -136,7 +150,7 @@ class _SalesReturnState extends State<SalesReturn> {
               ),
               SaleReturnProductList(),
               SizedBox(
-                height: 10,
+                height: 40,
               ),
               CustomButton(
                 height: 30,
@@ -167,6 +181,29 @@ class _SalesReturnState extends State<SalesReturn> {
               Text('Total Return Discount:-'),
               Text('Total Return Tax:-'),
               Text('Return Total Amount:-'),
+              SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  CustomButton(
+                    height: 30,
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    onTap: () async {
+                      saleReturnCtrlObj.addSaleReturn();
+                    },
+                    bgColor: primaryColor,
+                    btnChild: Text(
+                      'Save',
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              )
             ],
           ),
         ),

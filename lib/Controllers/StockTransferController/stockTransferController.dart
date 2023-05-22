@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Models/ViewStockTransferModel/statusListModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -70,18 +71,6 @@ class StockTransferController extends GetxController {
     'Action',
   ];
 
-  List<String> getStatusList() {
-    List<String> options = ['Pending', 'In Transit', 'Completed'];
-    // for (int i = 0;
-    // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
-    // i++) {
-    //   options.add(
-    //       '${widget.listUserCtrlObj?.listuserModel?.data?[i].firstName} ${widget.listUserCtrlObj?.listuserModel?.data?[i].lastName == null ? '' : widget.listUserCtrlObj?.listuserModel?.data?[i].lastName}' ??
-    //           '');
-    // }
-    return options;
-  }
-
   List<String> getAdjustmentTypeList() {
     List<String> options = ['Normal', 'Abnormal'];
     // for (int i = 0;
@@ -126,6 +115,23 @@ class StockTransferController extends GetxController {
       update();
       if (_res == null) return null;
       viewStockTransferMoodel = viewStockTransferModelFromJson(_res);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  List<StatusListModel>? statusListModel;
+
+  /// Fetching Status
+  Future fetchStatusList({String? pageUrl}) async {
+    await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.viewStockTransfer)
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      statusListModel = statusListModelFromJson(_res);
       update();
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');

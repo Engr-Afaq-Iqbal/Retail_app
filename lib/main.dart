@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
+import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:flutter/material.dart';
@@ -97,6 +98,7 @@ void main() async {
 
 void initializeControllers() {
   Get.put(AuthController());
+  Get.put(DashboardController());
   Get.put(NotificationsController());
   Get.put(TableSelectionController());
   Get.put(OrderTypeSelectionController());

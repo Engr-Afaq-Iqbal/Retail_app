@@ -72,6 +72,22 @@ class ApiUrls {
   ///Create Customer Visits
   static String createCustomerVisits = "connector/api/visit/store";
 
+  ///Update Customer Visit Status
+  static String updateCustomerVisitsStatusApi =
+      "connector/api/visit/status/update";
+
   ///Delete Customer Visits
   static String deleteCustomerVisits = "connector/api/visit/destroy/";
+
+  ///Dashboard Data Api
+  static String dashboardDataApi = "connector/api/home/get-totals";
+
+  ///Update Customer Visit
+  static String updateCustomerVisitApi = "connector/api/visit/update";
+
+  ///Sale return List api
+  static String saleReturnListApi = "connector/api/list-sell-return";
+
+  ///Add Sale Return
+  static String addSaleReturnApi = "connector/api/sell-return";
 }

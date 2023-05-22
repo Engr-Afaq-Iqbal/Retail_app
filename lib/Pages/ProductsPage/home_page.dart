@@ -25,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int categoryCurrentIndex = 0;
   bool viewAllIsTrue = true;
+  bool isSelected = false;
   final PageController _pageController = PageController();
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -51,7 +52,6 @@ class _HomePageState extends State<HomePage> {
     }
 
     searchController.clear();
-    //categoryCurrentIndex = 12;
     return null;
   }
 
@@ -77,10 +77,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // var locale = AppLocalizations.of(context)!;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
     return Scaffold(
       key: _scaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -89,15 +85,6 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: primaryColor.withOpacity(0.5),
           onPressed: () {
             Get.to(AddProductsPage());
-            // showModalBottomSheet(
-            //   isScrollControlled: true,
-            //   context: context,
-            //   builder: (context) {
-            //     return Container(
-            //       child: AddProductsPage(),
-            //     );
-            //   },
-            // );
           }),
       appBar: AppBar(
         automaticallyImplyLeading: true,
@@ -140,7 +127,49 @@ class _HomePageState extends State<HomePage> {
                 });
               },
             )),
-        actions: [buildItemsInCartButton()],
+        // actions: [buildItemsInCartButton()],
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(30.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                child: Row(
+                  children: [
+                    ///SKU
+                    Expanded(
+                      flex: 1,
+                      child: Text('SKU', style: appBarHeaderStyle),
+                    ),
+
+                    ///Product name
+                    Expanded(
+                      flex: 3,
+                      child: Text('Product Name', style: appBarHeaderStyle),
+                    ),
+
+                    ///Price
+                    Expanded(
+                      flex: 1,
+                      child: Text('Price', style: appBarHeaderStyle),
+                    ),
+
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Stock',
+                          style: appBarHeaderStyle,
+                        )),
+                  ],
+                ),
+              ),
+              Divider(
+                height: 0,
+                color: primaryColor,
+              ),
+            ],
+          ),
+        ),
       ),
       body: GetX<AllProductsController>(
         builder: (AllProductsController allProdCtrlObj) => (allProdCtrlObj
@@ -164,30 +193,32 @@ class _HomePageState extends State<HomePage> {
                               ? ListView.builder(
                                   padding: EdgeInsetsDirectional.only(
                                       top: 5, bottom: 5, start: 10, end: 10),
-                                  physics: BouncingScrollPhysics(),
+                                  physics: ScrollPhysics(),
                                   shrinkWrap: true,
                                   itemCount: productModelObjs.length,
                                   itemBuilder: (context, index) {
                                     return GestureDetector(
                                       onTap: () {
+                                        Get.to(AddProductsPage(
+                                          isView: true,
+                                          productModelObjs: productModelObjs,
+                                          index: index,
+                                        ));
                                         // prodCartCtrlObj.item?.value = item;
-                                        if (productModelObjs[index]
-                                            .modifier
-                                            .isNotEmpty) {
-                                          // _scaffoldKey.currentState!.openEndDrawer();
-                                          itemInfoPageNav(isPortrait,
-                                              productModelObjs[index]);
-                                        } else {
-                                          //prodCartCtrlObj.updateCart(item, isAdd: true);
-                                          prodCartCtrlObj.updateCart(
-                                              productModelObjs[index],
-                                              isAdd: true);
-                                        }
-                                        setState(() {});
+                                        // if (productModelObjs[index]
+                                        //     .modifier
+                                        //     .isNotEmpty) {
+                                        //   // _scaffoldKey.currentState!.openEndDrawer();
+                                        //   itemInfoPageNav(isPortrait,
+                                        //       productModelObjs[index]);
+                                        // } else {
+                                        //   //prodCartCtrlObj.updateCart(item, isAdd: true);
+                                        //   prodCartCtrlObj.updateCart(
+                                        //       productModelObjs[index],
+                                        //       isAdd: true);
+                                        // }
                                       },
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -199,51 +230,69 @@ class _HomePageState extends State<HomePage> {
                                                       .spaceBetween,
                                               children: [
                                                 ///SKU
-                                                Text(
-                                                  ' ${productModelObjs[index].sku}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleSmall!
-                                                      .copyWith(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Text(
+                                                    ' ${productModelObjs[index].sku}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleSmall!
+                                                        .copyWith(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                  ),
                                                 ),
 
                                                 ///Product name
-                                                Text(
-                                                  productModelObjs[index].name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(fontSize: 12),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: true,
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                    productModelObjs[index]
+                                                        .name,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(fontSize: 12),
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: true,
+                                                  ),
                                                 ),
 
                                                 ///Price
-                                                Text(
-                                                  double.parse(
-                                                        '${productModelObjs[index].productVariations.first.variations.first.sellPriceIncTax}',
-                                                      ).toStringAsFixed(2) +
-                                                      ' /-',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Text(
+                                                    double.parse(
+                                                          '${productModelObjs[index].productVariations.first.variations.first.sellPriceIncTax}',
+                                                        ).toStringAsFixed(2) +
+                                                        ' /-',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                  ),
                                                 ),
 
-                                                Text('Stock'),
+                                                Expanded(
+                                                    flex: 1,
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${productModelObjs[index].quantity}',
+                                                      ),
+                                                    )),
                                               ],
                                             ),
 
                                             Divider(
                                               thickness: 2,
-                                              height: 3,
+                                              height: 10,
                                             ),
                                           ],
                                         ),

@@ -1,13 +1,13 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
+
 import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
-import '../../../Pages/Stocks/ViewStockTransfer/viewStockTransferTile.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Controllers/AllSalesController/allSalesController.dart';
 
 class Receipts extends StatefulWidget {
   const Receipts({Key? key}) : super(key: key);
@@ -20,9 +20,12 @@ class _ReceiptsState extends State<Receipts> {
   StockTransferController stockTranCtrlObj =
       Get.find<StockTransferController>();
 
+  AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+
   @override
   void initState() {
     // TODO: implement initState
+    allSalesCtrl.callFirstOrderPage();
     stockTranCtrlObj.fetchStockTransfersList();
     super.initState();
   }

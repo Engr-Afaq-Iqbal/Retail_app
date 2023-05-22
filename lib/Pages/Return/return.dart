@@ -1,18 +1,14 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
 import 'package:bizmodo_emenu/Pages/Return/returnTile.dart';
 import 'package:bizmodo_emenu/Pages/Return/saleReturn.dart';
 import 'package:bizmodo_emenu/Pages/Return/searchSalesReturn.dart';
-import '../../../Pages/Stocks/ViewStockTransfer/viewStockTransferTile.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
+
 import '../../../Theme/colors.dart';
-import '../Tabs/View/packingCharges.dart';
-import 'addSaleReturn.dart';
+import '../../Controllers/SalesReturnController/saleReturnController.dart';
 
 class Return extends StatefulWidget {
   const Return({Key? key}) : super(key: key);
@@ -22,13 +18,11 @@ class Return extends StatefulWidget {
 }
 
 class _ReturnState extends State<Return> {
-  StockTransferController stockTranCtrlObj =
-      Get.find<StockTransferController>();
-
+  SaleReturnController saleReturnCtrlObj = Get.find<SaleReturnController>();
   @override
   void initState() {
     // TODO: implement initState
-    stockTranCtrlObj.fetchStockTransfersList();
+    saleReturnCtrlObj.fetchSalesReturnList();
     super.initState();
   }
 
@@ -39,6 +33,15 @@ class _ReturnState extends State<Return> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Return'),
+          actions: [
+            Icon(
+              Icons.calendar_month_outlined,
+              color: primaryColor,
+            ),
+            SizedBox(
+              width: 10,
+            ),
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
@@ -54,19 +57,34 @@ class _ReturnState extends State<Return> {
                 ),
               );
             }),
-        body: ListView.builder(
-            physics: AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 100),
-            itemCount: 7,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Get.to(SalesReturn());
-                },
-                child: IntrinsicHeight(
-                  child: ReturnTile(),
-                ),
-              );
-            }));
+        body: GetBuilder<SaleReturnController>(
+            builder: (SaleReturnController saleReturnCtrl) {
+          if (saleReturnCtrl.saleReturnListModel != null) {
+            return RefreshIndicator(
+              onRefresh: () async {
+                await saleReturnCtrl.fetchSalesReturnList();
+              },
+              child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 100),
+                  itemCount: saleReturnCtrl.saleReturnListModel?.data?.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        Get.to(SalesReturn(
+                            saleReturnCtrl: saleReturnCtrl, index: index));
+                      },
+                      child: IntrinsicHeight(
+                        child: ReturnTile(
+                          saleReturnCtrlObj: saleReturnCtrl,
+                          index: index,
+                        ),
+                      ),
+                    );
+                  }),
+            );
+          } else
+            return progressIndicator();
+        }));
   }
 }

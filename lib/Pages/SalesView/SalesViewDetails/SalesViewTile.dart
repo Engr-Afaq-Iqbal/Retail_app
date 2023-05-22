@@ -1,6 +1,9 @@
+import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../Config/enums.dart';
+import '../../../Models/order_type_model/SaleOrderModel.dart';
 import '../../../Theme/colors.dart';
 import '/Config/const.dart';
 import '/Pages/Orders/Components/AmountInfo.dart';
@@ -8,7 +11,15 @@ import '/Pages/Orders/Components/CustomerInfo.dart';
 import '/Theme/style.dart';
 
 class SalesViewTile extends StatelessWidget {
-  const SalesViewTile({Key? key}) : super(key: key);
+  AllSalesController allSalesCtrlObj;
+  final SaleOrderDataModel pastOrder;
+  int index;
+  SalesViewTile(
+      {Key? key,
+      required this.allSalesCtrlObj,
+      required this.index,
+      required this.pastOrder})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +35,7 @@ class SalesViewTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'INV88155',
+                '${allSalesCtrlObj.allSaleOrders?.saleOrdersData[index].invoiceNo}',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -33,13 +44,15 @@ class SalesViewTile extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    'Packed',
-                  ),
+                      '${pastOrder.shippingStatus == null ? '- -' : pastOrder.shippingStatus}'
+                          .capitalizeFirst!),
                   SizedBox(width: 5),
                   Container(height: 12, width: 1, color: Colors.black),
                   SizedBox(width: 5),
                   Text(
-                    'Due'.capitalizeFirst ?? '-',
+                    orderStatusValues
+                            .reverse?[pastOrder.resOrderStatus]?.capitalize ??
+                        '- -',
                     style: AppStyles.orderMapAppBarTextStyle
                         .copyWith(color: orangeColor),
                   ),
@@ -51,11 +64,12 @@ class SalesViewTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomerInfo('Walkin', DateTime.now()),
+              CustomerInfo(
+                  '${pastOrder.contact?.name}', pastOrder.transactionDate),
               //if (pastOrder.totalAmountRecovered != null)
               AmountInfo(
-                amount: '122',
-                status: 'Received',
+                amount: '${pastOrder.totalAmountRecovered ?? '- -'}',
+                status: 'Recovered',
               ),
             ],
           ),
@@ -74,14 +88,14 @@ class SalesViewTile extends StatelessWidget {
                           .titleLarge!
                           .copyWith(fontSize: 12, color: Colors.black),
                     ),
-                    AppConst.dividerLine(height: 12, width: 1),
-                    Text(
-                      'Items: 3',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge!
-                          .copyWith(fontSize: 12, color: Colors.black),
-                    ),
+                    //AppConst.dividerLine(height: 12, width: 1),
+                    // Text(
+                    //   'Items: ${pastOrder.}',
+                    //   style: Theme.of(context)
+                    //       .textTheme
+                    //       .titleLarge!
+                    //       .copyWith(fontSize: 12, color: Colors.black),
+                    // ),
                     //  TableInfo(pastOrder.tableData?.name),
                     // AppConst.dividerLine(height: 12, width: 1),
                     // StaffInfo(
@@ -95,7 +109,7 @@ class SalesViewTile extends StatelessWidget {
               // if (pastOrder.finalTotal != null)
               AmountInfo(
                 amount:
-                    (double.parse('${0}') - double.parse('${0}')).toString(),
+                    (double.parse('${pastOrder.finalTotal ?? ''}')).toString(),
                 status: 'due'.tr,
               ),
             ],

@@ -1,6 +1,4 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Models/AuthModels/loggged_in_user_detail.dart';
-import 'package:data_table_2/data_table_2.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,9 +6,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
-import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Services/storage_services.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../searchStockProducts.dart';
@@ -71,6 +67,21 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
     print(dateTime);
   }
 
+  List<String> getStatusList() {
+    List<String> options = ['Pending', 'In Transit', 'Completed'];
+    for (int i = 0; i < stockTranCtrlObj.statusListModel!.length; i++) {
+      options.add('${stockTranCtrlObj.statusListModel?[i].value}');
+    }
+    return options;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    stockTranCtrlObj.fetchStatusList();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -126,7 +137,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                   color: txtFieldHintColor,
                                 ),
                               )),
-                          items: stockTranCtrlObj.getStatusList().map((e) {
+                          items: getStatusList().map((e) {
                             return DropdownMenuItem(value: e, child: Text(e));
                           }).toList(),
                           value: statusValue,

@@ -4,21 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Components/custom_circular_button.dart';
 import '../../../Components/textfield.dart';
-import '../../../Config/DateTimeFormat.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/ProductsRetailController/productsRetailsController.dart';
-import 'RowRackPosition.dart';
-import 'TaxDataTable.dart';
+import '../../Models/ProductsModel/ProductModel.dart';
 
 class AddProductsPage extends StatefulWidget {
+  bool isView;
+  List<ProductModel>? productModelObjs;
+  int? index;
   AddProductsPage({
     Key? key,
+    this.isView = false,
+    this.productModelObjs,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -79,48 +82,38 @@ class _AddProductsPageState extends State<AddProductsPage> {
     }
   }
 
-  Future<void> _showDatePicker() async {
-    DateTime? dateTime = await showOmniDateTimePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      lastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      is24HourMode: false,
-      isShowSeconds: false,
-      minutesInterval: 1,
-      secondsInterval: 1,
-      borderRadius: const BorderRadius.all(Radius.circular(16)),
-      constraints: const BoxConstraints(
-        maxWidth: 350,
-        maxHeight: 650,
-      ),
-      transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1.drive(
-            Tween(
-              begin: 0,
-              end: 1,
-            ),
-          ),
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 200),
-      barrierDismissible: true,
-      selectableDayPredicate: (dateTime) {
-        // Disable 25th Feb 2023
-        if (dateTime == DateTime(2023, 2, 25)) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-    );
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.isView == true) {
+      productRetailCtrlObj.productNameCtrl.text =
+          widget.productModelObjs?[widget.index!].name ?? '';
+      productRetailCtrlObj.productSKUCtrl.text =
+          widget.productModelObjs![widget.index!].sku ?? '';
+      productRetailCtrlObj.barCodeStatus =
+          widget.productModelObjs![widget.index!].barcodeType ?? '';
 
-    productRetailCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
-    print(dateTime);
+      ///ToDo: need to add unit in it
+      // productRetailCtrlObj.unitStatus =
+      //     widget.productModelObjs![widget.index!] ?? '';
+      ///ToDo: need to add unit in it
+      // productRetailCtrlObj.categoryStatus =
+      //     widget.productModelObjs![widget.index!].cat ?? '';
+      productRetailCtrlObj.alertQtyCtrl.text =
+          widget.productModelObjs![widget.index!].alertQuantity ?? '';
+
+      ///ToDo: need to add unit in it
+      // productRetailCtrlObj.warrantyStatus =
+      //     widget.productModelObjs![widget.index!].warranty ?? '';
+      // productRetailCtrlObj =
+      //     widget.productModelObjs![widget.index!].kitchenPrinter ?? '';
+    }
+    super.initState();
+  }
+
+  void dispose() {
+    productRetailCtrlObj.clearAllFields();
+    super.dispose();
   }
 
   @override
@@ -130,6 +123,18 @@ class _AddProductsPageState extends State<AddProductsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Add new product'),
+        actions: [
+          CustomButton(
+            title: Text(
+              'Edit',
+              style: TextStyle(color: kWhiteColor),
+            ),
+            onTap: () {},
+          ),
+          SizedBox(
+            width: 15,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 15.0, right: 15, top: 15),
@@ -157,6 +162,8 @@ class _AddProductsPageState extends State<AddProductsPage> {
                             children: [
                               headings(txt: 'Product Name:*'),
                               AppFormField(
+                                  readOnly:
+                                      widget.isView == true ? true : false,
                                   width: width * 0.42,
                                   controller:
                                       productRetailCtrlObj.productNameCtrl)
@@ -348,7 +355,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                                 AppFormField(
                                     width: width * 0.42,
                                     controller:
-                                        productRetailCtrlObj.productNameCtrl),
+                                        productRetailCtrlObj.alertQtyCtrl),
                               ],
                             )
                         ],
@@ -677,8 +684,8 @@ class _AddProductsPageState extends State<AddProductsPage> {
                             'Not for selling',
                             style: TextStyle(color: blackColor),
                           )),
-                      headings(txt: 'Rack/Row/Position Details:'),
-                      RowRackPosition(),
+                      // headings(txt: 'Rack/Row/Position Details:'),
+                      // RowRackPosition(),
                       headings(txt: 'Weight:'),
                       AppFormField(
                           width: width,
@@ -881,7 +888,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                       AppFormField(
                           width: width,
                           controller: productRetailCtrlObj.productTypeCtrl),
-                      TaxDataTable()
+                      //TaxDataTable()
                     ],
                   ),
                 ),
@@ -908,7 +915,10 @@ class _AddProductsPageState extends State<AddProductsPage> {
                               'Save',
                               style: TextStyle(color: kWhiteColor),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              ///TODO: api in not built yet and fields implementation is remaining.
+                              // productRetailCtrlObj.createNewProduct();
+                            },
                             bgColor: primaryColor,
                           ),
                           SizedBox(

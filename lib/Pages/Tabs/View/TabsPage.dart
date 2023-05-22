@@ -49,13 +49,13 @@ class _TabsPageState extends State<TabsPage> {
                     durationInMilliseconds: 400,
                   ),
                   actions: [
-                    IconButton(
-                      onPressed: () => Get.to(() => Notifications()),
-                      icon: Icon(
-                        Icons.notifications_active_outlined,
-                        color: primaryColor,
-                      ),
-                    ),
+                    // IconButton(
+                    //   onPressed: () => Get.to(() => Notifications()),
+                    //   icon: Icon(
+                    //     Icons.notifications_active_outlined,
+                    //     color: primaryColor,
+                    //   ),
+                    // ),
                   ],
                 )
               : null,

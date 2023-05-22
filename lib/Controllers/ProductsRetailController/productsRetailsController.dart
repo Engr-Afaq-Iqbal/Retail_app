@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../Config/utils.dart';
+import '../../Services/api_services.dart';
+import '../../Services/api_urls.dart';
+
 class ProductsRetailController extends GetxController {
   String? barCodeStatus;
   String? unitStatus;
@@ -29,6 +33,7 @@ class ProductsRetailController extends GetxController {
   TextEditingController rackCtrl = TextEditingController();
   TextEditingController rowCtrl = TextEditingController();
   TextEditingController positionCtrl = TextEditingController();
+  TextEditingController alertQtyCtrl = TextEditingController();
 
   List<String> rowRackList = [
     'Restaurant (BL001)',
@@ -37,14 +42,7 @@ class ProductsRetailController extends GetxController {
   ];
 
   List<String> barCodeTypeList() {
-    List<String> options = [
-      'Code 128 (C128)',
-      'Code 39 (C39)',
-      'EAN-13',
-      'EAN-8',
-      'UPC-A',
-      'UPC-E'
-    ];
+    List<String> options = ['C128', 'C39', 'EAN-13', 'EAN-8', 'UPC-A', 'UPC-E'];
     // for (int i = 0;
     // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
     // i++) {
@@ -57,9 +55,9 @@ class ProductsRetailController extends GetxController {
 
   List<String> unitList() {
     List<String> options = [
-      'Pieces (Pc(s))',
-      'Plate (Plate)',
-      'KG (KG)',
+      'Pc(s)',
+      'Plate',
+      'KG',
     ];
     // for (int i = 0;
     // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
@@ -147,5 +145,50 @@ class ProductsRetailController extends GetxController {
   List<String> taxTypeList() {
     List<String> options = ['Inclusive', 'Exclusive'];
     return options;
+  }
+
+  Future createNewProduct() async {
+    Map<String, String> _field = {
+      "product_name": '${productNameCtrl.text}',
+      "sku": '${productSKUCtrl.text}',
+      "barcode_type": '${barCodeStatus}',
+      "unit": '${unitStatus}',
+      "category": '${categoryStatus}',
+      "alert_quantity": '${alertQtyCtrl.text}',
+      "warranty": '${warrantyStatus}',
+      "printer": '${printerStatus}',
+      "type_of_product": '${typeOfProductStatus}',
+      "device_model": '${deviceModelStatus}',
+      "product_desc": '${productDescCtrl.text}',
+      "product_image": 'image',
+      "product_broucer": 'prod-borucher image',
+      "enable_product dexc": '1',
+      "not_for_selling": '0',
+      "weight": '${weightCtrl.text}',
+      "custom_field1": '${customField1Ctrl}',
+      "custom_field2": '${customField2Ctrl}',
+      "custom_field3": '${customField3Ctrl}',
+      "custom_field4": '${customField4Ctrl}',
+      "disable woo comerce": '0',
+      "applicable_tax": '${applicableTaxStatus}',
+      "sellingPriceTaxtype": '${taxTypeStatus}',
+      "product_type": '${productTypeCtrl.text}',
+    };
+
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.createNewBookingAPI, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
+  clearAllFields() {
+    productNameCtrl.clear();
   }
 }

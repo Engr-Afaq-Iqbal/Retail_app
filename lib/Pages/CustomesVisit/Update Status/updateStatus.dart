@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 
 import 'package:flutter/material.dart';
@@ -16,7 +17,11 @@ import '../../../Theme/style.dart';
 import 'meetDetailsView.dart';
 
 class UpdateStatus extends StatefulWidget {
-  const UpdateStatus({Key? key}) : super(key: key);
+  CustomerVisitsController customerVisitsCtrl;
+  int index;
+  UpdateStatus(
+      {Key? key, required this.customerVisitsCtrl, required this.index})
+      : super(key: key);
 
   @override
   State<UpdateStatus> createState() => _UpdateStatusState();
@@ -26,8 +31,6 @@ class _UpdateStatusState extends State<UpdateStatus> {
   CustomerVisitsController custVisitsCtrlObj =
       Get.find<CustomerVisitsController>();
   String? statusValue;
-  File? image;
-  String frontPath = 'No file chosen';
 
   Future pickContactImage() async {
     try {
@@ -36,9 +39,9 @@ class _UpdateStatusState extends State<UpdateStatus> {
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image != null) {
         final imageTemporary = File(image.path);
-        frontPath = image.path;
+        custVisitsCtrlObj.frontPath = image.path;
         setState(() {
-          this.image = imageTemporary;
+          custVisitsCtrlObj.image = imageTemporary;
         });
       } else {
         return showToast("No Image picked");
@@ -48,13 +51,30 @@ class _UpdateStatusState extends State<UpdateStatus> {
     }
   }
 
+  void dispose() {
+    custVisitsCtrlObj.clearAllStatusUpdateFields();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    custVisitsCtrlObj.visitedOnCtrl.text = widget.customerVisitsCtrl
+        .customerVisitsListModel?.data[widget.index].visitedOn;
+    custVisitsCtrlObj.idCtrl.text = widget
+        .customerVisitsCtrl.customerVisitsListModel!.data[widget.index].id
+        .toString();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Update Status (#2022/0001)'),
+        title: Text(
+            'Update Status (Visti ID: ${widget.customerVisitsCtrl.customerVisitsListModel?.data[widget.index].id})'),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
@@ -76,6 +96,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             setState(() {
                               customerVisitsCtrlObj.meetYes = value!;
                               customerVisitsCtrlObj.meetNo = false;
+                              customerVisitsCtrlObj.meetWithStatus = '1';
                               customerVisitsCtrlObj.update();
                             });
                           },
@@ -94,6 +115,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             setState(() {
                               customerVisitsCtrlObj.meetNo = value!;
                               customerVisitsCtrlObj.meetYes = false;
+                              customerVisitsCtrlObj.meetWithStatus = '0';
                               customerVisitsCtrlObj.update();
                             });
                           },
@@ -149,7 +171,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             width: 5,
                           ),
                           Text(
-                            frontPath,
+                            custVisitsCtrlObj.frontPath,
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -170,7 +192,8 @@ class _UpdateStatusState extends State<UpdateStatus> {
                   SizedBox(
                     width: 5,
                   ),
-                  Text('05/11/2023 08:21')
+                  Text(
+                      '${widget.customerVisitsCtrl.customerVisitsListModel?.data[widget.index].visitedOn ?? ' - -'}')
                 ],
               ),
               SizedBox(
@@ -225,7 +248,9 @@ class _UpdateStatusState extends State<UpdateStatus> {
                               'Update',
                               style: TextStyle(color: kWhiteColor),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              custVisitsCtrlObj.updateCustomerVisitsStatus();
+                            },
                             bgColor: primaryColor,
                           ),
                           SizedBox(

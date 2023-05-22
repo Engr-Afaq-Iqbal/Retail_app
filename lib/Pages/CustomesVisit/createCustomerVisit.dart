@@ -16,7 +16,12 @@ import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 
 class CreateCustomerVisits extends StatefulWidget {
-  const CreateCustomerVisits({Key? key}) : super(key: key);
+  CustomerVisitsController? custVisitCtrl;
+  int? index;
+  bool editCustVisit;
+  CreateCustomerVisits(
+      {Key? key, this.custVisitCtrl, this.index, this.editCustVisit = false})
+      : super(key: key);
 
   @override
   State<CreateCustomerVisits> createState() => _CreateCustomerVisitsState();
@@ -77,7 +82,40 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
     // TODO: implement initState
     listUserCtrl.fetchListUsers();
     contactCtrl.fetchCustomerList(30);
+    if (widget.editCustVisit == true) initialFunction();
     super.initState();
+  }
+
+  void dispose() {
+    super.dispose();
+  }
+
+  initialFunction() {
+    if (widget.editCustVisit == true &&
+        widget.custVisitCtrl?.customerVisitsListModel?.data[widget.index!]
+                .contactId !=
+            null) {
+      customerVisitsCtrlObj.valuefirst = true;
+    } else if (widget.editCustVisit == true &&
+        widget.custVisitCtrl?.customerVisitsListModel?.data[widget.index!]
+                .contactId ==
+            null) {
+      customerVisitsCtrlObj.valuefirst = false;
+      customerVisitsCtrlObj.companyCtrl.text = widget
+          .custVisitCtrl!.customerVisitsListModel!.data[widget.index!].company;
+      customerVisitsCtrlObj.visitAddressCtrl.text = widget.custVisitCtrl!
+          .customerVisitsListModel!.data[widget.index!].visitingAddress;
+    }
+
+    customerVisitsCtrlObj.idCtrl.text = widget
+        .custVisitCtrl!.customerVisitsListModel!.data[widget.index!].id
+        .toString();
+    customerVisitsCtrlObj.dateCtrl.text = widget
+        .custVisitCtrl!.customerVisitsListModel!.data[widget.index!].visitOn;
+    customerVisitsCtrlObj.statusValue =
+        '${widget.custVisitCtrl!.customerVisitsListModel?.data[widget.index!].firstName ?? ''} ${widget.custVisitCtrl!.customerVisitsListModel?.data[widget.index!].lastName ?? ''}';
+    customerVisitsCtrlObj.purposeOfVisitingCtrl.text = widget.custVisitCtrl!
+        .customerVisitsListModel!.data[widget.index!].purposeOfVisiting;
   }
 
   @override
@@ -346,12 +384,18 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                       children: [
                         CustomButton(
                           title: Text(
-                            'Save',
+                            (widget.editCustVisit == true) ? 'Update' : 'Save',
                             style: TextStyle(color: kWhiteColor),
                           ),
                           onTap: () {
                             showProgress();
-                            customerVisitsCtrlObj.createCustomerVisits();
+                            if (widget.editCustVisit == true) {
+                              print('update is pressed');
+                              customerVisitsCtrlObj.updateCustomerVisits();
+                            } else {
+                              print(' save is pressed');
+                              customerVisitsCtrlObj.createCustomerVisits();
+                            }
                           },
                           bgColor: primaryColor,
                         ),

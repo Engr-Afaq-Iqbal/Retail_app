@@ -149,32 +149,51 @@ class Datum {
         firstName: json["first_name"],
         lastName: json["last_name"],
         id: json["id"],
-        visiting: json["visiting"],
+        visiting: json["visiting"] != null ? json["visiting"] : '',
         contactId: json["contact_id"],
         company: json["company"] != null ? json["company"] : '',
         visitingAddress:
             json["visiting_address"] != null ? json["visiting_address"] : '',
         userId: json["user_id"],
-        visitOn: json["visit_on"],
+        visitOn: json["visit_on"] != null ? json["visit_on"] : '',
         purposeOfVisiting: json["purpose_of_visiting"],
-        status: json["status"],
+        status: json["status"] != null ? json["status"] : '',
         businessId: json["business_id"],
-        reasonToNotMeetContact: json["reason_to_not_meet_contact"],
-        photo: json["photo"],
-        visitedOn: json["visited_on"],
-        meetWith: json["meet_with"],
-        meetWithMobileno: json["meet_with_mobileno"],
-        meetWithDesignation: json["meet_with_designation"],
-        meetWith2: json["meet_with2"],
-        meetWithMobileno2: json["meet_with_mobileno2"],
-        meetWithDesignation2: json["meet_with_designation2"],
-        meetWith3: json["meet_with3"],
-        meetWithMobileno3: json["meet_with_mobileno3"],
-        meetWithDesignation3: json["meet_with_designation3"],
-        visitedAddressLatitude: json["visited_address_latitude"],
-        visitedAddressLongitude: json["visited_address_longitude"],
-        visitedAddress: json["visited_address"],
-        comments: json["comments"],
+        reasonToNotMeetContact: json["reason_to_not_meet_contact"] != null
+            ? json["reason_to_not_meet_contact"]
+            : '',
+        photo: json["photo"] != null ? json["photo"] : '',
+        visitedOn: json["visited_on"] != null ? json["visited_on"] : '',
+        meetWith: json["meet_with"] != null ? json["meet_with"] : '',
+        meetWithMobileno: json["meet_with_mobileno"] != null
+            ? json["meet_with_mobileno"]
+            : '',
+        meetWithDesignation: json["meet_with_designation"] != null
+            ? json["meet_with_designation"]
+            : '',
+        meetWith2: json["meet_with2"] != null ? json["meet_with2"] : '',
+        meetWithMobileno2: json["meet_with_mobileno2"] != null
+            ? json["meet_with_mobileno2"]
+            : '',
+        meetWithDesignation2: json["meet_with_designation2"] != null
+            ? json["meet_with_designation2"]
+            : '',
+        meetWith3: json["meet_with3"] != null ? json["meet_with3"] : '',
+        meetWithMobileno3: json["meet_with_mobileno3"] != null
+            ? json["meet_with_mobileno3"]
+            : '',
+        meetWithDesignation3: json["meet_with_designation3"] != null
+            ? json["meet_with_designation3"]
+            : '',
+        visitedAddressLatitude: json["visited_address_latitude"] != null
+            ? json["visited_address_latitude"]
+            : '',
+        visitedAddressLongitude: json["visited_address_longitude"] != null
+            ? json["visited_address_longitude"]
+            : '',
+        visitedAddress:
+            json["visited_address"] != null ? json["visited_address"] : '',
+        comments: json["comments"] != null ? json["comments"] : '',
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         createdBy: json["created_by"],
