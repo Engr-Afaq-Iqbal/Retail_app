@@ -63,7 +63,10 @@ class ApiUrls {
   ///View Stock Transfer Api
   static String viewStockTransfer = "connector/api/stock-transfer";
 
-  ///View Stock Transfer Api
+  ///Status Stock Transfer Api
+  static String statusStockTransfer = "connector/api/stock-transfer/status";
+
+  ///View Stock Adjustment Api
   static String viewStockAdjustment = "connector/api/stock-adjustment";
 
   ///Customer Visits List
@@ -90,4 +93,23 @@ class ApiUrls {
 
   ///Add Sale Return
   static String addSaleReturnApi = "connector/api/sell-return";
+
+  ///Show Product List Api
+  static String showProductListApi = "connector/api/product/show";
+
+  ///All Kitchen Api
+  static String allKitchenApi = "connector/api/all/kitchen";
+
+  ///Create New Product
+  static String createNewProductApi = "connector/api/product/create";
+
+  ///Create Stock Transfer
+  static String createStockTransferApi = "connector/api/stock-transfer/store";
+
+  ///Create Stock Adjustment
+  static String createStockAdjustmentApi =
+      "connector/api/stock-adjustment/create";
+
+  ///Searh product list Api
+  static String searchProductListApi = "connector/api/product/search";
 }

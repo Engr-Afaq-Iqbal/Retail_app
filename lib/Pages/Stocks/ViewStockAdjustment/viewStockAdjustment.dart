@@ -1,5 +1,3 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import '../../../Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import '../../../Pages/Stocks/ViewStockAdjustment/viewStockAdjustmentTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
-import '../ViewStockTransfer/createStockTransfer.dart';
+
 import 'createStockAdjustment.dart';
 
 class ViewStockAdjustment extends StatefulWidget {
@@ -18,8 +16,8 @@ class ViewStockAdjustment extends StatefulWidget {
 }
 
 class _ViewStockAdjustmentState extends State<ViewStockAdjustment> {
-  StockAdjustmentController stockAdjustmentCtrlObj =
-      Get.find<StockAdjustmentController>();
+  StockTransferController stockAdjustmentCtrlObj =
+      Get.find<StockTransferController>();
 
   @override
   void initState() {
@@ -40,8 +38,8 @@ class _ViewStockAdjustmentState extends State<ViewStockAdjustment> {
             onPressed: () {
               Get.to(CreateStockAdjustment());
             }),
-        body: GetBuilder<StockAdjustmentController>(
-            builder: (StockAdjustmentController stockAdjustmentCtrlObj) {
+        body: GetBuilder<StockTransferController>(
+            builder: (StockTransferController stockAdjustmentCtrlObj) {
           if (stockAdjustmentCtrlObj.viewStockAdjustmentModel != null) {
             return RefreshIndicator(
               onRefresh: () async {

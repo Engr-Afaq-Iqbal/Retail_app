@@ -1,5 +1,6 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:data_table_2/data_table_2.dart';
+import 'package:bizmodo_emenu/Config/utils.dart';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,9 +8,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
-import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Services/storage_services.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../searchStockProducts.dart';
@@ -22,9 +21,8 @@ class CreateStockAdjustment extends StatefulWidget {
 }
 
 class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
-  StockTransferController stockTranCtrlObj =
+  StockTransferController stockAdjustmentCtrlObj =
       Get.find<StockTransferController>();
-  String? statusValue;
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -66,7 +64,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
       },
     );
 
-    stockTranCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    stockAdjustmentCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
     print(dateTime);
   }
 
@@ -95,7 +93,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                       AppFormField(
                         width: width * 0.43,
                         readOnly: true,
-                        controller: stockTranCtrlObj.dateCtrl,
+                        controller: stockAdjustmentCtrlObj.dateCtrl,
                         labelText: 'Select Date',
                         prefixIcon: Icon(Icons.calendar_month),
                         onTap: () {
@@ -108,49 +106,54 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                       ),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      headings(txt: 'Adjustment Type:*'),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                'Please Select',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  color: txtFieldHintColor,
-                                ),
-                              )),
-                          items:
-                              stockTranCtrlObj.getAdjustmentTypeList().map((e) {
-                            return DropdownMenuItem(value: e, child: Text(e));
-                          }).toList(),
-                          value: statusValue,
-                          dropdownDirection: DropdownDirection.textDirection,
-                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                          onChanged: (String? value) {
-                            setState(() {
-                              statusValue = value;
-                            });
-                          },
-                          buttonHeight: height * 0.06,
-                          buttonWidth: width * 0.43,
-                          buttonDecoration: BoxDecoration(
-                              border: Border.all(width: 1, color: primaryColor),
-                              borderRadius: BorderRadius.circular(15),
-                              color: kWhiteColor),
-                          itemHeight: 40,
-                          itemPadding: EdgeInsets.zero,
-                          itemHighlightColor: primaryColor,
+                  GetBuilder<StockTransferController>(
+                      builder: (StockTransferController stockAdjustmentCtrl) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        headings(txt: 'Adjustment Type:*'),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  'Please Select',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: txtFieldHintColor,
+                                  ),
+                                )),
+                            items: stockAdjustmentCtrl
+                                .getAdjustmentTypeList()
+                                .map((e) {
+                              return DropdownMenuItem(value: e, child: Text(e));
+                            }).toList(),
+                            value: stockAdjustmentCtrl.statusValue,
+                            dropdownDirection: DropdownDirection.textDirection,
+                            dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                            buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                            onChanged: (String? value) {
+                              setState(() {
+                                stockAdjustmentCtrl.statusValue = value;
+                              });
+                            },
+                            buttonHeight: height * 0.06,
+                            buttonWidth: width * 0.43,
+                            buttonDecoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1, color: primaryColor),
+                                borderRadius: BorderRadius.circular(15),
+                                color: kWhiteColor),
+                            itemHeight: 40,
+                            itemPadding: EdgeInsets.zero,
+                            itemHighlightColor: primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    );
+                  }),
                 ],
               ),
               SizedBox(
@@ -169,7 +172,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     children: [
                       headings(txt: 'Search Products'),
                       AppFormField(
-                        controller: stockTranCtrlObj.additionalNotes,
+                        controller: stockAdjustmentCtrlObj.additionalNotesCtrl,
                         labelText: 'Search products for stock',
                       ),
                       Container(
@@ -231,11 +234,11 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     children: [
                       headings(txt: 'Total amount recovered:'),
                       AppFormField(
-                        controller: stockTranCtrlObj.totalAmountRecCtrl,
+                        controller: stockAdjustmentCtrlObj.totalAmountRecCtrl,
                       ),
                       headings(txt: 'Reason:'),
                       AppFormField(
-                        controller: stockTranCtrlObj.reasonCtrl,
+                        controller: stockAdjustmentCtrlObj.reasonCtrl,
                         labelText: 'Reason',
                       ),
                       Row(
@@ -249,7 +252,11 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                   'Save',
                                   style: TextStyle(color: kWhiteColor),
                                 ),
-                                onTap: () {},
+                                onTap: () {
+                                  showProgress();
+                                  stockAdjustmentCtrlObj
+                                      .createStockAdjustment();
+                                },
                                 bgColor: primaryColor,
                               )
                             ],

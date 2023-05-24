@@ -1,13 +1,13 @@
-import 'package:bizmodo_emenu/Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Config/const.dart';
+import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
 
 class ViwStockAdjustmentTile extends StatefulWidget {
-  StockAdjustmentController stockAdjustmentCtrlObj;
+  StockTransferController stockAdjustmentCtrlObj;
   int index;
   ViwStockAdjustmentTile(
       {Key? key, required this.stockAdjustmentCtrlObj, required this.index})

@@ -15,6 +15,7 @@ import '../Return/return.dart';
 import '../SalesView/SalesTabPage.dart';
 import '../Upload/upload.dart';
 import '../ProductsPage/home_page.dart';
+import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {
   const HomePageRetail({Key? key}) : super(key: key);
@@ -79,15 +80,28 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 //Get.to(AddItem());
                                 Get.to(HomePage());
                               }
+                              if (index == 1) {
+                                Get.to(CustomerSearch(
+                                  dashBoardId: 1,
+                                ));
+                              }
                               if (index == 2) {
-                                //Get.to(CustomerSearch());
-                                Get.to(CreateOrderPage());
+                                Get.to(CustomerSearch(
+                                  dashBoardId: 2,
+                                ));
+                                //Get.to(CreateOrderPage());
                               }
                               if (index == 3) {
-                                Get.to(Return());
+                                Get.to(CustomerSearch(
+                                  dashBoardId: 3,
+                                ));
+                                // Get.to(Return());
                               }
                               if (index == 4) {
-                                Get.to(Receipts());
+                                Get.to(CustomerSearch(
+                                  dashBoardId: 4,
+                                ));
+                                // Get.to(Receipts());
                               }
                               if (index == 5) {
                                 Get.to(SalesTabPage());

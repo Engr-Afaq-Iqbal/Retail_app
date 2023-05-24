@@ -10,7 +10,6 @@ import '/Theme/colors.dart';
 import '/Theme/style.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/OrderController/order_type_controller.dart';
-import '../../Controllers/Tax Controller/TaxController.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
 import '../item_info.dart';
 import 'AddProductsPage.dart';
@@ -34,7 +33,6 @@ class _HomePageState extends State<HomePage> {
       Get.find<ProductCartController>();
   List<ProductModel>? listProducts;
   AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
-  final TaxController taxCtrlObj = Get.find<TaxController>();
 
   showingallItems(allProdCtrlObj) {
     productModelObjs.clear();
@@ -71,7 +69,7 @@ class _HomePageState extends State<HomePage> {
     }
     // // order service types
     Get.find<OrderTypeSelectionController>().fetchOrderTypes();
-    taxCtrlObj.fetchListTax();
+
     showingallItems(allProdCtrlObj);
   }
 

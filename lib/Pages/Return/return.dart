@@ -8,7 +8,9 @@ import 'package:get/get.dart';
 import '../../../Config/utils.dart';
 
 import '../../../Theme/colors.dart';
+import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
+import '../../Theme/style.dart';
 
 class Return extends StatefulWidget {
   const Return({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class Return extends StatefulWidget {
 
 class _ReturnState extends State<Return> {
   SaleReturnController saleReturnCtrlObj = Get.find<SaleReturnController>();
+  ContactController contactCtrlObjj = Get.find<ContactController>();
   @override
   void initState() {
     // TODO: implement initState
@@ -42,6 +45,25 @@ class _ReturnState extends State<Return> {
               width: 10,
             ),
           ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Customer Name:'),
+                  Center(
+                    child: Text(
+                      '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
+                      style: appBarHeaderStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(

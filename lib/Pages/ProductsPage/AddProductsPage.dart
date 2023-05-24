@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,7 @@ import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/ProductsRetailController/productsRetailsController.dart';
+import '../../Controllers/Tax Controller/TaxController.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
 
 class AddProductsPage extends StatefulWidget {
@@ -31,7 +33,10 @@ class AddProductsPage extends StatefulWidget {
 class _AddProductsPageState extends State<AddProductsPage> {
   ProductsRetailController productRetailCtrlObj =
       Get.find<ProductsRetailController>();
+  AllKitchenController allKitchenCtrlObj = Get.find<AllKitchenController>();
+  TaxController taxCtrlObj = Get.find<TaxController>();
   bool valuefirst = false;
+  bool isEdit = false;
   File? image;
   String frontPath = 'No file chosen';
   Future pickContactImage() async {
@@ -84,29 +89,35 @@ class _AddProductsPageState extends State<AddProductsPage> {
 
   @override
   void initState() {
+    ///Fetching the product list
+    productRetailCtrlObj.fetchShowProductList();
+    allKitchenCtrlObj.fetchShowProductList();
+    taxCtrlObj.fetchListTax();
     // TODO: implement initState
     if (widget.isView == true) {
       productRetailCtrlObj.productNameCtrl.text =
           widget.productModelObjs?[widget.index!].name ?? '';
       productRetailCtrlObj.productSKUCtrl.text =
           widget.productModelObjs![widget.index!].sku ?? '';
-      productRetailCtrlObj.barCodeStatus =
+      productRetailCtrlObj.barCodeHintStatus =
           widget.productModelObjs![widget.index!].barcodeType ?? '';
 
-      ///ToDo: need to add unit in it
-      // productRetailCtrlObj.unitStatus =
-      //     widget.productModelObjs![widget.index!] ?? '';
-      ///ToDo: need to add unit in it
-      // productRetailCtrlObj.categoryStatus =
-      //     widget.productModelObjs![widget.index!].cat ?? '';
       productRetailCtrlObj.alertQtyCtrl.text =
           widget.productModelObjs![widget.index!].alertQuantity ?? '';
-
-      ///ToDo: need to add unit in it
-      // productRetailCtrlObj.warrantyStatus =
-      //     widget.productModelObjs![widget.index!].warranty ?? '';
-      // productRetailCtrlObj =
-      //     widget.productModelObjs![widget.index!].kitchenPrinter ?? '';
+      productRetailCtrlObj.productDescCtrl.text =
+          widget.productModelObjs![widget.index!].productDescription ?? '';
+      productRetailCtrlObj.weightCtrl.text =
+          widget.productModelObjs![widget.index!].weight ?? '';
+      productRetailCtrlObj.customField1Ctrl.text =
+          widget.productModelObjs![widget.index!].productCustomField1 ?? '';
+      productRetailCtrlObj.customField2Ctrl.text =
+          widget.productModelObjs![widget.index!].productCustomField2 ?? '';
+      productRetailCtrlObj.customField3Ctrl.text =
+          widget.productModelObjs![widget.index!].productCustomField3 ?? '';
+      productRetailCtrlObj.customField4Ctrl.text =
+          widget.productModelObjs![widget.index!].productCustomField4 ?? '';
+      productRetailCtrlObj.productTypeCtrl.text =
+          widget.productModelObjs![widget.index!].type ?? '';
     }
     super.initState();
   }
@@ -120,17 +131,23 @@ class _AddProductsPageState extends State<AddProductsPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Add new product'),
         actions: [
-          CustomButton(
-            title: Text(
-              'Edit',
-              style: TextStyle(color: kWhiteColor),
+          if (widget.isView == true)
+            CustomButton(
+              title: Text(
+                'Edit',
+                style: TextStyle(color: kWhiteColor),
+              ),
+              onTap: () {
+                setState(() {
+                  isEdit = true;
+                });
+              },
             ),
-            onTap: () {},
-          ),
           SizedBox(
             width: 15,
           ),
@@ -143,503 +160,595 @@ class _AddProductsPageState extends State<AddProductsPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ///1st Container
-              IntrinsicHeight(
-                child: Container(
-                  width: width,
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: kWhiteColor,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Product Name:*'),
-                              AppFormField(
-                                  readOnly:
-                                      widget.isView == true ? true : false,
-                                  width: width * 0.42,
-                                  controller:
-                                      productRetailCtrlObj.productNameCtrl)
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'SKU:'),
-                              AppFormField(
-                                  width: width * 0.42,
-                                  controller:
-                                      productRetailCtrlObj.productSKUCtrl)
-                            ],
-                          )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Barcode Type:*'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .barCodeTypeList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value: productRetailCtrlObj.barCodeStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.barCodeStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Unit:*'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items:
-                                      productRetailCtrlObj.unitList().map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value: productRetailCtrlObj.unitStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.unitStatus = value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      headings(txt: 'Category:'),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                'Please Select',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  color: txtFieldHintColor,
-                                ),
-                              )),
-                          items: productRetailCtrlObj.categoryList().map((e) {
-                            return DropdownMenuItem(value: e, child: Text(e));
-                          }).toList(),
-                          value: productRetailCtrlObj.categoryStatus,
-                          dropdownDirection: DropdownDirection.textDirection,
-                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                          onChanged: (String? value) {
-                            setState(() {
-                              productRetailCtrlObj.categoryStatus = value;
-                            });
-                          },
-                          buttonHeight: height * 0.06,
-                          buttonWidth: width * 0.42,
-                          buttonDecoration: BoxDecoration(
-                              border: Border.all(width: 1, color: primaryColor),
-                              borderRadius: BorderRadius.circular(15),
-                              color: kWhiteColor),
-                          itemHeight: 40,
-                          itemPadding: EdgeInsets.zero,
-                          itemHighlightColor: primaryColor,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: CheckboxListTile(
-                                value: productRetailCtrlObj.manageValue,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    productRetailCtrlObj.manageValue = value!;
-                                    productRetailCtrlObj.update();
-                                  });
-                                },
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                title: Text(
-                                  'Manage Stock?',
-                                  style: TextStyle(color: blackColor),
-                                )),
-                          ),
-                          if (productRetailCtrlObj.manageValue == true)
+              GetBuilder<ProductsRetailController>(
+                  builder: (ProductsRetailController prodRtailCtrlObj) {
+                if (prodRtailCtrlObj.showProductListModel == null)
+                  return progressIndicator();
+                return IntrinsicHeight(
+                  child: Container(
+                    width: width,
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: kWhiteColor,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                headings(txt: 'Alert quantity:'),
+                                headings(txt: 'Product Name:*'),
+                                AppFormField(
+                                    readOnly:
+                                        widget.isView == true ? true : false,
+                                    width: width * 0.42,
+                                    controller:
+                                        productRetailCtrlObj.productNameCtrl)
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'SKU:'),
                                 AppFormField(
                                     width: width * 0.42,
                                     controller:
-                                        productRetailCtrlObj.alertQtyCtrl),
+                                        productRetailCtrlObj.productSKUCtrl)
                               ],
                             )
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Warranty:*'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .warrantyList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value: productRetailCtrlObj.warrantyStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.warrantyStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Printer:*'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .printersList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value: productRetailCtrlObj.printerStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.printerStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Type of product:'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .typeofProductList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value:
-                                      productRetailCtrlObj.typeOfProductStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.typeOfProductStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Device Model:'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .deviceModelList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value: productRetailCtrlObj.deviceModelStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.deviceModelStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      headings(txt: 'Product Description:'),
-                      AppFormField(
-                        width: width,
-                        controller: productRetailCtrlObj.productDescCtrl,
-                        maxLines: 3,
-                      ),
-                      headings(txt: 'Product Image:'),
-                      GestureDetector(
-                        onTap: () {
-                          pickContactImage();
-                        },
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: kHintColor.withOpacity(0.3)),
-                          child: (image != null)
-                              ? Center(
-                                  child: Image.file(
-                                    image!,
-                                    fit: BoxFit.contain,
-                                  ),
-                                )
-                              : Center(
-                                  child: Icon(
-                                    Icons.add,
-                                    size: 30,
-                                  ),
-                                ),
+                          ],
                         ),
-                      ),
-                      headings(txt: 'Product brochure:'),
-                      Row(
-                        children: [
-                          CustomButton(
-                            title: Text(
-                              'Choose File',
-                              style: TextStyle(color: kWhiteColor),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'Barcode Type:*'),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        child: Text(
+                                          prodRtailCtrlObj.barCodeHintStatus,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            color: txtFieldHintColor,
+                                          ),
+                                        )),
+                                    items: productRetailCtrlObj
+                                        .barCodeTypeList(productRetailCtrlObj)
+                                        .map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
+                                    value: productRetailCtrlObj.barCodeStatus,
+                                    dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                    dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                    buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        productRetailCtrlObj.barCodeStatus =
+                                            value;
+                                        productRetailCtrlObj.barCodeKey =
+                                            productRetailCtrlObj
+                                                .showProductListModel
+                                                ?.barcodeTypes?[
+                                                    productRetailCtrlObj
+                                                        .barCodeTypeList(
+                                                            productRetailCtrlObj)
+                                                        .indexOf(value!)]
+                                                .key;
+                                      });
+                                    },
+                                    buttonHeight: height * 0.06,
+                                    buttonWidth: width * 0.42,
+                                    buttonDecoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: kWhiteColor),
+                                    itemHeight: 40,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemHighlightColor: primaryColor,
+                                  ),
+                                ),
+                              ],
                             ),
-                            height: 20,
-                            borderRadius: 5,
-                            onTap: () {
-                              pickBroucherImage();
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'Unit:*'),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        child: Text(
+                                          prodRtailCtrlObj.unitStatusHint,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            color: txtFieldHintColor,
+                                          ),
+                                        )),
+                                    items: productRetailCtrlObj
+                                        .unitList(
+                                            prodRtailCtrlObj,
+                                            widget.index,
+                                            widget.productModelObjs)
+                                        .map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
+                                    value: productRetailCtrlObj.unitStatus,
+                                    dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                    dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                    buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        productRetailCtrlObj.unitStatus = value;
+                                        productRetailCtrlObj.unitID =
+                                            productRetailCtrlObj
+                                                .showProductListModel
+                                                ?.units?[productRetailCtrlObj
+                                                    .unitList(
+                                                        productRetailCtrlObj,
+                                                        widget.index,
+                                                        widget.productModelObjs)
+                                                    .indexOf(value!)]
+                                                .id
+                                                .toString();
+                                      });
+                                    },
+                                    buttonHeight: height * 0.06,
+                                    buttonWidth: width * 0.42,
+                                    buttonDecoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: kWhiteColor),
+                                    itemHeight: 40,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemHighlightColor: primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        headings(txt: 'Category:'),
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            isExpanded: true,
+                            hint: Align(
+                                alignment: AlignmentDirectional.centerStart,
+                                child: Text(
+                                  prodRtailCtrlObj.categoriesHintStatus,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w400,
+                                    color: txtFieldHintColor,
+                                  ),
+                                )),
+                            items: productRetailCtrlObj
+                                .categoryList(prodRtailCtrlObj, widget.index,
+                                    widget.productModelObjs)
+                                .map((e) {
+                              return DropdownMenuItem(value: e, child: Text(e));
+                            }).toList(),
+                            value: productRetailCtrlObj.categoryStatus,
+                            dropdownDirection: DropdownDirection.textDirection,
+                            dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                            buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                            dropdownMaxHeight: height * 0.4,
+                            onChanged: (String? value) {
+                              setState(() {
+                                productRetailCtrlObj.categoryStatus = value;
+                                productRetailCtrlObj.categoryID =
+                                    productRetailCtrlObj
+                                        .showProductListModel
+                                        ?.categories?[productRetailCtrlObj
+                                            .categoryList(
+                                                productRetailCtrlObj,
+                                                widget.index,
+                                                widget.productModelObjs)
+                                            .indexOf(value!)]
+                                        .id
+                                        .toString();
+                              });
                             },
+                            buttonHeight: height * 0.06,
+                            //  buttonWidth: width * 0.42,
+                            buttonDecoration: BoxDecoration(
+                                border:
+                                    Border.all(width: 1, color: primaryColor),
+                                borderRadius: BorderRadius.circular(15),
+                                color: kWhiteColor),
+                            itemHeight: 40,
+                            itemPadding: EdgeInsets.zero,
+                            itemHighlightColor: primaryColor,
                           ),
-                          SizedBox(
-                            width: 5,
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CheckboxListTile(
+                                  value: productRetailCtrlObj.manageValue,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      productRetailCtrlObj.manageValue = value!;
+                                      productRetailCtrlObj.update();
+                                    });
+                                  },
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  title: Text(
+                                    'Manage Stock?',
+                                    style: TextStyle(color: blackColor),
+                                  )),
+                            ),
+                            if (productRetailCtrlObj.manageValue == true)
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  headings(txt: 'Alert quantity:'),
+                                  AppFormField(
+                                      width: width * 0.42,
+                                      controller:
+                                          productRetailCtrlObj.alertQtyCtrl),
+                                ],
+                              )
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'Warranty:*'),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        child: Text(
+                                          prodRtailCtrlObj.warrantyHintStatus,
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            color: txtFieldHintColor,
+                                          ),
+                                        )),
+                                    items: productRetailCtrlObj
+                                        .warrantyList(
+                                            prodRtailCtrlObj,
+                                            widget.index,
+                                            widget.productModelObjs)
+                                        .map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
+                                    value: productRetailCtrlObj.warrantyStatus,
+                                    dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                    dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                    buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        productRetailCtrlObj.warrantyStatus =
+                                            value;
+
+                                        productRetailCtrlObj.warrantyID =
+                                            productRetailCtrlObj
+                                                .showProductListModel
+                                                ?.warranties?[productRetailCtrlObj
+                                                    .warrantyList(
+                                                        productRetailCtrlObj,
+                                                        widget.index,
+                                                        widget.productModelObjs)
+                                                    .indexOf(value!)]
+                                                .id
+                                                .toString();
+                                      });
+                                    },
+                                    buttonHeight: height * 0.06,
+                                    buttonWidth: width * 0.42,
+                                    buttonDecoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: kWhiteColor),
+                                    itemHeight: 40,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemHighlightColor: primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GetBuilder<AllKitchenController>(
+                                builder: (AllKitchenController allKitchenCtrl) {
+                              if (allKitchenCtrl.allKitchenModel == null)
+                                return progressIndicator();
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  headings(txt: 'Printer:*'),
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2(
+                                      isExpanded: true,
+                                      hint: Align(
+                                          alignment:
+                                              AlignmentDirectional.centerStart,
+                                          child: Text(
+                                            'Please Select',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w400,
+                                              color: txtFieldHintColor,
+                                            ),
+                                          )),
+                                      items: allKitchenCtrl
+                                          .printersList(allKitchenCtrl)
+                                          .map((e) {
+                                        return DropdownMenuItem(
+                                            value: e, child: Text(e));
+                                      }).toList(),
+                                      value: productRetailCtrlObj.printerStatus,
+                                      dropdownDirection:
+                                          DropdownDirection.textDirection,
+                                      dropdownPadding:
+                                          EdgeInsets.only(left: 5, right: 5),
+                                      buttonPadding:
+                                          EdgeInsets.only(left: 15, right: 15),
+                                      onChanged: (String? value) {
+                                        setState(() {
+                                          productRetailCtrlObj.printerStatus =
+                                              value;
+                                          productRetailCtrlObj.printerID =
+                                              allKitchenCtrl
+                                                  .allKitchenModel
+                                                  ?.kitchens?[allKitchenCtrl
+                                                      .printersList(
+                                                          allKitchenCtrl)
+                                                      .indexOf(value!)]
+                                                  .id
+                                                  .toString();
+                                        });
+                                      },
+                                      buttonHeight: height * 0.06,
+                                      buttonWidth: width * 0.42,
+                                      buttonDecoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1, color: primaryColor),
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: kWhiteColor),
+                                      itemHeight: 40,
+                                      itemPadding: EdgeInsets.zero,
+                                      itemHighlightColor: primaryColor,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'Type of product:'),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        child: Text(
+                                          'Please Select',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            color: txtFieldHintColor,
+                                          ),
+                                        )),
+                                    items: productRetailCtrlObj
+                                        .typeofProductList(
+                                            prodRtailCtrlObj,
+                                            widget.index,
+                                            widget.productModelObjs)
+                                        .map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
+                                    value: productRetailCtrlObj
+                                        .typeOfProductStatus,
+                                    dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                    dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                    buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        productRetailCtrlObj
+                                            .typeOfProductStatus = value;
+                                        productRetailCtrlObj.typeOfProductID =
+                                            productRetailCtrlObj
+                                                .showProductListModel
+                                                ?.typeOfProducts?[
+                                                    productRetailCtrlObj
+                                                        .typeofProductList(
+                                                            productRetailCtrlObj,
+                                                            widget.index,
+                                                            widget
+                                                                .productModelObjs)
+                                                        .indexOf(value!)]
+                                                .id
+                                                .toString();
+                                      });
+                                    },
+                                    buttonHeight: height * 0.06,
+                                    buttonWidth: width * 0.42,
+                                    buttonDecoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: kWhiteColor),
+                                    itemHeight: 40,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemHighlightColor: primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   children: [
+                            //     headings(txt: 'Device Model:'),
+                            //     DropdownButtonHideUnderline(
+                            //       child: DropdownButton2(
+                            //         isExpanded: true,
+                            //         hint: Align(
+                            //             alignment:
+                            //                 AlignmentDirectional.centerStart,
+                            //             child: Text(
+                            //               'Please Select',
+                            //               style: TextStyle(
+                            //                 fontSize: 13,
+                            //                 fontWeight: FontWeight.w400,
+                            //                 color: txtFieldHintColor,
+                            //               ),
+                            //             )),
+                            //         items: productRetailCtrlObj
+                            //             .deviceModelList(prodRtailCtrlObj)
+                            //             .map((e) {
+                            //           return DropdownMenuItem(
+                            //               value: e, child: Text(e));
+                            //         }).toList(),
+                            //         value:
+                            //             productRetailCtrlObj.deviceModelStatus,
+                            //         dropdownDirection:
+                            //             DropdownDirection.textDirection,
+                            //         dropdownPadding:
+                            //             EdgeInsets.only(left: 5, right: 5),
+                            //         buttonPadding:
+                            //             EdgeInsets.only(left: 15, right: 15),
+                            //         onChanged: (String? value) {
+                            //           setState(() {
+                            //             productRetailCtrlObj.deviceModelStatus =
+                            //                 value;
+                            //           });
+                            //         },
+                            //         buttonHeight: height * 0.06,
+                            //         buttonWidth: width * 0.42,
+                            //         buttonDecoration: BoxDecoration(
+                            //             border: Border.all(
+                            //                 width: 1, color: primaryColor),
+                            //             borderRadius: BorderRadius.circular(15),
+                            //             color: kWhiteColor),
+                            //         itemHeight: 40,
+                            //         itemPadding: EdgeInsets.zero,
+                            //         itemHighlightColor: primaryColor,
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        headings(txt: 'Product Description:'),
+                        AppFormField(
+                          width: width,
+                          controller: productRetailCtrlObj.productDescCtrl,
+                          maxLines: 2,
+                        ),
+                        headings(txt: 'Product Image:'),
+                        GestureDetector(
+                          onTap: () {
+                            pickContactImage();
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: kHintColor.withOpacity(0.3)),
+                            child: (image != null)
+                                ? Center(
+                                    child: Image.file(
+                                      image!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 30,
+                                    ),
+                                  ),
                           ),
-                          Text(
-                            frontPath,
-                            softWrap: true,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        headings(txt: 'Product brochure:'),
+                        Row(
+                          children: [
+                            CustomButton(
+                              title: Text(
+                                'Choose File',
+                                style: TextStyle(color: kWhiteColor),
+                              ),
+                              height: 20,
+                              borderRadius: 5,
+                              onTap: () {
+                                pickBroucherImage();
+                              },
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              frontPath,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              }),
               SizedBox(
                 height: 15,
               ),
@@ -661,6 +770,12 @@ class _AddProductsPageState extends State<AddProductsPage> {
                           onChanged: (bool? value) {
                             setState(() {
                               productRetailCtrlObj.enableProduct = value!;
+                              if (value) {
+                                productRetailCtrlObj.enableProductID = '1';
+                              } else {
+                                productRetailCtrlObj.enableProductID = '0';
+                              }
+
                               productRetailCtrlObj.update();
                             });
                           },
@@ -675,6 +790,11 @@ class _AddProductsPageState extends State<AddProductsPage> {
                           onChanged: (bool? value) {
                             setState(() {
                               productRetailCtrlObj.notForSelling = value!;
+                              if (value) {
+                                productRetailCtrlObj.notForSellingID = '1';
+                              } else {
+                                productRetailCtrlObj.notForSellingID = '0';
+                              }
                               productRetailCtrlObj.update();
                             });
                           },
@@ -745,6 +865,11 @@ class _AddProductsPageState extends State<AddProductsPage> {
                           onChanged: (bool? value) {
                             setState(() {
                               productRetailCtrlObj.disableWooCommerce = value!;
+                              if (value) {
+                                productRetailCtrlObj.disableWooCommerceID = '1';
+                              } else {
+                                productRetailCtrlObj.disableWooCommerceID = '0';
+                              }
                               productRetailCtrlObj.update();
                             });
                           },
@@ -776,58 +901,71 @@ class _AddProductsPageState extends State<AddProductsPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              headings(txt: 'Applicable Tax:'),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2(
-                                  isExpanded: true,
-                                  hint: Align(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      child: Text(
-                                        'Please Select',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w400,
-                                          color: txtFieldHintColor,
-                                        ),
-                                      )),
-                                  items: productRetailCtrlObj
-                                      .applicableTaxList()
-                                      .map((e) {
-                                    return DropdownMenuItem(
-                                        value: e, child: Text(e));
-                                  }).toList(),
-                                  value:
-                                      productRetailCtrlObj.applicableTaxStatus,
-                                  dropdownDirection:
-                                      DropdownDirection.textDirection,
-                                  dropdownPadding:
-                                      EdgeInsets.only(left: 5, right: 5),
-                                  buttonPadding:
-                                      EdgeInsets.only(left: 15, right: 15),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      productRetailCtrlObj.applicableTaxStatus =
-                                          value;
-                                    });
-                                  },
-                                  buttonHeight: height * 0.06,
-                                  buttonWidth: width * 0.42,
-                                  buttonDecoration: BoxDecoration(
-                                      border: Border.all(
-                                          width: 1, color: primaryColor),
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: kWhiteColor),
-                                  itemHeight: 40,
-                                  itemPadding: EdgeInsets.zero,
-                                  itemHighlightColor: primaryColor,
+                          GetBuilder<TaxController>(
+                              builder: (TaxController taxCtrl) {
+                            if (taxCtrl.listTaxModel == null)
+                              return progressIndicator();
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                headings(txt: 'Applicable Tax:'),
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton2(
+                                    isExpanded: true,
+                                    hint: Align(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        child: Text(
+                                          'Please Select',
+                                          style: TextStyle(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w400,
+                                            color: txtFieldHintColor,
+                                          ),
+                                        )),
+                                    items: productRetailCtrlObj
+                                        .applicableTaxList(taxCtrl)
+                                        .map((e) {
+                                      return DropdownMenuItem(
+                                          value: e, child: Text(e));
+                                    }).toList(),
+                                    value: productRetailCtrlObj
+                                        .applicableTaxStatus,
+                                    dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                    dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                    buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        productRetailCtrlObj
+                                            .applicableTaxStatus = value;
+                                        productRetailCtrlObj.applicableTaxId =
+                                            taxCtrl
+                                                .listTaxModel
+                                                ?.data?[productRetailCtrlObj
+                                                    .applicableTaxList(taxCtrl)
+                                                    .indexOf(value!)]
+                                                .id
+                                                .toString();
+                                      });
+                                    },
+                                    buttonHeight: height * 0.06,
+                                    buttonWidth: width * 0.42,
+                                    buttonDecoration: BoxDecoration(
+                                        border: Border.all(
+                                            width: 1, color: primaryColor),
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: kWhiteColor),
+                                    itemHeight: 40,
+                                    itemPadding: EdgeInsets.zero,
+                                    itemHighlightColor: primaryColor,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            );
+                          }),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -884,10 +1022,224 @@ class _AddProductsPageState extends State<AddProductsPage> {
                       SizedBox(
                         height: 15,
                       ),
-                      headings(txt: 'Product Type:*'),
-                      AppFormField(
-                          width: width,
-                          controller: productRetailCtrlObj.productTypeCtrl),
+                      GetBuilder<ProductsRetailController>(builder:
+                          (ProductsRetailController productRetailCtrl) {
+                        if (productRetailCtrl.showProductListModel == null)
+                          return progressIndicator();
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            headings(txt: 'Product Type:*'),
+                            DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                hint: Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Text(
+                                      'Please Select',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                        color: txtFieldHintColor,
+                                      ),
+                                    )),
+                                items: productRetailCtrlObj
+                                    .productTypeList()
+                                    .map((e) {
+                                  return DropdownMenuItem(
+                                      value: e, child: Text(e));
+                                }).toList(),
+                                value: productRetailCtrlObj.productTypeStatus,
+                                dropdownDirection:
+                                    DropdownDirection.textDirection,
+                                dropdownPadding:
+                                    EdgeInsets.only(left: 5, right: 5),
+                                buttonPadding:
+                                    EdgeInsets.only(left: 15, right: 15),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    productRetailCtrlObj.productTypeStatus =
+                                        value;
+                                  });
+                                },
+                                buttonHeight: height * 0.06,
+                                buttonWidth: width * 0.42,
+                                buttonDecoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: primaryColor),
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: kWhiteColor),
+                                itemHeight: 40,
+                                itemPadding: EdgeInsets.zero,
+                                itemHighlightColor: primaryColor,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
+
+                      SizedBox(
+                        height: 15,
+                      ),
+
+                      Container(
+                        color: newOrderColor,
+                        width: width,
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Default Purchase Price',
+                          style: TextStyle(
+                            color: kWhiteColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      Divider(
+                        color: primaryColor,
+                        height: 0,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'Exc. tax:*'),
+                              AppFormField(
+                                  width: width * 0.42,
+                                  controller: productRetailCtrlObj.excTaxCtrl)
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'Inc. tax:*'),
+                              AppFormField(
+                                width: width * 0.42,
+                                controller: productRetailCtrlObj.excTaxCtrl,
+                                keyboardType: TextInputType.number,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        color: newOrderColor,
+                        width: width,
+                        padding: EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'x Margin(%):',
+                              style: TextStyle(
+                                color: kWhiteColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              'Default Selling Price:',
+                              style: TextStyle(
+                                color: kWhiteColor,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: primaryColor,
+                        height: 0,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppFormField(
+                                  width: width * 0.42,
+                                  controller: productRetailCtrlObj.excTaxCtrl)
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'Inc. tax:*'),
+                              AppFormField(
+                                width: width * 0.42,
+                                controller: productRetailCtrlObj.incTaxCtrl,
+                                keyboardType: TextInputType.number,
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Container(
+                        color: newOrderColor,
+                        width: width,
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Product image',
+                          style: TextStyle(
+                            color: kWhiteColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+
+                      Divider(
+                        color: primaryColor,
+                        height: 0,
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      headings(txt: 'Product image:'),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          CustomButton(
+                            title: Text(
+                              'Choose File',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                            height: 20,
+                            borderRadius: 5,
+                            onTap: () {
+                              pickContactImage();
+                            },
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            'No file choosen',
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                       //TaxDataTable()
                     ],
                   ),
@@ -917,7 +1269,8 @@ class _AddProductsPageState extends State<AddProductsPage> {
                             ),
                             onTap: () {
                               ///TODO: api in not built yet and fields implementation is remaining.
-                              // productRetailCtrlObj.createNewProduct();
+                              showProgress();
+                              productRetailCtrlObj.createNewProduct();
                             },
                             bgColor: primaryColor,
                           ),

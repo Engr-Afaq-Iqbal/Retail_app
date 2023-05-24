@@ -8,6 +8,8 @@ import 'package:get/get.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
 import '../../Controllers/AllSalesController/allSalesController.dart';
+import '../../Controllers/ContactController/ContactController.dart';
+import '../../Theme/style.dart';
 
 class Receipts extends StatefulWidget {
   const Receipts({Key? key}) : super(key: key);
@@ -21,6 +23,7 @@ class _ReceiptsState extends State<Receipts> {
       Get.find<StockTransferController>();
 
   AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+  ContactController contactCtrlObjj = Get.find<ContactController>();
 
   @override
   void initState() {
@@ -69,6 +72,25 @@ class _ReceiptsState extends State<Receipts> {
               ),
             ),
           ],
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(50),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Customer Name:'),
+                  Center(
+                    child: Text(
+                      '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
+                      style: appBarHeaderStyle,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ),
         // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         // floatingActionButton: FloatingActionButton.small(

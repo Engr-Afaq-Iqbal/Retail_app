@@ -207,12 +207,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../CreateNewCustomer/createNewCustomer.dart';
+import '../CreateOrder/createOrderPage.dart';
+import '../Receipts/receipts.dart';
+import '../Return/return.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
 import '../../Theme/colors.dart';
 
 class CustomerSearch extends StatefulWidget {
+  int? dashBoardId;
+  CustomerSearch({Key? key, this.dashBoardId}) : super(key: key);
   @override
   State<CustomerSearch> createState() => _CustomerSearchState();
 }
@@ -223,6 +229,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
   ContactController contactCtrlObjj = Get.find<ContactController>();
 
   void initState() {
+    contactCtrlObjj.callFirstOrderPage();
     scrollControllerLis();
     super.initState();
   }
@@ -265,8 +272,8 @@ class _CustomerSearchState extends State<CustomerSearch> {
           },
         ),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(70.0),
-          child: Column(
+          preferredSize: Size.fromHeight(20.0),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -277,11 +284,28 @@ class _CustomerSearchState extends State<CustomerSearch> {
                 child: Text(
                     'suggesstions'.tr /*, style: theme.style16W800Orange*/),
               ),
-              createNewCustomTile(context),
+              //createNewCustomTile(context),
             ],
           ),
         ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: (widget.dashBoardId == 1)
+          ? FloatingActionButton.small(
+              child: Icon(Icons.add),
+              backgroundColor: primaryColor.withOpacity(0.5),
+              onPressed: () {
+                Get.to(CreateNewCustomer());
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => AlertDialog(
+                //     contentPadding:
+                //         const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                //     content: CreateNewCustomer(),
+                //   ),
+                // );
+              })
+          : null,
       body: Material(
         child: Stack(
           children: [
@@ -312,7 +336,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                       '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
                                     ),
                                     onTap: () {
-                                      Get.close(0);
+                                      //  Get.close(0);
                                       contactCtrlObj.contactId = contactCtrlObj
                                           .customerContacts!
                                           .contactDataList[index]
@@ -331,11 +355,13 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                                   .contactDataList[index]
                                                   .name ??
                                               '';
-                                      // close(
-                                      //   context,
-                                      //   contactCtrlObj
-                                      //       .customerContacts?.contactDataList[index],
-                                      // );
+                                      if (widget.dashBoardId == 2) {
+                                        Get.to(CreateOrderPage());
+                                      } else if (widget.dashBoardId == 3) {
+                                        Get.to(Return());
+                                      } else if (widget.dashBoardId == 4) {
+                                        Get.to(Receipts());
+                                      }
                                     },
                                   ),
                                   Divider(

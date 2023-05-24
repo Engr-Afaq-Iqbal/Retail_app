@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../ListUserController/ListUserController.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/create_contact_response_model.dart';
 import '/Models/order_type_model/customer_contact_model.dart';
@@ -13,13 +14,9 @@ class ContactController extends GetxController {
   final OrderTypeSelectionController orderTypeSelectionCtrlObj =
       Get.find<OrderTypeSelectionController>();
   TextEditingController customerNameCtrl = TextEditingController();
-
   TextEditingController searchCustomerCtrl = TextEditingController();
   TextEditingController nameCtrl = TextEditingController();
-  TextEditingController mobileNumberCtrl = TextEditingController();
-
   TextEditingController customLabelCtrl = TextEditingController();
-
   TextEditingController cityCtrl = TextEditingController();
   TextEditingController streetCtrl = TextEditingController();
   TextEditingController villaBuildingApartmentCtrl = TextEditingController();
@@ -36,6 +33,22 @@ class ContactController extends GetxController {
   String get contactId => _contactId;
   void set contactId(String? id) =>
       _contactId = id ?? AppValues.walkInCustomerID;
+
+  ///Retail app fields starting here
+  bool indiviualYes = false;
+  bool businessYes = false;
+  String? statusValue;
+  TextEditingController prefixCtrl = TextEditingController();
+  TextEditingController firstNameCtrl = TextEditingController();
+  TextEditingController middleNameCtrl = TextEditingController();
+  TextEditingController lastNameCtrl = TextEditingController();
+  TextEditingController businessNameCtrl = TextEditingController();
+  TextEditingController mobileNumberCtrl = TextEditingController();
+  TextEditingController alternateMblNbrNumberCtrl = TextEditingController();
+  TextEditingController landLineCtrl = TextEditingController();
+  TextEditingController emailCtrl = TextEditingController();
+
+  ///Ending
 
   // Customer Search
   ContactModel? customerContacts;
@@ -185,10 +198,68 @@ class ContactController extends GetxController {
     });
   }
 
+  // Create Customer
+  Future<bool?> createContactForRetailApp() async {
+    Map<String, String> _field = {
+      "type": "customer",
+      "first_name": "${firstNameCtrl.text}",
+      "mobile": "${mobileNumberCtrl.text}",
+    };
+    _field["supplier_business_name"] = "${businessNameCtrl.text}";
+    _field["prefix"] = "${prefixCtrl.text}";
+    _field["middle_name"] = "${middleNameCtrl.text}";
+    _field["last_name"] = "${lastNameCtrl.text}";
+    // _field["pay_term_number"] = '7';
+    // _field["pay_term_type"] = "months";
+    _field["landline"] = "${landLineCtrl.text}";
+    _field["alternate_number"] = "${alternateMblNbrNumberCtrl.text}";
+    _field["email"] = "${emailCtrl.text}";
+    _field["assigned_to"] = "${statusValue}";
+
+    // _field["customer_group_id"] = "fuga";
+    // _field["contact_id"] = "reprehenderit";
+    // _field["dob"] = "2000-06-13";
+    // _field["custom_field2"] = "rerum";
+    // _field["custom_field3"] = "dolorum";
+    // _field["custom_field4"] = "sint";
+    //
+    // _field["position"] = "et";
+    // _field["opening_balance"] = 0;
+    // _field["source_id"] = 10;
+    // _field["life_stage_id"] = 19;
+    //
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.contactApi, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+      stopProgress();
+      clearAllContactCtrl();
+      Get.back();
+      contactId = createContactResponseModelFromJson(_res).data.contactId;
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      debugPrint('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
   clearAllContactCtrl() {
     customerNameCtrl.clear();
     nameCtrl.clear();
     mobileNumberCtrl.clear();
+    indiviualYes = false;
+    businessYes = false;
+    statusValue = null;
+    prefixCtrl.clear();
+    firstNameCtrl.clear();
+    middleNameCtrl.clear();
+    lastNameCtrl.clear();
+    businessNameCtrl.clear();
+    mobileNumberCtrl.clear();
+    alternateMblNbrNumberCtrl.clear();
+    landLineCtrl.clear();
+    emailCtrl.clear();
   }
 
   // initial order page load function
@@ -199,5 +270,19 @@ class ContactController extends GetxController {
     isLoadMoreRunning.value = false;
     await fetchCustomerName(1);
     isFirstLoadRunning = false;
+  }
+
+  List<String> assignedToList(ListUserController listUserCtrl) {
+    List<String> options = [];
+    if (listUserCtrl.listuserModel != null) {
+      for (int i = 0; i < listUserCtrl.listuserModel!.data!.length; i++) {
+        options.add(
+            '${listUserCtrl.listuserModel?.data?[i].firstName} ${listUserCtrl.listuserModel?.data?[i].lastName == null ? '' : listUserCtrl.listuserModel?.data?[i].lastName}');
+      }
+      return options;
+    } else {
+      progressIndicator();
+    }
+    return options;
   }
 }

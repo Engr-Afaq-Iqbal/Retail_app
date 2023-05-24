@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
@@ -25,7 +26,6 @@ import 'Controllers/Notifications/NotificationsController.dart';
 import 'Controllers/OrderController/order_type_controller.dart';
 import 'Controllers/ProductsRetailController/productsRetailsController.dart';
 import 'Controllers/ServiceStaffController/ServiceStaffController.dart';
-import 'Controllers/StockAdjustmentController/stockAdjustmentController.dart';
 import 'Controllers/Tax Controller/TaxController.dart';
 import 'Locale/Languages/translation.dart';
 import 'Locale/language_cubit.dart';
@@ -116,7 +116,7 @@ void initializeControllers() {
   Get.put(AllSalesController());
   Get.put(ProductsRetailController());
   Get.put(SaleReturnController());
-  Get.put(StockAdjustmentController());
+  Get.put(AllKitchenController());
 }
 
 class BizModoEMenu extends StatefulWidget {

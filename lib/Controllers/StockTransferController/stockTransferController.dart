@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:bizmodo_emenu/Models/ViewStockTransferModel/statusListModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../Config/app_config.dart';
 import '../../Config/utils.dart';
 
 import '../../Models/NavBarModel.dart';
+import '../../Models/ProductsModel/SearchProductModel.dart';
+import '../../Models/ViewStockAdjustmentModel/viewStockAdjusmentModel.dart';
 import '../../Models/ViewStockTransferModel/viewStockTransferModel.dart';
 
 import '../../Pages/Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
@@ -12,6 +17,7 @@ import '../../Pages/Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
+import 'package:http/http.dart' as http;
 
 enum OrderTabsPage {
   ActiveOrders,
@@ -19,6 +25,9 @@ enum OrderTabsPage {
 }
 
 class StockTransferController extends GetxController {
+  String? statusValue;
+  String? locationFromStatusValue;
+  String? locationToStatusValue;
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController searchCtrl = TextEditingController();
   TextEditingController additionalNotes = TextEditingController();
@@ -29,6 +38,10 @@ class StockTransferController extends GetxController {
   TextEditingController priceCtrl = TextEditingController();
   TextEditingController totalCtrl = TextEditingController();
   TextEditingController remarksCtrl = TextEditingController();
+//stock adjustment controllers
+  TextEditingController additionalNotesCtrl = TextEditingController();
+  String? statusAdjustmentTypeValue;
+  //ending
   int allSaleOrdersPage = 1;
   bool isFirstLoadRunning = true;
   bool hasNextPage = true;
@@ -127,7 +140,7 @@ class StockTransferController extends GetxController {
 
   /// Fetching Status
   Future fetchStatusList({String? pageUrl}) async {
-    await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.viewStockTransfer)
+    await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.statusStockTransfer)
         .then((_res) {
       update();
       if (_res == null) return null;
@@ -199,4 +212,222 @@ class StockTransferController extends GetxController {
   //   await fetchSaleOrders(1);
   //   isFirstLoadRunning = false;
   // }
+
+  createStockTransfer(/*{required bool isCheckout}*/) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('${AppConfig.baseUrl}${ApiUrls.createStockTransferApi}'));
+
+    request.fields['location_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+    request.fields['transaction_date'] = '${dateCtrl.text}';
+    request.fields['ref_no'] = '';
+    request.fields['status'] = '${statusValue?.toLowerCase() ?? 'pending'}';
+    request.fields['transfer_location_id'] = '37';
+
+    request.fields['final_total'] = '12';
+    request.fields['shipping_charges'] = '0';
+    request.fields['additional_notes'] = '${additionalNotes.text}';
+    request.fields[''] = '';
+
+    for (int i = 0; i < 2; i++) {
+      request.fields['kitchen_id[$i]'] = '1';
+      request.fields['product_id[$i]'] = '3640';
+      request.fields['variation_id[$i]'] = '3659';
+      request.fields['enable_stock[$i]'] = '1';
+      request.fields['quantity[$i]'] = '1.00';
+      request.fields['base_unit_multiplier[$i]'] = '1';
+      request.fields['product_unit_id[$i]'] = '51';
+      request.fields['sub_unit_id[$i]'] = '51';
+      request.fields['unit_price[$i]'] = '1.00';
+      request.fields['price[$i]'] = '100.00';
+      request.fields['remarks[$i]'] = '';
+    }
+
+    logger.i(request.fields);
+
+    request.headers.addAll(headers);
+
+    return await request.send().then((http.StreamedResponse response) async {
+      String result = await response.stream.bytesToString();
+      logger.i('EndPoint => ${request.url}'
+          '\nStatus Code => ${response.statusCode}'
+          '\nResponse => $result');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(' successful');
+        stopProgress();
+      } else {
+        final jd = jsonDecode(result);
+
+        showToast(jd["message"]);
+
+        return null;
+      }
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
+
+  List<SearchProductModel>? searchProductModel;
+
+  /// Searching Product
+  Future searchProductList({String? pageUrl, String? term}) async {
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.searchProductListApi}?location_id${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}=&term=${term}')
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      searchProductModel = searchProductModelFromJson(_res);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      function();
+      update();
+    });
+  }
+
+  List<TextEditingController> productNameeCtrl = [];
+
+  function() {
+    for (int i = 0; i <= searchProductModel!.length; i++) {
+      productNameeCtrl[i].text = searchProductModel?[i].name ?? '';
+    }
+  }
+
+  // Future createStockTransfer() async {
+  //   Map<String, String> _field = {
+  //     'transaction_date': '${dateCtrl.text}',
+  //     'ref_no': '',
+  //     'status': '${statusValue?.toLowerCase() ?? 'pending'}',
+  //     'location_id':
+  //         '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}',
+  //     'transfer_location_id': '37',
+  //     'final_total': '112',
+  //     'shipping_charges': '0',
+  //     'additional_notes': '${additionalNotes.text}',
+  //     'kitchen_id[0]': '1',
+  //     'product_id[0]': '3640',
+  //     'variation_id[0]': '3659',
+  //     'enable_stock[0]': '1',
+  //     'quantity[0]': '1.00',
+  //     'base_unit_multiplier[0]': '1',
+  //     'product_unit_id[0]': '51',
+  //     'sub_unit_id[0]': '51',
+  //     'unit_price[0]': '100.00',
+  //     'price[0]': '100.00',
+  //     'remarks[0]': ''
+  //   };
+  //
+  //   return await ApiServices.postMethod(
+  //           feedUrl: ApiUrls.createStockTransferApi, fields: _field)
+  //       .then((_res) {
+  //     if (_res == null) return null;
+  //     stopProgress();
+  //     return true;
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     throw '$error';
+  //   });
+  // }
+
+  ViewStockAdjustmentModel? viewStockAdjustmentModel;
+
+  /// Fetching Stock Adjustment
+  Future fetchStockAdjustmentList({String? pageUrl}) async {
+    await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.viewStockAdjustment)
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      viewStockAdjustmentModel = viewStockAdjustmentModelFromJson(_res);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  // Future createStockAdjustment() async {
+  //   Map<String, String> _field = {
+  //
+  //   };
+  //
+  //   return await ApiServices.postMethod(
+  //           feedUrl: ApiUrls.createStockAdjustmentApi, fields: _field)
+  //       .then((_res) {
+  //     if (_res == null) return null;
+  //     stopProgress();
+  //     return true;
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     throw '$error';
+  //   });
+  // }
+
+  createStockAdjustment(/*{required bool isCheckout}*/) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
+    };
+    var request = http.MultipartRequest('POST',
+        Uri.parse('${AppConfig.baseUrl}${ApiUrls.createStockAdjustmentApi}'));
+
+    request.fields['location_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+    request.fields['transaction_date'] = '${dateCtrl.text}';
+    request.fields['ref_no'] = '';
+    request.fields['adjustment_type'] = 'statusValue'.toLowerCase();
+    request.fields['final_total'] = '12';
+    request.fields['total_amount_recovered'] = '${totalAmountRecCtrl.text}';
+    request.fields['additional_notes'] = '${reasonCtrl.text}';
+
+    for (int i = 0; i < 2; i++) {
+      request.fields['kitchen_id[$i]'] = '1';
+      request.fields['product_id[$i]'] = '3640';
+      request.fields['variation_id[$i]'] = '3659';
+      request.fields['enable_stock[$i]'] = '1';
+      request.fields['quantity[$i]'] = '1.00';
+      request.fields['price[$i]'] = '100';
+      request.fields['unit_price[$i]'] = '100';
+      request.fields['remarks[$i]'] = 'test';
+    }
+
+    logger.i(request.fields);
+
+    request.headers.addAll(headers);
+
+    return await request.send().then((http.StreamedResponse response) async {
+      String result = await response.stream.bytesToString();
+      logger.i('EndPoint => ${request.url}'
+          '\nStatus Code => ${response.statusCode}'
+          '\nResponse => $result');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        print(' successful');
+        stopProgress();
+      } else {
+        final jd = jsonDecode(result);
+
+        showToast(jd["message"]);
+
+        return null;
+      }
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
 }
