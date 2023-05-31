@@ -31,7 +31,8 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
             child: Icon(Icons.add),
-            backgroundColor: primaryColor.withOpacity(0.5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.5),
             onPressed: () {
               Get.to(CreateStockTransfer());
             }),

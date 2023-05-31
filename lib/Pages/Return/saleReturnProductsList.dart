@@ -35,7 +35,9 @@ class _SaleReturnProductListState extends State<SaleReturnProductList> {
                 bottom: 5,
               ),
               padding: EdgeInsets.symmetric(horizontal: 5),
-              color: index.isEven ? kWhiteColor : primaryColor.withOpacity(0.1),
+              color: index.isEven
+                  ? kWhiteColor
+                  : Theme.of(context).colorScheme.primary.withOpacity(0.1),
               child: Column(
                 children: [
                   Row(
@@ -43,13 +45,10 @@ class _SaleReturnProductListState extends State<SaleReturnProductList> {
                     children: [
                       Expanded(
                         flex: 3,
-                        child: AppFormField(
-                          controller: saleReturnCtrlObj.productNameCtrl,
-                          padding: EdgeInsets.only(right: 5),
-                          isOutlineBorder: false,
-                          isColor:
-                              index.isEven ? kWhiteColor : Colors.transparent,
-                          // labelText: '1',
+                        child: Text(
+                          'Chicken burger',
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: true,
                         ),
                       ),
                       Expanded(
@@ -92,10 +91,10 @@ class _SaleReturnProductListState extends State<SaleReturnProductList> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      Icon(
-                        Icons.cancel_outlined,
-                        color: buttonColor,
-                      )
+                      // Icon(
+                      //   Icons.cancel_outlined,
+                      //   color: buttonColor,
+                      // )
                     ],
                   ),
                 ],

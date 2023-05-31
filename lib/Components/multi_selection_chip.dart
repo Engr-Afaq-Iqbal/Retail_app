@@ -117,14 +117,16 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
             children: [
               ChoiceChip(
                 label: Text('${item.name.capitalize}'),
-                selectedColor: primaryColor.withOpacity(0.25),
+                selectedColor:
+                    Theme.of(context).colorScheme.primary.withOpacity(0.25),
                 selected: isContains(item.id),
                 onSelected: (selected) {
                   setState(() {
                     if (isContains(item.id)) {
                       widget.initChoices.remove(item);
                     } else {
-                      if (item.productVariationQuantity == 0) item.productVariationQuantity = 1;
+                      if (item.productVariationQuantity == 0)
+                        item.productVariationQuantity = 1;
                       widget.initChoices.add(item);
                     }
                     widget.onSelectionChanged(widget.initChoices);
@@ -159,7 +161,9 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
   }
 
   isContains(int itemId) {
-    return widget.initChoices.firstWhereOrNull((_choice) => _choice.id == itemId) != null;
+    return widget.initChoices
+            .firstWhereOrNull((_choice) => _choice.id == itemId) !=
+        null;
   }
 
   @override

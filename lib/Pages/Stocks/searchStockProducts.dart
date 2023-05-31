@@ -23,6 +23,7 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
   void initState() {
     super.initState();
     // Add an initial text field controller
+    stockTranCtrlObj.qtyCtrl.add(TextEditingController());
     stockTranCtrlObj.productNameeCtrl.add(TextEditingController());
   }
 
@@ -50,15 +51,20 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
             physics: BouncingScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
-            itemCount: stockTransferCtrlObj.searchProductModel?.length ?? 0,
+            itemCount: stockTransferCtrlObj.listForStockAdjustment?.length ?? 0,
             itemBuilder: (context, index) {
+              stockTranCtrlObj.qtyCtrl[index].text = '1';
+              // stockTranCtrlObj.totalCtrl.text = stockTransferCtrlObj.searchProductModel![index].qtyAvailable!;
+              stockTranCtrlObj.priceCtrl.text = stockTransferCtrlObj
+                  .listForStockAdjustment![index].sellingPrice!;
               return Container(
                 margin: EdgeInsets.only(
                   bottom: 5,
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 5),
-                color:
-                    index.isEven ? kWhiteColor : primaryColor.withOpacity(0.1),
+                color: index.isEven
+                    ? kWhiteColor
+                    : Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 child: Column(
                   children: [
                     Row(
@@ -67,7 +73,7 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
                         Expanded(
                             flex: 3,
                             child: Text(
-                                '${stockTransferCtrlObj.searchProductModel?[index].name ?? ''} ${stockTransferCtrlObj.searchProductModel?[index].subSku ?? ''}')
+                                '${stockTransferCtrlObj.listForStockAdjustment?[index].name ?? ''} ${stockTransferCtrlObj.listForStockAdjustment?[index].subSku ?? ''}')
                             //     AppFormField(
                             //   controller:
                             //       stockTranCtrlObj.productNameCtrl,
@@ -81,9 +87,9 @@ class _SearchStockProductsState extends State<SearchStockProducts> {
                         Expanded(
                           flex: 1,
                           child: AppFormField(
-                            controller: stockTranCtrlObj.qtyCtrl,
+                            controller: stockTranCtrlObj.qtyCtrl[index],
                             labelText:
-                                '${stockTransferCtrlObj.searchProductModel?[index].name ?? ''}',
+                                '${stockTransferCtrlObj.listForStockAdjustment?[index].name ?? ''}',
                             padding: EdgeInsets.only(right: 5),
                             isOutlineBorder: false,
                             isColor:

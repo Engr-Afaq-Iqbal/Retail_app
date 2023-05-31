@@ -37,7 +37,7 @@ class ActiveOrderInfoTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: activeOrder.typesOfService?.colorValue != null
                       ? Color(activeOrder.typesOfService!.colorValue!)
-                      : primaryColor.withOpacity(0.1),
+                      : Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),

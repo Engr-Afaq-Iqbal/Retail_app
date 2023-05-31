@@ -70,11 +70,12 @@ class _DiscountTypeDropDownState extends State<DiscountTypeDropDown> {
           buttonWidth: w * 0.05,
           buttonDecoration: BoxDecoration(
               color: kWhiteColor,
-              border: Border.all(width: 1, color: primaryColor),
+              border: Border.all(
+                  width: 1, color: Theme.of(context).colorScheme.primary),
               borderRadius: BorderRadius.circular(15)),
           itemHeight: 40,
           itemPadding: EdgeInsets.zero,
-          itemHighlightColor: primaryColor,
+          itemHighlightColor: Theme.of(context).colorScheme.primary,
         ),
       ),
     );

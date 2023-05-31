@@ -124,12 +124,15 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                           buttonHeight: height * 0.06,
                           buttonWidth: width * 0.43,
                           buttonDecoration: BoxDecoration(
-                              border: Border.all(width: 1, color: primaryColor),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.primary),
                               borderRadius: BorderRadius.circular(15),
                               color: kWhiteColor),
                           itemHeight: 40,
                           itemPadding: EdgeInsets.zero,
-                          itemHighlightColor: primaryColor,
+                          itemHighlightColor:
+                              Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
@@ -193,13 +196,16 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             buttonHeight: height * 0.06,
                             buttonWidth: width * 0.43,
                             buttonDecoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: primaryColor),
+                                border: Border.all(
+                                    width: 1,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 borderRadius: BorderRadius.circular(15),
                                 color: kWhiteColor),
                             itemHeight: 40,
                             itemPadding: EdgeInsets.zero,
-                            itemHighlightColor: primaryColor,
+                            itemHighlightColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -236,12 +242,15 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                           buttonHeight: height * 0.06,
                           buttonWidth: width * 0.43,
                           buttonDecoration: BoxDecoration(
-                              border: Border.all(width: 1, color: primaryColor),
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.primary),
                               borderRadius: BorderRadius.circular(15),
                               color: kWhiteColor),
                           itemHeight: 40,
                           itemPadding: EdgeInsets.zero,
-                          itemHighlightColor: primaryColor,
+                          itemHighlightColor:
+                              Theme.of(context).colorScheme.primary,
                         ),
                       ),
                     ],
@@ -270,7 +279,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                       Container(
                         height: 50,
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        color: primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -397,7 +406,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                               style: TextStyle(color: kWhiteColor),
                             ),
                             onTap: () {},
-                            bgColor: primaryColor,
+                            bgColor: Theme.of(context).colorScheme.primary,
                           ),
                           SizedBox(
                             width: 5,
@@ -410,7 +419,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             onTap: () {
                               Get.back();
                             },
-                            bgColor: primaryColor,
+                            bgColor: Theme.of(context).colorScheme.primary,
                           )
                         ],
                       )

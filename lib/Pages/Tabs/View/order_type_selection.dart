@@ -568,7 +568,8 @@ class _OrderTypeSelectionState extends State<OrderTypeSelection> {
                                     _orderCtrlObj.update();
                                   },
                                   btnTxt: 'submit'.tr,
-                                  bgColor: Theme.of(context).primaryColor,
+                                  bgColor:
+                                      Theme.of(context).colorScheme.primary,
                                 ),
                               ),
                             // Expanded(

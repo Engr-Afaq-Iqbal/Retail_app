@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp/whatsapp.dart';
 
+import '../ThemePage/themePage.dart';
 import '/Config/const.dart';
 import '/Config/utils.dart';
 import '/Controllers/AuthController/auth_controller.dart';
@@ -139,6 +140,7 @@ class AppMenuPage extends StatelessWidget {
                       Get.to(() => ProfileView());
                     },
                     title: 'profile'.tr,
+                    context: context,
                     iconData: Icons.person_outlined,
                   ),
                   listTile(
@@ -155,13 +157,23 @@ class AppMenuPage extends StatelessWidget {
                       );
                     },
                     title: 'change_language'.tr,
+                    context: context,
                     iconData: Icons.translate_outlined,
+                  ),
+                  listTile(
+                    onTap: () async {
+                      Get.to(ThemePage());
+                    },
+                    title: 'Change Theme',
+                    context: context,
+                    iconData: Icons.color_lens_outlined,
                   ),
                   listTile(
                     onTap: () async {
                       await launchWhatsApp(number: supportNumber, text: '');
                     },
                     title: 'support'.tr,
+                    context: context,
                     iconData: Icons.support_outlined,
                   ),
                   listTile(
@@ -169,14 +181,15 @@ class AppMenuPage extends StatelessWidget {
                         Get.to(TermsAndConditions());
                       },
                       title: 'terms'.tr,
+                      context: context,
                       iconData: Icons.notes_outlined),
                   listTile(
-                    onTap: () async {
-                      logout();
-                    },
-                    title: 'logout'.tr,
-                    iconData: Icons.logout_outlined,
-                  ),
+                      onTap: () async {
+                        logout();
+                      },
+                      title: 'logout'.tr,
+                      iconData: Icons.logout_outlined,
+                      context: context),
                 ],
               ),
             )
@@ -187,11 +200,14 @@ class AppMenuPage extends StatelessWidget {
   }
 
   Widget listTile(
-      {required onTap, required String title, required IconData iconData}) {
+      {required onTap,
+      required String title,
+      required IconData iconData,
+      required BuildContext context}) {
     return ListTile(
       leading: Icon(
         iconData,
-        color: primaryColor,
+        color: Theme.of(context).colorScheme.primary,
       ),
       title: Text(
         title,

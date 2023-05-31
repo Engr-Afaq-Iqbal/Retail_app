@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
+import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
+import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +29,13 @@ import 'Controllers/OrderController/order_type_controller.dart';
 import 'Controllers/ProductsRetailController/productsRetailsController.dart';
 import 'Controllers/ServiceStaffController/ServiceStaffController.dart';
 import 'Controllers/Tax Controller/TaxController.dart';
+import 'Controllers/ThemeController/themeController.dart';
 import 'Locale/Languages/translation.dart';
 import 'Locale/language_cubit.dart';
-import 'Pages/Notification Services/pushnotification.dart';
 import 'Pages/Orders/Controller/OrderController.dart';
 import 'Pages/Tabs/Controllers/BottomNavBarController.dart';
 import 'Routes/routes.dart';
-import 'Services/socket_handlers.dart';
+import 'Theme/colors.dart';
 import 'Theme/style.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -53,7 +55,6 @@ void main() async {
   String currLang = sharedPreferences.getString("localeLanguage") ?? 'en';
   String currCountryCode =
       sharedPreferences.getString("localeCountryCode") ?? 'US';
-
   await GetStorage.init();
   initializeControllers();
   // NotificationServices.initialize();
@@ -84,7 +85,10 @@ void main() async {
             create: (context) => LanguageCubit(),
           ),
         ],
-        child: BizModoEMenu(currLang, currCountryCode),
+        child: BizModoEMenu(
+          currLang,
+          currCountryCode,
+        ),
       ),
     ),
   );
@@ -97,6 +101,7 @@ void main() async {
 // }
 
 void initializeControllers() {
+  Get.put(ThemeController());
   Get.put(AuthController());
   Get.put(DashboardController());
   Get.put(NotificationsController());
@@ -117,12 +122,17 @@ void initializeControllers() {
   Get.put(ProductsRetailController());
   Get.put(SaleReturnController());
   Get.put(AllKitchenController());
+  Get.put(ReceiptsController());
+  Get.put(QuotationController());
 }
 
 class BizModoEMenu extends StatefulWidget {
   final String currLang;
   final String currCountryCode;
-  BizModoEMenu(this.currLang, this.currCountryCode);
+  BizModoEMenu(
+    this.currLang,
+    this.currCountryCode,
+  );
 
   @override
   State<BizModoEMenu> createState() => _BizModoEMenuState();

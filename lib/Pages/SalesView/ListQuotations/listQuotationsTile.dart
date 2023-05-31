@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../../Theme/colors.dart';
+import '../../../Models/QuotationModel/listQuotationModel.dart';
 import '/Config/const.dart';
-import '/Pages/Orders/Components/AmountInfo.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
-import '/Theme/style.dart';
 
 class ListQuotationTile extends StatelessWidget {
-  const ListQuotationTile({Key? key}) : super(key: key);
+  final ListQuotationModel? listQuotModel;
+  final int index;
+  ListQuotationTile({Key? key, this.listQuotModel, required this.index})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class ListQuotationTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'INV88155',
+                '${listQuotModel?.data?[index].invoiceNo ?? ''}',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -47,7 +47,8 @@ class ListQuotationTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              CustomerInfo('Walkin', DateTime.now()),
+              CustomerInfo('${listQuotModel?.data?[index].name ?? ''}',
+                  listQuotModel?.data?[index].transactionDate),
               //if (pastOrder.totalAmountRecovered != null)
               // AmountInfo(
               //   amount: '122',
@@ -64,7 +65,7 @@ class ListQuotationTile extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Mohammad Al Tamimi',
+                      '${listQuotModel?.data?[index].addedBy ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
@@ -72,7 +73,9 @@ class ListQuotationTile extends StatelessWidget {
                     ),
                     AppConst.dividerLine(height: 12, width: 1),
                     Text(
-                      'Items: 3',
+                      'Items: '
+                      ''
+                      '${listQuotModel?.data?[index].totalItems ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!

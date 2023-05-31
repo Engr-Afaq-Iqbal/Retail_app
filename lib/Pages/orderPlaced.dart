@@ -40,10 +40,10 @@ class _OrderPlacedState extends State<OrderPlaced> {
                     ),
                     Text(
                       'youveGreatChoiceOfTaste'.tr,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyText2!
-                          .copyWith(fontSize: 20, letterSpacing: 1, fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                          fontSize: 20,
+                          letterSpacing: 1,
+                          fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -107,7 +107,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
                       'finish'.tr,
                       style: TextStyle(color: Colors.white),
                     ),
-                    bgColor: primaryColor,
+                    bgColor: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 Spacer(),

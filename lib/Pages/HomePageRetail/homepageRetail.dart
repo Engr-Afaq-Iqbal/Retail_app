@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
 import '../../const/CurvedContainer.dart';
-import '../CreateOrder/createOrderPage.dart';
 import '../CustomesVisit/customersVisit.dart';
 import '../Orders/View/OrdersTabPage.dart';
 
@@ -71,7 +70,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           IconButton(
                             icon: Icon(
                               dashBoardCtrl.iconList[index],
-                              color: primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               size: 20,
                             ),
                             onPressed: () {
@@ -92,16 +91,16 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 //Get.to(CreateOrderPage());
                               }
                               if (index == 3) {
-                                Get.to(CustomerSearch(
-                                  dashBoardId: 3,
-                                ));
-                                // Get.to(Return());
+                                // Get.to(CustomerSearch(
+                                //   dashBoardId: 3,
+                                // ));
+                                Get.to(Return());
                               }
                               if (index == 4) {
-                                Get.to(CustomerSearch(
-                                  dashBoardId: 4,
-                                ));
-                                // Get.to(Receipts());
+                                // Get.to(CustomerSearch(
+                                //   dashBoardId: 4,
+                                // ));
+                                Get.to(Receipts());
                               }
                               if (index == 5) {
                                 Get.to(SalesTabPage());
@@ -157,7 +156,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           height: MediaQuery.of(context).size.height * 0.02,
                           width: MediaQuery.of(context).size.width * 0.6,
                           decoration: BoxDecoration(
-                              color: primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(15)),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +176,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
-                                    .copyWith(color: kHintColor),
+                                    .copyWith(color: kCardBackgroundColor),
                               )
                             ],
                           ),

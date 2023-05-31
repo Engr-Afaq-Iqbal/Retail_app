@@ -203,6 +203,7 @@ class OrderController extends GetxController {
     // }
 
     orderSellLine.isSelected = !orderSellLine.isSelected;
+    print(orderSellLine.isSelected);
     update();
   }
 

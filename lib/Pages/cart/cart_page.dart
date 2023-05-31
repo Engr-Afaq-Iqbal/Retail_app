@@ -133,7 +133,8 @@ class _CartPageState extends State<CartPage> {
                                           ),
                                         );
                                       },
-                                      bgColor: primaryColor,
+                                      bgColor:
+                                          Theme.of(context).colorScheme.primary,
                                       // orderTypeSelectionCtrlObj
                                       //         .isButtonDisabled
                                       //     ? buttonColor
@@ -195,7 +196,9 @@ class _CartPageState extends State<CartPage> {
                                       bgColor:
                                           _orderTypeCtrlObj.isButtonDisabled
                                               ? buttonColor
-                                              : primaryColor,
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                       btnChild: Text(
                                         '${contactCtrlObj.nameCtrl.text.isNotEmpty ? contactCtrlObj.nameCtrl.text : 'Walk-In'}',
                                         style: Theme.of(context)
@@ -232,7 +235,8 @@ class _CartPageState extends State<CartPage> {
                                                   ),
                                                 );
                                               },
-                                              bgColor: primaryColor,
+                                              bgColor: Theme.of(context)
+                                                  .primaryColor,
                                               btnChild: Text(
                                                 'table'.tr +
                                                     ' ' +
@@ -295,7 +299,9 @@ class _CartPageState extends State<CartPage> {
                                           },
                                           bgColor: _productCartCtrlObj
                                                   .discoutCtrl.text.isNotEmpty
-                                              ? primaryColor
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .primary
                                               : Theme.of(context)
                                                   .primaryColorLight,
                                           btnChild: Text(
@@ -648,7 +654,7 @@ class _CartPageState extends State<CartPage> {
                     //           ? () => prodCartCtrlObj.placeOrder()
                     //           : null,
                     //       padding: EdgeInsets.all(20),
-                    //       bgColor: Theme.of(context).primaryColor,
+                    //       bgColor: Theme.of(context).colorScheme.primary,
                     //       title: Text(
                     //         (prodCartCtrlObj.itemCartList.isEmpty)
                     //             ? 'Cart Is Empty. Select Items.'
@@ -723,7 +729,7 @@ class _CartPageState extends State<CartPage> {
                                           }
                                         : null,
                             padding: EdgeInsets.all(15),
-                            bgColor: Theme.of(context).primaryColor,
+                            bgColor: Theme.of(context).colorScheme.primary,
                             btnTxt: (orderCtrlObj.isOrderUpdating &&
                                     orderCtrlObj.singleOrderData != null)
                                 ? 'update_order'.tr

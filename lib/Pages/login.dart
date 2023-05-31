@@ -102,7 +102,8 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             child: Text(
                               'forget_password'.tr,
-                              style: TextStyle(color: primaryColor),
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
                             ),
                           ),
                           SizedBox(width: 30),

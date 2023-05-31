@@ -34,7 +34,7 @@ class StockTransferController extends GetxController {
   TextEditingController totalAmountRecCtrl = TextEditingController(text: '0');
   TextEditingController reasonCtrl = TextEditingController();
   TextEditingController productNameCtrl = TextEditingController();
-  TextEditingController qtyCtrl = TextEditingController();
+  List<TextEditingController> qtyCtrl = [];
   TextEditingController priceCtrl = TextEditingController();
   TextEditingController totalCtrl = TextEditingController();
   TextEditingController remarksCtrl = TextEditingController();
@@ -276,10 +276,11 @@ class StockTransferController extends GetxController {
   }
 
   List<SearchProductModel>? searchProductModel;
+  List<SearchProductModel>? listForStockAdjustment;
 
   /// Searching Product
   Future searchProductList({String? pageUrl, String? term}) async {
-    await ApiServices.getMethod(
+    return await ApiServices.getMethod(
             feedUrl: pageUrl ??
                 '${ApiUrls.searchProductListApi}?location_id${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}=&term=${term}')
         .then((_res) {
@@ -287,11 +288,13 @@ class StockTransferController extends GetxController {
       if (_res == null) return null;
       searchProductModel = searchProductModelFromJson(_res);
       update();
+      return searchProductModel;
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
       function();
       update();
+      return null;
     });
   }
 

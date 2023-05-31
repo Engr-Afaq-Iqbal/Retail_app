@@ -1,17 +1,8 @@
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Models/ViewStockTransferModel/viewStockTransferModel.dart';
-import 'package:bizmodo_emenu/Pages/Orders/Components/PaymentStatusInfo.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '/Config/const.dart';
-import '/Config/enums.dart';
-import '/Models/order_type_model/SaleOrderModel.dart';
-import '/Pages/Orders/Components/CustomerInfo.dart';
-import '/Pages/Orders/Components/StaffInfo.dart';
-import '/Pages/Orders/Components/TableInfo.dart';
-import '/Pages/Orders/View/OrderDetails/OrderDetailsPage.dart';
-import '/Theme/colors.dart';
 
 class StockTransfersInfoTile extends StatelessWidget {
   Datum? viewStocksModel;
@@ -36,7 +27,7 @@ class StockTransfersInfoTile extends StatelessWidget {
                 height: 35,
                 width: 140,
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
@@ -49,7 +40,7 @@ class StockTransfersInfoTile extends StatelessWidget {
                     Text(
                       viewStocksModel?.refNo ?? '',
                       // 'delivery'.tr,
-                      style: Theme.of(context).textTheme.caption!.copyWith(
+                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
                             fontSize: 11.7,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -59,7 +50,7 @@ class StockTransfersInfoTile extends StatelessWidget {
                       Text(
                         AppFormat.hhmmDifference(
                             viewStocksModel?.transactionDate),
-                        style: Theme.of(context).textTheme.caption!.copyWith(
+                        style: Theme.of(context).textTheme.bodySmall!.copyWith(
                               fontSize: 11.7,
                               fontWeight: FontWeight.bold,
                               color: viewStocksModel?.transactionDate != null
@@ -87,16 +78,18 @@ class StockTransfersInfoTile extends StatelessWidget {
                             text1: 'Location (From)',
                             text1Style: Theme.of(context)
                                 .textTheme
-                                .headline4!
+                                .headlineMedium!
                                 .copyWith(fontSize: 14),
                             text2: 'Location (to)',
-                            text2Style:
-                                Theme.of(context).textTheme.headline4!.copyWith(
-                                      color: Color(0xffffa025),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 11.7,
-                                      letterSpacing: 0.06,
-                                    ),
+                            text2Style: Theme.of(context)
+                                .textTheme
+                                .headlineMedium!
+                                .copyWith(
+                                  color: Color(0xffffa025),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 11.7,
+                                  letterSpacing: 0.06,
+                                ),
                           ),
                           orderInfoRow(
                             context,
@@ -147,7 +140,7 @@ class StockTransfersInfoTile extends StatelessWidget {
               Text(
                 text1 ?? '',
                 style: text1Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -156,7 +149,7 @@ class StockTransfersInfoTile extends StatelessWidget {
               Text(
                 (text2 != null && text2.isNotEmpty) ? text2.capitalize! : '',
                 style: text2Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),

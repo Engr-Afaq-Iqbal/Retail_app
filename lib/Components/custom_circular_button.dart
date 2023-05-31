@@ -42,7 +42,8 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: padding,
-          backgroundColor: bgColor == null ? primaryColor : bgColor,
+          backgroundColor:
+              bgColor == null ? Theme.of(context).colorScheme.primary : bgColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               borderRadius ?? (isBtnRounded ? 50 : 15),
@@ -56,7 +57,9 @@ class CustomButton extends StatelessWidget {
               mainAxisSize: btnTxtAxisSize,
               children: [
                 leading == null ? SizedBox.shrink() : leading!,
-                title ?? Text(btnTxt ?? 'submit'.tr, style: TextStyle(color: Colors.white)),
+                title ??
+                    Text(btnTxt ?? 'submit'.tr,
+                        style: TextStyle(color: Colors.white)),
               ],
             ),
       ),

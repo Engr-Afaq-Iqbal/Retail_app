@@ -81,7 +81,8 @@ class _NotificationsState extends State<Notifications> {
                                     ?.data?[index].msg
                                     .toString() ??
                                 '',
-                            style: TextStyle(color: primaryColor),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           Icon(
                             notificationsController.notificationShowingModelObj
@@ -94,7 +95,7 @@ class _NotificationsState extends State<Notifications> {
                                         ?.data?[index]
                                         .readAt ==
                                     null
-                                ? primaryColor
+                                ? Theme.of(context).colorScheme.primary
                                 : kLightTextColor,
                           ),
                         ],

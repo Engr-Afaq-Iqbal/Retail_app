@@ -202,12 +202,15 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                         // buttonHeight: height * 0.06,
                         // buttonWidth: width * 0.43,
                         buttonDecoration: BoxDecoration(
-                            border: Border.all(width: 1, color: primaryColor),
+                            border: Border.all(
+                                width: 1,
+                                color: Theme.of(context).colorScheme.primary),
                             borderRadius: BorderRadius.circular(15),
                             color: kWhiteColor),
                         itemHeight: 40,
                         itemPadding: EdgeInsets.zero,
-                        itemHighlightColor: primaryColor,
+                        itemHighlightColor:
+                            Theme.of(context).colorScheme.primary,
                       ),
                     );
                   else
@@ -228,7 +231,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     }
                   },
                   btnTxt: 'submit'.tr,
-                  bgColor: Theme.of(context).primaryColor,
+                  bgColor: Theme.of(context).colorScheme.primary,
                 ),
               ],
             ),

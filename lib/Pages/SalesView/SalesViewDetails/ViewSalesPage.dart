@@ -1,296 +1,263 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '/Components/custom_circular_button.dart';
+import '../../../Controllers/AllSalesController/allSalesController.dart';
 import '/Config/DateTimeFormat.dart';
 import '/Config/const.dart';
-import '/Config/enums.dart';
-import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
-import '/Pages/Orders/Components/StaffInfo.dart';
-import '/Pages/Orders/Components/TableInfo.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
-import '/Pages/cart/cart_page.dart';
-import '../../ProductsPage/home_page.dart';
 import '/Theme/colors.dart';
 import '/Theme/style.dart';
 
-class SalesViewDetailsPage extends StatelessWidget {
-  SalesViewDetailsPage({Key? key}) : super(key: key) {}
+class SalesViewDetailsPage extends StatefulWidget {
+  final AllSalesController allSalesCtrlObj;
+  final int index;
+  SalesViewDetailsPage(
+      {Key? key, required this.allSalesCtrlObj, required this.index})
+      : super(key: key) {}
+
+  @override
+  State<SalesViewDetailsPage> createState() => _SalesViewDetailsPageState();
+}
+
+class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
+  AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            actions: [
-              // Button to add or remove item/s in existing order.
-              // AppStyles.p12p5(
-              //   (isActiveOrder)
-              //       ? CustomButton(
-              //     btnTxt:
-              //     (isActiveOrder) ? 'add_item'.tr : 'edit_order'.tr,
-              //     onTap: () async {
-              //       // order.sellLines.forEach((element) {
-              //       //   if (element.product != null)
-              //       //     Get.find<ProductCartController>().orderItemsList.add(element.product!);
-              //       // });
-              //       orderCtrlObj.isOrderUpdating = true;
-              //       if (isActiveOrder)
-              //         await Get.to(() => HomePage());
-              //       else
-              //         await Get.to(() => CartPage());
-              //       orderCtrlObj.isOrderUpdating = false;
-              //     },
-              //   )
-              //       : SizedBox(),
-              // ),
-            ],
-          ),
-          SliverToBoxAdapter(
-            child: ListTile(
-              title: Text(
-                'INV88155',
-                style: AppTextStyles.style13w500,
-              ),
-              // subtitle: Text(
-              //   (order.serviceStaff?.firstName ?? '') +
-              //       ' ' +
-              //       (order.serviceStaff?.lastName ?? '') +
-              //       ' | ${AppFormat.ddMMM12h(order.createdAt)}',
-              //   style: Theme.of(context)
-              //       .textTheme
-              //       .headline6!
-              //       .copyWith(fontSize: 11.7, letterSpacing: 0.06),
-              // ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // AppStyles.p2p5(
-                  //   Row(
-                  //     children: [
-                  //       TableInfo(order.tableData?.name ?? ''),
-                  //       AppConst.dividerLine(height: 10, width: 1),
-                  //       StaffInfo(order.serviceStaff?.firstName ?? ''),
-                  //     ],
-                  //   ),
-                  // ),
-                  AppStyles.p2p5(CustomerInfo('Walk-in', DateTime.now())),
-                ],
-              ),
+      appBar: AppBar(
+        title: Text('View Sells Details'),
+      ),
+      body: SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            title: Text(
+              '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].invoiceNo ?? ''}',
+              style: AppTextStyles.style13w500,
             ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Divider(color: Theme.of(context).cardColor, thickness: 8.0),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Container(
-                    color: Theme.of(context).scaffoldBackgroundColor,
-                    padding: EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Text('item'.tr,
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                            color: Color(0xffadadad),
-                            fontWeight: FontWeight.bold)),
-                  ),
-                ),
-                // if (order.sellLines.isNotEmpty)
-                GetBuilder(builder: (OrderController orderCtrlObj) {
-                  return AppStyles.p20h(
-                      itemsTable(context, index: 0, isHeading: true));
-                }),
-                GetBuilder(builder: (OrderController orderCtrlObj) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.all(0),
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 4,
-                    itemBuilder: (context, index) => Container(
-                      color: Theme.of(context).scaffoldBackgroundColor,
-                      child: GestureDetector(
-                        onTap: () {
-                          // orderCtrlObj.markUnMarkOrder(order.sellLines[index],
-                          //     index: index);
-                        },
-                        child: Card(
-                          elevation: 0,
-                          color: Colors.transparent,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20.0, vertical: 10.0),
-                          child: itemsTable(context, index: index),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-                SizedBox(height: 5),
-                Divider(color: Theme.of(context).cardColor, thickness: 8.0),
-                Container(
-                  width: double.infinity,
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-                  child: Text(
-                    'payment'.tr.toUpperCase(),
-                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: kDisabledColor, fontWeight: FontWeight.bold),
-                  ),
-                ),
-
-                // if payed (Payed Amount)
-                //if (order.totalAmountRecovered != null)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'payed_amount'.tr,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        AppFormat.doubleToStringUpTo2('56.33') ?? '',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                AppConst.dividerLine(color: Theme.of(context).cardColor),
-                // Sub Total Amount Widget
-                //if (!isActiveOrder)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'sub_total_amount'.tr,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        AppFormat.doubleToStringUpTo2('5567.988') ?? '',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                // Sub Total Amount Widget
-                // if (order.taxAmount != null)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'tax_amount'.tr,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        AppFormat.doubleToStringUpTo2('67.0988') ?? '',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                //if (order.discountAmount != null)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'discount'.tr,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        AppFormat.doubleToStringUpTo2('47.876') ?? '',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-
-                // if (order.totalPaid != null)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        'paid_amount'.tr,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                      Text(
-                        AppFormat.doubleToStringUpTo2('456.098') ?? '',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                // Total Amount
-                // if (order.finalTotal != null)
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'total_amount'.tr,
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                        Text(
-                          AppFormat.doubleToStringUpTo2('55.9999') ?? '',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ]),
-                ),
-                AppConst.dividerLine(color: Theme.of(context).cardColor),
-
-                // Due Amount
-                Container(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'due_amount'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '56',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ]),
-                ),
-
-                Container(height: 180.0, color: Theme.of(context).cardColor),
+            // subtitle: Text(
+            //   (order.serviceStaff?.firstName ?? '') +
+            //       ' ' +
+            //       (order.serviceStaff?.lastName ?? '') +
+            //       ' | ${AppFormat.ddMMM12h(order.createdAt)}',
+            //   style: Theme.of(context)
+            //       .textTheme
+            //       .headline6!
+            //       .copyWith(fontSize: 11.7, letterSpacing: 0.06),
+            // ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // AppStyles.p2p5(
+                //   Row(
+                //     children: [
+                //       TableInfo(order.tableData?.name ?? ''),
+                //       AppConst.dividerLine(height: 10, width: 1),
+                //       StaffInfo(order.serviceStaff?.firstName ?? ''),
+                //     ],
+                //   ),
+                // ),
+                AppStyles.p2p5(CustomerInfo(
+                    '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.name ?? ''}',
+                    widget.allSalesCtrlObj.allSaleOrders
+                        ?.saleOrdersData[widget.index].transactionDate)),
               ],
             ),
           ),
+          Divider(color: Theme.of(context).cardColor, thickness: 8.0),
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text('item'.tr,
+                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                      color: Color(0xffadadad), fontWeight: FontWeight.bold)),
+            ),
+          ),
+          AppStyles.p20h(itemsTable(context, index: 0, isHeading: true)),
+
+          GetBuilder(builder: (AllSalesController allSalesCtrl) {
+            return ListView.builder(
+              shrinkWrap: true,
+              padding: const EdgeInsets.all(0),
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: widget.allSalesCtrlObj.allSaleOrders
+                      ?.saleOrdersData[widget.index].sellLines.length ??
+                  0,
+              itemBuilder: (context, index) => Container(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: GestureDetector(
+                  onTap: () {
+                    // orderCtrlObj.markUnMarkOrder(order.sellLines[index],
+                    //     index: index);
+                  },
+                  child: Card(
+                    elevation: 0,
+                    color: Colors.transparent,
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    child: itemsTable(context, index: index),
+                  ),
+                ),
+              ),
+            );
+          }),
+          SizedBox(height: 5),
+          Divider(color: Theme.of(context).cardColor, thickness: 8.0),
+          Container(
+            width: double.infinity,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
+            child: Text(
+              'payment'.tr.toUpperCase(),
+              style: Theme.of(context)
+                  .textTheme
+                  .titleLarge!
+                  .copyWith(color: kDisabledColor, fontWeight: FontWeight.bold),
+            ),
+          ),
+
+          AppConst.dividerLine(color: Theme.of(context).cardColor),
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'sub_total_amount'.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  AppFormat.doubleToStringUpTo2(
+                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalBeforeTax ?? ''}',
+                      ) ??
+                      '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          // if (order.taxAmount != null)
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'tax_amount'.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  AppFormat.doubleToStringUpTo2(
+                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].taxAmount ?? ''}',
+                      ) ??
+                      '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+
+          //if (order.discountAmount != null)
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'discount'.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  AppFormat.doubleToStringUpTo2(
+                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].discountAmount ?? ''}',
+                      ) ??
+                      '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          // if (order.totalPaid != null)
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'paid_amount'.tr,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  AppFormat.doubleToStringUpTo2(
+                          '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalPaid}') ??
+                      '',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+
+          // if (order.finalTotal != null)
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'total_amount'.tr,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                  Text(
+                    AppFormat.doubleToStringUpTo2(
+                          '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].finalTotal ?? ''}',
+                        ) ??
+                        '',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ]),
+          ),
+          AppConst.dividerLine(color: Theme.of(context).cardColor),
+          // Due Amount
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text(
+                    'due_amount'.tr,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodySmall!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    '${''}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ]),
+          ),
+
+          Container(height: 180.0, color: Theme.of(context).cardColor),
         ],
-      ),
+      )),
       bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.end,
@@ -379,7 +346,7 @@ class SalesViewDetailsPage extends StatelessWidget {
                   children: [
                     Text(
                       //order.sellLines[index].product?.name ?? '',
-                      'Product Names',
+                      '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].product?.name ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -388,7 +355,7 @@ class SalesViewDetailsPage extends StatelessWidget {
                     ),
                     Text(
                       // order.sellLines[index].product?.sku ?? '',
-                      'sku',
+                      '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].product?.sku ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -423,7 +390,7 @@ class SalesViewDetailsPage extends StatelessWidget {
               ? Text('qty'.tr.toUpperCase(), style: _headingTextStyle)
               : Text(
                   //'${order.sellLines[index].quantity}',
-                  index.toString(),
+                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].quantity ?? ''}',
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium!
@@ -447,7 +414,10 @@ class SalesViewDetailsPage extends StatelessWidget {
               : Text(
                   // AppFormat.doubleToStringUpTo2(
                   //         order.sellLines[index].unitPriceIncTax) ??
-                  '4322',
+                  AppFormat.doubleToStringUpTo2(
+                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].unitPrice ?? ''}',
+                      ) ??
+                      '0',
                   style: Theme.of(context)
                       .textTheme
                       .bodySmall!
@@ -459,7 +429,7 @@ class SalesViewDetailsPage extends StatelessWidget {
         isHeading
             ? Text('total'.tr, style: _headingTextStyle)
             : Text(
-                '124',
+                '${double.parse(widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].unitPrice ?? '0') * double.parse(widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].quantity.toString() ?? '0')}',
                 // Get.find<ProductCartController>().totalItemPrice(
                 //     order.sellLines[index].unitPriceIncTax,
                 //     order.sellLines[index].quantity),

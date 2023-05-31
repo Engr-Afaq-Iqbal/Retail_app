@@ -70,7 +70,7 @@ class _ShippingChargeState extends State<ShippingCharge> {
                       },
                       child: Icon(
                         Icons.cancel_outlined,
-                        color: primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   )
@@ -167,11 +167,13 @@ class _ShippingChargeState extends State<ShippingCharge> {
                     buttonWidth: MediaQuery.of(context).size.width * 0.05,
                     buttonDecoration: BoxDecoration(
                         color: kWhiteColor,
-                        border: Border.all(width: 1, color: primaryColor),
+                        border: Border.all(
+                            width: 1,
+                            color: Theme.of(context).colorScheme.primary),
                         borderRadius: BorderRadius.circular(15)),
                     itemHeight: 40,
                     itemPadding: EdgeInsets.zero,
-                    itemHighlightColor: primaryColor,
+                    itemHighlightColor: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               ),
@@ -206,7 +208,7 @@ class _ShippingChargeState extends State<ShippingCharge> {
                           Get.back();
                         },
                         btnTxt: 'close'.tr,
-                        bgColor: primaryColor,
+                        bgColor: Theme.of(context).colorScheme.primary,
                         borderRadius: 10),
                   ),
                 ],

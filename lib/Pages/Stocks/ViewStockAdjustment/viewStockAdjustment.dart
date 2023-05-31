@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Theme/colors.dart';
 
 import 'createStockAdjustment.dart';
 
@@ -34,7 +33,8 @@ class _ViewStockAdjustmentState extends State<ViewStockAdjustment> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
             child: Icon(Icons.add),
-            backgroundColor: primaryColor.withOpacity(0.5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.5),
             onPressed: () {
               Get.to(CreateStockAdjustment());
             }),

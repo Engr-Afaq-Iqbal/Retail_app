@@ -1,11 +1,14 @@
 import 'package:bizmodo_emenu/Pages/Profile_View/profile_view.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import '../Config/utils.dart';
 import '../Controllers/DashboardController/dashboardController.dart';
 import '../Pages/Notifications/notifications.dart';
+import '../Services/storage_services.dart';
 
 class CurvedContainer extends StatefulWidget {
   @override
@@ -76,7 +79,7 @@ class _CurvedContainerState extends State<CurvedContainer> {
       child: Container(
         height: 250,
         width: MediaQuery.of(context).size.width,
-        color: primaryColor,
+        color: Theme.of(context).colorScheme.primary,
         child: Padding(
           padding: const EdgeInsets.only(left: 10.0, right: 10, top: 30),
           child: Column(
@@ -142,17 +145,39 @@ class _CurvedContainerState extends State<CurvedContainer> {
                 },
                 child: Row(
                   children: [
-                    ClipRect(
-                      child: CircleAvatar(
-                        backgroundColor: kWhiteColor,
-                        radius: 32,
+                    // ClipRect(
+                    //   child: CircleAvatar(
+                    //     backgroundColor: kWhiteColor,
+                    //     radius: 32,
+                    //   ),
+                    // ),
+                    ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: AppStorage.getLoggedUserData()
+                                ?.staffUser
+                                .media
+                                ?.fileName ??
+                            "",
+                        imageBuilder: (context, imageProvider) => Container(
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        placeholder: (context, url) =>
+                            progressIndicator(width: 100, height: 100),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
                       ),
                     ),
                     SizedBox(
                       width: 20,
                     ),
                     Text(
-                      'Ashiq',
+                      '${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''} ${AppStorage.getLoggedUserData()?.staffUser.lastName ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium!

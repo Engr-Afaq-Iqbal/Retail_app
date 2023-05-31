@@ -251,7 +251,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             onTap: () {
                               custVisitsCtrlObj.updateCustomerVisitsStatus();
                             },
-                            bgColor: primaryColor,
+                            bgColor: Theme.of(context).colorScheme.primary,
                           ),
                           SizedBox(
                             width: 5,

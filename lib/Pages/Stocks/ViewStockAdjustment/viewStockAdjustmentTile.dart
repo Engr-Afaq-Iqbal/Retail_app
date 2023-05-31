@@ -34,7 +34,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
               height: 35,
               //width: 120,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),

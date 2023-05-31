@@ -44,7 +44,7 @@ class _DiscountState extends State<Discount> {
                     },
                     child: Icon(
                       Icons.cancel_outlined,
-                      color: primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 )
@@ -106,7 +106,7 @@ class _DiscountState extends State<Discount> {
                         Get.back();
                       },
                       btnTxt: 'update'.tr,
-                      bgColor: primaryColor,
+                      bgColor: Theme.of(context).colorScheme.primary,
                       borderRadius: 10),
                 ),
                 SizedBox(
@@ -123,7 +123,7 @@ class _DiscountState extends State<Discount> {
                         Get.back();
                       },
                       btnTxt: 'close'.tr,
-                      bgColor: primaryColor,
+                      bgColor: Theme.of(context).colorScheme.primary,
                       borderRadius: 10),
                 ),
               ],

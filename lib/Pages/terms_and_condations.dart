@@ -48,7 +48,8 @@ class TermsAndConditions extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 5),
       child: Text(
         title,
-        style: TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Colors.grey, fontSize: 18, fontWeight: FontWeight.bold),
       ),
     );
   }

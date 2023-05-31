@@ -2,15 +2,14 @@ import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Theme/colors.dart';
 import '../../Config/const.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
 import '../Orders/Components/AmountInfo.dart';
 import '../Orders/Components/CustomerInfo.dart';
 
 class ReturnTile extends StatefulWidget {
-  SaleReturnController saleReturnCtrlObj;
-  int index;
+  final SaleReturnController saleReturnCtrlObj;
+  final int index;
   ReturnTile({Key? key, required this.index, required this.saleReturnCtrlObj})
       : super(key: key);
 
@@ -37,7 +36,7 @@ class _ReturnTileState extends State<ReturnTile> {
               height: 35,
               //width: 110,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
@@ -51,7 +50,7 @@ class _ReturnTileState extends State<ReturnTile> {
                   Text(
                     widget.saleReturnCtrlObj.saleReturnListModel!
                         .data![widget.index].paymentStatus.capitalizeFirst!,
-                    style: Theme.of(context).textTheme.caption!.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
                         color: Colors.black
@@ -81,7 +80,7 @@ class _ReturnTileState extends State<ReturnTile> {
                             'Invoice No.: ${widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].invoiceNo}',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 14),
                       ),
                       // CounterWithAddRemoveButton(
@@ -118,7 +117,7 @@ class _ReturnTileState extends State<ReturnTile> {
                             'Parent Sale: ${widget.saleReturnCtrlObj.saleReturnListModel!.data![widget.index].parentSale}',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 12),
                       ),
                     ],
@@ -179,7 +178,7 @@ class _ReturnTileState extends State<ReturnTile> {
               Text(
                 text1 ?? '',
                 style: text1Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -188,7 +187,7 @@ class _ReturnTileState extends State<ReturnTile> {
               Text(
                 (text2 != null && text2.isNotEmpty) ? text2.capitalize! : '',
                 style: text2Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),

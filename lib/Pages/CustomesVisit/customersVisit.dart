@@ -1,13 +1,9 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import '../../../Pages/Stocks/ViewStockTransfer/viewStockTransferTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Theme/colors.dart';
+
 import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
-import '../Stocks/ViewStockTransfer/createStockTransfer.dart';
 import 'VIewCustomerVisit/viewCustomerVisit.dart';
 import 'createCustomerVisit.dart';
 import 'customerVisitTile.dart';
@@ -39,7 +35,8 @@ class _CustomerVisitsState extends State<CustomerVisits> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
             child: Icon(Icons.add),
-            backgroundColor: primaryColor.withOpacity(0.5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.5),
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true,

@@ -8,9 +8,11 @@ import '/Theme/colors.dart';
 /// TODO: button bg colors
 
 final ThemeData appTheme = ThemeData(
+  //primaryColor: Colors.red,
   fontFamily: 'ProductSans',
   scaffoldBackgroundColor: Color(0xfff8f9fd),
   colorScheme: ColorScheme.fromSwatch(
+    // primarySwatch: createMaterialColor(primaryColor),
     primarySwatch: createMaterialColor(primaryColor),
   ).copyWith(
     background: Color(0xffF8F9FD),

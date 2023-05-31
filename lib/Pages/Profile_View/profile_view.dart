@@ -117,7 +117,7 @@ class _ProfileViewState extends State<ProfileView> {
                   ),
                 ),
                 // btnTxt: 'update_password'.tr,
-                bgColor: primaryColor,
+                bgColor: Theme.of(context).colorScheme.primary,
                 onTap: () {
                   _showPasswordDialog();
                 },
@@ -142,7 +142,9 @@ class _ProfileViewState extends State<ProfileView> {
             overflow: TextOverflow.ellipsis,
             softWrap: true,
             style: TextStyle(
-                fontWeight: FontWeight.w500, color: primaryColor, fontSize: 12),
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.primary,
+                fontSize: 12),
           ),
         ),
       ],
@@ -188,7 +190,7 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                     CustomButton(
                       btnTxt: 'update_password'.tr,
-                      bgColor: primaryColor,
+                      bgColor: Theme.of(context).colorScheme.primary,
                       onTap: () {
                         if (listUserCtrl.newPasswordCtrl.text ==
                             listUserCtrl.confirmPasswordCtrl.text) {

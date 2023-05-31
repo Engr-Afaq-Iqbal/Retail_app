@@ -51,11 +51,9 @@ class _SettingsState extends State<Settings> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text('change_language'.tr, //'Change Language',
-            style: Theme.of(context)
-                .textTheme
-                .headline5!
-                .copyWith(fontWeight: FontWeight.bold)),
+        title: Text(
+          'change_language'.tr, //'Change Language',
+        ),
         titleSpacing: 0,
         leading: widget.isForSetting
             ? IconButton(

@@ -2,7 +2,6 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Theme/colors.dart';
 import 'AddSalesAndQuotation.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
@@ -54,7 +53,8 @@ class _SalesViewState extends State<SalesView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
           child: Icon(Icons.add),
-          backgroundColor: primaryColor.withOpacity(0.5),
+          backgroundColor:
+              Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
             Get.to(
               AddSalesAndQuotation(
@@ -85,7 +85,10 @@ class _SalesViewState extends State<SalesView> {
                             return IntrinsicHeight(
                               child: GestureDetector(
                                   onTap: () {
-                                    Get.to(SalesViewDetailsPage());
+                                    Get.to(SalesViewDetailsPage(
+                                      allSalesCtrlObj: allSalesCtrlObj,
+                                      index: index,
+                                    ));
                                   },
                                   child: SalesViewTile(
                                     allSalesCtrlObj: allSalesCtrlObj,

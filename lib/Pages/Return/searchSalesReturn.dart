@@ -44,7 +44,7 @@ class _SearchSalesReturnState extends State<SearchSalesReturn> {
                   },
                   child: Icon(
                     Icons.cancel_outlined,
-                    color: primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               )
@@ -82,7 +82,7 @@ class _SearchSalesReturnState extends State<SearchSalesReturn> {
                       // }
                     },
                     btnTxt: 'Search',
-                    bgColor: primaryColor,
+                    bgColor: Theme.of(context).colorScheme.primary,
                     borderRadius: 10),
               ),
               SizedBox(
@@ -96,7 +96,7 @@ class _SearchSalesReturnState extends State<SearchSalesReturn> {
                       Get.back();
                     },
                     btnTxt: 'close'.tr,
-                    bgColor: primaryColor,
+                    bgColor: Theme.of(context).colorScheme.primary,
                     borderRadius: 10),
               ),
             ],

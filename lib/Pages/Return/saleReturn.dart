@@ -113,7 +113,7 @@ class _SalesReturnState extends State<SalesReturn> {
               Container(
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                color: primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -166,7 +166,7 @@ class _SalesReturnState extends State<SalesReturn> {
                     ),
                   );
                 },
-                bgColor: primaryColor,
+                bgColor: Theme.of(context).colorScheme.primary,
                 btnChild: Text(
                   'discount'.tr,
                   style: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -193,7 +193,7 @@ class _SalesReturnState extends State<SalesReturn> {
                     onTap: () async {
                       saleReturnCtrlObj.addSaleReturn();
                     },
-                    bgColor: primaryColor,
+                    bgColor: Theme.of(context).colorScheme.primary,
                     btnChild: Text(
                       'Save',
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(

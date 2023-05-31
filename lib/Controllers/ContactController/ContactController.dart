@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
+import '../../Services/storage_services.dart';
 import '../ListUserController/ListUserController.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/create_contact_response_model.dart';
@@ -21,6 +23,32 @@ class ContactController extends GetxController {
   TextEditingController streetCtrl = TextEditingController();
   TextEditingController villaBuildingApartmentCtrl = TextEditingController();
   TextEditingController addressCtrl = TextEditingController();
+
+  ///to view customer
+  TextEditingController currentPasswordCtrl = TextEditingController();
+  TextEditingController newPasswordCtrl = TextEditingController();
+  TextEditingController confirmPasswordCtrl = TextEditingController();
+  TextEditingController dobCtrl = TextEditingController();
+  TextEditingController genderCtrl = TextEditingController();
+  TextEditingController martialStatusCtrl = TextEditingController();
+  TextEditingController socialMediaCtrl = TextEditingController();
+  TextEditingController bloodGroupCtrl = TextEditingController();
+  TextEditingController socialMedia2Ctrl = TextEditingController();
+  TextEditingController mobileNbrCtrl = TextEditingController();
+  TextEditingController alternativeMobileNbrCtrl = TextEditingController();
+  TextEditingController familyContactNbrCtrl = TextEditingController();
+  TextEditingController idProofNameCtrl = TextEditingController();
+  TextEditingController idProofNbrCtrl = TextEditingController();
+  TextEditingController faceBookLinkCtrl = TextEditingController();
+  TextEditingController twitterLinkCtrl = TextEditingController();
+  TextEditingController customField1Ctrl = TextEditingController();
+  TextEditingController customField2Ctrl = TextEditingController();
+  TextEditingController customField3Ctrl = TextEditingController();
+  TextEditingController customField4Ctrl = TextEditingController();
+  TextEditingController permanentAddressCtrl = TextEditingController();
+  TextEditingController currentAddressCtrl = TextEditingController();
+
+  ///end
 
   // customer screen pagination flags
   int allSaleOrdersPage = 1;
@@ -284,5 +312,40 @@ class ContactController extends GetxController {
       progressIndicator();
     }
     return options;
+  }
+
+  GetSpecificContactModel? getSpecificContactModel;
+
+  /// Fetching Specified Contact
+  Future fetchSpecifiedContactList(
+      {String? pageUrl, required String contactApi}) async {
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.getSpecifiedContactApi}${contactApi}') //&global_search=$global_search
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      getSpecificContactModel = getSpecificContactModelFromJson(_res);
+      functionStoreValue(getSpecificContactModel);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  functionStoreValue(GetSpecificContactModel? getSpecificContactModel) {
+    prefixCtrl.text = getSpecificContactModel?.data?[0].prefix ?? '';
+    firstNameCtrl.text = getSpecificContactModel?.data?[0].firstName ?? '';
+    middleNameCtrl.text = getSpecificContactModel?.data?[0].middleName ?? '';
+    lastNameCtrl.text = getSpecificContactModel?.data?[0].lastName ?? '';
+    businessNameCtrl.text =
+        getSpecificContactModel?.data?[0].supplierBusinessName ?? '';
+    mobileNumberCtrl.text = getSpecificContactModel?.data?[0].mobile ?? '';
+    alternateMblNbrNumberCtrl.text =
+        getSpecificContactModel?.data?[0].alternateNumber ?? '';
+    landLineCtrl.text = getSpecificContactModel?.data?[0].landline ?? '';
+    emailCtrl.text = getSpecificContactModel?.data?[0].email ?? '';
   }
 }

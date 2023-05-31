@@ -8,6 +8,10 @@ class ApiUrls {
 
   // find customer
   static String contactApi = "connector/api/contactapi";
+
+  //Get Specified Contact Api
+  static String getSpecifiedContactApi = "connector/api/contactapi/";
+
   // fetch tables information and list
   static String getTables = "connector/api/table";
   // table status update
@@ -112,4 +116,13 @@ class ApiUrls {
 
   ///Searh product list Api
   static String searchProductListApi = "connector/api/product/search";
+
+  ///List Quotation Api
+  static String listQuotationApi = "connector/api/sells/quotations";
+
+  ///Show Details Quotation Api
+  static String showDetailsQuotationApi = "connector/api/sells/quotations/show";
+
+  ///Create Quotations Api
+  static String createQuotationApi = "connector/api/sells/quotations/store";
 }

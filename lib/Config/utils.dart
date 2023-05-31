@@ -22,14 +22,19 @@ showProgress() {
   Get.defaultDialog(
     title: 'loading'.tr,
     content: Container(
-      decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
       child: progressIndicator(),
     ),
     barrierDismissible: true,
   );
 }
 
-Widget progressIndicator({double? height, double? width}) => Center(
+Widget progressIndicator({
+  double? height,
+  double? width,
+}) =>
+    Center(
       child: SizedBox(
         height: height,
         width: width,

@@ -122,7 +122,7 @@ class _AppFormFieldState extends State<AppFormField> {
             : null,
         keyboardType: widget.keyboardType,
         inputFormatters: widget.inputFormatterList,
-        cursorColor: Theme.of(context).primaryColor,
+        cursorColor: Theme.of(context).colorScheme.primary,
         obscureText: widget.isPasswordField ? _obscureText : false,
         controller: widget.controller,
         enabled: widget.enabled,
@@ -154,7 +154,9 @@ class _AppFormFieldState extends State<AppFormField> {
   outlineBorder({bool isBorderColorApply = true}) => OutlineInputBorder(
         borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide(
-          color: isBorderColorApply ? primaryColor : Colors.transparent,
+          color: isBorderColorApply
+              ? Theme.of(context).colorScheme.primary
+              : Colors.transparent,
         ),
       );
 

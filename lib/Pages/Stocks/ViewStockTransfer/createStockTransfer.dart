@@ -166,13 +166,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               buttonHeight: height * 0.06,
                               buttonWidth: width * 0.43,
                               buttonDecoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: primaryColor),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   borderRadius: BorderRadius.circular(15),
                                   color: kWhiteColor),
                               itemHeight: 40,
                               itemPadding: EdgeInsets.zero,
-                              itemHighlightColor: primaryColor,
+                              itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],
@@ -223,13 +227,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               buttonHeight: height * 0.06,
                               buttonWidth: width * 0.43,
                               buttonDecoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: primaryColor),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   borderRadius: BorderRadius.circular(15),
                                   color: kWhiteColor),
                               itemHeight: 40,
                               itemPadding: EdgeInsets.zero,
-                              itemHighlightColor: primaryColor,
+                              itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],
@@ -275,13 +283,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               buttonHeight: height * 0.06,
                               buttonWidth: width * 0.43,
                               buttonDecoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: primaryColor),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   borderRadius: BorderRadius.circular(15),
                                   color: kWhiteColor),
                               itemHeight: 40,
                               itemPadding: EdgeInsets.zero,
-                              itemHighlightColor: primaryColor,
+                              itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
                             ),
                           ),
                         ],
@@ -315,7 +327,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                           Container(
                             height: 50,
                             padding: EdgeInsets.symmetric(horizontal: 10),
-                            color: primaryColor,
+                            color: Theme.of(context).colorScheme.primary,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -390,7 +402,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                       showProgress();
                                       stockTranCtrlObj.createStockTransfer();
                                     },
-                                    bgColor: primaryColor,
+                                    bgColor:
+                                        Theme.of(context).colorScheme.primary,
                                   )
                                 ],
                               )

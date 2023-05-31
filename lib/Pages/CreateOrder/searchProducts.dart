@@ -36,7 +36,9 @@ class _SearchProductsState extends State<SearchProducts> {
                 bottom: 5,
               ),
               padding: EdgeInsets.symmetric(horizontal: 5),
-              color: index.isEven ? kWhiteColor : primaryColor.withOpacity(0.1),
+              color: index.isEven
+                  ? kWhiteColor
+                  : Theme.of(context).colorScheme.primary.withOpacity(0.1),
               child: Column(
                 children: [
                   Row(

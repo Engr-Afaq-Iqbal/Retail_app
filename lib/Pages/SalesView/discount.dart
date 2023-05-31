@@ -5,7 +5,6 @@ import '../../Components/custom_circular_button.dart';
 import '../../Components/discountTypeDropDown.dart';
 import '../../Components/textfield.dart';
 import '../../Controllers/ProductController/product_cart_controller.dart';
-import '../../Theme/colors.dart';
 
 class Discount extends StatefulWidget {
   const Discount({Key? key}) : super(key: key);
@@ -44,7 +43,7 @@ class _DiscountState extends State<Discount> {
                     },
                     child: Icon(
                       Icons.cancel_outlined,
-                      color: primaryColor,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 )
@@ -106,7 +105,7 @@ class _DiscountState extends State<Discount> {
                         Get.back();
                       },
                       btnTxt: 'update'.tr,
-                      bgColor: primaryColor,
+                      bgColor: Theme.of(context).colorScheme.primary,
                       borderRadius: 10),
                 ),
                 SizedBox(
@@ -123,7 +122,7 @@ class _DiscountState extends State<Discount> {
                         Get.back();
                       },
                       btnTxt: 'close'.tr,
-                      bgColor: primaryColor,
+                      bgColor: Theme.of(context).colorScheme.primary,
                       borderRadius: 10),
                 ),
               ],

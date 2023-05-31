@@ -306,7 +306,7 @@ class ContactDataModel {
   factory ContactDataModel.fromJson(Map<String, dynamic> json) =>
       ContactDataModel(
         id: json["id"],
-        businessId: json["business_id"],
+        businessId: json["business_id"] == null ? 0 : json["business_id"],
         type: json["type"],
         supplierBusinessName: json["supplier_business_name"],
         name: json["name"],

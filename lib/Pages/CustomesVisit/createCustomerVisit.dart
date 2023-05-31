@@ -229,13 +229,17 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                               buttonHeight: height * 0.06,
                               buttonWidth: width * 0.885,
                               buttonDecoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: primaryColor),
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                                   borderRadius: BorderRadius.circular(15),
                                   color: kWhiteColor),
                               itemHeight: 40,
                               itemPadding: EdgeInsets.zero,
-                              itemHighlightColor: primaryColor,
+                              itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
                             ),
                           );
                         else
@@ -344,13 +348,16 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                             buttonHeight: height * 0.06,
                             buttonWidth: width * 0.43,
                             buttonDecoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: primaryColor),
+                                border: Border.all(
+                                    width: 1,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 borderRadius: BorderRadius.circular(15),
                                 color: kWhiteColor),
                             itemHeight: 40,
                             itemPadding: EdgeInsets.zero,
-                            itemHighlightColor: primaryColor,
+                            itemHighlightColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                         );
                       else
@@ -397,7 +404,7 @@ class _CreateCustomerVisitsState extends State<CreateCustomerVisits> {
                               customerVisitsCtrlObj.createCustomerVisits();
                             }
                           },
-                          bgColor: primaryColor,
+                          bgColor: Theme.of(context).colorScheme.primary,
                         ),
                         SizedBox(
                           width: 5,

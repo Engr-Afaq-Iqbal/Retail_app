@@ -2,6 +2,7 @@ import 'package:bizmodo_emenu/Controllers/Tax%20Controller/TaxController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
 import '../../Models/ProductsModel/ShowProductListModel.dart';
@@ -56,28 +57,8 @@ class ProductsRetailController extends GetxController {
   TextEditingController alertQtyCtrl = TextEditingController();
   TextEditingController excTaxCtrl = TextEditingController();
   TextEditingController incTaxCtrl = TextEditingController();
-
-  clearAllFields() {
-    productNameCtrl.clear();
-    productSKUCtrl.clear();
-    dateCtrl.clear();
-    productDescCtrl.clear();
-    weightCtrl.clear();
-    customField1Ctrl.clear();
-    customField2Ctrl.clear();
-    customField3Ctrl.clear();
-    customField4Ctrl.clear();
-    serviceStaffTimerCtrl.clear();
-    productTypeCtrl.clear();
-    rackCtrl.clear();
-    rowCtrl.clear();
-    positionCtrl.clear();
-    alertQtyCtrl.clear();
-    unitStatusHint = 'Please Select';
-    barCodeHintStatus = 'Please Select';
-    categoriesHintStatus = 'Please Select';
-    typeOfProductHintStatus = 'Please Select';
-  }
+  TextEditingController marginCtrl = TextEditingController();
+  TextEditingController defaultSellingPriceCtrl = TextEditingController();
 
   List<String> rowRackList = [
     'Restaurant (BL001)',
@@ -235,55 +216,13 @@ class ProductsRetailController extends GetxController {
 
   Future createNewProduct() async {
     Map<String, String> _field = {
-      // 'name': '${productNameCtrl.text}',
-      // 'brand_id': '45',
-      // 'unit_id': '${unitID}',
-      // 'category_id': '${categoryID}',
-      // 'tax': '${applicableTaxId}',
-      // 'type': '${productTypeStatus?.toLowerCase()}',
-      // 'barcode_type': '', // '${barCodeKey}',
-      // 'sku': '${productSKUCtrl.text}',
-      // 'alert_quantity': '${alertQtyCtrl.text}',
-      // 'weight': '${weightCtrl.text}',
-      // 'product_custom_field1': '${customField1Ctrl.text}',
-      // 'product_custom_field2': '${customField2Ctrl.text}',
-      // 'product_custom_field3': '${customField3Ctrl.text}',
-      // 'product_custom_field4': '${customField4Ctrl.text}',
-      // 'product_description': '${productDescCtrl.text}',
-      // 'sub_unit_ids': '51',
-      // 'preparation_time_in_minutes': '',
-      // 'kitchen_id': '15', //'${printerID}',
-      // 'type_of_product': '${typeOfProductID}',
-      // 'sub_category_id': '51',
-      // 'enable_stock': '1',
-      // 'warranty_id': '${warrantyID}',
-      // 'has_module_data': '1',
-      // 'repair_model_id': '',
-      // 'enable_sr_no': '${enableProductID}',
-      // 'not_for_selling': '${notForSellingID}',
-      // 'woocommerce_disable_sync': '${disableWooCommerceID}',
-      // 'tax_type': '${taxTypeStatus}'.toLowerCase(),
-      // 'single_dpp_inc_tax': '105.00',
-      // 'single_dpp': '100',
-      // 'profit_percent': '25.00',
-      // 'single_dsp': '125.00',
-      // 'single_dsp_inc_tax': '131.25',
-      // 'image': '',
-      // 'product_brochure': '',
-      // 'variation_images[0]': '',
-      // 'product_locations[0]': '30',
-      // 'rack[0]': 'Assumenda dolores ad',
-      // 'row[0]': 'Consectetur quia qu',
-      // 'position[0]': 'Amet aut est quasi',
-      // 'location_id':
-      //    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}'
       'name': '${productNameCtrl.text}',
       'brand_id': '45',
       'unit_id': '${unitID}',
       'category_id': '${categoryID}',
       'tax': '${applicableTaxId}',
       'type': '${productTypeStatus?.toLowerCase()}',
-      'barcode_type': '${barCodeStatus}',
+      'barcode_type': '${barCodeKey}',
       'sku': '${productSKUCtrl.text}',
       'alert_quantity': '${alertQtyCtrl.text}',
       'tax_type': '${taxTypeStatus?.toLowerCase()}',
@@ -333,7 +272,7 @@ class ProductsRetailController extends GetxController {
 
   ShowProductListModel? showProductListModel;
 
-  /// Fetching Stock Adjustment
+  /// Fetching Product List Method
   Future fetchShowProductList({String? pageUrl}) async {
     await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.showProductListApi)
         .then((_res) {
@@ -346,5 +285,166 @@ class ProductsRetailController extends GetxController {
       logger.e('StackTrace => $stackTrace');
       update();
     });
+  }
+
+  ///Functions are starting from here for Taxes
+  String excTax({String? value}) {
+    double itemsPriceCount = 0.0;
+    try {
+      if (taxTypeStatus?.toLowerCase() == 'exclusive') {}
+    } catch (e) {
+      logger.e('Error to calculate sub total amount => $e');
+    }
+
+    return AppFormat.doubleToStringUpTo2('${itemsPriceCount}') ?? '0';
+  }
+
+  String defaultSellingPrice({String? value, taxCtrlObj}) {
+    double defaultSellingAmount = 0;
+    try {
+      // if (taxTypeStatus?.toLowerCase() == 'exclusive') {
+      //   defaultSellingAmount = (double.parse(excTaxCtrl.text) / 100) *
+      //       double.parse(
+      //           taxCtrlObj.listTaxModel?.data?[0].amount.toString() ?? '0');
+      //   defaultSellingAmount =
+      //       defaultSellingAmount + double.parse(excTaxCtrl.text);
+      //   defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
+      //   print('Result;;;;;;;;;');
+      //   print(defaultSellingAmount);
+      //   update();
+
+      if (taxTypeStatus?.toLowerCase() == 'exclusive') {
+        defaultSellingAmount = double.parse(excTaxCtrl.text) *
+            (double.parse(marginCtrl.text) / 100);
+        defaultSellingAmount =
+            defaultSellingAmount + double.parse(excTaxCtrl.text);
+        defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
+        print('Result;;;;;;;;;');
+        print(defaultSellingAmount);
+        update();
+      } else if (taxTypeStatus?.toLowerCase() == 'inclusive') {
+        defaultSellingAmount = double.parse(incTaxCtrl.text) *
+            (double.parse(marginCtrl.text) / 100);
+        defaultSellingAmount =
+            defaultSellingAmount + double.parse(incTaxCtrl.text);
+        defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
+        print('Result;;;;;;;;;');
+        print(defaultSellingAmount);
+        update();
+      }
+    } catch (e) {
+      logger.e('Error to calculate sub total amount => $e');
+    }
+
+    return AppFormat.doubleToStringUpTo2('${defaultSellingAmount}') ?? '0';
+  }
+
+  String incTax({String? value, taxCtrlObj}) {
+    double defaultSellingAmount = 0;
+    try {
+      if (taxTypeStatus?.toLowerCase() == 'exclusive') {
+        ///Exclusive Vat
+        ///Formula : Amount /100*Vat
+        ///100/100*5  =5 +100 = 105
+        defaultSellingAmount = (double.parse(excTaxCtrl.text) / 100) *
+            double.parse(
+                taxCtrlObj.listTaxModel?.data?[0].amount.toString() ?? '0');
+
+        defaultSellingAmount =
+            defaultSellingAmount + double.parse(excTaxCtrl.text);
+        excTaxCtrl.text = defaultSellingAmount.toString();
+        print('Result;;;;;;;;;');
+        print(defaultSellingAmount);
+        update();
+      } else if (taxTypeStatus?.toLowerCase() == 'inclusive') {
+        ///Inclusive Vat
+        ///Formula : Amount*vat/100+vat
+        ///100*5/105 = 4.76
+        ///100 - 4.76 =. 95.76
+        defaultSellingAmount = (double.parse(incTaxCtrl.text) *
+                double.parse(
+                    taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+                        '0')) /
+            (100 +
+                double.parse(
+                    taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+                        '0'));
+        defaultSellingAmount =
+            double.parse(incTaxCtrl.text) - defaultSellingAmount;
+        incTaxCtrl.text = defaultSellingAmount.toString();
+        print('Result;;;;;;;;;');
+        print(defaultSellingAmount);
+        update();
+      }
+    } catch (e) {
+      logger.e('Error to calculate sub total amount => $e');
+    }
+
+    return AppFormat.doubleToStringUpTo2('${defaultSellingAmount}') ?? '0';
+  }
+
+  addVatInInctax({taxCtrlObj}) {
+    double defaultSellingAmount = 0;
+    try {
+      incTaxCtrl.text =
+          '${double.parse(incTaxCtrl.text) + double.parse(taxCtrlObj.listTaxModel?.data?[0].amount.toString() ?? '0')}';
+      update();
+    } catch (e) {
+      logger.e('Error to calculate sub total amount => $e');
+    }
+
+    return AppFormat.doubleToStringUpTo2('${defaultSellingAmount}') ?? '0';
+  }
+
+  clearAllFields() {
+    productNameCtrl.clear();
+    productSKUCtrl.clear();
+    dateCtrl.clear();
+    productDescCtrl.clear();
+    weightCtrl.clear();
+    customField1Ctrl.clear();
+    customField2Ctrl.clear();
+    customField3Ctrl.clear();
+    customField4Ctrl.clear();
+    serviceStaffTimerCtrl.clear();
+    productTypeCtrl.clear();
+    rackCtrl.clear();
+    rowCtrl.clear();
+    positionCtrl.clear();
+    alertQtyCtrl.clear();
+    excTaxCtrl.clear();
+    incTaxCtrl.clear();
+    unitStatusHint = 'Please Select';
+    barCodeHintStatus = 'Please Select';
+    categoriesHintStatus = 'Please Select';
+    typeOfProductHintStatus = 'Please Select';
+    barCodeStatus = null;
+    barCodeKey = null;
+    unitStatus = null;
+    unitID = null;
+    categoryStatus = null;
+    categoryID = null;
+    warrantyStatus = null;
+    warrantyID = null;
+    printerStatus = null;
+    printerID = null;
+    typeOfProductStatus = null;
+    typeOfProductID = null;
+    enableProduct = false;
+    enableProductID = '0';
+    notForSelling = false;
+    notForSellingID = '0';
+    disableWooCommerce = false;
+    disableWooCommerceID = '0';
+    applicableTaxStatus = null;
+    applicableTaxId = null;
+    taxTypeStatus = null;
+    applicableTaxStatus = null;
+    productTypeStatus = null;
+    manageValue = false;
+    excTaxCtrl.clear();
+    incTaxCtrl.clear();
+    defaultSellingPriceCtrl.clear();
+    marginCtrl.clear();
   }
 }

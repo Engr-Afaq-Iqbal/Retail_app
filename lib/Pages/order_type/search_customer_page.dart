@@ -203,13 +203,13 @@
 //   }
 // }
 
+import 'package:bizmodo_emenu/Pages/CreateNewCustomer/showCustomerDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../CreateNewCustomer/createNewCustomer.dart';
 import '../CreateOrder/createOrderPage.dart';
-import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
@@ -237,6 +237,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
   @override
   void dispose() {
     _scrollController?.removeListener(scrollControllerLis);
+    contactCtrlObjj.clearAllContactCtrl();
     super.dispose();
   }
 
@@ -293,7 +294,8 @@ class _CustomerSearchState extends State<CustomerSearch> {
       floatingActionButton: (widget.dashBoardId == 1)
           ? FloatingActionButton.small(
               child: Icon(Icons.add),
-              backgroundColor: primaryColor.withOpacity(0.5),
+              backgroundColor:
+                  Theme.of(context).colorScheme.primary.withOpacity(0.5),
               onPressed: () {
                 Get.to(CreateNewCustomer());
                 // showDialog(
@@ -337,6 +339,12 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                     ),
                                     onTap: () {
                                       //  Get.close(0);
+                                      Get.to(ShowCustomerDetails(
+                                          contactApi: contactCtrlObj
+                                              .customerContacts!
+                                              .contactDataList[index]
+                                              .id
+                                              .toString()));
                                       contactCtrlObj.contactId = contactCtrlObj
                                           .customerContacts!
                                           .contactDataList[index]
@@ -360,7 +368,9 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                       } else if (widget.dashBoardId == 3) {
                                         Get.to(Return());
                                       } else if (widget.dashBoardId == 4) {
-                                        Get.to(Receipts());
+                                        contactCtrlObj.update();
+                                        Get.close(1);
+                                        //Get.to(Receipts());
                                       }
                                     },
                                   ),
@@ -415,7 +425,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
       // we will display the data returned from our future here
       title: Text(
         'create_new_customer'.tr,
-        style: TextStyle(color: primaryColor),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
       onTap: () {
         ContactDataModel(

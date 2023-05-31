@@ -42,7 +42,7 @@ class _PackingChargesState extends State<PackingCharges> {
                   },
                   child: Icon(
                     Icons.cancel_outlined,
-                    color: primaryColor,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
               )
@@ -74,7 +74,7 @@ class _PackingChargesState extends State<PackingCharges> {
                       Get.back();
                     },
                     btnTxt: 'close'.tr,
-                    bgColor: primaryColor,
+                    bgColor: Theme.of(context).colorScheme.primary,
                     borderRadius: 10),
               ),
             ],

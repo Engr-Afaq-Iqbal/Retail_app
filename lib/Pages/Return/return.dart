@@ -39,36 +39,37 @@ class _ReturnState extends State<Return> {
           actions: [
             Icon(
               Icons.calendar_month_outlined,
-              color: primaryColor,
+              color: Theme.of(context).colorScheme.primary,
             ),
             SizedBox(
               width: 10,
             ),
           ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(50),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Customer Name:'),
-                  Center(
-                    child: Text(
-                      '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
-                      style: appBarHeaderStyle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // bottom: PreferredSize(
+          //   preferredSize: Size.fromHeight(50),
+          //   child: Padding(
+          //     padding: const EdgeInsets.all(10.0),
+          //     child: Column(
+          //       mainAxisAlignment: MainAxisAlignment.start,
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Text('Customer Name:'),
+          //         Center(
+          //           child: Text(
+          //             '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
+          //             style: appBarHeaderStyle,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
             child: Icon(Icons.add),
-            backgroundColor: primaryColor.withOpacity(0.5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.5),
             onPressed: () {
               showDialog(
                 context: context,

@@ -65,7 +65,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
               Container(
                 height: 50,
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                color: primaryColor,
+                color: Theme.of(context).colorScheme.primary,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

@@ -6,7 +6,8 @@ class BottomBar extends StatelessWidget {
   final Color? color;
   final Color? textColor;
 
-  BottomBar({required this.onTap, required this.text, this.color, this.textColor});
+  BottomBar(
+      {required this.onTap, required this.text, this.color, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class BottomBar extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   )),
         ),
-        color: color ?? Theme.of(context).primaryColor,
+        color: color ?? Theme.of(context).colorScheme.primary,
         height: 60.0,
       ),
     );

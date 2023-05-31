@@ -26,7 +26,7 @@ class _UserInformationState extends State<UserInformation> {
   @override
   Widget build(BuildContext context) {
     double h = MediaQuery.of(context).size.height;
-    bool isScreenWide = MediaQuery.of(context).size.width >= 1200;
+
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -46,7 +46,7 @@ class _UserInformationState extends State<UserInformation> {
             children: [
               Icon(
                 Icons.person,
-                color: primaryColor,
+                color: Theme.of(context).colorScheme.primary,
               ),
               Text(
                 'user_information'.tr,

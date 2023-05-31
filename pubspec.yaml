@@ -50,6 +50,7 @@ dependencies:
   overlay_support: ^2.1.0
   font_awesome_flutter: ^10.4.0
   data_table_2: ^2.3.11
+  flutter_typeahead: ^4.4.0
 
 
   #  tablemi.com

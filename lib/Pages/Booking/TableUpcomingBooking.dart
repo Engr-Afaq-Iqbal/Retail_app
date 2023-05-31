@@ -26,7 +26,8 @@ class _TableUpcomingbookingState extends State<TableUpcomingbooking> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton.small(
             child: Icon(Icons.add),
-            backgroundColor: primaryColor.withOpacity(0.5),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.5),
             onPressed: () {
               showModalBottomSheet(
                 isScrollControlled: true,

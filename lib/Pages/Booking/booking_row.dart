@@ -306,13 +306,14 @@ class _BottomWidgetState extends State<BottomWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: forIndex == index
-                                  ? primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Colors.white,
                             ),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
-                            color:
-                                forIndex == index ? primaryColor : Colors.white,
+                            color: forIndex == index
+                                ? Theme.of(context).colorScheme.primary
+                                : Colors.white,
                           ),
                           alignment: Alignment.center,
                           child: Text(
@@ -380,13 +381,13 @@ class _BottomWidgetState extends State<BottomWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: dateIndex == index
-                                  ? primaryColor
+                                  ? Theme.of(context).colorScheme.primary
                                   : Colors.white,
                             ),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                             color: dateIndex == index
-                                ? primaryColor
+                                ? Theme.of(context).colorScheme.primary
                                 : Colors.white,
                           ),
                           alignment: Alignment.center,
@@ -453,12 +454,12 @@ class _BottomWidgetState extends State<BottomWidget> {
                           decoration: BoxDecoration(
                             border: Border.all(
                                 color: timeIndex == index
-                                    ? primaryColor
+                                    ? Theme.of(context).colorScheme.primary
                                     : Colors.white),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                             color: timeIndex == index
-                                ? primaryColor
+                                ? Theme.of(context).colorScheme.primary
                                 : Colors.white,
                           ),
                           alignment: Alignment.center,
@@ -466,7 +467,7 @@ class _BottomWidgetState extends State<BottomWidget> {
                             time[index],
                             style: Theme.of(context)
                                 .textTheme
-                                .caption!
+                                .bodySmall!
                                 .copyWith(
                                     fontSize: timeIndex == index ? 13 : 12.0,
                                     color: timeIndex == index
@@ -552,11 +553,14 @@ class _BottomWidgetState extends State<BottomWidget> {
                                 buttonDecoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1,
-                                        color: primaryColor.withOpacity(0.6)),
+                                        color: Theme.of(context)
+                                            .primaryColor
+                                            .withOpacity(0.6)),
                                     borderRadius: BorderRadius.circular(10)),
                                 itemHeight: 40,
                                 itemPadding: EdgeInsets.zero,
-                                itemHighlightColor: primaryColor,
+                                itemHighlightColor:
+                                    Theme.of(context).colorScheme.primary,
                               );
                             }),
                       );
@@ -604,11 +608,14 @@ class _BottomWidgetState extends State<BottomWidget> {
                           buttonDecoration: BoxDecoration(
                               border: Border.all(
                                   width: 1,
-                                  color: primaryColor.withOpacity(0.6)),
+                                  color: Theme.of(context)
+                                      .primaryColor
+                                      .withOpacity(0.6)),
                               borderRadius: BorderRadius.circular(10)),
                           itemHeight: 40,
                           itemPadding: EdgeInsets.zero,
-                          itemHighlightColor: primaryColor,
+                          itemHighlightColor:
+                              Theme.of(context).colorScheme.primary,
                         ),
                       );
                     })),

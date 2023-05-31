@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../Config/utils.dart';
 import '../../Models/AllSalesModel/allSalesModel.dart';
+import '../../Models/AllSalesModel/specifiedSellModel.dart';
 import '../../Models/NavBarModel.dart';
 import '../../Models/order_type_model/SaleOrderModel.dart';
 import '../../Pages/SalesView/ListQuotations/listQuotations.dart';
@@ -132,7 +133,7 @@ class AllSalesController extends GetxController {
     'Subtotal'
   ];
 
-  AllSalesModel? allSalesModel;
+  //AllSalesModel? allSalesModel;
 
   // /// Fetching Sales Return List
   // Future fetchAllSalesList({
@@ -211,5 +212,25 @@ class AllSalesController extends GetxController {
     isLoadMoreRunning.value = false;
     await fetchAllSalesList(1);
     isFirstLoadRunning = false;
+  }
+
+  SpecifiedSellModel? salesOrderModel;
+
+  /// Fetching list of Quotations
+  Future fetchSellDetails({
+    String? pageUrl,
+    String? id,
+  }) async {
+    await ApiServices.getMethod(feedUrl: pageUrl ?? '${ApiUrls.allOrders}/$id')
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      salesOrderModel = specifiedSellModelFromJson(_res);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
   }
 }

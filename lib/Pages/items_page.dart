@@ -76,7 +76,7 @@ class _ItemsPageState extends State<ItemsPage> {
                             width: 30,
                             child: Icon(
                               Icons.info,
-                              color: Theme.of(context).primaryColor,
+                              color: Theme.of(context).colorScheme.primary,
                               size: 30,
                             ),
                           ),
@@ -263,7 +263,7 @@ class _ItemsPageState extends State<ItemsPage> {
       //             //                           begin: Alignment.bottomCenter,
       //             //                           end: Alignment.center,
       //             //                           colors: [
-      //             //                             Theme.of(context).primaryColor,
+      //             //                             Theme.of(context).colorScheme.primary,
       //             //                             Colors.transparent,
       //             //                           ],
       //             //                           stops: [
@@ -376,7 +376,7 @@ class _ItemsPageState extends State<ItemsPage> {
       //             //               width: 30,
       //             //               child: Icon(
       //             //                 Icons.info,
-      //             //                 color: Theme.of(context).primaryColor,
+      //             //                 color: Theme.of(context).colorScheme.primary,
       //             //                 size: 30,
       //             //               ),
       //             //             ),
@@ -424,7 +424,7 @@ class _ItemsPageState extends State<ItemsPage> {
       //                           width: 30,
       //                           child: Icon(
       //                             Icons.info,
-      //                             color: Theme.of(context).primaryColor,
+      //                             color: Theme.of(context).colorScheme.primary,
       //                             size: 30,
       //                           ),
       //                         ),

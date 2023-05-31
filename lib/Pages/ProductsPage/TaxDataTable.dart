@@ -46,7 +46,8 @@ class _TaxDataTableState extends State<TaxDataTable> {
                     columnSpacing: 10,
                     showBottomBorder: false,
                     dividerThickness: 0,
-                    headingRowColor: MaterialStateProperty.all(primaryColor),
+                    headingRowColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.primary),
                     columns: prodRetailCtrlObj.rowRackList
                         .map(
                           (e) => DataColumn2(

@@ -1,17 +1,20 @@
+import 'package:bizmodo_emenu/Config/enums.dart';
+import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../Config/DateTimeFormat.dart';
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
-import '../../Config/const.dart';
+
+import '../../Models/order_type_model/SaleOrderModel.dart';
 import '../Orders/Components/AmountInfo.dart';
 import '../Orders/Components/CustomerInfo.dart';
+import '../Orders/Controller/OrderController.dart';
 
 class ReceiptsTile extends StatefulWidget {
-  ReceiptsTile({
-    Key? key,
-  }) : super(key: key);
+  final SaleOrderDataModel pastOrder;
+  // final AllSalesController allSalesCtrlObj;
+  final int index;
+  ReceiptsTile({Key? key, required this.pastOrder, required this.index})
+      : super(key: key);
 
   @override
   State<ReceiptsTile> createState() => _ReceiptsTileState();
@@ -19,6 +22,19 @@ class ReceiptsTile extends StatefulWidget {
 
 class _ReceiptsTileState extends State<ReceiptsTile> {
   bool valuefirst = false;
+  OrderController orderCtrlObj = Get.find<OrderController>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    //Get.find<ReceiptsController>().singleOrderData = ;
+    orderCtrlObj.singleOrderData = widget.pastOrder;
+    print('::::::::::');
+    print(widget.index);
+    print('::::::::::');
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,7 +52,7 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
               height: 35,
               //width: 110,
               decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
+                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(10),
                   bottomLeft: Radius.circular(10),
@@ -48,8 +64,11 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                 children: [
                   // if (viewStocksModel?.transactionDate != null)
                   Text(
-                    'Paid',
-                    style: Theme.of(context).textTheme.caption!.copyWith(
+                    paymentStatusValues.reverse?[widget.pastOrder.paymentStatus]
+                            ?.toLowerCase()
+                            .tr ??
+                        '-',
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         fontSize: 11.7,
                         fontWeight: FontWeight.bold,
                         color: Colors.black
@@ -58,7 +77,7 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                         //     ? Colors.white
                         //     : Colors.black,
                         ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -75,24 +94,30 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'INV88789',
+                        text1: '${widget.pastOrder.invoiceNo ?? ''}',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 14),
                       ),
-                      Container(
-                        height: 20,
-                        width: 20,
-                        child: Checkbox(
-                          value: valuefirst,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              valuefirst = value!;
-                            });
-                          },
-                        ),
-                      ),
+                      //   (widget.pastOrder.isSuspend)
+                      // ? isItCooked(index)
+                      //  ?
+                      OrderSelectionBox(
+                          index: widget.index, order: widget.pastOrder)
+                      // : SizedBox(),
+                      // Container(
+                      //   height: 20,
+                      //   width: 20,
+                      //   child: Checkbox(
+                      //     value: valuefirst,
+                      //     onChanged: (bool? value) {
+                      //       setState(() {
+                      //         valuefirst = value!;
+                      //       });
+                      //     },
+                      //   ),
+                      // ),
                     ],
                   ),
                   Row(
@@ -100,7 +125,8 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomerInfo('Walkin', DateTime.now()),
+                          CustomerInfo('${widget.pastOrder.contact?.name}',
+                              widget.pastOrder.transactionDate),
                         ],
                       ),
                     ],
@@ -112,42 +138,46 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
                         text1: 'Doc No.: ',
                         text1Style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(fontSize: 14),
-                        text2: '1122235665432345',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
+                        text2: '${widget.pastOrder.document ?? '- -'}',
+                        text2Style: Theme.of(context)
+                            .textTheme
+                            .headlineMedium!
+                            .copyWith(
+                              color: orangeColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                              letterSpacing: 0.06,
+                            ),
                       ),
                     ],
                   ),
                   Row(
-                    // mainAxisAlignment:
-                    //     MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      orderInfoRow(
-                        context,
-                        text1: 'Type: ',
-                        text1Style: Theme.of(context)
-                            .textTheme
-                            .headline4!
-                            .copyWith(fontSize: 12),
-                        text2: 'INV',
-                        text2Style:
-                            Theme.of(context).textTheme.headline4!.copyWith(
-                                  color: Color(0xffffa025),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  letterSpacing: 0.06,
-                                ),
-                      ),
-                      AppConst.dividerLine(height: 12, width: 1),
+                      //   orderInfoRow(
+                      //     context,
+                      //     text1: 'Type: ',
+                      //     text1Style: Theme.of(context)
+                      //         .textTheme
+                      //         .headlineMedium!
+                      //         .copyWith(fontSize: 12),
+                      //     text2:
+                      //         '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].type}',
+                      //     text2Style: Theme.of(context)
+                      //         .textTheme
+                      //         .headlineMedium!
+                      //         .copyWith(
+                      //           color: Color(0xffffa025),
+                      //           fontWeight: FontWeight.bold,
+                      //           fontSize: 12,
+                      //           letterSpacing: 0.06,
+                      //         ),
+                      //   ),
+                      //AppConst.dividerLine(height: 12, width: 1),
                       AmountInfo(
-                        amount: '543',
+                        amount: '${widget.pastOrder.finalTotal ?? '- -'}',
                         status: 'Amount',
                       ),
                     ],
@@ -178,7 +208,7 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
               Text(
                 text1 ?? '',
                 style: text1Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -187,13 +217,53 @@ class _ReceiptsTileState extends State<ReceiptsTile> {
               Text(
                 (text2 != null && text2.isNotEmpty) ? text2.capitalize! : '',
                 style: text2Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
               ),
         ],
       ),
+    );
+  }
+}
+
+class OrderSelectionBox extends StatefulWidget {
+  final int? index;
+  final bool isHeading;
+  final SaleOrderDataModel order;
+  //final SellLine? sellLine;
+  const OrderSelectionBox(
+      {required this.order,
+      // this.sellLine,
+      this.index,
+      this.isHeading = false,
+      Key? key})
+      : super(key: key);
+
+  @override
+  State<OrderSelectionBox> createState() => _OrderSelectionBoxState();
+}
+
+class _OrderSelectionBoxState extends State<OrderSelectionBox> {
+  @override
+  Widget build(BuildContext context) {
+    // print(widget.index);
+    return Checkbox(
+      value: widget.order.isSelected,
+      //widget.order.isSuspend ?
+      // : widget.order.sellLines.every((element) => element.isSelected),
+      onChanged: (_) {
+        if (widget.isHeading)
+          setState(() {
+            Get.find<OrderController>().markUnMarkAllOrder(/*order.sellLines*/);
+          });
+        else
+          setState(() {
+            Get.find<ReceiptsController>()
+                .markUnMarkOrder(widget.order, index: widget.index);
+          });
+      },
     );
   }
 }

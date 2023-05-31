@@ -42,14 +42,14 @@ class SearchProductModel {
       SearchProductModel(
         productId: json["product_id"],
         name: json["name"],
-        type: typeValues.map[json["type"]]!,
+        type: typeValues.map[json["type"]],
         enableStock: json["enable_stock"],
         variationId: json["variation_id"],
-        variation: variationValues.map[json["variation"]]!,
+        variation: variationValues.map[json["variation"]],
         qtyAvailable: json["qty_available"],
         sellingPrice: json["selling_price"],
         subSku: json["sub_sku"],
-        unit: unitValues.map[json["unit"]]!,
+        unit: unitValues.map[json["unit"]],
         imageUrl: json["image_url"],
       );
 

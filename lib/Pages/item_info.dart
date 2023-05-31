@@ -165,7 +165,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                       //         decoration: BoxDecoration(
                                       //           borderRadius: BorderRadius.circular(8),
                                       //           // color: selectedModifier == index
-                                      //           //     ? Theme.of(context).primaryColor
+                                      //           //     ? Theme.of(context).colorScheme.primary
                                       //           //     : Theme.of(context).scaffoldBackgroundColor,
                                       //         ),
                                       //         child: Text('${_variation?.name}'),
@@ -199,7 +199,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                           Get.back(result: true);
                         },
                         padding: EdgeInsets.all(20),
-                        bgColor: Theme.of(context).primaryColor,
+                        bgColor: Theme.of(context).colorScheme.primary,
                         title: Text(
                           'add'.tr,
                           style: Theme.of(context)
@@ -241,7 +241,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                       //           decoration: BoxDecoration(
                       //             borderRadius: BorderRadius.circular(8),
                       //             color: selectedModifier == index
-                      //                 ? Theme.of(context).primaryColor
+                      //                 ? Theme.of(context).colorScheme.primary
                       //                 : Theme.of(context).scaffoldBackgroundColor,
                       //           ),
                       //           child: Column(

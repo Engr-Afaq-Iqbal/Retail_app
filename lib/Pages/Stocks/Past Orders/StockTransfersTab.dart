@@ -3,10 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Theme/colors.dart';
-import '/Config/utils.dart';
-import '/Pages/Orders/Controller/OrderController.dart';
-import 'StockTransfersInfoTile.dart';
 
 class StockTransfer extends StatefulWidget {
   @override
@@ -72,7 +68,10 @@ class _StockTransferState extends State<StockTransfer> {
                         height: 35,
                         width: 140,
                         decoration: BoxDecoration(
-                          color: primaryColor.withOpacity(0.1),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.only(
                             bottomRight: Radius.circular(10),
                             bottomLeft: Radius.circular(10),
@@ -87,12 +86,14 @@ class _StockTransferState extends State<StockTransfer> {
                                       ?.data[index].refNo ??
                                   '',
                               // 'delivery'.tr,
-                              style:
-                                  Theme.of(context).textTheme.caption!.copyWith(
-                                        fontSize: 11.7,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                    fontSize: 11.7,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
                             ),
                             if (stockTransferController.viewStockTransferMoodel
                                     ?.data[index].transactionDate !=
@@ -104,7 +105,7 @@ class _StockTransferState extends State<StockTransfer> {
                                     .transactionDate),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .caption!
+                                    .bodySmall!
                                     .copyWith(
                                       fontSize: 11.7,
                                       fontWeight: FontWeight.bold,
@@ -137,12 +138,12 @@ class _StockTransferState extends State<StockTransfer> {
                                     text1: 'Location (From)',
                                     text1Style: Theme.of(context)
                                         .textTheme
-                                        .headline4!
+                                        .headlineMedium!
                                         .copyWith(fontSize: 14),
                                     text2: 'Location (to)',
                                     text2Style: Theme.of(context)
                                         .textTheme
-                                        .headline4!
+                                        .headlineMedium!
                                         .copyWith(
                                           color: Color(0xffffa025),
                                           fontWeight: FontWeight.bold,
@@ -231,7 +232,7 @@ class _StockTransferState extends State<StockTransfer> {
               Text(
                 text1 ?? '',
                 style: text1Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
@@ -240,7 +241,7 @@ class _StockTransferState extends State<StockTransfer> {
               Text(
                 (text2 != null && text2.isNotEmpty) ? text2.capitalize! : '',
                 style: text2Style ??
-                    Theme.of(context).textTheme.headline6!.copyWith(
+                    Theme.of(context).textTheme.titleLarge!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),

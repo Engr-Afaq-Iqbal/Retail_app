@@ -3,12 +3,14 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../../Models/ProductsModel/SearchProductModel.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../searchStockProducts.dart';
@@ -66,6 +68,12 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
 
     stockAdjustmentCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
     print(dateTime);
+  }
+
+  void dispose() {
+    stockAdjustmentCtrlObj.searchCtrl.clear();
+    stockAdjustmentCtrlObj.listForStockAdjustment?.clear();
+    super.dispose();
   }
 
   @override
@@ -142,13 +150,16 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                             buttonHeight: height * 0.06,
                             buttonWidth: width * 0.43,
                             buttonDecoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 1, color: primaryColor),
+                                border: Border.all(
+                                    width: 1,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 borderRadius: BorderRadius.circular(15),
                                 color: kWhiteColor),
                             itemHeight: 40,
                             itemPadding: EdgeInsets.zero,
-                            itemHighlightColor: primaryColor,
+                            itemHighlightColor:
+                                Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ],
@@ -171,14 +182,46 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       headings(txt: 'Search Products'),
-                      AppFormField(
-                        controller: stockAdjustmentCtrlObj.additionalNotesCtrl,
-                        labelText: 'Search products for stock',
-                      ),
+                      // AppFormField(
+                      //   controller: stockAdjustmentCtrlObj.additionalNotesCtrl,
+                      //   labelText: 'Search products for stock',
+                      // ),
+                      TypeAheadField<SearchProductModel>(
+                          textFieldConfiguration: TextFieldConfiguration(
+                              controller: stockAdjustmentCtrlObj.searchCtrl,
+                              autofocus: true,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: blackColor,
+                              ),
+                              decoration: InputDecoration(
+                                  border: OutlineInputBorder())),
+                          suggestionsCallback: (pattern) async {
+                            return await stockAdjustmentCtrlObj
+                                .searchProductList(term: pattern);
+                          },
+                          itemBuilder: (context, suggestion) {
+                            return ListTile(
+                              title: Text(
+                                  '${suggestion.name} ${suggestion.subSku}' ??
+                                      ''),
+                            );
+                          },
+                          onSuggestionSelected: (suggestion) {
+                            stockAdjustmentCtrlObj.listForStockAdjustment
+                                ?.add(suggestion);
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         ProductPage(product: suggestion)));
+                          },
+                          errorBuilder: (context, error) => Text('$error',
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error))),
                       Container(
                         height: 50,
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        color: primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -257,7 +300,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                   stockAdjustmentCtrlObj
                                       .createStockAdjustment();
                                 },
-                                bgColor: primaryColor,
+                                bgColor: Theme.of(context).colorScheme.primary,
                               )
                             ],
                           )
