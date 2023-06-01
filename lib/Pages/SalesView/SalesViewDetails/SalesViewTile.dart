@@ -68,8 +68,8 @@ class SalesViewTile extends StatelessWidget {
                   '${pastOrder.contact?.name}', pastOrder.transactionDate),
               //if (pastOrder.totalAmountRecovered != null)
               AmountInfo(
-                amount: '${pastOrder.totalAmountRecovered ?? '- -'}',
-                status: 'Recovered',
+                amount: '${pastOrder.totalAmountRecovered ?? '0.00'}',
+                status: 'Paid',
               ),
             ],
           ),
@@ -108,8 +108,8 @@ class SalesViewTile extends StatelessWidget {
               ),
               // if (pastOrder.finalTotal != null)
               AmountInfo(
-                amount:
-                    (double.parse('${pastOrder.finalTotal ?? ''}')).toString(),
+                amount: (double.parse('${pastOrder.finalTotal ?? '0.00'}'))
+                    .toString(),
                 status: 'due'.tr,
               ),
             ],

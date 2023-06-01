@@ -8,7 +8,7 @@ import '/Theme/colors.dart';
 import '/Theme/style.dart';
 
 class ShowCustomerDetails extends StatefulWidget {
-  String contactApi;
+  final String contactApi;
   ShowCustomerDetails({Key? key, required this.contactApi}) : super(key: key);
 
   @override

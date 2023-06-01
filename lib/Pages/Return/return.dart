@@ -7,10 +7,8 @@ import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
 
-import '../../../Theme/colors.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
-import '../../Theme/style.dart';
 
 class Return extends StatefulWidget {
   const Return({Key? key}) : super(key: key);
@@ -95,7 +93,8 @@ class _ReturnState extends State<Return> {
                     return GestureDetector(
                       onTap: () {
                         Get.to(SalesReturn(
-                            saleReturnCtrl: saleReturnCtrl, index: index));
+                          id: '${saleReturnCtrl.saleReturnListModel?.data?[index].parentSaleId}',
+                        ));
                       },
                       child: IntrinsicHeight(
                         child: ReturnTile(

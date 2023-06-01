@@ -59,6 +59,8 @@ class ProductsRetailController extends GetxController {
   TextEditingController incTaxCtrl = TextEditingController();
   TextEditingController marginCtrl = TextEditingController();
   TextEditingController defaultSellingPriceCtrl = TextEditingController();
+  TextEditingController defaultSelllingIncCtrl = TextEditingController();
+  TextEditingController defaultSelllingExcCtrl = TextEditingController();
 
   List<String> rowRackList = [
     'Restaurant (BL001)',
@@ -244,11 +246,11 @@ class ProductsRetailController extends GetxController {
       'enable_sr_no': '$enableProductID',
       'not_for_selling': '${notForSellingID}',
       'woocommerce_disable_sync': '$disableWooCommerceID',
-      'single_dpp_inc_tax': '105.00',
-      'single_dpp': '100',
-      'profit_percent': '25.00',
-      'single_dsp': '125.00',
-      'single_dsp_inc_tax': '131.25',
+      'single_dpp_inc_tax': '${incTaxCtrl.text}',
+      'single_dpp': '${excTaxCtrl.text}',
+      'profit_percent': '${marginCtrl.text}',
+      'single_dsp': '${defaultSelllingExcCtrl.text}',
+      'single_dsp_inc_tax': '${defaultSelllingIncCtrl.text}',
       'product_locations[0]': '30',
       'rack[0]': 'Assumenda dolores ad',
       'row[0]': 'Consectetur quia qu',
@@ -302,22 +304,12 @@ class ProductsRetailController extends GetxController {
   String defaultSellingPrice({String? value, taxCtrlObj}) {
     double defaultSellingAmount = 0;
     try {
-      // if (taxTypeStatus?.toLowerCase() == 'exclusive') {
-      //   defaultSellingAmount = (double.parse(excTaxCtrl.text) / 100) *
-      //       double.parse(
-      //           taxCtrlObj.listTaxModel?.data?[0].amount.toString() ?? '0');
-      //   defaultSellingAmount =
-      //       defaultSellingAmount + double.parse(excTaxCtrl.text);
-      //   defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
-      //   print('Result;;;;;;;;;');
-      //   print(defaultSellingAmount);
-      //   update();
-
       if (taxTypeStatus?.toLowerCase() == 'exclusive') {
         defaultSellingAmount = double.parse(excTaxCtrl.text) *
             (double.parse(marginCtrl.text) / 100);
         defaultSellingAmount =
             defaultSellingAmount + double.parse(excTaxCtrl.text);
+        defaultSelllingExcCtrl.text = defaultSellingAmount.toString();
         defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
         print('Result;;;;;;;;;');
         print(defaultSellingAmount);
@@ -327,6 +319,7 @@ class ProductsRetailController extends GetxController {
             (double.parse(marginCtrl.text) / 100);
         defaultSellingAmount =
             defaultSellingAmount + double.parse(incTaxCtrl.text);
+        defaultSelllingIncCtrl.text = defaultSellingAmount.toString();
         defaultSellingPriceCtrl.text = defaultSellingAmount.toString();
         print('Result;;;;;;;;;');
         print(defaultSellingAmount);

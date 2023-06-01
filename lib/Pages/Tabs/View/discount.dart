@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,7 +6,6 @@ import '../../../Components/custom_circular_button.dart';
 import '../../../Components/discountTypeDropDown.dart';
 import '../../../Components/textfield.dart';
 import '../../../Controllers/ProductController/product_cart_controller.dart';
-import '../../../Theme/colors.dart';
 
 class Discount extends StatefulWidget {
   const Discount({Key? key}) : super(key: key);
@@ -79,6 +79,9 @@ class _DiscountState extends State<Discount> {
                 isLabel: false,
                 labelText: 'discount_amount'.tr,
                 controller: productCtrlCtrlObj.discoutCtrl,
+                onChanged: (value) {
+                  Get.find<SaleReturnController>().update();
+                },
               ),
             ),
             SizedBox(
@@ -95,6 +98,7 @@ class _DiscountState extends State<Discount> {
                         if ('Percentage' ==
                             productCtrlCtrlObj.discountType.text) {
                           productCtrlCtrlObj.totalDiscountPercentage();
+                          Get.find<SaleReturnController>().returnTotalAmount();
                           print('percentage');
                           productCtrlCtrlObj.update();
                         } else if (productCtrlCtrlObj.discountType.text ==

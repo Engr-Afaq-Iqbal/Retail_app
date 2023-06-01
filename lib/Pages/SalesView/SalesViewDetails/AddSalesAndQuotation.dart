@@ -16,7 +16,7 @@ import '../discount.dart';
 import '../SearchSaleProducts.dart';
 
 class AddSalesAndQuotation extends StatefulWidget {
-  bool? isSale;
+  final bool? isSale;
   AddSalesAndQuotation({Key? key, this.isSale = true}) : super(key: key);
 
   @override
@@ -70,6 +70,13 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    allSalesCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(DateTime.now())}';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -96,44 +103,63 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       headings(txt: 'Pay term:'),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Align(
-                              alignment: AlignmentDirectional.centerStart,
-                              child: Text(
-                                'Please Select',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  color: txtFieldHintColor,
-                                ),
-                              )),
-                          items: allSalesCtrlObj.payTermList().map((e) {
-                            return DropdownMenuItem(value: e, child: Text(e));
-                          }).toList(),
-                          value: allSalesCtrlObj.paytermStatusValue,
-                          dropdownDirection: DropdownDirection.textDirection,
-                          dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                          buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                          onChanged: (String? value) {
-                            setState(() {
-                              allSalesCtrlObj.paytermStatusValue = value;
-                            });
-                          },
-                          buttonHeight: height * 0.06,
-                          buttonWidth: width * 0.43,
-                          buttonDecoration: BoxDecoration(
-                              border: Border.all(
-                                  width: 1,
-                                  color: Theme.of(context).colorScheme.primary),
-                              borderRadius: BorderRadius.circular(15),
-                              color: kWhiteColor),
-                          itemHeight: 40,
-                          itemPadding: EdgeInsets.zero,
-                          itemHighlightColor:
-                              Theme.of(context).colorScheme.primary,
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          AppFormField(
+                            controller: allSalesCtrlObj.searchCtrl,
+                            labelText: '',
+                            width: width * 0.15,
+                          ),
+                          SizedBox(
+                            width: 2,
+                          ),
+                          DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                              isExpanded: true,
+                              hint: Align(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: Text(
+                                    'Please Select',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      color: txtFieldHintColor,
+                                    ),
+                                  )),
+                              items: allSalesCtrlObj.payTermList().map((e) {
+                                return DropdownMenuItem(
+                                    value: e, child: Text(e));
+                              }).toList(),
+                              value: allSalesCtrlObj.paytermStatusValue,
+                              dropdownDirection:
+                                  DropdownDirection.textDirection,
+                              dropdownPadding:
+                                  EdgeInsets.only(left: 5, right: 5),
+                              buttonPadding:
+                                  EdgeInsets.only(left: 15, right: 15),
+                              onChanged: (String? value) {
+                                setState(() {
+                                  allSalesCtrlObj.paytermStatusValue = value;
+                                });
+                              },
+                              buttonHeight: height * 0.06,
+                              buttonWidth: width * 0.26,
+                              buttonDecoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: kWhiteColor),
+                              itemHeight: 40,
+                              itemPadding: EdgeInsets.zero,
+                              itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

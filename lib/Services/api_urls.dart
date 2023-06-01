@@ -125,4 +125,7 @@ class ApiUrls {
 
   ///Create Quotations Api
   static String createQuotationApi = "connector/api/sells/quotations/store";
+
+  ///Create Quotations Api
+  static String editSaleReturnApi = "connector/api/sell-return/edit/";
 }

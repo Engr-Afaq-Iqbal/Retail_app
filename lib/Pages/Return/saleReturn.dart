@@ -1,20 +1,22 @@
 import 'package:bizmodo_emenu/Components/textfield.dart';
-import 'package:bizmodo_emenu/Pages/Return/saleReturnProductsList.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../Components/custom_circular_button.dart';
 import '../../Config/DateTimeFormat.dart';
+import '../../Config/utils.dart';
+import '../../Controllers/ProductController/product_cart_controller.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
 import '../../Theme/colors.dart';
 import '../SalesView/discount.dart';
 
 class SalesReturn extends StatefulWidget {
-  SaleReturnController saleReturnCtrl;
-  int index;
-  SalesReturn({Key? key, required this.saleReturnCtrl, required this.index})
-      : super(key: key);
+  final String id;
+  SalesReturn({
+    Key? key,
+    required this.id,
+  }) : super(key: key);
 
   @override
   State<SalesReturn> createState() => _SalesReturnState();
@@ -23,6 +25,8 @@ class SalesReturn extends StatefulWidget {
 class _SalesReturnState extends State<SalesReturn> {
   final SaleReturnController saleReturnCtrlObj =
       Get.find<SaleReturnController>();
+  final ProductCartController productCtrlCtrlObj =
+      Get.find<ProductCartController>();
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -71,12 +75,41 @@ class _SalesReturnState extends State<SalesReturn> {
 
   @override
   void initState() {
+    print(widget.id);
+    saleReturnCtrlObj.fetchEditSalesReturnList(id: widget.id);
     saleReturnCtrlObj.invoiceNbrCtrl.text =
-        '${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].invoiceNo}';
+        '${saleReturnCtrlObj.editSaleReturnModelDart?.invoiceNo}';
     saleReturnCtrlObj.transactionIdCtrl.text =
-        '${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].id}';
+        '${saleReturnCtrlObj.editSaleReturnModelDart?.id}';
+    saleReturnCtrlObj.saleReturnDateCtrl.text = DateTime.now().toString();
+    productCtrlCtrlObj.discoutCtrl.clear();
+    //initialCtrl();
+
+    //  '${AppFormat.dateDDMMYY(DateTime.now())}';
     // TODO: implement initState
     super.initState();
+  }
+
+  initialCtrl() async {
+    var length =
+        await saleReturnCtrlObj.editSaleReturnModelDart?.sellLines?.length ?? 0;
+    print('length ;::::');
+    print(length);
+    for (int i = 0; i < length; i++) {
+      saleReturnCtrlObj.returnQtyCtrl.add(TextEditingController());
+    }
+  }
+
+  void dispose() {
+    saleReturnCtrlObj.editSaleReturnModelDart = null;
+    saleReturnCtrlObj.returnQtyCtrl.clear();
+    saleReturnCtrlObj.totalReturnTax = '0.00';
+    saleReturnCtrlObj.subtotal.clear();
+    saleReturnCtrlObj.totalAmount = '0.00';
+    // for (var controller in saleReturnCtrlObj.returnQtyCtrl) {
+    //   controller.dispose();
+    // }
+    super.dispose();
   }
 
   @override
@@ -85,126 +118,266 @@ class _SalesReturnState extends State<SalesReturn> {
       appBar: AppBar(
         title: Text('Sale Return'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                  'Invoice No: ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].invoiceNo}'),
-              Text(
-                  'Customer Name:  ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].name}'),
-              Text(
-                  'Date:  ${saleReturnCtrlObj.saleReturnListModel?.data?[widget.index].transactionDate}'),
-              AppFormField(
-                width: MediaQuery.of(context).size.width * 0.43,
-                readOnly: true,
-                controller: saleReturnCtrlObj.saleReturnDateCtrl,
-                labelText: 'Return Date',
-                prefixIcon: Icon(Icons.calendar_month),
-                onTap: () {
-                  setState(() {
-                    _showDatePicker();
-                    //_show(context);
-                  });
-                },
-              ),
-              Container(
-                height: 50,
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                color: Theme.of(context).colorScheme.primary,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        'Product Name',
-                        style: TextStyle(color: kWhiteColor),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Price',
-                        style: TextStyle(color: kWhiteColor),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'QTY',
-                        style: TextStyle(color: kWhiteColor),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'Return QTY',
-                        style: TextStyle(color: kWhiteColor),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SaleReturnProductList(),
-              SizedBox(
-                height: 40,
-              ),
-              CustomButton(
-                height: 30,
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                onTap: () async {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      //title: title != null ? Text(title) : null,
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 15, horizontal: 0),
-                      content: Discount(),
-                    ),
-                  );
-                },
-                bgColor: Theme.of(context).colorScheme.primary,
-                btnChild: Text(
-                  'discount'.tr,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text('Total Return Discount:-'),
-              Text('Total Return Tax:-'),
-              Text('Return Total Amount:-'),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: GetBuilder<SaleReturnController>(
+                builder: (SaleReturnController saleReturnCtrl) {
+              if (saleReturnCtrl.editSaleReturnModelDart == null)
+                return progressIndicator();
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                      'Invoice No: ${saleReturnCtrl.editSaleReturnModelDart?.invoiceNo}'),
+                  Text(
+                      'Customer Name: ${saleReturnCtrl.editSaleReturnModelDart?.contact?.name}'),
+                  Text(
+                      'Date: ${saleReturnCtrl.editSaleReturnModelDart?.transactionDate}'),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  AppFormField(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    readOnly: true,
+                    controller: saleReturnCtrl.saleReturnDateCtrl,
+                    labelText: 'Return Date',
+                    prefixIcon: Icon(Icons.calendar_month),
+                    onTap: () {
+                      setState(() {
+                        _showDatePicker();
+                        //_show(context);
+                      });
+                    },
+                  ),
+                  Container(
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    color: Theme.of(context).colorScheme.primary,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Text(
+                            'Product Name',
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Text(
+                              'Price',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Text(
+                              'QTY',
+                              style: TextStyle(color: kWhiteColor),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text(
+                            'Return QTY',
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  // SaleReturnProductList(),
+                  ListView.builder(
+                      padding: EdgeInsetsDirectional.only(
+                          top: 5, bottom: 5, start: 10, end: 10),
+                      physics: BouncingScrollPhysics(),
+                      shrinkWrap: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: saleReturnCtrl
+                          .editSaleReturnModelDart?.sellLines?.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: EdgeInsets.only(
+                            bottom: 5,
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 5),
+                          color: index.isEven
+                              ? kWhiteColor
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withOpacity(0.1),
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].product?.name}',
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        AppFormat.doubleToStringUpTo2(
+                                                '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPrice}') ??
+                                            '0.00',
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Center(
+                                      child: Text(
+                                        '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].quantity}',
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: AppFormField(
+                                      controller:
+                                          saleReturnCtrl.returnQtyCtrl[index],
+                                      padding: EdgeInsets.only(right: 5),
+                                      isOutlineBorder: false,
+                                      isColor: index.isEven
+                                          ? kWhiteColor
+                                          : Colors.transparent,
+                                      onChanged: (value) {
+                                        if (double.parse(saleReturnCtrl
+                                                .returnQtyCtrl[index].text) >
+                                            double.parse(
+                                                '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].quantity}')) {
+                                          showToast('Quantity not available');
+                                          print('value is greater');
+                                        } else {
+                                          saleReturnCtrl.subtotal[index] =
+                                              '${double.parse(value) * double.parse(saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPrice ?? '0')}';
+                                          saleReturnCtrl
+                                              .totalTaxAmountWithDiscount(
+                                                  ordersItemsTotalTax:
+                                                      saleReturnCtrl
+                                                          .totalOrderedTaxAmount(),
+                                                  saleReturnCtrl:
+                                                      saleReturnCtrl);
+                                          saleReturnCtrl.returnTotalAmount();
+                                          saleReturnCtrl.update();
+                                        }
+                                      },
+                                      // onEditingComp: () {
+                                      //
+                                      // },
+                                      // labelText: '1',
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      'Subtotal:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.subtotal[index])}',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  // Icon(
+                                  //   Icons.cancel_outlined,
+                                  //   color: buttonColor,
+                                  // )
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                  SizedBox(
+                    height: 40,
+                  ),
                   CustomButton(
                     height: 30,
                     margin: const EdgeInsets.symmetric(horizontal: 5),
                     onTap: () async {
-                      saleReturnCtrlObj.addSaleReturn();
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          //title: title != null ? Text(title) : null,
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 15, horizontal: 0),
+                          content: Discount(),
+                        ),
+                      );
                     },
                     bgColor: Theme.of(context).colorScheme.primary,
                     btnChild: Text(
-                      'Save',
+                      'discount'.tr,
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                           color: Colors.white),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                      'Total Return Discount:- ${productCtrlCtrlObj.discoutCtrl.text}'),
+                  Text(
+                      'Total Return Tax:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalReturnTax)}'),
+                  Text(
+                      'Return Total Amount:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalAmount)}'),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      CustomButton(
+                        height: 30,
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        onTap: () async {
+                          saleReturnCtrl.addSaleReturn();
+                        },
+                        bgColor: Theme.of(context).colorScheme.primary,
+                        btnChild: Text(
+                          'Save',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              );
+            }),
           ),
         ),
       ),

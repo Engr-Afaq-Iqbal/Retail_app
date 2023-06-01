@@ -1405,7 +1405,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
-                                Get.back();
+                                // Get.back();
                               },
                               bgColor: Theme.of(context).colorScheme.primary,
                             )
