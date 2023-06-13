@@ -1,3 +1,5 @@
+import '../Config/app_config.dart';
+
 class ApiUrls {
   //Endpoints
   // login / get access token
@@ -23,6 +25,8 @@ class ApiUrls {
   static String getOrderTypes = "connector/api/types-of-service";
   // create order
   static String createOrder = "connector/api/orders";
+
+  static String createOrderApi = "${AppConfig.baseUrl}connector/api/orders";
   static String updateOrder = "connector/api/sell/";
   static String sellUpdateOrder =
       "connector/api/sell/update/"; // Samar'sCreated
@@ -92,11 +96,20 @@ class ApiUrls {
   ///Update Customer Visit
   static String updateCustomerVisitApi = "connector/api/visit/update";
 
+  ///Checkout Api
+  static String checkOutApi = "connector/api/checkout";
+
+  ///CheckIn Api
+  static String checkInApi = "connector/api/checkin";
+
   ///Sale return List api
   static String saleReturnListApi = "connector/api/list-sell-return";
 
   ///Add Sale Return
   static String addSaleReturnApi = "connector/api/sell-return";
+
+  ///Create Sale Return New Api
+  static String createSaleReturnApi = "connector/api/sell-return/create";
 
   ///Show Product List Api
   static String showProductListApi = "connector/api/product/show";
@@ -128,4 +141,21 @@ class ApiUrls {
 
   ///Create Quotations Api
   static String editSaleReturnApi = "connector/api/sell-return/edit/";
+
+  /// order payment
+  static String orderPaymentAPI =
+      "${AppConfig.baseUrl}connector/api/order/payment/";
+
+  ///Register Apis
+  static String openRegisterAPI =
+      "${AppConfig.baseUrl}connector/api/cash-register";
+
+  static String closeRegisterAPI =
+      "${AppConfig.baseUrl}connector/api/cash-register/close";
+
+  static String registersDetailsAPI =
+      "${AppConfig.baseUrl}connector/api/cash-register";
+
+  static String openedRegisterRecordsAPI =
+      "${AppConfig.baseUrl}connector/api/cash-register/close-register";
 }

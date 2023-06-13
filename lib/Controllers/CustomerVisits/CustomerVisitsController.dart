@@ -1,13 +1,18 @@
 import 'dart:io';
 import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
 import 'package:bizmodo_emenu/Controllers/ListUserController/ListUserController.dart';
+import 'package:bizmodo_emenu/Models/ContactsModel/CustomerCheckInModel.dart';
+import 'package:bizmodo_emenu/Models/ContactsModel/CustomerCheckOutModel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
 import '../../Config/utils.dart';
 import '../../Models/CustomerVisits/customerVisitListModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
+import '../../Services/storage_services.dart';
 
 class CustomerVisitsController extends GetxController {
   bool valuefirst = false;
@@ -19,6 +24,7 @@ class CustomerVisitsController extends GetxController {
   String meetWithStatus = ' 1';
   String frontPath = 'No file chosen';
   File? image;
+  String titleText = 'Check-in';
   TextEditingController meetNoReason = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController searchCtrl = TextEditingController();
@@ -32,6 +38,7 @@ class CustomerVisitsController extends GetxController {
   TextEditingController designationCtrl = TextEditingController();
   TextEditingController visitedOnCtrl = TextEditingController();
   TextEditingController idCtrl = TextEditingController();
+  ContactController contactCtrlObjj = Get.find<ContactController>();
   List<String> assignedToList(ListUserController listUserCtrl) {
     List<String> options = [];
     if (listUserCtrl.listuserModel != null) {
@@ -90,22 +97,26 @@ class CustomerVisitsController extends GetxController {
   Future<bool?> createCustomerVisits() async {
     Map<String, String> _field = {
       "visiting": "1",
-      "contact_id": "793",
-      "company": "${companyCtrl.text}",
-      "visiting_address": "${visitAddressCtrl.text}",
-      "user_id": "65",
-      "visit_on": "${dateCtrl.text}",
-      "purpose_of_visiting": "${purposeOfVisitingCtrl.text}"
+      "contact_id": "${contactCtrlObjj.id}",
+      "company": "",
+      "visiting_address": "xyz",
+      "user_id": "${AppStorage.getLoggedUserData()?.staffUser.id}",
+      "visit_on": "${DateTime.now()}",
+      "visited_address_latitude": "${latitude}",
+      "visited_address_longitude": "${longitude}",
+      "visited_address": "${address}",
+      "purpose_of_visiting": "Customer visit"
     };
-
     return await ApiServices.postMethod(
             feedUrl: ApiUrls.createCustomerVisits, fields: _field)
         .then((_res) {
       if (_res == null) return null;
+      titleText = 'Check-out';
+      update();
       stopProgress();
       clearAllFields();
-      Get.back();
-      print('Create Customer: ');
+      // Get.back();
+      print('Customer visitt: ');
       print(_res);
       return true;
     }).onError((error, stackTrace) {
@@ -200,6 +211,54 @@ class CustomerVisitsController extends GetxController {
     });
   }
 
+  CustomerCheckOutModel? customerCheckOutModel;
+
+  ///CheckOut Function
+  Future<bool?> checkOutFunction() async {
+    Map<String, String> _field = {
+      "id": "1",
+      "contact_id": "643",
+    };
+
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.checkOutApi, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+      customerCheckOutModel = customerCheckOutModelFromJson(_res);
+      stopProgress();
+      print('Check out Data: ');
+      print(_res);
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
+  CustomerCheckInModel? customerCheckInModel;
+
+  ///CheckIn Function
+  Future<bool?> checkInFunction() async {
+    Map<String, String> _field = {
+      "contact_id": "643",
+    };
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.checkInApi, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+      customerCheckInModel = customerCheckInModelFromJson(_res);
+      stopProgress();
+      print('Check In Data: ');
+      print(_res);
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      throw '$error';
+    });
+  }
+
   clearAllFields() {
     dateCtrl.clear();
     visitAddressCtrl.clear();
@@ -217,5 +276,54 @@ class CustomerVisitsController extends GetxController {
     meetNoReason.clear();
     idCtrl.clear();
     frontPath = '';
+  }
+
+  ///functions for geo location starting here
+  double? latitude;
+  double? longitude;
+  String? address;
+  Future<void> checkPermission() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied) {
+      // Handle permission denied
+    } else if (permission == LocationPermission.deniedForever) {
+      // Handle permission denied forever
+    } else {
+      // Permission granted, proceed with getting the location
+      getCurrentLocation();
+    }
+  }
+
+  void getCurrentLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    latitude = position.latitude;
+    longitude = position.longitude;
+
+    print('Latitude: $latitude, Longitude: $longitude');
+    getAddressFromCoordinates(latitude!, longitude!);
+  }
+
+  void getAddressFromCoordinates(double latitude, double longitude) async {
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+
+    if (placemarks != null && placemarks.isNotEmpty) {
+      Placemark placemark = placemarks[0];
+
+      String address = placemark.street ?? '';
+
+      String city = placemark.locality ?? '';
+      String state = placemark.administrativeArea ?? '';
+      String country = placemark.country ?? '';
+      address = ('$address, $city, $state, $country');
+      print('Address: $address');
+      createCustomerVisits();
+    } else {
+      print('No address found');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
+
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 
 import 'package:flutter/material.dart';
@@ -17,10 +17,9 @@ import '../../../Theme/style.dart';
 import 'meetDetailsView.dart';
 
 class UpdateStatus extends StatefulWidget {
-  CustomerVisitsController customerVisitsCtrl;
-  int index;
-  UpdateStatus(
-      {Key? key, required this.customerVisitsCtrl, required this.index})
+  CustomerVisitsController? customerVisitsCtrl;
+  int? index;
+  UpdateStatus({Key? key, this.customerVisitsCtrl, this.index})
       : super(key: key);
 
   @override
@@ -28,7 +27,7 @@ class UpdateStatus extends StatefulWidget {
 }
 
 class _UpdateStatusState extends State<UpdateStatus> {
-  CustomerVisitsController custVisitsCtrlObj =
+  CustomerVisitsController? custVisitsCtrlObj =
       Get.find<CustomerVisitsController>();
   String? statusValue;
 
@@ -39,9 +38,9 @@ class _UpdateStatusState extends State<UpdateStatus> {
           await ImagePicker().pickImage(source: ImageSource.gallery);
       if (image != null) {
         final imageTemporary = File(image.path);
-        custVisitsCtrlObj.frontPath = image.path;
+        custVisitsCtrlObj?.frontPath = image.path;
         setState(() {
-          custVisitsCtrlObj.image = imageTemporary;
+          custVisitsCtrlObj?.image = imageTemporary;
         });
       } else {
         return showToast("No Image picked");
@@ -52,18 +51,18 @@ class _UpdateStatusState extends State<UpdateStatus> {
   }
 
   void dispose() {
-    custVisitsCtrlObj.clearAllStatusUpdateFields();
+    custVisitsCtrlObj?.clearAllStatusUpdateFields();
     super.dispose();
   }
 
   @override
   void initState() {
     // TODO: implement initState
-    custVisitsCtrlObj.visitedOnCtrl.text = widget.customerVisitsCtrl
-        .customerVisitsListModel?.data[widget.index].visitedOn;
-    custVisitsCtrlObj.idCtrl.text = widget
-        .customerVisitsCtrl.customerVisitsListModel!.data[widget.index].id
-        .toString();
+    // custVisitsCtrlObj?.visitedOnCtrl.text = widget.customerVisitsCtrl!
+    //     .customerVisitsListModel?.data[widget.index].visitedOn;
+    // custVisitsCtrlObj?.idCtrl.text = widget
+    //     .customerVisitsCtrl.customerVisitsListModel!.data[widget.index].id
+    //     .toString();
     super.initState();
   }
 
@@ -74,7 +73,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            'Update Status (Visti ID: ${widget.customerVisitsCtrl.customerVisitsListModel?.data[widget.index].id})'),
+            'Update Status (Visti ID: )'), //${widget.customerVisitsCtrl?.customerVisitsListModel?.data[widget.index].id}
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20, top: 20),
@@ -128,7 +127,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                   ],
                 );
               }),
-              if (custVisitsCtrlObj.meetNo == true)
+              if (custVisitsCtrlObj?.meetNo == true)
                 Row(
                   children: [
                     Column(
@@ -137,7 +136,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                         headings(txt: 'Reason:'),
                         AppFormField(
                           width: width * 0.885,
-                          controller: custVisitsCtrlObj.meetNoReason,
+                          controller: custVisitsCtrlObj!.meetNoReason,
                           labelText: 'Please Select',
                         ),
                       ],
@@ -171,7 +170,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                             width: 5,
                           ),
                           Text(
-                            custVisitsCtrlObj.frontPath,
+                            custVisitsCtrlObj?.frontPath ?? '',
                             softWrap: true,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -193,7 +192,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                     width: 5,
                   ),
                   Text(
-                      '${widget.customerVisitsCtrl.customerVisitsListModel?.data[widget.index].visitedOn ?? ' - -'}')
+                      '') //${widget.customerVisitsCtrl?.customerVisitsListModel?.data[widget.index].visitedOn ?? ' - -'}
                 ],
               ),
               SizedBox(
@@ -237,7 +236,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                       ),
                       headings(txt: 'Discussions with the contact:'),
                       AppFormField(
-                        controller: custVisitsCtrlObj.discussionCtrl,
+                        controller: custVisitsCtrlObj!.discussionCtrl,
                         labelText: '',
                       ),
                       Row(
@@ -249,7 +248,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                               style: TextStyle(color: kWhiteColor),
                             ),
                             onTap: () {
-                              custVisitsCtrlObj.updateCustomerVisitsStatus();
+                              custVisitsCtrlObj?.updateCustomerVisitsStatus();
                             },
                             bgColor: Theme.of(context).colorScheme.primary,
                           ),

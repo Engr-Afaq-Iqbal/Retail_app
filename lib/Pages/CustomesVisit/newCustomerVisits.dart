@@ -204,31 +204,32 @@
 // }
 
 import 'package:bizmodo_emenu/Pages/CreateNewCustomer/showCustomerDetails.dart';
+import 'package:bizmodo_emenu/Pages/CustomesVisit/Update%20Status/updateStatus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../CreateNewCustomer/createNewCustomer.dart';
+import '../../Components/custom_circular_button.dart';
+import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
 import '../CreateOrder/createOrderPage.dart';
-import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
-import '../../Models/order_type_model/customer_contact_model.dart';
 import '../../Theme/colors.dart';
 
-class CustomerSearch extends StatefulWidget {
+class NewCustomerVisit extends StatefulWidget {
   int? dashBoardId;
-  CustomerSearch({Key? key, this.dashBoardId}) : super(key: key);
+  NewCustomerVisit({Key? key, this.dashBoardId}) : super(key: key);
   @override
-  State<CustomerSearch> createState() => _CustomerSearchState();
+  State<NewCustomerVisit> createState() => _NewCustomerVisitState();
 }
 
-class _CustomerSearchState extends State<CustomerSearch> {
+class _NewCustomerVisitState extends State<NewCustomerVisit> {
   ScrollController? _scrollController;
   String? query;
   ContactController contactCtrlObjj = Get.find<ContactController>();
-
+  CustomerVisitsController customerVisitsCtrlObj =
+      Get.find<CustomerVisitsController>();
   void initState() {
     contactCtrlObjj.callFirstOrderPage();
     scrollControllerLis();
@@ -261,54 +262,51 @@ class _CustomerSearchState extends State<CustomerSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextFormField(
-          //controller: searchCtrl,
-          decoration: InputDecoration(
-            border: InputBorder.none,
-            hintText: 'Enter some text',
-            hintStyle: TextStyle(color: Colors.grey),
-          ),
-          onChanged: (value) {
-            query = value;
-            contactCtrlObjj.fetchCustomerInfo(query);
-          },
-        ),
+        title: Text('Customer Visits'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(20.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 15.0,
+          preferredSize: Size.fromHeight(40.0),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TextFormField(
+                  //controller: searchCtrl,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Search Customers',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                  onChanged: (value) {
+                    query = value;
+                    contactCtrlObjj.fetchCustomerInfo(query);
+                  },
                 ),
-                child: Text(
-                    'suggesstions'.tr /*, style: theme.style16W800Orange*/),
-              ),
-              //createNewCustomTile(context),
-            ],
+                //createNewCustomTile(context),
+              ],
+            ),
           ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: (widget.dashBoardId == 1)
-          ? FloatingActionButton.small(
-              child: Icon(Icons.add),
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.5),
-              onPressed: () {
-                Get.to(CreateNewCustomer());
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => AlertDialog(
-                //     contentPadding:
-                //         const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
-                //     content: CreateNewCustomer(),
-                //   ),
-                // );
-              })
-          : null,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: (widget.dashBoardId == 1)
+      //     ? FloatingActionButton.small(
+      //         child: Icon(Icons.add),
+      //         backgroundColor:
+      //             Theme.of(context).colorScheme.primary.withOpacity(0.5),
+      //         onPressed: () {
+      //           Get.to(CreateNewCustomer());
+      //           // showDialog(
+      //           //   context: context,
+      //           //   builder: (context) => AlertDialog(
+      //           //     contentPadding:
+      //           //         const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+      //           //     content: CreateNewCustomer(),
+      //           //   ),
+      //           // );
+      //         })
+      //     : null,
       body: Material(
         child: Stack(
           children: [
@@ -331,106 +329,102 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                     .customerContacts?.contactDataList.length ??
                                 0,
                             itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      //  Get.close(0);
-                                      Get.to(ShowCustomerDetails(
-                                          contactApi: contactCtrlObj
-                                              .customerContacts!
-                                              .contactDataList[index]
-                                              .id
-                                              .toString()));
-                                      contactCtrlObj.id = contactCtrlObj
-                                          .customerContacts!
-                                          .contactDataList[index]
-                                          .id
-                                          .toString();
-                                      contactCtrlObj.contactId = contactCtrlObj
-                                          .customerContacts!
-                                          .contactDataList[index]
-                                          .contactId;
-                                      contactCtrlObj.searchCustomerCtrl.text =
-                                          '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
-                                      contactCtrlObj.mobileNumberCtrl.text =
-                                          contactCtrlObj
-                                                  .customerContacts!
-                                                  .contactDataList[index]
-                                                  .mobile ??
-                                              '';
-                                      contactCtrlObj.nameCtrl.text =
-                                          contactCtrlObj
-                                                  .customerContacts!
-                                                  .contactDataList[index]
-                                                  .name ??
-                                              '';
-                                      if (widget.dashBoardId == 2) {
-                                        Get.to(CreateOrderPage());
-                                      } else if (widget.dashBoardId == 3) {
-                                        Get.to(Return());
-                                      } else if (widget.dashBoardId == 4) {
-                                        Get.to(Receipts());
-                                        contactCtrlObj.update();
-                                        // Get.close(2);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
-                                      child: Text(
-                                        '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
-                                      ),
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            //  Get.close(0);
+                                            Get.to(ShowCustomerDetails(
+                                                contactApi: contactCtrlObj
+                                                    .customerContacts!
+                                                    .contactDataList[index]
+                                                    .id
+                                                    .toString()));
+                                            contactCtrlObj.id = contactCtrlObj
+                                                .customerContacts!
+                                                .contactDataList[index]
+                                                .id
+                                                .toString();
+                                            contactCtrlObj.contactId =
+                                                contactCtrlObj
+                                                    .customerContacts!
+                                                    .contactDataList[index]
+                                                    .contactId;
+                                            contactCtrlObj
+                                                    .searchCustomerCtrl.text =
+                                                '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
+                                            contactCtrlObj.mobileNumberCtrl
+                                                .text = contactCtrlObj
+                                                    .customerContacts!
+                                                    .contactDataList[index]
+                                                    .mobile ??
+                                                '';
+                                            contactCtrlObj.nameCtrl.text =
+                                                contactCtrlObj
+                                                        .customerContacts!
+                                                        .contactDataList[index]
+                                                        .name ??
+                                                    '';
+                                            if (widget.dashBoardId == 2) {
+                                              Get.to(CreateOrderPage());
+                                            } else if (widget.dashBoardId ==
+                                                3) {
+                                              Get.to(Return());
+                                            } else if (widget.dashBoardId ==
+                                                4) {
+                                              contactCtrlObj.update();
+                                              Get.close(2);
+                                              //Get.to(Receipts());
+                                            }
+                                          },
+                                          child: Text(
+                                            '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
+                                          ),
+                                        ),
+                                        Divider(
+                                          height: 0,
+                                          color:
+                                              kLightTextColor.withOpacity(0.2),
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  // ListTile(
-                                  //   // we will display the data returned from our future here
-                                  //   title: Text(
-                                  //     '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
-                                  //   ),
-                                  //   onTap: () {
-                                  //     //  Get.close(0);
-                                  //     Get.to(ShowCustomerDetails(
-                                  //         contactApi: contactCtrlObj
-                                  //             .customerContacts!
-                                  //             .contactDataList[index]
-                                  //             .id
-                                  //             .toString()));
-                                  //     contactCtrlObj.contactId = contactCtrlObj
-                                  //         .customerContacts!
-                                  //         .contactDataList[index]
-                                  //         .contactId;
-                                  //     contactCtrlObj.searchCustomerCtrl.text =
-                                  //         '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
-                                  //     contactCtrlObj.mobileNumberCtrl.text =
-                                  //         contactCtrlObj
-                                  //                 .customerContacts!
-                                  //                 .contactDataList[index]
-                                  //                 .mobile ??
-                                  //             '';
-                                  //     contactCtrlObj.nameCtrl.text =
-                                  //         contactCtrlObj
-                                  //                 .customerContacts!
-                                  //                 .contactDataList[index]
-                                  //                 .name ??
-                                  //             '';
-                                  //     if (widget.dashBoardId == 2) {
-                                  //       Get.to(CreateOrderPage());
-                                  //     } else if (widget.dashBoardId == 3) {
-                                  //       Get.to(Return());
-                                  //     } else if (widget.dashBoardId == 4) {
-                                  //       contactCtrlObj.update();
-                                  //       Get.close(1);
-                                  //       //Get.to(Receipts());
-                                  //     }
-                                  //   },
-                                  // ),
-                                  Divider(
-                                    height: 0,
-                                    color: kLightTextColor.withOpacity(0.2),
-                                  ),
-                                ],
+                                    CustomButton(
+                                      onTap: () {
+                                        contactCtrlObj.id = contactCtrlObj
+                                            .customerContacts!
+                                            .contactDataList[index]
+                                            .id
+                                            .toString();
+
+                                        print(' save is pressed');
+                                        if (customerVisitsCtrlObj.titleText ==
+                                            'Check-in') {
+                                          showProgress();
+                                          customerVisitsCtrlObj
+                                              .checkPermission();
+                                          // customerVisitsCtrlObj
+                                          //     .createCustomerVisits();
+                                        } else {
+                                          Get.to(UpdateStatus(index: index));
+                                        }
+                                      },
+                                      bgColor: primaryColor,
+                                      title: Text(
+                                        '${customerVisitsCtrlObj.titleText}',
+                                        style: TextStyle(color: kWhiteColor),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               );
                             },
                           ),
@@ -452,54 +446,6 @@ class _CustomerSearchState extends State<CustomerSearch> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<ContactModel?> searchCustomer() async {
-    try {
-      //debugPrint('Search Query' + query);
-      ContactController contactCtrlObj = Get.find<ContactController>();
-      return contactCtrlObj.fetchCustomerInfo(query);
-    } on PlatformException catch (e) {
-      if (e.code == 'not_available') {
-        return throw ('Please enter more info!');
-      }
-      print('Error in PlatformException => ${e.code}');
-      return throw ('${e.code}');
-    } catch (e) {
-      print('Error => $e');
-      return throw ('Something bad happen!');
-    }
-  }
-
-  createNewCustomTile(BuildContext context) {
-    return ListTile(
-      // we will display the data returned from our future here
-      title: Text(
-        'create_new_customer'.tr,
-        style: TextStyle(color: Theme.of(context).colorScheme.primary),
-      ),
-      onTap: () {
-        ContactDataModel(
-          id: -1,
-          businessId: -1,
-          type: 'Customer',
-          name: 'Create New Customer',
-        );
-        contactCtrlObjj.nameCtrl.clear();
-        contactCtrlObjj.mobileNumberCtrl.clear();
-        contactCtrlObjj.searchCustomerCtrl.text = 'create_new_customer'.tr;
-        Get.close(1);
-        // close(
-        //   context,
-        //   ContactDataModel(
-        //     id: -1,
-        //     businessId: -1,
-        //     type: 'Customer',
-        //     name: 'Create New Customer',
-        //   ),
-        // );
-      },
     );
   }
 }

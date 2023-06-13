@@ -7,11 +7,13 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
 import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/customersVisit.dart';
+import '../CustomesVisit/newCustomerVisits.dart';
 import '../Orders/View/OrdersTabPage.dart';
 
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesTabPage.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
 import '../ProductsPage/home_page.dart';
 import '../order_type/search_customer_page.dart';
@@ -97,19 +99,21 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 Get.to(Return());
                               }
                               if (index == 4) {
-                                // Get.to(CustomerSearch(
-                                //   dashBoardId: 4,
-                                // ));
-                                Get.to(Receipts());
+                                Get.to(CustomerSearch(
+                                  dashBoardId: 4,
+                                ));
+                                // Get.to(Receipts());
                               }
                               if (index == 5) {
-                                Get.to(SalesTabPage());
+                                // Get.to(SalesTabPage());
+                                Get.to(SalesView());
                               }
                               if (index == 6) {
                                 Get.to(OrdersTabPage());
                               }
                               if (index == 7) {
-                                Get.to(CustomerVisits());
+                                //Get.to(CustomerVisits());
+                                Get.to(NewCustomerVisit());
                               }
                               if (index == 8) {
                                 Get.to(Upload());

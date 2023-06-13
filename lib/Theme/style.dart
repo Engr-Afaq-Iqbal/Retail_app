@@ -115,14 +115,14 @@ final ThemeData appDarkTheme = ThemeData(
   //text theme
   textTheme: TextTheme(
     //default text style of Text Widget
-    bodyText1: TextStyle(color: Colors.white),
-    bodyText2: TextStyle(),
-    subtitle1: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
-    headline3: TextStyle(),
-    headline5: TextStyle(),
-    headline6: TextStyle(),
-    caption: TextStyle(),
-    overline: TextStyle(),
+    bodyLarge: TextStyle(color: Colors.white),
+    bodyMedium: TextStyle(),
+    titleMedium: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+    displaySmall: TextStyle(),
+    headlineSmall: TextStyle(),
+    titleLarge: TextStyle(),
+    bodySmall: TextStyle(),
+    labelSmall: TextStyle(),
   ) /*.apply(displayColor: Colors.black)*/,
 );
 
@@ -173,6 +173,23 @@ class AppStyles {
     fontWeight: FontWeight.w400,
   );
 
+  static outlineBorderDecoration({bool isBorderColorApply = true}) =>
+      BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(
+          width: 1,
+          color: isBorderColorApply ? primaryColor : Colors.transparent,
+        ),
+      );
+
+  /// Back Button
+  static Widget backButton({Function()? onTap}) {
+    return IconButton(
+      onPressed: onTap,
+      icon: Icon(Icons.arrow_back_rounded),
+    );
+  }
+
   static TextStyle orderMapAppBarTextStyle = GoogleFonts.openSans().copyWith(
     fontSize: 13.3,
     fontWeight: FontWeight.bold,
@@ -220,4 +237,10 @@ final TextStyle hintGreyStyle = GoogleFonts.openSans().copyWith(
   fontSize: 14,
   fontWeight: FontWeight.w500,
   color: kHintColor,
+);
+
+final TextStyle orderMapAppBarTextStyle = GoogleFonts.openSans().copyWith(
+  fontSize: 12,
+  fontWeight: FontWeight.bold,
+  color: blackColor,
 );

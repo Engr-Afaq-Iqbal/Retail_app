@@ -360,5 +360,10 @@ Map<String, String> english() {
     'no_image_picked': 'No Image picked',
     'upload': 'Upload',
     'selected_customer': 'Selected Customer',
+    'payment_small': 'Payment',
+    'finalize_payment': 'Finalize Payment',
+    'add_payment_row': 'Add Payment Row',
+    'sell_note': 'Sell Note',
+    'staff_note': 'Staff Note',
   };
 }

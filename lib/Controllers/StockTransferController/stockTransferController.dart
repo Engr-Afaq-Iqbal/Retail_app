@@ -19,6 +19,8 @@ import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
 import 'package:http/http.dart' as http;
 
+import '../ProductController/all_products_controller.dart';
+
 enum OrderTabsPage {
   ActiveOrders,
   PastOrders,
@@ -26,8 +28,11 @@ enum OrderTabsPage {
 
 class StockTransferController extends GetxController {
   String? statusValue;
+  String? adjustmentTypeStatus;
   String? locationFromStatusValue;
   String? locationToStatusValue;
+  String? locationFromID;
+  String? locationToID;
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController searchCtrl = TextEditingController();
   TextEditingController additionalNotes = TextEditingController();
@@ -214,6 +219,8 @@ class StockTransferController extends GetxController {
   // }
 
   createStockTransfer(/*{required bool isCheckout}*/) async {
+    AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+    var length = allProdCtrlObj.searchProductModel?.length ?? 0;
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -222,31 +229,51 @@ class StockTransferController extends GetxController {
     var request = http.MultipartRequest('POST',
         Uri.parse('${AppConfig.baseUrl}${ApiUrls.createStockTransferApi}'));
 
-    request.fields['location_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+    request.fields['location_id'] = '${locationFromID}';
     request.fields['transaction_date'] = '${dateCtrl.text}';
     request.fields['ref_no'] = '';
     request.fields['status'] = '${statusValue?.toLowerCase() ?? 'pending'}';
-    request.fields['transfer_location_id'] = '37';
+    request.fields['transfer_location_id'] = '${locationToID}';
 
-    request.fields['final_total'] = '12';
+    request.fields['final_total'] = '${allProdCtrlObj.finalTotal}';
     request.fields['shipping_charges'] = '0';
     request.fields['additional_notes'] = '${additionalNotes.text}';
-    request.fields[''] = '';
 
-    for (int i = 0; i < 2; i++) {
-      request.fields['kitchen_id[$i]'] = '1';
-      request.fields['product_id[$i]'] = '3640';
-      request.fields['variation_id[$i]'] = '3659';
-      request.fields['enable_stock[$i]'] = '1';
-      request.fields['quantity[$i]'] = '1.00';
-      request.fields['base_unit_multiplier[$i]'] = '1';
-      request.fields['product_unit_id[$i]'] = '51';
-      request.fields['sub_unit_id[$i]'] = '51';
-      request.fields['unit_price[$i]'] = '1.00';
-      request.fields['price[$i]'] = '100.00';
-      request.fields['remarks[$i]'] = '';
-    }
+    if (allProdCtrlObj.searchProductModel != null)
+      for (int i = 0; i < length; i++) {
+        if (allProdCtrlObj.productQuantityCtrl[i].text.isNotEmpty &&
+            allProdCtrlObj.productQuantityCtrl[i].text != '0') {
+          request.fields['kitchen_id[$i]'] = '1';
+          request.fields['product_id[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].productId}';
+          request.fields['variation_id[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].variationId}';
+          request.fields['enable_stock[$i]'] = '1';
+          request.fields['quantity[$i]'] =
+              '${allProdCtrlObj.productQuantityCtrl[i].text}';
+          //   request.fields['base_unit_multiplier[$i]'] = '0';
+          // request.fields['product_unit_id[$i]'] = '${allProdCtrlObj.searchProductModel?[i].}';
+          // request.fields['sub_unit_id[$i]'] = '51';
+          request.fields['unit_price[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].sellingPrice}';
+          //request.fields['price[$i]'] = '${searchProductModel?[i].sellingPrice}';
+          request.fields['remarks[$i]'] = '';
+        }
+      }
+
+    // for (int i = 0; i < 2; i++) {
+    //   request.fields['kitchen_id[$i]'] = '1';
+    //   request.fields['product_id[$i]'] = '3640';
+    //   request.fields['variation_id[$i]'] = '3659';
+    //   request.fields['enable_stock[$i]'] = '1';
+    //   request.fields['quantity[$i]'] = '1.00';
+    //   request.fields['base_unit_multiplier[$i]'] = '1';
+    //   request.fields['product_unit_id[$i]'] = '51';
+    //   request.fields['sub_unit_id[$i]'] = '51';
+    //   request.fields['unit_price[$i]'] = '1.00';
+    //   request.fields['price[$i]'] = '100.00';
+    //   request.fields['remarks[$i]'] = '';
+    // }
 
     logger.i(request.fields);
 
@@ -275,36 +302,31 @@ class StockTransferController extends GetxController {
     });
   }
 
-  List<SearchProductModel>? searchProductModel;
+  List<SearchProductModel> searchProductModelFinal = [];
   List<SearchProductModel>? listForStockAdjustment;
 
   /// Searching Product
-  Future searchProductList({String? pageUrl, String? term}) async {
-    return await ApiServices.getMethod(
-            feedUrl: pageUrl ??
-                '${ApiUrls.searchProductListApi}?location_id${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}=&term=${term}')
-        .then((_res) {
-      update();
-      if (_res == null) return null;
-      searchProductModel = searchProductModelFromJson(_res);
-      update();
-      return searchProductModel;
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      function();
-      update();
-      return null;
-    });
-  }
+  // Future searchProductList({String? pageUrl, String? term}) async {
+  //   return await ApiServices.getMethod(
+  //           feedUrl: pageUrl ??
+  //               '${ApiUrls.searchProductListApi}?location_id${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}=&term=${term}')
+  //       .then((_res) {
+  //     update();
+  //     if (_res == null) return null;
+  //     searchProductModel = searchProductModelFromJson(_res);
+  //     update();
+  //     return searchProductModel;
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     function();
+  //     update();
+  //     return null;
+  //   });
+  // }
 
   List<TextEditingController> productNameeCtrl = [];
-
-  function() {
-    for (int i = 0; i <= searchProductModel!.length; i++) {
-      productNameeCtrl[i].text = searchProductModel?[i].name ?? '';
-    }
-  }
+  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
 
   // Future createStockTransfer() async {
   //   Map<String, String> _field = {
@@ -379,6 +401,8 @@ class StockTransferController extends GetxController {
   // }
 
   createStockAdjustment(/*{required bool isCheckout}*/) async {
+    AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+    var length = allProdCtrlObj.searchProductModel?.length ?? 0;
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
@@ -391,22 +415,33 @@ class StockTransferController extends GetxController {
         '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
     request.fields['transaction_date'] = '${dateCtrl.text}';
     request.fields['ref_no'] = '';
-    request.fields['adjustment_type'] = 'statusValue'.toLowerCase();
-    request.fields['final_total'] = '12';
+    request.fields['adjustment_type'] =
+        '${adjustmentTypeStatus?.toLowerCase() ?? 'normal'}';
+    request.fields['final_total'] = '${allProdCtrlObj.finalTotal}';
     request.fields['total_amount_recovered'] = '${totalAmountRecCtrl.text}';
     request.fields['additional_notes'] = '${reasonCtrl.text}';
 
-    for (int i = 0; i < 2; i++) {
-      request.fields['kitchen_id[$i]'] = '1';
-      request.fields['product_id[$i]'] = '3640';
-      request.fields['variation_id[$i]'] = '3659';
-      request.fields['enable_stock[$i]'] = '1';
-      request.fields['quantity[$i]'] = '1.00';
-      request.fields['price[$i]'] = '100';
-      request.fields['unit_price[$i]'] = '100';
-      request.fields['remarks[$i]'] = 'test';
-    }
-
+    if (allProdCtrlObj.searchProductModel != null)
+      for (int i = 0; i < length; i++) {
+        if (allProdCtrlObj.productQuantityCtrl[i].text.isNotEmpty &&
+            allProdCtrlObj.productQuantityCtrl[i].text != '0') {
+          request.fields['kitchen_id[$i]'] = '1';
+          request.fields['product_id[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].productId}';
+          request.fields['variation_id[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].variationId}';
+          request.fields['enable_stock[$i]'] = '1';
+          request.fields['quantity[$i]'] =
+              '${allProdCtrlObj.productQuantityCtrl[i].text}';
+          //   request.fields['base_unit_multiplier[$i]'] = '0';
+          // request.fields['product_unit_id[$i]'] = '${allProdCtrlObj.searchProductModel?[i].}';
+          // request.fields['sub_unit_id[$i]'] = '51';
+          request.fields['unit_price[$i]'] =
+              '${allProdCtrlObj.searchProductModel?[i].sellingPrice}';
+          //request.fields['price[$i]'] = '${searchProductModel?[i].sellingPrice}';
+          request.fields['remarks[$i]'] = '';
+        }
+      }
     logger.i(request.fields);
 
     request.headers.addAll(headers);

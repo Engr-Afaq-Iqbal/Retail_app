@@ -2,6 +2,7 @@ import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 
 import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
+import 'package:bizmodo_emenu/Pages/Receipts/searchInReceipts.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -37,7 +38,7 @@ class _ReceiptsState extends State<Receipts> {
   @override
   void initState() {
     // TODO: implement initState
-    allSalesCtrl.callFirstOrderPage();
+    allSalesCtrl.callFirstOrderPageForReceipt();
     stockTranCtrlObj.fetchStockTransfersList();
     receiptsCtrl.totalAmount = '0';
     receiptsCtrl.listSaleOrderDataModel =
@@ -66,6 +67,7 @@ class _ReceiptsState extends State<Receipts> {
   void dispose() {
     _pastOrdersScrollCtrl?.removeListener(scrollControllerLis);
     receiptsCtrl.totalAmount = '0';
+    allSalesCtrl.allSaleOrders = null;
     super.dispose();
   }
 
@@ -77,7 +79,16 @@ class _ReceiptsState extends State<Receipts> {
         title: Text('Issue Receipts'),
         actions: [
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                  content: SearchInReceipts(),
+                ),
+              );
+            },
             child: Icon(
               Icons.filter_alt_outlined,
               color: blackColor,
@@ -129,7 +140,7 @@ class _ReceiptsState extends State<Receipts> {
                   Text('Customer Name:'),
                   Center(
                     child: Text(
-                      '${contactCtrl.nameCtrl.text} (${contactCtrl.contactId ?? ''})',
+                      '${contactCtrl.nameCtrl.text} (${contactCtrl.contactId})',
                       style: appBarHeaderStyle,
                     ),
                   ),
@@ -160,7 +171,7 @@ class _ReceiptsState extends State<Receipts> {
             builder: (AllSalesController allSalesCtrlObj) {
               return RefreshIndicator(
                 onRefresh: () async {
-                  await allSalesCtrlObj.callFirstOrderPage();
+                  await allSalesCtrlObj.callFirstOrderPageForReceipt();
                   setState(() {
                     receiptsCtrl.totalAmount = '0';
                   });

@@ -3,17 +3,16 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import '../../../Components/productHeadings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Models/ProductsModel/SearchProductModel.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
-import '../searchStockProducts.dart';
 
 class CreateStockAdjustment extends StatefulWidget {
   const CreateStockAdjustment({Key? key}) : super(key: key);
@@ -25,6 +24,7 @@ class CreateStockAdjustment extends StatefulWidget {
 class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
   StockTransferController stockAdjustmentCtrlObj =
       Get.find<StockTransferController>();
+  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -72,8 +72,19 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
 
   void dispose() {
     stockAdjustmentCtrlObj.searchCtrl.clear();
-    stockAdjustmentCtrlObj.listForStockAdjustment?.clear();
+    allProdCtrlObj.finalTotal = 0.00;
+    allProdCtrlObj.totalAmount.clear();
+    allProdCtrlObj.productQuantityCtrl.clear();
+    allProdCtrlObj.searchProductModel = null;
+
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    allProdCtrlObj.searchProductList(term: '');
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -143,7 +154,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                 return DropdownMenuItem(
                                     value: e, child: Text(e));
                               }).toList(),
-                              value: stockAdjustmentCtrl.statusValue,
+                              value: stockAdjustmentCtrl.adjustmentTypeStatus,
                               dropdownDirection:
                                   DropdownDirection.textDirection,
                               dropdownPadding:
@@ -152,7 +163,8 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                   EdgeInsets.only(left: 15, right: 15),
                               onChanged: (String? value) {
                                 setState(() {
-                                  stockAdjustmentCtrl.statusValue = value;
+                                  stockAdjustmentCtrl.adjustmentTypeStatus =
+                                      value;
                                 });
                               },
                               buttonHeight: height * 0.06,
@@ -190,83 +202,108 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Search Products'),
-                        // AppFormField(
-                        //   controller: stockAdjustmentCtrlObj.additionalNotesCtrl,
-                        //   labelText: 'Search products for stock',
-                        // ),
-                        TypeAheadField<SearchProductModel>(
-                            textFieldConfiguration: TextFieldConfiguration(
-                                controller: stockAdjustmentCtrlObj.searchCtrl,
-                                autofocus: true,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: blackColor,
-                                ),
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder())),
-                            suggestionsCallback: (pattern) async {
-                              return await stockAdjustmentCtrlObj
-                                  .searchProductList(term: pattern);
-                            },
-                            itemBuilder: (context, suggestion) {
-                              return ListTile(
-                                title: Text(
-                                    '${suggestion.name} ${suggestion.subSku}' ??
-                                        ''),
-                              );
-                            },
-                            onSuggestionSelected: (suggestion) {
-                              stockAdjustmentCtrlObj.listForStockAdjustment
-                                  ?.add(suggestion);
-                              // Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) =>
-                              //         ProductPage(product: suggestion)));
-                            },
-                            errorBuilder: (context, error) => Text('$error',
-                                style: TextStyle(
-                                    color:
-                                        Theme.of(context).colorScheme.error))),
-                        Container(
-                          height: 50,
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          color: Theme.of(context).colorScheme.primary,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                flex: 3,
-                                child: Text(
-                                  'Product Name',
-                                  style: TextStyle(color: kWhiteColor),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'QTY',
-                                  style: TextStyle(color: kWhiteColor),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Price',
-                                  style: TextStyle(color: kWhiteColor),
-                                ),
-                              ),
-                              Expanded(
-                                flex: 1,
-                                child: Text(
-                                  'Total',
-                                  style: TextStyle(color: kWhiteColor),
-                                ),
-                              )
-                            ],
-                          ),
+                        ProductHeadings(
+                          txt1: 'Product Name',
+                          txt2: 'QTY',
+                          txt3: 'Price',
+                          txt4: 'Total',
                         ),
-                        SearchStockProducts(),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: GetBuilder<AllProductsController>(
+                              builder: (AllProductsController allProdCtrlObj) {
+                            if (allProdCtrlObj.searchProductModel == null) {
+                              return progressIndicator();
+                            }
+                            return ListView.builder(
+                                padding: EdgeInsetsDirectional.only(
+                                    top: 5, bottom: 5, start: 10, end: 10),
+                                physics: ScrollPhysics(),
+                                shrinkWrap: true,
+                                scrollDirection: Axis.vertical,
+                                itemCount:
+                                    allProdCtrlObj.searchProductModel?.length,
+                                itemBuilder: (context, index) {
+                                  return Container(
+                                    margin: EdgeInsets.only(
+                                      bottom: 5,
+                                    ),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 5),
+                                    color: index.isEven
+                                        ? kWhiteColor
+                                        : Colors.grey.withOpacity(0.1),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            //name
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                              ),
+                                            ),
+
+                                            //Quantity
+                                            Expanded(
+                                              flex: 1,
+                                              child: AppFormField(
+                                                  controller: allProdCtrlObj
+                                                          .productQuantityCtrl[
+                                                      index],
+                                                  padding:
+                                                      EdgeInsets.only(right: 5),
+                                                  isOutlineBorder: false,
+                                                  isColor: index.isEven
+                                                      ? kWhiteColor
+                                                      : Colors.transparent,
+                                                  onChanged: (value) {
+                                                    allProdCtrlObj.totalAmount[
+                                                            index] =
+                                                        '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
+                                                    allProdCtrlObj
+                                                        .calculateFinalAmount();
+                                                    debugPrint(
+                                                        'Product Amount');
+                                                    debugPrint(allProdCtrlObj
+                                                        .totalAmount[index]);
+                                                    allProdCtrlObj.update();
+                                                  }),
+                                            ),
+                                            //unit
+                                            Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text(
+                                                  '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text(
+                                                  '${allProdCtrlObj.totalAmount[index]}',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                });
+                          }),
+                        ),
                       ],
                     ),
                   ),

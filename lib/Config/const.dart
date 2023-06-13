@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Theme/colors.dart';
 import '/Components/custom_circular_button.dart';
 import 'utils.dart';
 
@@ -141,6 +142,30 @@ class AppValues {
   static String dineIn = 'Dine-In';
   static String takeAway = 'Take-Away';
   static String delivery = 'Delivery';
+  static String chequeMethod = 'cheque';
+  static String cashMethod = 'cash';
 
   static String walkInCustomerID = "1";
+}
+
+PreferredSize appBarBottomLine() {
+  return PreferredSize(
+    preferredSize: const Size.fromHeight(1.0),
+    child: Container(
+      color: primaryColor,
+      height: 2.0,
+    ),
+  );
+}
+
+BoxShadow settingsPageBoxShadow() {
+  return BoxShadow(
+    color: Colors.grey.withOpacity(0.1),
+    blurRadius: 8.0, // soften the shadow
+    spreadRadius: 1.0, //extend the shadow
+    offset: Offset(
+      1.0, // Move to right 5  horizontally
+      1.0, // Move to bottom 5 Vertically
+    ),
+  );
 }

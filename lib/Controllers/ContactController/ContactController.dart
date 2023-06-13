@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
-import '../../Services/storage_services.dart';
 import '../ListUserController/ListUserController.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/create_contact_response_model.dart';
@@ -47,6 +46,7 @@ class ContactController extends GetxController {
   TextEditingController customField4Ctrl = TextEditingController();
   TextEditingController permanentAddressCtrl = TextEditingController();
   TextEditingController currentAddressCtrl = TextEditingController();
+  String? id;
 
   ///end
 

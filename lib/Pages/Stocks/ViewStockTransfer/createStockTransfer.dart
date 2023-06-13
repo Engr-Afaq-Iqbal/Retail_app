@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import '../../../Components/productHeadings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../../Services/storage_services.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
-import '../searchStockProducts.dart';
 
 class CreateStockTransfer extends StatefulWidget {
   const CreateStockTransfer({Key? key}) : super(key: key);
@@ -22,7 +24,7 @@ class CreateStockTransfer extends StatefulWidget {
 class _CreateStockTransferState extends State<CreateStockTransfer> {
   StockTransferController stockTranCtrlObj =
       Get.find<StockTransferController>();
-
+  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
@@ -83,7 +85,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
   void initState() {
     // TODO: implement initState
     stockTranCtrlObj.fetchStatusList();
+    allProdCtrlObj.searchProductList(term: '');
     super.initState();
+  }
+
+  void dispose() {
+    allProdCtrlObj.finalTotal = 0.00;
+    allProdCtrlObj.totalAmount.clear();
+    allProdCtrlObj.productQuantityCtrl.clear();
+    allProdCtrlObj.searchProductModel = null;
+
+    super.dispose();
   }
 
   @override
@@ -222,6 +234,16 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                 setState(() {
                                   stockTransferCtrlObj.locationFromStatusValue =
                                       value;
+                                  stockTranCtrlObj.locationFromID =
+                                      AppStorage.getBusinessDetailsData()
+                                          ?.businessData
+                                          ?.locations[stockTransferCtrlObj
+                                              .getBusinessLocationItems()
+                                              .indexOf(value!)]
+                                          .id
+                                          .toString();
+
+                                  print(stockTranCtrlObj.locationFromID);
                                 });
                               },
                               buttonHeight: height * 0.06,
@@ -278,6 +300,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                 setState(() {
                                   stockTransferCtrlObj.locationToStatusValue =
                                       value;
+
+                                  stockTranCtrlObj.locationToID =
+                                      AppStorage.getBusinessDetailsData()
+                                          ?.businessData
+                                          ?.locations[stockTransferCtrlObj
+                                              .getBusinessLocationItems()
+                                              .indexOf(value!)]
+                                          .id
+                                          .toString();
+
+                                  print(stockTranCtrlObj.locationFromID);
                                 });
                               },
                               buttonHeight: height * 0.06,
@@ -314,55 +347,121 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          headings(txt: 'Search Products'),
-                          AppFormField(
-                            controller: stockTranCtrlObj.searchCtrl,
-                            labelText: 'Search products for stock',
-                            onEditingComp: () {
-                              stockTranCtrlObj.searchProductList(
-                                  term: stockTranCtrlObj.searchCtrl.text);
-                              print(stockTranCtrlObj.searchCtrl.text);
-                            },
+                          // headings(txt: 'Search Products'),
+                          // AppFormField(
+                          //   controller: stockTranCtrlObj.searchCtrl,
+                          //   labelText: 'Search products for stock',
+                          //   onEditingComp: () {
+                          //     stockTranCtrlObj.searchProductList(
+                          //         term: stockTranCtrlObj.searchCtrl.text);
+                          //     print(stockTranCtrlObj.searchCtrl.text);
+                          //   },
+                          // ),
+
+                          ProductHeadings(
+                            txt1: 'Product Name',
+                            txt2: 'QTY',
+                            txt3: 'Price',
+                            txt4: 'Total',
                           ),
                           Container(
-                            height: 50,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            color: Theme.of(context).colorScheme.primary,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    'Product Name',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    'QTY',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    'Price',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Text(
-                                    'Total',
-                                    style: TextStyle(color: kWhiteColor),
-                                  ),
-                                )
-                              ],
-                            ),
+                            height: MediaQuery.of(context).size.height * 0.4,
+                            child: GetBuilder<AllProductsController>(builder:
+                                (AllProductsController allProdCtrlObj) {
+                              if (allProdCtrlObj.searchProductModel == null) {
+                                return progressIndicator();
+                              }
+                              return ListView.builder(
+                                  padding: EdgeInsetsDirectional.only(
+                                      top: 5, bottom: 5, start: 10, end: 10),
+                                  physics: ScrollPhysics(),
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      allProdCtrlObj.searchProductModel?.length,
+                                  itemBuilder: (context, index) {
+                                    return Container(
+                                      margin: EdgeInsets.only(
+                                        bottom: 5,
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 5),
+                                      color: index.isEven
+                                          ? kWhiteColor
+                                          : Colors.grey.withOpacity(0.1),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              //name
+                                              Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                  '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                ),
+                                              ),
+
+                                              //Quantity
+                                              Expanded(
+                                                flex: 1,
+                                                child: AppFormField(
+                                                    controller: allProdCtrlObj
+                                                            .productQuantityCtrl[
+                                                        index],
+                                                    padding: EdgeInsets.only(
+                                                        right: 5),
+                                                    isOutlineBorder: false,
+                                                    isColor: index.isEven
+                                                        ? kWhiteColor
+                                                        : Colors.transparent,
+                                                    onChanged: (value) {
+                                                      allProdCtrlObj
+                                                                  .totalAmount[
+                                                              index] =
+                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
+                                                      allProdCtrlObj
+                                                          .calculateFinalAmount();
+                                                      debugPrint(
+                                                          'Product Amount');
+                                                      debugPrint(allProdCtrlObj
+                                                          .totalAmount[index]);
+                                                      allProdCtrlObj.update();
+                                                    }),
+                                              ),
+                                              //unit
+                                              Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                  child: Text(
+                                                    '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                              Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                  child: Text(
+                                                    '${allProdCtrlObj.totalAmount[index]}',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            }),
                           ),
-                          SearchStockProducts(),
                         ],
                       ),
                     ),
@@ -392,7 +491,9 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  headings(txt: 'Total Amount: 0.00'),
+                                  headings(
+                                      txt:
+                                          'Total Amount: ${allProdCtrlObj.finalTotal}'),
                                   CustomButton(
                                     title: Text(
                                       'Save',

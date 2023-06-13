@@ -4,9 +4,11 @@ import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenControl
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
+import 'package:bizmodo_emenu/Controllers/ProductController/PaymentController.dart';
 import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
+import 'package:bizmodo_emenu/Controllers/register/RegisterController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
@@ -35,7 +37,6 @@ import 'Locale/language_cubit.dart';
 import 'Pages/Orders/Controller/OrderController.dart';
 import 'Pages/Tabs/Controllers/BottomNavBarController.dart';
 import 'Routes/routes.dart';
-import 'Theme/colors.dart';
 import 'Theme/style.dart';
 
 class MyHttpOverrides extends HttpOverrides {
@@ -110,6 +111,8 @@ void initializeControllers() {
   Get.put(ContactController());
   Get.put(OrderController());
   Get.put(TaxController());
+  Get.put(RegisterController());
+  Get.put(PaymentController());
   Get.put(AllProductsController());
   Get.put(ProductCartController());
   Get.put(BottomNavBarController());

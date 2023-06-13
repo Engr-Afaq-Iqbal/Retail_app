@@ -35,7 +35,7 @@ class _ListQuotationsState extends State<ListQuotations> {
             onPressed: () {
               Get.to(
                 AddSalesAndQuotation(
-                  isSale: false,
+                  isSale: true,
                 ),
               );
             }),

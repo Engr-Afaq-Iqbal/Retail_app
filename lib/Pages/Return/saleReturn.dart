@@ -69,7 +69,7 @@ class _SalesReturnState extends State<SalesReturn> {
     );
 
     saleReturnCtrlObj.saleReturnDateCtrl.text =
-        '${AppFormat.dateDDMMYY(dateTime!)}';
+        '${AppFormat.dateDDMMYY(dateTime ?? DateTime.now())}';
     print(dateTime);
   }
 
@@ -77,15 +77,10 @@ class _SalesReturnState extends State<SalesReturn> {
   void initState() {
     print(widget.id);
     saleReturnCtrlObj.fetchEditSalesReturnList(id: widget.id);
-    saleReturnCtrlObj.invoiceNbrCtrl.text =
-        '${saleReturnCtrlObj.editSaleReturnModelDart?.invoiceNo}';
-    saleReturnCtrlObj.transactionIdCtrl.text =
-        '${saleReturnCtrlObj.editSaleReturnModelDart?.id}';
-    saleReturnCtrlObj.saleReturnDateCtrl.text = DateTime.now().toString();
-    productCtrlCtrlObj.discoutCtrl.clear();
-    //initialCtrl();
 
-    //  '${AppFormat.dateDDMMYY(DateTime.now())}';
+    saleReturnCtrlObj.saleReturnDateCtrl.text =
+        AppFormat.dateDDMMYY(DateTime.now()); // DateTime.now().toString();
+    productCtrlCtrlObj.discoutCtrl.clear();
     // TODO: implement initState
     super.initState();
   }
@@ -359,6 +354,12 @@ class _SalesReturnState extends State<SalesReturn> {
                         height: 30,
                         margin: const EdgeInsets.symmetric(horizontal: 5),
                         onTap: () async {
+                          saleReturnCtrlObj.invoiceNbrCtrl.text =
+                              '${saleReturnCtrlObj.editSaleReturnModelDart?.invoiceNo}';
+                          saleReturnCtrlObj.transactionIdCtrl.text =
+                              '${saleReturnCtrlObj.editSaleReturnModelDart?.id}';
+                          print(saleReturnCtrlObj.invoiceNbrCtrl.text);
+                          showProgress();
                           saleReturnCtrl.addSaleReturn();
                         },
                         bgColor: Theme.of(context).colorScheme.primary,

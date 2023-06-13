@@ -2,6 +2,7 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import 'AddSalesAndQuotation.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
@@ -50,6 +51,9 @@ class _SalesViewState extends State<SalesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('All Sells'),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
           child: Icon(Icons.add),
@@ -58,7 +62,7 @@ class _SalesViewState extends State<SalesView> {
           onPressed: () {
             Get.to(
               AddSalesAndQuotation(
-                isSale: true,
+                isSale: false,
               ),
             );
           }),

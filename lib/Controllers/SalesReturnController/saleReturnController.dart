@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
+import 'package:bizmodo_emenu/Pages/Return/return.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +9,7 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 import '../../Models/SaleReturn/editSaleReturnModel.dart';
 import '../../Models/SaleReturn/saleReturn.dart';
+import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../ProductController/product_cart_controller.dart';
@@ -50,31 +53,6 @@ class SaleReturnController extends GetxController {
     });
   }
 
-  ///Add Sale Returb
-  Future addSaleReturn() async {
-    Map<String, String> _field = {
-      "transaction_id": '${transactionIdCtrl.text}',
-      "invoice_no": '${invoiceNbrCtrl.text}',
-      "discount_amount": '${productCtrlCtrlObj.discoutCtrl.text}',
-      "discount_type": '${productCtrlCtrlObj.discountType.text}',
-      "products": jsonEncode([
-        {"sell_line_id": 22744, "quantity": 1, "unit_price_inc_tax": 437.5}
-      ])
-    };
-
-    return await ApiServices.postMethod(
-            feedUrl: ApiUrls.addSaleReturnApi, fields: _field)
-        .then((_res) {
-      if (_res == null) return null;
-
-      return true;
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      throw '$error';
-    });
-  }
-
   EditSaleReturnModelDart? editSaleReturnModelDart;
 
   /// Fetching Edit Sale Return List
@@ -87,8 +65,6 @@ class SaleReturnController extends GetxController {
       if (_res == null) return null;
       editSaleReturnModelDart = editSaleReturnModelDartFromJson(_res);
       var length = editSaleReturnModelDart?.sellLines?.length ?? 0;
-      print('length ;::::');
-      print(length);
       for (int i = 0; i < length; i++) {
         returnQtyCtrl.add(TextEditingController());
         subtotal.add('0.00');
@@ -161,5 +137,103 @@ class SaleReturnController extends GetxController {
     totalAmount = '${itemsTotal}';
     return double.parse(
         AppFormat.doubleToStringUpTo2('${itemsTotal}') ?? '0.00');
+  }
+
+  ///Add Sale Returb
+  // Future addSaleReturn() async {
+  //   Map<String, String> _field = {
+  //     "transaction_id": '${transactionIdCtrl.text}',
+  //     "invoice_no": '${invoiceNbrCtrl.text}',
+  //     "discount_amount": '${productCtrlCtrlObj.discoutCtrl.text}',
+  //     "discount_type": '${productCtrlCtrlObj.discountType.text}',
+  //     "products": jsonEncode([
+  //       {"sell_line_id": 22744, "quantity": 1, "unit_price_inc_tax": 437.5}
+  //     ])
+  //   };
+  //
+  //   return await ApiServices.postMethod(
+  //           feedUrl: ApiUrls.addSaleReturnApi, fields: _field)
+  //       .then((_res) {
+  //     if (_res == null) return null;
+  //
+  //     return true;
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     throw '$error';
+  //   });
+  // }
+
+  ///function to create Sale Return
+  addSaleReturn() async {
+    // if (orderCtrlObj.singleOrderData?.id == null) {
+    //   showToast('Reference for update order is missing!');
+    //   return;
+    // }
+
+    /// Working with 2nd approach
+    multipartPutMethod();
+  }
+
+  multipartPutMethod() async {
+    // API Method with url
+    // PaymentController _paymentCtrlObj = Get.find<PaymentController>();
+    String _url = '${ApiUrls.createSaleReturnApi}';
+    var length = editSaleReturnModelDart?.sellLines?.length ?? 0;
+    /*
+    Approach 2 (Multipart Request simple )
+    */
+
+    Map<String, String> _fields = {};
+    _fields['transaction_id'] = '${transactionIdCtrl.text}';
+    _fields['transaction_date'] = '${saleReturnDateCtrl.text}';
+    _fields['invoice_no'] = '${invoiceNbrCtrl.text}';
+    _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
+    _fields['discount_type'] = '${productCtrlCtrlObj.discountType.text}';
+    if (editSaleReturnModelDart != null)
+      for (int i = 0; i < length; i++) {
+        if (returnQtyCtrl[i].text.isNotEmpty) {
+          _fields['sell_line_id[$i]'] =
+              '${editSaleReturnModelDart?.sellLines?[i].productId}';
+          _fields['quantity[$i]'] = '${returnQtyCtrl[i].text}';
+          _fields['unit_price_inc_tax[$i]'] =
+              '${editSaleReturnModelDart?.sellLines?[i].unitPriceIncTax}';
+        }
+      }
+
+    logger.i(_fields);
+
+    // return await request.send().then((response) async {
+    //   String result = await response.stream.bytesToString();
+    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+        .then((response) async {
+      // logger.i('EndPoint => ${_url}'
+      //     '\nStatus Code => {response.statusCode}'
+      //     '\nResponse => $response');
+
+      if (response == null) return;
+      // clearOnOrderPlaceSuccess();
+      stopProgress();
+      // print('order created successfully');
+      // showToast('Finalize Created Successfully');
+      clearAllFields();
+      Get.close(1);
+      //await Get.to(() => OrderPlaced());
+      // Get.offAll(HomePage());
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
+
+  clearAllFields() {
+    transactionIdCtrl.clear();
+    saleReturnDateCtrl.clear();
+    invoiceNbrCtrl.clear();
+    productCtrlCtrlObj.discoutCtrl.clear();
+    productCtrlCtrlObj.discountType.clear();
+    returnQtyCtrl.clear();
+    editSaleReturnModelDart = null;
   }
 }

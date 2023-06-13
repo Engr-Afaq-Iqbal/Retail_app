@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,18 +44,9 @@ class SalesViewTile extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text(
-                      '${pastOrder.shippingStatus == null ? '- -' : pastOrder.shippingStatus}'
-                          .capitalizeFirst!),
-                  SizedBox(width: 5),
-                  Container(height: 12, width: 1, color: Colors.black),
-                  SizedBox(width: 5),
-                  Text(
-                    orderStatusValues
-                            .reverse?[pastOrder.resOrderStatus]?.capitalize ??
-                        '- -',
-                    style: AppStyles.orderMapAppBarTextStyle
-                        .copyWith(color: orangeColor),
+                  AmountInfo(
+                    amount: '${pastOrder.finalTotal ?? '0.00'}',
+                    status: 'Amount',
                   ),
                 ],
               )
@@ -68,7 +60,7 @@ class SalesViewTile extends StatelessWidget {
                   '${pastOrder.contact?.name}', pastOrder.transactionDate),
               //if (pastOrder.totalAmountRecovered != null)
               AmountInfo(
-                amount: '${pastOrder.totalAmountRecovered ?? '0.00'}',
+                amount: '${pastOrder.totalPaid ?? '0.00'}',
                 status: 'Paid',
               ),
             ],
@@ -82,7 +74,7 @@ class SalesViewTile extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      'Mohammad Al Tamimi',
+                      '', //Mohammad Al Tamimi
                       style: Theme.of(context)
                           .textTheme
                           .titleLarge!
@@ -108,7 +100,8 @@ class SalesViewTile extends StatelessWidget {
               ),
               // if (pastOrder.finalTotal != null)
               AmountInfo(
-                amount: (double.parse('${pastOrder.finalTotal ?? '0.00'}'))
+                amount: (double.parse(
+                        '${double.parse('${pastOrder.finalTotal ?? '0.00'}') - double.parse('${pastOrder.totalPaid ?? '0.00'}')}'))
                     .toString(),
                 status: 'due'.tr,
               ),

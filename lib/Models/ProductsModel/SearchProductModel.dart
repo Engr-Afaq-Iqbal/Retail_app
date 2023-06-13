@@ -21,7 +21,7 @@ class SearchProductModel {
   String? qtyAvailable;
   String? sellingPrice;
   String? subSku;
-  Unit? unit;
+  String? unit;
   String? imageUrl;
 
   SearchProductModel({
@@ -49,7 +49,7 @@ class SearchProductModel {
         qtyAvailable: json["qty_available"],
         sellingPrice: json["selling_price"],
         subSku: json["sub_sku"],
-        unit: unitValues.map[json["unit"]],
+        unit: json["unit"],
         imageUrl: json["image_url"],
       );
 
@@ -63,7 +63,7 @@ class SearchProductModel {
         "qty_available": qtyAvailable,
         "selling_price": sellingPrice,
         "sub_sku": subSku,
-        "unit": unitValues.reverse[unit],
+        "unit": unit,
         "image_url": imageUrl,
       };
 }
@@ -72,9 +72,9 @@ enum Type { SINGLE }
 
 final typeValues = EnumValues({"single": Type.SINGLE});
 
-enum Unit { PC_S, KG }
-
-final unitValues = EnumValues({"KG": Unit.KG, "Pc(s)": Unit.PC_S});
+// enum Unit { PC_S, KG }
+//
+// final unitValues = EnumValues({"KG": Unit.KG, "Pc(s)": Unit.PC_S});
 
 enum Variation { DUMMY }
 
