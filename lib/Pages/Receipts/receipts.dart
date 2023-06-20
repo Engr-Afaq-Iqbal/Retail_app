@@ -14,6 +14,7 @@ import '../../Controllers/AllSalesController/allSalesController.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ReceiptsController/receiptsController.dart';
 import '../../Theme/style.dart';
+import '../checkout/check_out.dart';
 import '../order_type/search_customer_page.dart';
 
 class Receipts extends StatefulWidget {
@@ -261,52 +262,54 @@ class _ReceiptsState extends State<Receipts> {
                   ),
                 );
               }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomButton(
-                    onTap: () {
-                      setState(() {
-                        selectedMethod = 1;
-                      });
-                    },
-                    title: Text(
-                      'CASH',
-                      style: TextStyle(color: kWhiteColor),
-                    ),
-                    bgColor: selectedMethod == 1
-                        ? Theme.of(context).colorScheme.primary
-                        : strikeThroughColor,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  CustomButton(
-                    onTap: () {
-                      setState(() {
-                        selectedMethod = 2;
-                      });
-                    },
-                    title: Text(
-                      'CHEQUE',
-                      style: TextStyle(color: kWhiteColor),
-                    ),
-                    bgColor: selectedMethod == 2
-                        ? Theme.of(context).colorScheme.primary
-                        : strikeThroughColor,
-                  ),
-                ],
-              ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     CustomButton(
+              //       onTap: () {
+              //         setState(() {
+              //           selectedMethod = 1;
+              //         });
+              //       },
+              //       title: Text(
+              //         'CASH',
+              //         style: TextStyle(color: kWhiteColor),
+              //       ),
+              //       bgColor: selectedMethod == 1
+              //           ? Theme.of(context).colorScheme.primary
+              //           : strikeThroughColor,
+              //     ),
+              //     SizedBox(
+              //       width: 10,
+              //     ),
+              //     CustomButton(
+              //       onTap: () {
+              //         setState(() {
+              //           selectedMethod = 2;
+              //         });
+              //       },
+              //       title: Text(
+              //         'CHEQUE',
+              //         style: TextStyle(color: kWhiteColor),
+              //       ),
+              //       bgColor: selectedMethod == 2
+              //           ? Theme.of(context).colorScheme.primary
+              //           : strikeThroughColor,
+              //     ),
+              //   ],
+              // ),
               CustomButton(
                 onTap: () {
-                  ///for cash
-                  if (selectedMethod == 1) {}
+                  Get.to(CheckOutPage());
 
-                  ///for cheque
-                  if (selectedMethod == 2) {}
-                  if (selectedMethod == 0) {
-                    showToast('Please select method');
-                  }
+                  ///for cash
+                  // if (selectedMethod == 1) {}
+                  //
+                  // ///for cheque
+                  // if (selectedMethod == 2) {}
+                  // if (selectedMethod == 0) {
+                  //   showToast('Please select method');
+                  // }
                 },
                 title: Text(
                   'SUBMIT',

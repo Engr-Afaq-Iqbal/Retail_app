@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
 import 'package:bizmodo_emenu/Pages/HomePageRetail/homepageRetail.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -75,6 +76,165 @@ class AllProductsController extends GetxController {
     print('final Total = ${finalTotal}');
   }
 
+  List<String> payTermList() {
+    List<String> options = ['Months', 'Days'];
+    return options;
+  }
+
+  List<String> statusList() {
+    List<String> options = ['Final', 'Draft', 'Quotation', 'Proforma'];
+    return options;
+  }
+
+  List<String> invoiceSchemaList() {
+    List<String> options = ['Default', 'Restro'];
+    return options;
+  }
+
+  TextEditingController payTermCtrl = TextEditingController();
+  TextEditingController dateCtrl = TextEditingController();
+  String? paytermStatusValue;
+  String? statusValue;
+  String? invoiceSchemaStatusValue;
+  ProductCartController productCtrlCtrlObj = Get.find<ProductCartController>();
+
+  // ///Function to create order:::::
+  // sellCreate() async {
+  //   // if (orderCtrlObj.singleOrderData?.id == null) {
+  //   //   showToast('Reference for update order is missing!');
+  //   //   return;
+  //   // }
+  //
+  //   /// Working with 2nd approach
+  //   multipartSalePutMethod();
+  // }
+  //
+  // multipartSalePutMethod() async {
+  //   // API Method with url
+  //
+  //   String _url = '${ApiUrls.addSellApi}';
+  //   var length = searchProductModel?.length ?? 0;
+  //   /*
+  //   Approach 2 (Multipart Request simple )
+  //   */
+  //
+  //   Map<String, String> _fields = {};
+  //
+  //   _fields['location_id[0]'] =
+  //       '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+  //   _fields['business_id[0]'] =
+  //       '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.staffUser.businessId}';
+  //   _fields['contact_id[0]'] = '552';
+  //   _fields['transaction_date[0]'] = '${dateCtrl.text}';
+  //   _fields['invoice_no[0]'] = '';
+  //   _fields['status[0]'] = '${statusValue}';
+  //   _fields['is_quotation[0]'] = 'true';
+  //   _fields['tax_rate_id[0]'] = '13';
+  //   _fields['discount_type[0]'] = '${productCtrlCtrlObj.discountType.text}';
+  //   _fields['discount_amount[0]'] = '${productCtrlCtrlObj.discoutCtrl.text}';
+  //   _fields['sale_note[0]'] = 'created from retail app';
+  //   _fields['staff_note[0]'] = 'staff note';
+  //   _fields['commission_agent[0]'] = '0';
+  //   _fields['shipping_details[0]'] =
+  //       '${productCtrlCtrlObj.shippingDetailsCtrl.text}';
+  //   _fields['shipping_address[0]'] =
+  //       '${productCtrlCtrlObj.shippingAddressCtrl.text}';
+  //   _fields['shipping_status[0]'] =
+  //       '${productCtrlCtrlObj.shippingStatusCtrl.text}';
+  //   _fields['delivered_to[0]'] = '${productCtrlCtrlObj.deliveredTo.text}';
+  //   _fields['shipping_charges[0]'] =
+  //       '${productCtrlCtrlObj.shippingChargeCtrl.text}';
+  //   _fields['packing_charge[0]'] = '0.00';
+  //   _fields['exchange_rate[0]'] = '0';
+  //   _fields['selling_price_group_id[0]'] = '0';
+  //   _fields['pay_term_number[0]'] = '${payTermCtrl.text}';
+  //   _fields['pay_term_type[0]'] = '${paytermStatusValue}';
+  //   _fields['is_recurring[0]'] = '1';
+  //   _fields['recur_interval[0]'] = 'months';
+  //   _fields['recur_interval_type[0]'] = '0';
+  //   _fields['subscription_repeat_on[0]'] = '0';
+  //   _fields['subscription_no[0]'] = 'abc';
+  //   _fields['recur_repetitions[0]'] = '20';
+  //   _fields['rp_redeemed[0]'] = '1';
+  //   _fields['rp_redeemed_amount[0]'] = '13.5';
+  //   _fields['types_of_service_id[0]'] = '0.00';
+  //   _fields['service_custom_field_1[0]'] = 'abc';
+  //   _fields['service_custom_field_2[0]'] = 'abc';
+  //   _fields['service_custom_field_3[0]'] = 'abc';
+  //   _fields['service_custom_field_4[0]'] = 'abc';
+  //   _fields['round_off_amount[0]'] = '0.00';
+  //   _fields['table_id[0]'] = '';
+  //   _fields['service_staff_id[0]'] = '1';
+  //   _fields['change_return[0]'] = '0';
+  //
+  //   ///products details
+  //   if (searchProductModel != null) {
+  //     for (int i = 0; i < length; i++) {
+  //       if (productQuantityCtrl[i].text.isNotEmpty) {
+  //         _fields['products[product_id][$i]'] =
+  //             '${searchProductModel?[i].productId}';
+  //         _fields['products[variation_id][$i]'] =
+  //             '${searchProductModel?[i].variationId}';
+  //         _fields['products[quantity][$i]'] = '1';
+  //         _fields['products[tax_rate_id][$i]'] = '13';
+  //         _fields['products[discount_amount][$i]'] = '0';
+  //         _fields['products[discount_type][$i]'] = 'fixed';
+  //         _fields['products[sub_unit_id][$i]'] = '0';
+  //         _fields['products[note][$i]'] = 'product testing';
+  //       }
+  //     }
+  //   }
+  //
+  //   ///further fields
+  //   _fields['products[unit_price_inc_tax][0]'] = '100';
+  //   _fields['products[enable_stock][0]'] = '0';
+  //   _fields['products[product_type][0]'] = 'test';
+  //   _fields['products[product_unit_id][0]'] = '34';
+  //   _fields['products[unit_price][0]'] = '10';
+  //   _fields['products[item_tax][0]'] = '13';
+  //   _fields['products[tax_id][0]'] = '13';
+  //
+  //   ///Payments
+  //   _fields['payments[amount][0]'] = '100';
+  //   _fields['payments[method][0]'] = 'cash';
+  //   _fields['payments[account_id][0]'] = '2';
+  //   _fields['payments[card_number][0]'] = '';
+  //   _fields['payments[card_holder_name][0]'] = '';
+  //   _fields['payments[card_transaction_number][0]'] = '';
+  //   _fields['payments[card_type][0]'] = '';
+  //   _fields['payments[card_month][0]'] = '';
+  //   _fields['payments[card_year][0]'] = '';
+  //   _fields['payments[card_security][0]'] = '';
+  //   _fields['payments[transaction_no_1][0]'] = '';
+  //   _fields['payments[transaction_no_2][0]'] = '';
+  //   _fields['payments[transaction_no_3][0]'] = '';
+  //   _fields['payments[bank_account_number][0]'] = '';
+  //   _fields['payments[note][0]'] = '';
+  //   _fields['payments[cheque_number][0]'] = '';
+  //   logger.i(_fields);
+  //
+  //   // return await request.send().then((response) async {
+  //   //   String result = await response.stream.bytesToString();
+  //   return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+  //       .then((response) async {
+  //     // logger.i('EndPoint => ${_url}'
+  //     //     '\nStatus Code => {response.statusCode}'
+  //     //     '\nResponse => $response');
+  //
+  //     if (response == null) return;
+  //     // clearOnOrderPlaceSuccess();
+  //     stopProgress();
+  //     showToast('Finalize Created Successfully');
+  //     Get.to(HomePageRetail());
+  //     //await Get.to(() => OrderPlaced());
+  //     // Get.offAll(HomePage());
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     return null;
+  //   });
+  // }
+
   ///Function to create order:::::
   orderCreate() async {
     // if (orderCtrlObj.singleOrderData?.id == null) {
@@ -89,7 +249,7 @@ class AllProductsController extends GetxController {
   multipartPutMethod() async {
     // API Method with url
 
-    String _url = '${ApiUrls.createOrder}';
+    String _url = '${ApiUrls.createOrder}'; //
     var length = searchProductModel?.length ?? 0;
     /*
     Approach 2 (Multipart Request simple )
@@ -195,7 +355,7 @@ class AllProductsController extends GetxController {
     });
   }
 
-  // method to submit payment for sell page
+  //// method to submit payment for sell page
   Future addPaymentForSellPage(String orderId) async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -263,5 +423,127 @@ class AllProductsController extends GetxController {
     // }
 
     request.fields['note[0]'] = '${paymentCtrlObj.paymentNoteCtrl.text}';
+  }
+
+  ///Function to create sell:::::
+  sellCreate() async {
+    // if (orderCtrlObj.singleOrderData?.id == null) {
+    //   showToast('Reference for update order is missing!');
+    //   return;
+    // }
+
+    /// Working with 2nd approach
+    multipartSellPutMethod();
+  }
+
+  multipartSellPutMethod() async {
+    // API Method with url
+
+    String _url = '${ApiUrls.createOrder}'; //
+    var length = searchProductModel?.length ?? 0;
+    /*
+    Approach 2 (Multipart Request simple )
+    */
+
+    Map<String, String> _fields = {};
+    _fields['transaction_date'] = '${DateTime.now()}';
+    _fields['contact_id'] = '${contactCtrlObj.id}';
+    _fields['service_staff_id'] =
+        '${AppStorage.getLoggedUserData()?.staffUser.id}';
+    _fields['created_by'] = '${AppStorage.getLoggedUserData()?.staffUser.id}';
+
+    _fields['status'] = '${statusValue}';
+    _fields['type'] = 'sell';
+    _fields['discounttype'] = '${productCtrlCtrlObj.discountType.text}';
+    _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
+    _fields['tax_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1}';
+    _fields['final_total'] = '${finalTotal}';
+    _fields['exchange_rate'] = '0.00';
+    _fields['packing_charge'] = '0.00';
+    _fields['packing_charge_type'] = 'fixed';
+    _fields['business_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.staffUser.businessId}';
+    _fields['location_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+    _fields['shipping_charges'] =
+        '${productCtrlCtrlObj.shippingChargeCtrl.text}';
+    _fields['is_suspend'] = '0';
+    _fields['total_before_tax'] = '0.00';
+    // request.fields['discount_type'] = 'Fixed';
+    _fields['tax_amount'] = '0.00';
+    _fields['discount_amount'] = '0.00';
+    if (searchProductModel != null)
+      for (int i = 0; i < length; i++) {
+        if (productQuantityCtrl[i].text.isNotEmpty) {
+          _fields['product_id[$i]'] = '${searchProductModel?[i].productId}';
+          _fields['variation_id[$i]'] = '${searchProductModel?[i].variationId}';
+          _fields['quantity[$i]'] = '${productQuantityCtrl[i].text}';
+          _fields['line_discount_type[$i]'] = 'fixed';
+          _fields['unit_price_before_discount[$i]'] = '0.00';
+          _fields['unit_price[$i]'] = '0.00';
+          _fields['unit_price_inc_tax[$i]'] = '0.00';
+          _fields['item_tax[$i]'] = '0.00';
+        }
+      }
+
+    if (paymentCtrlObj.totalPayingAmount() == 0) {
+      _fields['payment_status'] = 'due';
+    } else {
+      _fields['payment_status'] =
+          paymentCtrlObj.totalPayingAmount() < double.parse('${finalTotal}')
+              ? 'partial'
+              : 'paid';
+    }
+    // for order suspend = due, cash = paid / partial,
+
+    // Get.find<PaymentController>().fieldsForCheckout(request);
+    /// OR
+    for (int checkoutIndex = 0;
+        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
+        checkoutIndex++) {
+      _fields['amount[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.text}';
+      _fields['method[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.paymentMethod}';
+      _fields['account_id[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
+      _fields['card_type[$checkoutIndex]'] = 'credit'; // debit
+
+      if (paymentCtrlObj.isSelectedPaymentOptionCheque(index: checkoutIndex)) {
+        _fields['cheque_number[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
+      } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
+          index: checkoutIndex)) {
+        _fields['transaction_no_1[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+      }
+
+      _fields['note[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.text}';
+    }
+
+    logger.i(_fields);
+
+    // return await request.send().then((response) async {
+    //   String result = await response.stream.bytesToString();
+    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+        .then((response) async {
+      // logger.i('EndPoint => ${_url}'
+      //     '\nStatus Code => {response.statusCode}'
+      //     '\nResponse => $response');
+
+      if (response == null) return;
+      // clearOnOrderPlaceSuccess();
+      stopProgress();
+      showToast('Finalize Created Successfully');
+      Get.to(HomePageRetail());
+      //await Get.to(() => OrderPlaced());
+      // Get.offAll(HomePage());
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
   }
 }

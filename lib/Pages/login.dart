@@ -54,7 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                         AppConfig.appName,
                         style: Theme.of(context)
                             .textTheme
-                            .bodyText1!
+                            .bodyLarge!
                             .copyWith(color: Colors.black, fontSize: 18),
                       ),
                       durationInMilliseconds: 200,

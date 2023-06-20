@@ -36,8 +36,6 @@ class ProductCartController extends GetxController {
   TextEditingController discountType = TextEditingController();
   TextEditingController deliveredTo = TextEditingController();
   TextEditingController discoutCtrl = TextEditingController();
-  final AllProductsController allProdCtrlObj =
-      Get.find<AllProductsController>();
   final TableSelectionController tableManageCtrlObj =
       Get.find<TableSelectionController>();
   final OrderTypeSelectionController orderManageCtrlObj =

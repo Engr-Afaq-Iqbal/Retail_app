@@ -68,7 +68,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
       },
     );
 
-    allSalesCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    allProdCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
     print(dateTime);
   }
 
@@ -117,7 +117,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AppFormField(
-                              controller: allSalesCtrlObj.searchCtrl,
+                              controller: allProdCtrlObj.payTermCtrl,
                               labelText: '',
                               width: width * 0.15,
                             ),
@@ -137,11 +137,11 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                         color: txtFieldHintColor,
                                       ),
                                     )),
-                                items: allSalesCtrlObj.payTermList().map((e) {
+                                items: allProdCtrlObj.payTermList().map((e) {
                                   return DropdownMenuItem(
                                       value: e, child: Text(e));
                                 }).toList(),
-                                value: allSalesCtrlObj.paytermStatusValue,
+                                value: allProdCtrlObj.paytermStatusValue,
                                 dropdownDirection:
                                     DropdownDirection.textDirection,
                                 dropdownPadding:
@@ -150,7 +150,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                     EdgeInsets.only(left: 15, right: 15),
                                 onChanged: (String? value) {
                                   setState(() {
-                                    allSalesCtrlObj.paytermStatusValue = value;
+                                    allProdCtrlObj.paytermStatusValue = value;
                                   });
                                 },
                                 buttonHeight: height * 0.06,
@@ -217,11 +217,11 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                       color: txtFieldHintColor,
                                     ),
                                   )),
-                              items: allSalesCtrlObj.statusList().map((e) {
+                              items: allProdCtrlObj.statusList().map((e) {
                                 return DropdownMenuItem(
                                     value: e, child: Text(e));
                               }).toList(),
-                              value: allSalesCtrlObj.statusValue,
+                              value: allProdCtrlObj.statusValue,
                               dropdownDirection:
                                   DropdownDirection.textDirection,
                               dropdownPadding:
@@ -230,7 +230,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                   EdgeInsets.only(left: 15, right: 15),
                               onChanged: (String? value) {
                                 setState(() {
-                                  allSalesCtrlObj.statusValue = value;
+                                  allProdCtrlObj.statusValue = value;
                                 });
                               },
                               buttonHeight: height * 0.06,
@@ -268,17 +268,16 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                     color: txtFieldHintColor,
                                   ),
                                 )),
-                            items: allSalesCtrlObj.invoiceSchemaList().map((e) {
+                            items: allProdCtrlObj.invoiceSchemaList().map((e) {
                               return DropdownMenuItem(value: e, child: Text(e));
                             }).toList(),
-                            value: allSalesCtrlObj.invoiceSchemaStatusValue,
+                            value: allProdCtrlObj.invoiceSchemaStatusValue,
                             dropdownDirection: DropdownDirection.textDirection,
                             dropdownPadding: EdgeInsets.only(left: 5, right: 5),
                             buttonPadding: EdgeInsets.only(left: 15, right: 15),
                             onChanged: (String? value) {
                               setState(() {
-                                allSalesCtrlObj.invoiceSchemaStatusValue =
-                                    value;
+                                allProdCtrlObj.invoiceSchemaStatusValue = value;
                               });
                             },
                             buttonHeight: height * 0.06,
@@ -526,7 +525,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
-                                allProdCtrlObj.orderCreate();
+                                allProdCtrlObj.sellCreate();
                               },
                               bgColor: Theme.of(context).colorScheme.primary,
                             ),

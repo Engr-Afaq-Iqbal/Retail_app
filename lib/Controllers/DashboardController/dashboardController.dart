@@ -13,26 +13,26 @@ class DashboardController extends GetxController {
   TextEditingController endDateCtrl = TextEditingController();
   List<String> namesData = [];
   List<String> names = [
-    'Total Sales',
-    'Net',
-    'Invoice Due',
-    'Total Sell Return',
-    'Total Purchase',
-    'Purchase Due',
-    'Total Purchase return',
-    'Expense',
+    'total_sales'.tr,
+    'net'.tr,
+    'invoice_due'.tr,
+    'total_sale_return'.tr,
+    'total_purchase'.tr,
+    'purchase_due'.tr,
+    'total_purchase_return'.tr,
+    'expense'.tr,
   ];
 
   List<String> iconsNames = [
-    'Items',
-    'Customer',
-    'Create Order',
-    'Return',
-    'Receipt',
-    'Sales',
-    'Stock',
-    'Customer Visits',
-    'Upload'
+    'items'.tr,
+    'customer'.tr,
+    'create_order'.tr,
+    'return'.tr,
+    'receipt'.tr,
+    'sale'.tr,
+    'stock'.tr,
+    'customer_visits'.tr,
+    'upload'.tr,
   ];
 
   List<IconData> iconList = [

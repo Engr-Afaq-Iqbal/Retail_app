@@ -212,6 +212,8 @@ import '../CreateNewCustomer/createNewCustomer.dart';
 import '../CreateOrder/createOrderPage.dart';
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
+import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
@@ -337,12 +339,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                   GestureDetector(
                                     onTap: () {
                                       //  Get.close(0);
-                                      Get.to(ShowCustomerDetails(
-                                          contactApi: contactCtrlObj
-                                              .customerContacts!
-                                              .contactDataList[index]
-                                              .id
-                                              .toString()));
+
                                       contactCtrlObj.id = contactCtrlObj
                                           .customerContacts!
                                           .contactDataList[index]
@@ -366,7 +363,14 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                                   .contactDataList[index]
                                                   .name ??
                                               '';
-                                      if (widget.dashBoardId == 2) {
+                                      if (widget.dashBoardId == 1) {
+                                        Get.to(ShowCustomerDetails(
+                                            contactApi: contactCtrlObj
+                                                .customerContacts!
+                                                .contactDataList[index]
+                                                .id
+                                                .toString()));
+                                      } else if (widget.dashBoardId == 2) {
                                         Get.to(CreateOrderPage());
                                       } else if (widget.dashBoardId == 3) {
                                         Get.to(Return());
@@ -374,13 +378,19 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                         Get.to(Receipts());
                                         contactCtrlObj.update();
                                         // Get.close(2);
+                                      } else if (widget.dashBoardId == 5) {
+                                        Get.to(AddSalesAndQuotation());
                                       }
                                     },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 10),
-                                      child: Text(
-                                        '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 45,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 10),
+                                        child: Text(
+                                          '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
+                                        ),
                                       ),
                                     ),
                                   ),

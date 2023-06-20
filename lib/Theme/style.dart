@@ -1,19 +1,24 @@
+import 'package:bizmodo_emenu/Services/storage_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../Services/storage_services.dart';
 import '/Theme/colors.dart';
 
 /// TODO: button bg colors
 
-final ThemeData appTheme = ThemeData(
+ThemeData appTheme = ThemeData(
   //primaryColor: Colors.red,
   fontFamily: 'ProductSans',
   scaffoldBackgroundColor: Color(0xfff8f9fd),
   colorScheme: ColorScheme.fromSwatch(
     // primarySwatch: createMaterialColor(primaryColor),
-    primarySwatch: createMaterialColor(primaryColor),
+    primarySwatch: createMaterialColor(Color(int.parse(
+        AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection ??
+            'ffED3F40',
+        radix: 16))), // createMaterialColor(primaryColor),
   ).copyWith(
     background: Color(0xffF8F9FD),
   ),

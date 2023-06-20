@@ -1,13 +1,17 @@
+import 'dart:io';
 import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../Components/custom_circular_button.dart';
 import '../../Components/textfield.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ListUserController/ListUserController.dart';
 import '../../Theme/colors.dart';
+import '../../Theme/style.dart';
 
 class CreateNewCustomer extends StatefulWidget {
   const CreateNewCustomer({Key? key}) : super(key: key);
@@ -20,11 +24,63 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
   final ContactController contactCtrlObj = Get.find<ContactController>();
   ListUserController listUserCtrl = Get.find<ListUserController>();
   final GlobalKey<FormState> createContactFormKey = GlobalKey<FormState>();
+  File? image;
+  File? image2;
   @override
   void initState() {
     listUserCtrl.fetchListUsers();
     // TODO: implement initState
     super.initState();
+  }
+
+  Future trnImage() async {
+    try {
+      //final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      int? fileSizeInBytes = await image?.length();
+      double fileSizeInKB = fileSizeInBytes! / 1024;
+      double fileSizeInMB = fileSizeInKB / 1024;
+      print('size ${fileSizeInMB}');
+      print(fileSizeInMB);
+      if (image != null && fileSizeInMB <= 1) {
+        final imageTemporary = File(image.path);
+        setState(() {
+          this.image = imageTemporary;
+        });
+      } else if (fileSizeInMB > 1) {
+        return showToast("File size is greater than 1MB");
+      } else {
+        return showToast("No Image picked");
+      }
+    } on PlatformException catch (ex) {
+      print('Failed to pick Image: $ex');
+    }
+  }
+
+  Future licenseImage() async {
+    try {
+      //final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      int? fileSizeInBytes = await image?.length();
+      double fileSizeInKB = fileSizeInBytes! / 1024;
+      double fileSizeInMB = fileSizeInKB / 1024;
+      print('size ${fileSizeInMB}');
+      print(fileSizeInMB);
+      if (image != null && fileSizeInMB <= 1) {
+        final imageTemporary = File(image.path);
+        setState(() {
+          this.image2 = imageTemporary;
+        });
+      } else if (fileSizeInMB > 1) {
+        return showToast("File size is greater than 1MB");
+      } else {
+        return showToast("No Image picked");
+      }
+    } on PlatformException catch (ex) {
+      print('Failed to pick Image: $ex');
+    }
   }
 
   @override
@@ -41,6 +97,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
           child: Form(
             key: createContactFormKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 GetBuilder<ContactController>(
                     builder: (ContactController contactCtrl) {
@@ -216,7 +273,79 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                   else
                     return progressIndicator();
                 }),
+                SizedBox(
+                  height: 20,
+                ),
 
+                AppFormField(
+                  fontWeight: false,
+                  labelText: 'TRN',
+                  controller: contactCtrlObj.trnCtrl,
+                ),
+                Text(
+                  'TRN Upload',
+                  style: appBarHeaderStyle,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    trnImage();
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.16,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: kHintColor.withOpacity(0.3)),
+                    child: (image != null)
+                        ? Center(
+                            child: Image.file(
+                              image!,
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                AppFormField(
+                  fontWeight: false,
+                  labelText: 'License',
+                  controller: contactCtrlObj.licenseCtrl,
+                ),
+                Text(
+                  'License Upload',
+                  style: appBarHeaderStyle,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    licenseImage();
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.16,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: kHintColor.withOpacity(0.3)),
+                    child: (image != null)
+                        ? Center(
+                            child: Image.file(
+                              image!,
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        : Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 30,
+                            ),
+                          ),
+                  ),
+                ),
                 SizedBox(
                   height: 30,
                 ),

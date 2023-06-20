@@ -91,6 +91,7 @@ class StaffUserModel {
     this.isAdmin,
     this.business,
     this.media,
+    this.appSetting,
   });
 
   late int id;
@@ -148,6 +149,7 @@ class StaffUserModel {
   bool? isAdmin;
   Business? business;
   Media? media;
+  AppSetting? appSetting;
 
   StaffUserModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
@@ -1106,5 +1108,53 @@ class Media {
         "updated_at": updatedAt?.toIso8601String(),
         "display_name": displayName,
         "display_url": displayUrl,
+      };
+}
+
+class AppSetting {
+  int? id;
+  String? themeSelection;
+  String? lang;
+  String? printerId;
+  int? autoPrinter;
+  int? userId;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  AppSetting({
+    this.id,
+    this.themeSelection,
+    this.lang,
+    this.printerId,
+    this.autoPrinter,
+    this.userId,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory AppSetting.fromJson(Map<String, dynamic> json) => AppSetting(
+        id: json["id"],
+        themeSelection: json["theme_selection"],
+        lang: json["lang"],
+        printerId: json["printer_id"],
+        autoPrinter: json["auto_printer"],
+        userId: json["user_id"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "theme_selection": themeSelection,
+        "lang": lang,
+        "printer_id": printerId,
+        "auto_printer": autoPrinter,
+        "user_id": userId,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
       };
 }

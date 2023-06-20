@@ -65,6 +65,7 @@ class ContactController extends GetxController {
   ///Retail app fields starting here
   bool indiviualYes = false;
   bool businessYes = false;
+  bool isDisable = false;
   String? statusValue;
   TextEditingController prefixCtrl = TextEditingController();
   TextEditingController firstNameCtrl = TextEditingController();
@@ -75,6 +76,8 @@ class ContactController extends GetxController {
   TextEditingController alternateMblNbrNumberCtrl = TextEditingController();
   TextEditingController landLineCtrl = TextEditingController();
   TextEditingController emailCtrl = TextEditingController();
+  TextEditingController trnCtrl = TextEditingController();
+  TextEditingController licenseCtrl = TextEditingController();
 
   ///Ending
 

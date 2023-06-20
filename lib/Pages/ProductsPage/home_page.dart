@@ -125,11 +125,11 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  // Get.to(AddProductsPage(
-                  //   isView: true,
-                  //   productModelObjs: productModelObjs,
-                  //   index: index,
-                  // ));
+                  Get.to(AddProductsPage(
+                    isView: true,
+                    // productModelObjs: allProdCtrlObj.searchProductModel,
+                    // index: index,
+                  ));
                 },
                 child: Container(
                   color: Theme.of(context).colorScheme.background,

@@ -18,7 +18,7 @@ class AuthController extends GetxController {
 
   initialDataCheck() async {
     await Future.delayed(Duration(seconds: 2));
-    if (!AppStorage.isStorageHasTablesData()) {
+    if (!AppStorage.isStorageHasUserToken()) {
       return Get.off(() => LoginPage());
     }
     if (!AppStorage.isStorageHasLoggedUserData()) {
@@ -28,12 +28,6 @@ class AuthController extends GetxController {
     if (!AppStorage.isStorageHasBusinessDetails()) {
       await Get.find<AuthController>().getBusinessSetting();
     }
-
-    // Register Status & Information
-    // await Get.find<RegisterController>().fetchRegisterStatus();
-    // if (AppStorage.isStorageHasUserToken() &&
-    //     Get.find<RegisterController>().openedRegisterStatus == null)
-    //   return Get.off(() => OpenRegisterPage());
 
     if (AppStorage
             .isStorageHasUserToken() /* &&
@@ -64,7 +58,10 @@ class AuthController extends GetxController {
         await ApiServices.getMethod(feedUrl: ApiUrls.getLoggedInUserDetail);
 
     if (response == null) return false;
+
     await AppStorage.setLoggedUserData(response);
+    // print('Color Code');
+    // print(AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection);
     showToast("logged in");
     // disposeControllers();
     return true;
@@ -98,9 +95,11 @@ class AuthController extends GetxController {
           AppStorage.getBusinessDetailsData()?.businessData?.locations.first;
 
       String address = '';
-      if (businessLoc?.landmark != null) address += '${businessLoc!.landmark},';
-      if (businessLoc?.city != null) address += ' ${businessLoc!.city}';
-      if (businessLoc?.country != null) address += '\n${businessLoc!.country}';
+      if (businessLoc?.landmark != null)
+        address += '${businessLoc?.landmark ?? ''},';
+      if (businessLoc?.city != null) address += ' ${businessLoc?.city ?? ''}';
+      if (businessLoc?.country != null)
+        address += '\n${businessLoc?.country ?? ''}';
 
       return address;
     } catch (_e) {

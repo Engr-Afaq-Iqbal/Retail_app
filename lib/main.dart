@@ -107,14 +107,16 @@ void initializeControllers() {
   Get.put(DashboardController());
   Get.put(NotificationsController());
   Get.put(TableSelectionController());
+
   Get.put(OrderTypeSelectionController());
   Get.put(ContactController());
   Get.put(OrderController());
   Get.put(TaxController());
   Get.put(RegisterController());
   Get.put(PaymentController());
-  Get.put(AllProductsController());
   Get.put(ProductCartController());
+  Get.put(AllProductsController());
+
   Get.put(BottomNavBarController());
   Get.put(BookingController());
   Get.put(ServiceStaffController());

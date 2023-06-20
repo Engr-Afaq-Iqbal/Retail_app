@@ -14,7 +14,7 @@ String searchProductModelToJson(List<SearchProductModel> data) =>
 class SearchProductModel {
   int? productId;
   String? name;
-  Type? type;
+  String? type;
   int? enableStock;
   int? variationId;
   Variation? variation;
@@ -42,7 +42,7 @@ class SearchProductModel {
       SearchProductModel(
         productId: json["product_id"],
         name: json["name"],
-        type: typeValues.map[json["type"]],
+        type: json["type"],
         enableStock: json["enable_stock"],
         variationId: json["variation_id"],
         variation: variationValues.map[json["variation"]],
@@ -56,7 +56,7 @@ class SearchProductModel {
   Map<String, dynamic> toJson() => {
         "product_id": productId,
         "name": name,
-        "type": typeValues.reverse[type],
+        "type": type,
         "enable_stock": enableStock,
         "variation_id": variationId,
         "variation": variationValues.reverse[variation],
@@ -67,10 +67,6 @@ class SearchProductModel {
         "image_url": imageUrl,
       };
 }
-
-enum Type { SINGLE }
-
-final typeValues = EnumValues({"single": Type.SINGLE});
 
 // enum Unit { PC_S, KG }
 //

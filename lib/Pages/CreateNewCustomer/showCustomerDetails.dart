@@ -132,6 +132,16 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                   readOnly: true,
                   controller: contactCtrl.emailCtrl,
                 ),
+                AppFormField(
+                  labelText: 'TRN',
+                  readOnly: true,
+                  controller: contactCtrl.trnCtrl,
+                ),
+                AppFormField(
+                  labelText: 'License',
+                  readOnly: true,
+                  controller: contactCtrl.licenseCtrl,
+                ),
                 SizedBox(
                   height: h * 0.02,
                 ),

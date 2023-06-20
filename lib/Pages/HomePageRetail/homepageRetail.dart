@@ -5,14 +5,11 @@ import 'package:get/get.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
+import '../../Services/storage_services.dart';
 import '../../const/CurvedContainer.dart';
-import '../CustomesVisit/customersVisit.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
 import '../Orders/View/OrdersTabPage.dart';
-
-import '../Receipts/receipts.dart';
 import '../Return/return.dart';
-import '../SalesView/SalesTabPage.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
 import '../ProductsPage/home_page.dart';
@@ -30,6 +27,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
 
   @override
   void initState() {
+    print('Color Code');
+    print(AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection);
     // TODO: implement initState
     dashBoardCtrl.fetchDashboardData();
     super.initState();
@@ -106,6 +105,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               }
                               if (index == 5) {
                                 // Get.to(SalesTabPage());
+
                                 Get.to(SalesView());
                               }
                               if (index == 6) {

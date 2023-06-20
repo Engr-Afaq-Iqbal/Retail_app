@@ -2,6 +2,8 @@ import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Theme/style.dart';
+
 class ThemeController extends GetxController {
   Rx<Color> primaryColor = Colors.blue.obs;
 
@@ -11,7 +13,7 @@ class ThemeController extends GetxController {
   }
 
   void updateTheme() {
-    Get.changeTheme(ThemeData(
+    appTheme = ThemeData(
       //primaryColor: primaryColor.value, colorScheme: ColorScheme(background: Color(0xffF8F9FD))
       // Add other theme configurations
       colorScheme: ColorScheme.fromSwatch(
@@ -20,6 +22,8 @@ class ThemeController extends GetxController {
       ).copyWith(
         background: Color(0xffF8F9FD),
       ),
-    ));
+    );
+    Get.changeTheme(appTheme);
+    Get.forceAppUpdate();
   }
 }

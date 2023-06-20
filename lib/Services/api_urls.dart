@@ -26,6 +26,9 @@ class ApiUrls {
   // create order
   static String createOrder = "connector/api/orders";
 
+  // Add Sell Api
+  static String addSellApi = "connector/api/sell/create";
+
   static String createOrderApi = "${AppConfig.baseUrl}connector/api/orders";
   static String updateOrder = "connector/api/sell/";
   static String sellUpdateOrder =

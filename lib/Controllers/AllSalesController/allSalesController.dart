@@ -17,9 +17,6 @@ enum SalesTabsPage {
 }
 
 class AllSalesController extends GetxController {
-  String? paytermStatusValue;
-  String? statusValue;
-  String? invoiceSchemaStatusValue;
   String? paymentStatusValue;
   String? paymentAccountStatusValue;
   bool salesAndQuotStatus = false;
@@ -52,42 +49,6 @@ class AllSalesController extends GetxController {
           page: ListQuotations(),
         ),
       ];
-
-  List<String> payTermList() {
-    List<String> options = ['Months', 'Days'];
-    // for (int i = 0;
-    // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
-    // i++) {
-    //   options.add(
-    //       '${widget.listUserCtrlObj?.listuserModel?.data?[i].firstName} ${widget.listUserCtrlObj?.listuserModel?.data?[i].lastName == null ? '' : widget.listUserCtrlObj?.listuserModel?.data?[i].lastName}' ??
-    //           '');
-    // }
-    return options;
-  }
-
-  List<String> statusList() {
-    List<String> options = ['Final', 'Draft', 'Quotation', 'Proforma'];
-    // for (int i = 0;
-    // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
-    // i++) {
-    //   options.add(
-    //       '${widget.listUserCtrlObj?.listuserModel?.data?[i].firstName} ${widget.listUserCtrlObj?.listuserModel?.data?[i].lastName == null ? '' : widget.listUserCtrlObj?.listuserModel?.data?[i].lastName}' ??
-    //           '');
-    // }
-    return options;
-  }
-
-  List<String> invoiceSchemaList() {
-    List<String> options = ['Default', 'Restro'];
-    // for (int i = 0;
-    // i < widget.listUserCtrlObj!.listuserModel!.data!.length;
-    // i++) {
-    //   options.add(
-    //       '${widget.listUserCtrlObj?.listuserModel?.data?[i].firstName} ${widget.listUserCtrlObj?.listuserModel?.data?[i].lastName == null ? '' : widget.listUserCtrlObj?.listuserModel?.data?[i].lastName}' ??
-    //           '');
-    // }
-    return options;
-  }
 
   List<String> getPaymentMethodsItems() {
     List<String> options = [

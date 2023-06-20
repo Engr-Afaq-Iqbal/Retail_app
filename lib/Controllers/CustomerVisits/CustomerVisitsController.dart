@@ -25,6 +25,7 @@ class CustomerVisitsController extends GetxController {
   String frontPath = 'No file chosen';
   File? image;
   String titleText = 'Check-in';
+  bool isDisable = false;
   TextEditingController meetNoReason = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController searchCtrl = TextEditingController();
@@ -216,8 +217,8 @@ class CustomerVisitsController extends GetxController {
   ///CheckOut Function
   Future<bool?> checkOutFunction() async {
     Map<String, String> _field = {
-      "id": "1",
-      "contact_id": "643",
+      "id": "${customerCheckInModel?.id}",
+      "contact_id": "${contactCtrlObjj.id}",
     };
 
     return await ApiServices.postMethod(
@@ -225,6 +226,10 @@ class CustomerVisitsController extends GetxController {
         .then((_res) {
       if (_res == null) return null;
       customerCheckOutModel = customerCheckOutModelFromJson(_res);
+      contactCtrlObjj.callFirstOrderPage();
+      contactCtrlObjj.isDisable = false;
+      contactCtrlObjj.update();
+      update();
       stopProgress();
       print('Check out Data: ');
       print(_res);
@@ -241,13 +246,17 @@ class CustomerVisitsController extends GetxController {
   ///CheckIn Function
   Future<bool?> checkInFunction() async {
     Map<String, String> _field = {
-      "contact_id": "643",
+      "contact_id": "${contactCtrlObjj.id}",
     };
     return await ApiServices.postMethod(
             feedUrl: ApiUrls.checkInApi, fields: _field)
         .then((_res) {
       if (_res == null) return null;
       customerCheckInModel = customerCheckInModelFromJson(_res);
+      contactCtrlObjj.callFirstOrderPage();
+      contactCtrlObjj.isDisable = true;
+      contactCtrlObjj.update();
+      update();
       stopProgress();
       print('Check In Data: ');
       print(_res);

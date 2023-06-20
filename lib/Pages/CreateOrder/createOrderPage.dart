@@ -201,7 +201,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 ),
                 CustomButton(
                     onTap: () {
-                      showProgress();
+                      //showProgress();
                       Get.to(CheckOutPage());
                       // allProdCtrlObj.orderCreate();
                     },

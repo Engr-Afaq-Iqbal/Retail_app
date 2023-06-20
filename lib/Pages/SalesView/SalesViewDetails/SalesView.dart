@@ -3,6 +3,7 @@ import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
+import '../../order_type/search_customer_page.dart';
 import 'AddSalesAndQuotation.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
@@ -60,11 +61,14 @@ class _SalesViewState extends State<SalesView> {
           backgroundColor:
               Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(
-              AddSalesAndQuotation(
-                isSale: false,
-              ),
-            );
+            Get.to(CustomerSearch(
+              dashBoardId: 5,
+            ));
+            // Get.to(
+            //   AddSalesAndQuotation(
+            //     isSale: false,
+            //   ),
+            // );
           }),
       body: Stack(
         children: [

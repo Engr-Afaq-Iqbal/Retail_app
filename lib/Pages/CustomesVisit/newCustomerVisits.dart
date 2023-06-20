@@ -397,29 +397,53 @@ class _NewCustomerVisitState extends State<NewCustomerVisit> {
                                         ),
                                       ],
                                     ),
-                                    CustomButton(
-                                      onTap: () {
-                                        contactCtrlObj.id = contactCtrlObj
-                                            .customerContacts!
-                                            .contactDataList[index]
-                                            .id
-                                            .toString();
 
-                                        print(' save is pressed');
-                                        if (customerVisitsCtrlObj.titleText ==
-                                            'Check-in') {
-                                          showProgress();
-                                          customerVisitsCtrlObj
-                                              .checkPermission();
-                                          // customerVisitsCtrlObj
-                                          //     .createCustomerVisits();
-                                        } else {
-                                          Get.to(UpdateStatus(index: index));
-                                        }
-                                      },
+                                    //check-in check-out button
+                                    CustomButton(
+                                      onTap: (contactCtrlObj
+                                                      .customerContacts!
+                                                      .contactDataList[index]
+                                                      .customerStatus ==
+                                                  '0' &&
+                                              contactCtrlObj.isDisable == true)
+                                          ? null
+                                          : () {
+                                              contactCtrlObj.id = contactCtrlObj
+                                                  .customerContacts!
+                                                  .contactDataList[index]
+                                                  .id
+                                                  .toString();
+                                              if (contactCtrlObj
+                                                      .customerContacts!
+                                                      .contactDataList[index]
+                                                      .customerStatus ==
+                                                  '0') {
+                                                debugPrint(
+                                                    'going for check-in');
+                                                showProgress();
+
+                                                customerVisitsCtrlObj
+                                                    .checkInFunction();
+                                                // customerVisitsCtrlObj
+                                                //     .checkPermission();
+                                                // customerVisitsCtrlObj
+                                                //     .createCustomerVisits();
+                                              } else if (contactCtrlObj
+                                                      .customerContacts!
+                                                      .contactDataList[index]
+                                                      .customerStatus ==
+                                                  '1') {
+                                                debugPrint(
+                                                    'going for check-out');
+                                                showProgress();
+                                                customerVisitsCtrlObj
+                                                    .checkOutFunction();
+                                                //  Get.to(UpdateStatus(index: index));
+                                              }
+                                            },
                                       bgColor: primaryColor,
                                       title: Text(
-                                        '${customerVisitsCtrlObj.titleText}',
+                                        '${contactCtrlObj.customerContacts!.contactDataList[index].customerStatus == '0' ? 'Check-In' : 'Check-Out'}',
                                         style: TextStyle(color: kWhiteColor),
                                       ),
                                     )

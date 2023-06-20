@@ -12,7 +12,6 @@ import '/Locale/settings_page.dart';
 import '/Pages/Tabs/Components/BusinessLogoWidget.dart';
 import '/Pages/terms_and_condations.dart';
 import '/Services/storage_services.dart';
-import '../../Theme/colors.dart';
 import '../Profile_View/profile_view.dart';
 
 class AppMenuPage extends StatelessWidget {
@@ -25,55 +24,10 @@ class AppMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: Padding(
-      //   padding: EdgeInsets.symmetric(horizontal: 7, vertical: 10),
-      //   child: GNav(
-      //       gap: 8,
-      //       tabBackgroundColor: Colors.grey.withOpacity(0.2),
-      //       activeColor: primaryColor,
-      //       color: primaryColor.withOpacity(0.5),
-      //       padding: EdgeInsets.all(12),
-      //       selectedIndex: 3,
-      //       tabs: [
-      //         GButton(
-      //           icon: Icons.home_outlined,
-      //           text: 'dashboard_drop'.tr,
-      //           onPressed: () {
-      //             print('Order Type Selection page');
-      //             Get.to(OrderTypeSelection());
-      //           },
-      //         ),
-      //         GButton(
-      //           icon: Icons.shopping_bag_outlined,
-      //           text: 'orders'.tr,
-      //           onPressed: () {
-      //             print('Order Page');
-      //             Get.to(OrdersMain());
-      //           },
-      //         ),
-      //         GButton(
-      //           icon: Icons.table_restaurant_outlined,
-      //           text: 'table_drop'.tr,
-      //           onPressed: () {
-      //             print('Table page');
-      //             Get.to(TablePage());
-      //           },
-      //         ),
-      //         GButton(
-      //           icon: Icons.menu,
-      //           text: 'menu_drop'.tr,
-      //           active: true,
-      //           onPressed: () {
-      //             print('Menu Page');
-      //
-      //             Get.to(() => AppMenuSettings());
-      //           },
-      //         )
-      //       ]),
-      // ),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
+        elevation: 0,
         title: FadedScaleAnimation(
           Text(
             'settings'.tr,
@@ -120,7 +74,9 @@ class AppMenuPage extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          child: Text('restaurant_profile'.tr),
+                          child: Text(
+                            '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name}',
+                          ),
                           onPressed: () {
                             /// TODO: Catalog
                           },
