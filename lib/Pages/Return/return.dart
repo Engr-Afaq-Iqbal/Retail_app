@@ -33,6 +33,8 @@ class _ReturnState extends State<Return> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          centerTitle: true,
           title: Text('Return'),
           actions: [
             Icon(

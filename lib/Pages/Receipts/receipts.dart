@@ -300,7 +300,8 @@ class _ReceiptsState extends State<Receipts> {
               // ),
               CustomButton(
                 onTap: () {
-                  Get.to(CheckOutPage());
+                  receiptsCtrl.addReceipt();
+                  //Get.to(CheckOutPage());
 
                   ///for cash
                   // if (selectedMethod == 1) {}

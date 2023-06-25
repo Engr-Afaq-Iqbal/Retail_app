@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Theme/colors.dart';
 import 'createStockTransfer.dart';
 
 class ViewStockTransfer extends StatefulWidget {

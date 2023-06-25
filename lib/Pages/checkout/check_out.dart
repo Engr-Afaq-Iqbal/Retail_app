@@ -1,4 +1,5 @@
 import 'package:bizmodo_emenu/Pages/HomePageRetail/homepageRetail.dart';
+import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -45,7 +46,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
   }
 
   void closeCheckoutPage() {
-    Get.to(HomePageRetail());
+    Get.to(TabsPage());
     // if (_appScreenCtrlObj.getHomeCurrentSidePageSection.toString() ==
     //     'CheckOutPage') {
     //   _appScreenCtrlObj.setHomeCurrentSidePageSection(CartPage());

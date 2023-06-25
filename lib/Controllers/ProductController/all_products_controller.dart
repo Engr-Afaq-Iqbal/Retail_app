@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
-import 'package:bizmodo_emenu/Pages/HomePageRetail/homepageRetail.dart';
+import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../Config/utils.dart';
+import '../../Models/ProductsModel/ListProductsModel.dart';
+import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ProductsModel/SearchProductModel.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
 import '../ContactController/ContactController.dart';
@@ -29,6 +31,12 @@ class AllProductsController extends GetxController {
   double finalTotal = 0.00;
   String total = '0.00';
 
+  //loading more variables:
+  int allSaleOrdersPage = 1;
+  bool isFirstLoadRunning = true;
+  bool hasNextPage = true;
+  RxBool isLoadMoreRunning = false.obs;
+
   Future<void> fetchAllProducts() async {
     isFetchingProduct.value = true;
     String? response =
@@ -38,8 +46,80 @@ class AllProductsController extends GetxController {
     getAllProductsFromStorage(res: response);
   }
 
+  ProductShowListModel? productShowListModel;
+  Future getProductShowList({String? pageUrl}) async {
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.productListApi}location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}&per_page=50')
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      productShowListModel = productShowListModelFromJson(_res);
+      print(productShowListModel?.data);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  // load more order page
+  void loadMoreSaleOrders() async {
+    logger.wtf('load more items function called!');
+    //if (hasNextPage && !isFirstLoadRunning && !isLoadMoreRunning.value) {
+    isLoadMoreRunning.value = true;
+
+    allSaleOrdersPage += 1;
+
+    await fetchCustomerName(allSaleOrdersPage).then((bool? _isFinished) {
+      if (_isFinished == null) {
+        allSaleOrdersPage -= 1;
+      } else if (_isFinished) {
+        // This means there is no more data
+        // and therefore, we will not send another request
+        hasNextPage = false;
+      }
+    });
+    isLoadMoreRunning.value = false;
+    // }
+  }
+
+  // fetch all sale orders list
+  Future<bool?> fetchCustomerName(int _page) async {
+    print('========================================');
+    print('Function calling');
+    return await ApiServices.getMethod(
+            feedUrl:
+                '${ApiUrls.productListApi}&page=$_page&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}&per_page=20')
+        .then((_res) {
+      if (_res == null) return null;
+      final _data = productShowListModelFromJson(_res);
+      if (_page > 1 && productShowListModel != null) {
+        productShowListModel!.data?.addAll(_data.data!);
+      } else {
+        productShowListModel = _data;
+      }
+      update();
+
+      /* fallback end status means is all item finished or not */
+      if (productShowListModel?.lastPage != null &&
+          _page == productShowListModel?.lastPage) {
+        return true;
+      }
+
+      return false;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
+
   void getAllProductsFromStorage({res}) async {
     allCategoriesProductsData = AppStorage.getProductsData(res: res);
+    print('get all products from storage');
+    print(allCategoriesProductsData?.categories.length);
     isFetchingProduct.value = false;
   }
 
@@ -66,6 +146,16 @@ class AllProductsController extends GetxController {
       logger.e('StackTrace => $stackTrace');
       update();
     });
+  }
+
+  // initial order page load function
+  callFirstOrderPage() async {
+    allSaleOrdersPage = 1;
+    isFirstLoadRunning = true;
+    hasNextPage = true;
+    isLoadMoreRunning.value = false;
+    await fetchCustomerName(1);
+    isFirstLoadRunning = false;
   }
 
   calculateFinalAmount() {
@@ -345,7 +435,7 @@ class AllProductsController extends GetxController {
       // clearOnOrderPlaceSuccess();
       stopProgress();
       showToast('Finalize Created Successfully');
-      Get.to(HomePageRetail());
+      Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
     }).onError((error, stackTrace) {
@@ -537,13 +627,37 @@ class AllProductsController extends GetxController {
       // clearOnOrderPlaceSuccess();
       stopProgress();
       showToast('Finalize Created Successfully');
-      Get.to(HomePageRetail());
+      Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
       return null;
+    });
+  }
+
+  ListProductsModel? listProductModel;
+
+  /// Showing Product
+  Future showProductList({String? pageUrl, String? term}) async {
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.allProducts}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}') //
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      listProductModel = listProductsModelFromJson(_res);
+      // var length = searchProductModel?.length ?? 0;
+      // for (int i = 0; i < length; i++) {
+      //   productQuantityCtrl.add(TextEditingController());
+      //   totalAmount.add('0.00');
+      // }
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
     });
   }
 }

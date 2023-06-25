@@ -14,7 +14,6 @@ class TermsAndConditions extends StatelessWidget {
         centerTitle: true,
         title: Text(
           'terms'.tr,
-          style: TextStyle(color: Colors.black),
         ),
       ),
       body: SingleChildScrollView(

@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,6 +31,8 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('Stock Transfer'),
       ),
       body: DefaultTabController(
@@ -41,8 +44,10 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
               Container(
                 height: 35,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                color: kWhiteColor,
                 child: TabBar(
+                  labelColor: Theme.of(context).colorScheme.primary,
+                  indicatorColor: Theme.of(context).colorScheme.primary,
                   tabs:
                       StockTransferController.stockTabsList().map((_orderTab) {
                     return Tab(text: _orderTab.label);

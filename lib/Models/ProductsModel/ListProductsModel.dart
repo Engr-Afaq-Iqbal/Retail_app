@@ -256,9 +256,9 @@ class Product {
   Brand? brand;
   List<Modifier>? modifier;
   List<Product>? modifierSets;
-  List<ProductLocation>? productLocations;
+  List<dynamic>? productLocations;
   List<Variation>? variations;
-  ProductPivot? pivot;
+  Pivot? pivot;
 
   Product({
     this.id,
@@ -387,14 +387,12 @@ class Product {
                 json["modifier_sets"]!.map((x) => Product.fromJson(x))),
         productLocations: json["product_locations"] == null
             ? []
-            : List<ProductLocation>.from(json["product_locations"]!
-                .map((x) => ProductLocation.fromJson(x))),
+            : List<dynamic>.from(json["product_locations"]!.map((x) => x)),
         variations: json["variations"] == null
             ? []
             : List<Variation>.from(
                 json["variations"]!.map((x) => Variation.fromJson(x))),
-        pivot:
-            json["pivot"] == null ? null : ProductPivot.fromJson(json["pivot"]),
+        pivot: json["pivot"] == null ? null : Pivot.fromJson(json["pivot"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -458,7 +456,7 @@ class Product {
             : List<dynamic>.from(modifierSets!.map((x) => x.toJson())),
         "product_locations": productLocations == null
             ? []
-            : List<dynamic>.from(productLocations!.map((x) => x.toJson())),
+            : List<dynamic>.from(productLocations!.map((x) => x)),
         "variations": variations == null
             ? []
             : List<dynamic>.from(variations!.map((x) => x.toJson())),
@@ -745,16 +743,16 @@ final purpleNameValues = EnumValues({
   "Veg 1": PurpleName.VEG_1
 });
 
-class ProductPivot {
+class Pivot {
   int? productId;
   int? modifierSetId;
 
-  ProductPivot({
+  Pivot({
     this.productId,
     this.modifierSetId,
   });
 
-  factory ProductPivot.fromJson(Map<String, dynamic> json) => ProductPivot(
+  factory Pivot.fromJson(Map<String, dynamic> json) => Pivot(
         productId: json["product_id"],
         modifierSetId: json["modifier_set_id"],
       );
@@ -788,207 +786,6 @@ final productCustomField4Values = EnumValues({
   "Ff": ProductCustomField4.FF,
   "Hy": ProductCustomField4.HY
 });
-
-class ProductLocation {
-  int? id;
-  int? businessId;
-  LocationId? locationId;
-  ProductLocationName? name;
-  Landmark? landmark;
-  Country? country;
-  City? state;
-  City? city;
-  String? zipCode;
-  int? invoiceSchemeId;
-  int? invoiceLayoutId;
-  int? saleInvoiceLayoutId;
-  int? sellingPriceGroupId;
-  int? printReceiptOnInvoice;
-  ReceiptPrinterType? receiptPrinterType;
-  int? printerId;
-  String? mobile;
-  dynamic alternateNumber;
-  Email? email;
-  String? website;
-  List<String>? featuredProducts;
-  int? isActive;
-  String? defaultPaymentAccounts;
-  dynamic customField1;
-  dynamic customField2;
-  dynamic customField3;
-  dynamic customField4;
-  dynamic deletedAt;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  ProductLocationPivot? pivot;
-
-  ProductLocation({
-    this.id,
-    this.businessId,
-    this.locationId,
-    this.name,
-    this.landmark,
-    this.country,
-    this.state,
-    this.city,
-    this.zipCode,
-    this.invoiceSchemeId,
-    this.invoiceLayoutId,
-    this.saleInvoiceLayoutId,
-    this.sellingPriceGroupId,
-    this.printReceiptOnInvoice,
-    this.receiptPrinterType,
-    this.printerId,
-    this.mobile,
-    this.alternateNumber,
-    this.email,
-    this.website,
-    this.featuredProducts,
-    this.isActive,
-    this.defaultPaymentAccounts,
-    this.customField1,
-    this.customField2,
-    this.customField3,
-    this.customField4,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.pivot,
-  });
-
-  factory ProductLocation.fromJson(Map<String, dynamic> json) =>
-      ProductLocation(
-        id: json["id"],
-        businessId: json["business_id"],
-        locationId: locationIdValues.map[json["location_id"]]!,
-        name: productLocationNameValues.map[json["name"]]!,
-        landmark: landmarkValues.map[json["landmark"]]!,
-        country: countryValues.map[json["country"]]!,
-        state: cityValues.map[json["state"]]!,
-        city: cityValues.map[json["city"]]!,
-        zipCode: json["zip_code"],
-        invoiceSchemeId: json["invoice_scheme_id"],
-        invoiceLayoutId: json["invoice_layout_id"],
-        saleInvoiceLayoutId: json["sale_invoice_layout_id"],
-        sellingPriceGroupId: json["selling_price_group_id"],
-        printReceiptOnInvoice: json["print_receipt_on_invoice"],
-        receiptPrinterType:
-            receiptPrinterTypeValues.map[json["receipt_printer_type"]]!,
-        printerId: json["printer_id"],
-        mobile: json["mobile"],
-        alternateNumber: json["alternate_number"],
-        email: emailValues.map[json["email"]]!,
-        website: json["website"],
-        featuredProducts: json["featured_products"] == null
-            ? []
-            : List<String>.from(json["featured_products"]!.map((x) => x)),
-        isActive: json["is_active"],
-        defaultPaymentAccounts: json["default_payment_accounts"],
-        customField1: json["custom_field1"],
-        customField2: json["custom_field2"],
-        customField3: json["custom_field3"],
-        customField4: json["custom_field4"],
-        deletedAt: json["deleted_at"],
-        createdAt: json["created_at"] == null
-            ? null
-            : DateTime.parse(json["created_at"]),
-        updatedAt: json["updated_at"] == null
-            ? null
-            : DateTime.parse(json["updated_at"]),
-        pivot: json["pivot"] == null
-            ? null
-            : ProductLocationPivot.fromJson(json["pivot"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "business_id": businessId,
-        "location_id": locationIdValues.reverse[locationId],
-        "name": productLocationNameValues.reverse[name],
-        "landmark": landmarkValues.reverse[landmark],
-        "country": countryValues.reverse[country],
-        "state": cityValues.reverse[state],
-        "city": cityValues.reverse[city],
-        "zip_code": zipCode,
-        "invoice_scheme_id": invoiceSchemeId,
-        "invoice_layout_id": invoiceLayoutId,
-        "sale_invoice_layout_id": saleInvoiceLayoutId,
-        "selling_price_group_id": sellingPriceGroupId,
-        "print_receipt_on_invoice": printReceiptOnInvoice,
-        "receipt_printer_type":
-            receiptPrinterTypeValues.reverse[receiptPrinterType],
-        "printer_id": printerId,
-        "mobile": mobile,
-        "alternate_number": alternateNumber,
-        "email": emailValues.reverse[email],
-        "website": website,
-        "featured_products": featuredProducts == null
-            ? []
-            : List<dynamic>.from(featuredProducts!.map((x) => x)),
-        "is_active": isActive,
-        "default_payment_accounts": defaultPaymentAccounts,
-        "custom_field1": customField1,
-        "custom_field2": customField2,
-        "custom_field3": customField3,
-        "custom_field4": customField4,
-        "deleted_at": deletedAt,
-        "created_at": createdAt?.toIso8601String(),
-        "updated_at": updatedAt?.toIso8601String(),
-        "pivot": pivot?.toJson(),
-      };
-}
-
-enum City { ABU_DHABI }
-
-final cityValues = EnumValues({"Abu Dhabi": City.ABU_DHABI});
-
-enum Country { UNITED_ARAB_EMIRATES }
-
-final countryValues =
-    EnumValues({"United Arab Emirates": Country.UNITED_ARAB_EMIRATES});
-
-enum Email { RESTRO_BIZMODO_AE }
-
-final emailValues = EnumValues({"restro@bizmodo.ae": Email.RESTRO_BIZMODO_AE});
-
-enum Landmark { AL_FALAH }
-
-final landmarkValues = EnumValues({"Al Falah": Landmark.AL_FALAH});
-
-enum LocationId { BL0001 }
-
-final locationIdValues = EnumValues({"BL0001": LocationId.BL0001});
-
-enum ProductLocationName { RESTAURANT }
-
-final productLocationNameValues =
-    EnumValues({"Restaurant": ProductLocationName.RESTAURANT});
-
-class ProductLocationPivot {
-  int? productId;
-  int? locationId;
-
-  ProductLocationPivot({
-    this.productId,
-    this.locationId,
-  });
-
-  factory ProductLocationPivot.fromJson(Map<String, dynamic> json) =>
-      ProductLocationPivot(
-        productId: json["product_id"],
-        locationId: json["location_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "product_id": productId,
-        "location_id": locationId,
-      };
-}
-
-enum ReceiptPrinterType { BROWSER }
-
-final receiptPrinterTypeValues =
-    EnumValues({"browser": ReceiptPrinterType.BROWSER});
 
 class ProductTax {
   int? id;

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../Config/utils.dart';
+import '../../Controllers/Upload Controller/uploadController.dart';
 import '../../Theme/style.dart';
 
 class Upload extends StatefulWidget {
@@ -16,13 +18,14 @@ class Upload extends StatefulWidget {
 }
 
 class _UploadState extends State<Upload> {
-  File? image;
+  UploadController uploadCtrl = Get.find<UploadController>();
+
   String frontPath = 'no_file_choosen'.tr;
   Future pickContactImage() async {
     try {
       //final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.camera);
+          await ImagePicker().pickImage(source: ImageSource.gallery);
       int? fileSizeInBytes = await image?.length();
       double fileSizeInKB = fileSizeInBytes! / 1024;
       double fileSizeInMB = fileSizeInKB / 1024;
@@ -32,7 +35,7 @@ class _UploadState extends State<Upload> {
         final imageTemporary = File(image.path);
         frontPath = image.path;
         setState(() {
-          this.image = imageTemporary;
+          uploadCtrl.image = imageTemporary;
         });
       } else if (fileSizeInMB > 1) {
         return showToast('file_size_isGreater'.tr);
@@ -48,6 +51,8 @@ class _UploadState extends State<Upload> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('upload'.tr),
       ),
       body: Container(
@@ -78,10 +83,10 @@ class _UploadState extends State<Upload> {
                 height: MediaQuery.of(context).size.height * 0.2,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5), color: kWhiteColor),
-                child: (image != null)
+                child: (uploadCtrl.image != null)
                     ? Center(
                         child: Image.file(
-                          image!,
+                          uploadCtrl.image!,
                           fit: BoxFit.contain,
                         ),
                       )
@@ -91,6 +96,19 @@ class _UploadState extends State<Upload> {
                           size: 30,
                         ),
                       ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            CustomButton(
+              onTap: () {
+                showProgress();
+                uploadCtrl.addImage();
+              },
+              title: Text(
+                'Upload',
+                style: TextStyle(color: kWhiteColor),
               ),
             )
           ],

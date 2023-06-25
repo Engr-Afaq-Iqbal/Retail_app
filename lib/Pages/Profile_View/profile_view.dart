@@ -26,6 +26,7 @@ class _ProfileViewState extends State<ProfileView> {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
         title: Text(
           'profile'.tr,

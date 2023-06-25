@@ -103,13 +103,13 @@ class _AppFormFieldState extends State<AppFormField> {
                   : null,
           border: widget.isOutlineBorder
               ? outlineBorder(isBorderColorApply: widget.isBorderColorApply)
-              : underlineBorder,
+              : underlineBorder(context),
           enabledBorder: widget.isOutlineBorder
               ? outlineBorder(isBorderColorApply: widget.isBorderColorApply)
-              : underlineBorder,
+              : underlineBorder(context),
           focusedBorder: widget.isOutlineBorder
               ? outlineBorder(isBorderColorApply: widget.isBorderColorApply)
-              : underlineBorder,
+              : underlineBorder(context),
           suffixIcon: (widget.suffixIcon != null)
               ? widget.suffixIcon
               : (widget.isPasswordField)
@@ -160,7 +160,7 @@ class _AppFormFieldState extends State<AppFormField> {
         ),
       );
 
-  UnderlineInputBorder underlineBorder = UnderlineInputBorder(
-    borderSide: BorderSide(color: primaryColor),
-  );
+  UnderlineInputBorder underlineBorder(context) => UnderlineInputBorder(
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+      );
 }

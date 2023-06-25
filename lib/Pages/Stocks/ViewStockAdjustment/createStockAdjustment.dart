@@ -93,6 +93,8 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('Create Stock Adjustment'),
       ),
       body: GestureDetector(

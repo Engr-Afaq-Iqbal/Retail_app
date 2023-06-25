@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Services/storage_services.dart';
 import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
@@ -27,9 +28,11 @@ class _HomePageRetailState extends State<HomePageRetail> {
 
   @override
   void initState() {
-    print('Color Code');
-    print(AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection);
-    // TODO: implement initState
+    if (!AppStorage.isStorageHasProductsData()) {
+      Get.find<AllProductsController>().fetchAllProducts();
+    } else {
+      Get.find<AllProductsController>().getAllProductsFromStorage();
+    }
     dashBoardCtrl.fetchDashboardData();
     super.initState();
   }
@@ -122,7 +125,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           ),
                           Expanded(
                             child: Text(
-                              dashBoardCtrl.iconsNames[index],
+                              dashBoardCtrl.iconsNames[index].tr,
                               style: TextStyle(color: blackColor, fontSize: 11),
                               softWrap: true,
                               textAlign: TextAlign.center,
@@ -166,7 +169,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Center(
-                                child: Text(dashBoardCtrl.names[index],
+                                child: Text(dashBoardCtrl.names[index].tr,
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!

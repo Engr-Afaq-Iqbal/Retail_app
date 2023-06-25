@@ -34,17 +34,19 @@ Widget progressIndicator({
   double? height,
   double? width,
 }) =>
-    Center(
-      child: SizedBox(
-        height: height,
-        width: width,
-        child: CircularProgressIndicator(
-          backgroundColor: Colors.grey,
-          color: primaryColor,
-          strokeWidth: 1.5,
+    Builder(builder: (context) {
+      return Center(
+        child: SizedBox(
+          height: height,
+          width: width,
+          child: CircularProgressIndicator(
+            backgroundColor: Colors.grey,
+            color: Theme.of(context).colorScheme.primary,
+            strokeWidth: 1.5,
+          ),
         ),
-      ),
-    );
+      );
+    });
 
 stopProgress() {
   if (Get.isDialogOpen!) Get.back();

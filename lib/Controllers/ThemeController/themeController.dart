@@ -1,7 +1,12 @@
+import 'package:bizmodo_emenu/Services/storage_services.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Config/utils.dart';
+import '../../Models/StoreSettingsModel/storeSettingsModel.dart';
+import '../../Services/api_services.dart';
+import '../../Services/api_urls.dart';
 import '../../Theme/style.dart';
 
 class ThemeController extends GetxController {
@@ -25,5 +30,35 @@ class ThemeController extends GetxController {
     );
     Get.changeTheme(appTheme);
     Get.forceAppUpdate();
+  }
+
+  StoreSettingsModel? storeSettingsModel;
+  Future setThemeColor({String color = 'ff591cd3'}) async {
+    Map<String, String> _field = {
+      'theme_selection': '${color}',
+      'lang': 'eng',
+      'printer_id': '4',
+      'auto_printer': '1',
+      'user_id': '${AppStorage.getLoggedUserData()?.staffUser.id}'
+    };
+
+    return await ApiServices.postMethod(
+            feedUrl: ApiUrls.storeSettingsAPI, fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+      storeSettingsModel = storeSettingsModelFromJson(_res);
+      if (storeSettingsModel?.success == true) {
+        debugPrint('');
+        debugPrint(storeSettingsModel?.msg?.themeSelection);
+        stopProgress();
+        Get.back();
+      }
+
+      return true;
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      throw '$error';
+    });
   }
 }

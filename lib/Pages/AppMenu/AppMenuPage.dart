@@ -120,7 +120,7 @@ class AppMenuPage extends StatelessWidget {
                     onTap: () async {
                       Get.to(ThemePage());
                     },
-                    title: 'Change Theme',
+                    title: 'change_theme'.tr,
                     context: context,
                     iconData: Icons.color_lens_outlined,
                   ),

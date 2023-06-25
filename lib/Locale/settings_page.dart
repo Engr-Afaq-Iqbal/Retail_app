@@ -49,8 +49,9 @@ class _SettingsState extends State<Settings> {
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       appBar: AppBar(
+        elevation: 0,
         centerTitle: true,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           'change_language'.tr, //'Change Language',
         ),

@@ -104,6 +104,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
         title: Text('Create Stock Transfer'),
       ),
       body: GestureDetector(

@@ -87,6 +87,8 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           'create_new_customer'.tr,
         ),

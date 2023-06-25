@@ -114,8 +114,14 @@ class ApiUrls {
   ///Create Sale Return New Api
   static String createSaleReturnApi = "connector/api/sell-return/create";
 
+  ///Multiple Payment Api
+  static String multiPaymentApi = "connector/api/multiple/payment";
+
   ///Show Product List Api
   static String showProductListApi = "connector/api/product/show";
+
+  ///Show Product List Api
+  static String showProductsApi = "connector/api/product/list";
 
   ///All Kitchen Api
   static String allKitchenApi = "connector/api/all/kitchen";
@@ -133,6 +139,12 @@ class ApiUrls {
   ///Searh product list Api
   static String searchProductListApi = "connector/api/product/search";
 
+  ///Product list Api
+  static String productListApi = "connector/api/product/list?";
+
+  ///Product list Api
+  static String uploadApi = "connector/api/user/google/file?";
+
   ///List Quotation Api
   static String listQuotationApi = "connector/api/sells/quotations";
 
@@ -144,6 +156,9 @@ class ApiUrls {
 
   ///Create Quotations Api
   static String editSaleReturnApi = "connector/api/sell-return/edit/";
+
+  ///Store Settings Api
+  static String storeSettingsAPI = "connector/api/app/setting/store";
 
   /// order payment
   static String orderPaymentAPI =

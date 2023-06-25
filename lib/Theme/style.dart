@@ -17,7 +17,7 @@ ThemeData appTheme = ThemeData(
     // primarySwatch: createMaterialColor(primaryColor),
     primarySwatch: createMaterialColor(Color(int.parse(
         AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection ??
-            'ffED3F40',
+            'ff591cd3',
         radix: 16))), // createMaterialColor(primaryColor),
   ).copyWith(
     background: Color(0xffF8F9FD),

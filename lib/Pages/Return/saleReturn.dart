@@ -111,6 +111,8 @@ class _SalesReturnState extends State<SalesReturn> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('Sale Return'),
       ),
       body: GestureDetector(

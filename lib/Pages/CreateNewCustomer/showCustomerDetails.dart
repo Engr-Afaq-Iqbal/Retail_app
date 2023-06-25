@@ -35,6 +35,8 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
     double h = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text(
           'Customer Details',
         ),

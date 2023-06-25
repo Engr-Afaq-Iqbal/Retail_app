@@ -213,7 +213,6 @@ import '../CreateOrder/createOrderPage.dart';
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
-import '../SalesView/SalesViewDetails/SalesView.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
@@ -263,6 +262,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         title: TextFormField(
           //controller: searchCtrl,
           decoration: InputDecoration(
@@ -394,48 +394,6 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                       ),
                                     ),
                                   ),
-                                  // ListTile(
-                                  //   // we will display the data returned from our future here
-                                  //   title: Text(
-                                  //     '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
-                                  //   ),
-                                  //   onTap: () {
-                                  //     //  Get.close(0);
-                                  //     Get.to(ShowCustomerDetails(
-                                  //         contactApi: contactCtrlObj
-                                  //             .customerContacts!
-                                  //             .contactDataList[index]
-                                  //             .id
-                                  //             .toString()));
-                                  //     contactCtrlObj.contactId = contactCtrlObj
-                                  //         .customerContacts!
-                                  //         .contactDataList[index]
-                                  //         .contactId;
-                                  //     contactCtrlObj.searchCustomerCtrl.text =
-                                  //         '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
-                                  //     contactCtrlObj.mobileNumberCtrl.text =
-                                  //         contactCtrlObj
-                                  //                 .customerContacts!
-                                  //                 .contactDataList[index]
-                                  //                 .mobile ??
-                                  //             '';
-                                  //     contactCtrlObj.nameCtrl.text =
-                                  //         contactCtrlObj
-                                  //                 .customerContacts!
-                                  //                 .contactDataList[index]
-                                  //                 .name ??
-                                  //             '';
-                                  //     if (widget.dashBoardId == 2) {
-                                  //       Get.to(CreateOrderPage());
-                                  //     } else if (widget.dashBoardId == 3) {
-                                  //       Get.to(Return());
-                                  //     } else if (widget.dashBoardId == 4) {
-                                  //       contactCtrlObj.update();
-                                  //       Get.close(1);
-                                  //       //Get.to(Receipts());
-                                  //     }
-                                  //   },
-                                  // ),
                                   Divider(
                                     height: 0,
                                     color: kLightTextColor.withOpacity(0.2),

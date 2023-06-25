@@ -10,14 +10,14 @@ import '/Models/order_type_model/order_service_model.dart';
 class AppStorage {
   static final box = GetStorage();
 
-  static String _langStorageKey = "Lang";
-  static String _tokenStorageKey = "token";
-  static String _loggedUserDataStorageKey = "loggedUserData";
-  static String _businessDetailDataStorageKey = "businessDetailData";
-  static String _tableDataStorageKey = "tableCount";
-  static String _printerDataStorageKey = "printers";
-  static String _productsStorageKey = "products";
-  static String _orderTypesStorageKey = "orderTypes";
+  static String _retailLangStorageKey = "Lang";
+  static String _retailTokenStorageKey = "token";
+  static String _retailLoggedUserDataStorageKey = "loggedUserData";
+  static String _retailBusinessDetailDataStorageKey = "businessDetailData";
+  static String _retailTableDataStorageKey = "tableCount";
+  static String _retailPrinterDataStorageKey = "printers";
+  static String _retailProductsStorageKey = "products";
+  static String _retailOrderTypesStorageKey = "orderTypes";
 
   static Future<void> _write(String key, dynamic value) async {
     await box.write(key, value);
@@ -33,14 +33,14 @@ class AppStorage {
 
   /// Localization
   static isStorageHasLocalizationData() =>
-      _storageHasData(AppStorage._langStorageKey);
+      _storageHasData(AppStorage._retailLangStorageKey);
 
   static setLocalizationData(String? _res) async =>
-      await AppStorage._write(AppStorage._langStorageKey, _res);
+      await AppStorage._write(AppStorage._retailLangStorageKey, _res);
 
   static OauthModel? getLocalizationData() {
     try {
-      return oauthModelFromJson(box.read(_langStorageKey));
+      return oauthModelFromJson(box.read(_retailLangStorageKey));
     } catch (e) {
       return null;
     }
@@ -48,14 +48,14 @@ class AppStorage {
 
   /// User Access Token Storage
   static isStorageHasUserToken() =>
-      _storageHasData(AppStorage._tokenStorageKey);
+      _storageHasData(AppStorage._retailTokenStorageKey);
 
   static setUserToken(String _res) async =>
-      await AppStorage._write(AppStorage._tokenStorageKey, _res);
+      await AppStorage._write(AppStorage._retailTokenStorageKey, _res);
 
   static OauthModel? getUserToken() {
     try {
-      return oauthModelFromJson(box.read(_tokenStorageKey));
+      return oauthModelFromJson(box.read(_retailTokenStorageKey));
     } catch (e) {
       return null;
     }
@@ -63,14 +63,14 @@ class AppStorage {
 
   /// Logged User Storage
   static isStorageHasLoggedUserData() =>
-      _storageHasData(AppStorage._loggedUserDataStorageKey);
+      _storageHasData(AppStorage._retailLoggedUserDataStorageKey);
 
   static setLoggedUserData(String _res) async =>
-      await AppStorage._write(AppStorage._loggedUserDataStorageKey, _res);
+      await AppStorage._write(AppStorage._retailLoggedUserDataStorageKey, _res);
 
   static LoggedInUserDetail? getLoggedUserData() {
     try {
-      String? storedLoginUserData = box.read(_loggedUserDataStorageKey);
+      String? storedLoginUserData = box.read(_retailLoggedUserDataStorageKey);
       if (storedLoginUserData == null) return null;
 
       return loggedInUserDetailFromJson(storedLoginUserData);
@@ -81,14 +81,15 @@ class AppStorage {
 
   /// Business Storage
   static isStorageHasBusinessDetails() =>
-      _storageHasData(AppStorage._businessDetailDataStorageKey);
+      _storageHasData(AppStorage._retailBusinessDetailDataStorageKey);
 
-  static setBusinessDetails(String _res) async =>
-      await AppStorage._write(AppStorage._businessDetailDataStorageKey, _res);
+  static setBusinessDetails(String _res) async => await AppStorage._write(
+      AppStorage._retailBusinessDetailDataStorageKey, _res);
 
   static BusinessModel? getBusinessDetailsData() {
     try {
-      String? storedBusinessDetails = box.read(_businessDetailDataStorageKey);
+      String? storedBusinessDetails =
+          box.read(_retailBusinessDetailDataStorageKey);
       if (storedBusinessDetails == null) return null;
 
       return businessModelFromJson(storedBusinessDetails);
@@ -99,14 +100,15 @@ class AppStorage {
 
   /// Order Service Storage
   static isStorageHasOrderServiceTypes() =>
-      _storageHasData(AppStorage._orderTypesStorageKey);
+      _storageHasData(AppStorage._retailOrderTypesStorageKey);
 
   static Future setOrderServiceTypes(String _res) async =>
-      await AppStorage._write(AppStorage._orderTypesStorageKey, _res);
+      await AppStorage._write(AppStorage._retailOrderTypesStorageKey, _res);
 
   static OrderServiceModel? getOrderServiceData({String? res}) {
     try {
-      return orderServiceModelFromJson(res ?? box.read(_orderTypesStorageKey));
+      return orderServiceModelFromJson(
+          res ?? box.read(_retailOrderTypesStorageKey));
     } catch (_e) {
       return null;
     }
@@ -114,14 +116,14 @@ class AppStorage {
 
   /// Table Storage
   static isStorageHasTablesData() =>
-      _storageHasData(AppStorage._tableDataStorageKey);
+      _storageHasData(AppStorage._retailTableDataStorageKey);
 
   static setTablesData(String _res) async =>
-      await AppStorage._write(AppStorage._tableDataStorageKey, _res);
+      await AppStorage._write(AppStorage._retailTableDataStorageKey, _res);
 
   static TableModel? getTablesData({String? res}) {
     try {
-      return tableModelFromJson(res ?? box.read(_tableDataStorageKey));
+      return tableModelFromJson(res ?? box.read(_retailTableDataStorageKey));
     } catch (_e) {
       return null;
     }
@@ -142,15 +144,15 @@ class AppStorage {
 
   /// Products Storage
   static isStorageHasProductsData() =>
-      _storageHasData(AppStorage._productsStorageKey);
+      _storageHasData(AppStorage._retailProductsStorageKey);
 
   static setProductsData(String _res) async =>
-      await AppStorage._write(AppStorage._productsStorageKey, _res);
+      await AppStorage._write(AppStorage._retailProductsStorageKey, _res);
 
   static CategoriesProductsModel? getProductsData({String? res}) {
     try {
       return categoriesProductsModelFromJson(
-          res ?? box.read(_productsStorageKey));
+          res ?? box.read(_retailProductsStorageKey));
     } catch (_e) {
       return null;
     }

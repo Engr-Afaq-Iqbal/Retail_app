@@ -34,6 +34,8 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('View Sells Details'),
       ),
       body: SingleChildScrollView(

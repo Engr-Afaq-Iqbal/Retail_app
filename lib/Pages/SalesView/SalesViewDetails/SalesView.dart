@@ -53,6 +53,8 @@ class _SalesViewState extends State<SalesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('All Sells'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

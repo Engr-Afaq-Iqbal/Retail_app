@@ -87,6 +87,8 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        elevation: 0,
         title:
             widget.isSale == false ? Text('Add Sale') : Text('Add Quotation'),
       ),

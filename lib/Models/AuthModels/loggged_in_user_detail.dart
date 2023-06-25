@@ -232,6 +232,9 @@ class StaffUserModel {
     // } catch (e) {
     //   debugPrint('Error -> StaffUserModel -> media : $e');
     // }
+    appSetting = json["app_setting"] == null
+        ? null
+        : AppSetting.fromJson(json["app_setting"]);
   }
 
   Map<String, dynamic> toJson() => {
@@ -290,6 +293,7 @@ class StaffUserModel {
         "is_admin": isAdmin,
         "business": business?.toJson(),
         "media": media?.toJson(),
+        "app_setting": appSetting?.toJson(),
       };
 }
 

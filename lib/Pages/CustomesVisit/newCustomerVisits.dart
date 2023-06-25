@@ -262,6 +262,8 @@ class _NewCustomerVisitState extends State<NewCustomerVisit> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        centerTitle: true,
         title: Text('Customer Visits'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(40.0),
@@ -441,7 +443,8 @@ class _NewCustomerVisitState extends State<NewCustomerVisit> {
                                                 //  Get.to(UpdateStatus(index: index));
                                               }
                                             },
-                                      bgColor: primaryColor,
+                                      bgColor:
+                                          Theme.of(context).colorScheme.primary,
                                       title: Text(
                                         '${contactCtrlObj.customerContacts!.contactDataList[index].customerStatus == '0' ? 'Check-In' : 'Check-Out'}',
                                         style: TextStyle(color: kWhiteColor),
