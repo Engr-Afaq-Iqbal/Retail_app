@@ -143,7 +143,7 @@ class ApiUrls {
   static String productListApi = "connector/api/product/list?";
 
   ///Product list Api
-  static String uploadApi = "connector/api/user/google/file?";
+  static String uploadApi = "connector/api/user/google/file";
 
   ///List Quotation Api
   static String listQuotationApi = "connector/api/sells/quotations";

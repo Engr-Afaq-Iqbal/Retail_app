@@ -12,6 +12,7 @@ import '../../../Theme/colors.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/AllSalesController/allSalesController.dart';
 import '../../Controllers/ContactController/ContactController.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Controllers/ReceiptsController/receiptsController.dart';
 import '../../Theme/style.dart';
 import '../checkout/check_out.dart';
@@ -300,8 +301,9 @@ class _ReceiptsState extends State<Receipts> {
               // ),
               CustomButton(
                 onTap: () {
-                  receiptsCtrl.addReceipt();
-                  //Get.to(CheckOutPage());
+                  Get.find<AllProductsController>().receiptPayment = true;
+                  Get.find<AllProductsController>().update();
+                  Get.to(CheckOutPage());
 
                   ///for cash
                   // if (selectedMethod == 1) {}

@@ -45,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                       Container(
                         width: 100,
                         height: 100,
-                        child: Image(image: AssetImage(AppImages.appIcon)),
+                        child: Image(image: AssetImage(AppImages.retailIcon)),
                       ),
                       durationInMilliseconds: 200,
                     ),

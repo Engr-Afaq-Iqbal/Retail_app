@@ -188,7 +188,8 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset(AppImages.appIcon),
+        child: SizedBox(
+            height: 200, width: 200, child: Image.asset(AppImages.retailIcon)),
       ),
     );
   }

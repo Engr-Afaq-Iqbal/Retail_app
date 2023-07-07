@@ -1,3 +1,4 @@
+import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:bizmodo_emenu/Pages/Profile_View/profile_view.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -151,30 +152,41 @@ class _CurvedContainerState extends State<CurvedContainer> {
                     //     radius: 32,
                     //   ),
                     // ),
-                    ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: AppStorage.getLoggedUserData()
-                                ?.staffUser
-                                .media
-                                ?.fileName ??
-                            "",
-                        imageBuilder: (context, imageProvider) => Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
-                          width: MediaQuery.of(context).size.width * 0.3,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: imageProvider,
-                              fit: BoxFit.cover,
-                            ),
+                    SizedBox(
+                      height: 35,
+                      width: 100,
+                      child: ClipOval(
+                        child: FadedScaleAnimation(
+                          CachedNetworkImage(
+                            imageUrl:
+                                '${AppStorage.getLoggedUserData()?.staffUser.media?.displayUrl ?? ''}',
                           ),
+                          durationInMilliseconds: 400,
                         ),
-                        placeholder: (context, url) =>
-                            progressIndicator(width: 100, height: 100),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        // CachedNetworkImage(
+                        //   imageUrl: AppStorage.getLoggedUserData()
+                        //           ?.staffUser
+                        //           .media
+                        //           ?.fileName ??
+                        //       "",
+                        //   imageBuilder: (context, imageProvider) => Container(
+                        //     height: MediaQuery.of(context).size.height * 0.3,
+                        //     width: MediaQuery.of(context).size.width * 0.3,
+                        //     decoration: BoxDecoration(
+                        //       image: DecorationImage(
+                        //         image: imageProvider,
+                        //         fit: BoxFit.cover,
+                        //       ),
+                        //     ),
+                        //   ),
+                        //   placeholder: (context, url) =>
+                        //       progressIndicator(width: 100, height: 100),
+                        //   errorWidget: (context, url, error) => Icon(Icons.error),
+                        // ),
                       ),
                     ),
                     SizedBox(
-                      width: 20,
+                      width: 5,
                     ),
                     Text(
                       '${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''} ${AppStorage.getLoggedUserData()?.staffUser.lastName ?? ''}',

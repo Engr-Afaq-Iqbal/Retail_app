@@ -1,4 +1,3 @@
-import 'package:bizmodo_emenu/Pages/HomePageRetail/homepageRetail.dart';
 import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +104,15 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       Expanded(
                         child: CustomButton(
                           onTap: () {
-                            Get.find<AllProductsController>().orderCreate();
+                            if (Get.find<AllProductsController>()
+                                    .receiptPayment ==
+                                true) {
+                              print('inside add receipt method call');
+                              Get.find<AllProductsController>().addReceipt();
+                            } else {
+                              Get.find<AllProductsController>().orderCreate();
+                            }
+
                             // if (widget.orderData != null) {
                             //   _paymentCtrlObj
                             //       .submitOrderPayment('${widget.orderData.id}');
@@ -177,9 +184,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
                   return _paymentCtrlObj.paymentWidgetList[index];
                 },
               );
-              return Column(
-                children: _paymentCtrlObj.paymentWidgetList,
-              );
+              // return Column(
+              //   children: _paymentCtrlObj.paymentWidgetList,
+              // );
             }),
 
             CustomButton(

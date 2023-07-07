@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
+import '../Config/const.dart';
 import '/Config/app_config.dart';
 import '../Config/utils.dart';
 import 'storage_services.dart';
@@ -109,4 +110,52 @@ class ApiServices {
   //     return null;
   //   });
   // }
+  static Future<String?> postMultiPartQuery({
+    required String feedUrl,
+    Map<String, String>? fields,
+    Map<String, String>? files,
+    bool returnAnyResponse = false,
+  }) async {
+    try {
+      var headers = {
+        "Accept": "application/json",
+        //  "Content-type": "application/json",
+        'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
+      };
+      var request = http.MultipartRequest(
+          'POST', Uri.parse('${AppConfig.baseUrl}$feedUrl'));
+      if (fields != null) {
+        request.fields.addAll(fields);
+      }
+      if (files != null) {
+        files.forEach((key, value) async {
+          request.files.add(
+            await http.MultipartFile.fromPath(
+              key,
+              value,
+              filename: value.split("/").last,
+            ),
+          );
+        });
+      }
+      request.headers.addAll(headers);
+      http.StreamedResponse response = await request.send();
+      String resBody = await response.stream.bytesToString();
+      logger.d(
+          'Submitted Fields => \nAPI Do => $feedUrl\nStatus Code => ${response.statusCode}\nResponse => $resBody');
+      final jd = json.decode(resBody);
+      logger.d('Decoded Response => $jd');
+      if (returnAnyResponse) return resBody;
+      if (response.statusCode == 200) {
+        return resBody;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      logger.e(
+          'Error: ApiService -> postMultiPartMethod -> API Do = $feedUrl, Error => $error');
+      //AppConst.errorOccurAlert();
+      return null;
+    }
+  }
 }

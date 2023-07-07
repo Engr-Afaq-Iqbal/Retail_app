@@ -11,7 +11,8 @@ class ForgetPasswordScreen extends StatelessWidget {
   final TextEditingController textEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -24,7 +25,9 @@ class ForgetPasswordScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back, color: Colors.black),
         ),
         title: FadedScaleAnimation(
-          SizedBox(height: 50, child: Image(image: AssetImage(AppImages.eMenuIcon))),
+          SizedBox(
+              height: 50,
+              child: Image(image: AssetImage(AppImages.retailIcon))),
           durationInMilliseconds: 400,
         ),
       ),

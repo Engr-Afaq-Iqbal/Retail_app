@@ -125,6 +125,10 @@ class AppImages {
       'assets/bizmodo_icons/BizModo Restro Icon.png';
   static const String restroLogo =
       'assets/bizmodo_icons/BizModo Restro Logo.png';
+  static const String retailIcon =
+      'assets/bizmodo_icons/Bizmodo_RetailIicon.png';
+  static const String retailLogo =
+      'assets/bizmodo_icons/Bizmodo_RetailLogo.png';
 }
 
 class AppTextStyles {

@@ -10,35 +10,8 @@ import '../../Services/api_urls.dart';
 class UploadController extends GetxController {
   File? image;
 
-  ///Upload Function
-  Future<bool?> uploadFunction() async {
-    Map<String, String> _field = {
-      "file": '${image?.path}',
-    };
-    return await ApiServices.postMethod(
-            feedUrl: '${ApiUrls.uploadApi}', fields: _field)
-        .then((_res) {
-      if (_res == null) return null;
-      update();
-      stopProgress();
-      // Get.back();
-      print('File Uploaded successfully: ');
-      print(_res);
-      return true;
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      throw '$error';
-    });
-  }
-
   ///function to create Sale Return
   addImage() async {
-    /// Working with 2nd approach
-    multipartPutMethod();
-  }
-
-  multipartPutMethod() async {
     String _url = '${ApiUrls.uploadApi}';
 
     Map<String, String> _fields = {};
@@ -46,7 +19,7 @@ class UploadController extends GetxController {
 
     logger.i(_fields);
 
-    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+    return await ApiServices.postMultiPartQuery(feedUrl: _url, files: _fields)
         .then((response) async {
       if (response == null) return;
       stopProgress();

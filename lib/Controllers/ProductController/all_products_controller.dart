@@ -10,6 +10,7 @@ import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ProductsModel/SearchProductModel.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
+import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Services/api_services.dart';
@@ -658,6 +659,88 @@ class AllProductsController extends GetxController {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
       update();
+    });
+  }
+
+  bool receiptPayment = false;
+  String receiptsFinalPayment = '0.00';
+
+  ///Receipts Multiple payment Function
+  addReceipt() async {
+    // if (orderCtrlObj.singleOrderData?.id == null) {
+    //   showToast('Reference for update order is missing!');
+    //   return;
+    // }
+
+    /// Working with 2nd approach
+    multipartReceiptPutMethod();
+  }
+
+  multipartReceiptPutMethod() async {
+    // API Method with url
+    // PaymentController _paymentCtrlObj = Get.find<PaymentController>();
+    AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+    String _url = '${ApiUrls.multiPaymentApi}';
+    var length = allSalesCtrl.allSaleOrders?.saleOrdersData.length ?? 0;
+
+    // 'card_number': '',
+
+    Map<String, String> _fields = {};
+    for (int i = 0; i < length; i++) {
+      if (allSalesCtrl.allSaleOrders?.saleOrdersData[i].isSelected != false)
+        _fields['transaction_id[$i]'] =
+            '${allSalesCtrl.allSaleOrders?.saleOrdersData[i].id}';
+      print('${allSalesCtrl.allSaleOrders?.saleOrdersData[i].id}');
+    }
+
+    _fields['method'] = 'cash';
+    _fields['note'] =
+        '${paymentCtrlObj.paymentWidgetList[0].paymentNoteCtrl.text}';
+    _fields['card_type'] = 'credit';
+    _fields['is_return'] = '0';
+    _fields['paid_on'] = '${DateTime.now()}';
+    _fields['created_by'] = '${AppStorage.getLoggedUserData()?.staffUser.id}';
+    _fields['amount'] = '$receiptsFinalPayment';
+    _fields['payment_ref_no'] = '';
+    _fields['account_id'] =
+        '${paymentCtrlObj.paymentWidgetList[0].selectedPaymentOption?.account?.id}';
+    _fields['transaction_no_1'] = '';
+    _fields['transaction_no_2'] = '';
+    _fields['transaction_no_3'] = '';
+    _fields['transaction_no_4'] = '';
+    _fields['transaction_no_5'] = '';
+    _fields['transaction_no_6'] = '';
+    _fields['transaction_no_7'] = '';
+    _fields['bank_account_number'] = '';
+    _fields['cheque_number'] = '';
+    _fields['card_security'] = '';
+    _fields['card_year'] = '';
+    _fields['card_month'] = '';
+    _fields['card_year'] = '';
+    _fields['card_month'] = '';
+    _fields['card_type'] = 'credit';
+    _fields['card_transaction_number'] = '';
+    _fields['card_holder_name'] = '';
+    _fields['card_number'] = '';
+    logger.i(_fields);
+
+    // return await request.send().then((response) async {
+    //   String result = await response.stream.bytesToString();
+    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+        .then((response) async {
+      // logger.i('EndPoint => ${_url}'
+      //     '\nStatus Code => {response.statusCode}'
+      //     '\nResponse => $response');
+
+      if (response == null) return;
+      stopProgress();
+      Get.close(1);
+      //await Get.to(() => OrderPlaced());
+      // Get.offAll(HomePage());
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
     });
   }
 }

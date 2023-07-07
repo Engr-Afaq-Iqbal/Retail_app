@@ -71,7 +71,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
                           color: Colors.blueGrey.shade800),
                     ),
                     SizedBox(height: 10),
-                    Image.asset(AppImages.eMenuLogo),
+                    Image.asset(AppImages.retailLogo),
                   ],
                 ),
                 Spacer(),
@@ -79,7 +79,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
                   children: [
                     Text(
                       'yourOrderWillBeAtYourTable'.tr.toUpperCase(),
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           fontSize: 13,
                           letterSpacing: 1,
                           fontWeight: FontWeight.bold,
