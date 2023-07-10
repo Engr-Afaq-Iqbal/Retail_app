@@ -4,15 +4,15 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp/whatsapp.dart';
 
-import '../ThemePage/themePage.dart';
+import '/Components/BusinessLogoWidget.dart';
 import '/Config/const.dart';
 import '/Config/utils.dart';
 import '/Controllers/AuthController/auth_controller.dart';
 import '/Locale/settings_page.dart';
-import '/Pages/Tabs/Components/BusinessLogoWidget.dart';
 import '/Pages/terms_and_condations.dart';
 import '/Services/storage_services.dart';
 import '../Profile_View/profile_view.dart';
+import '../ThemePage/themePage.dart';
 
 class AppMenuPage extends StatelessWidget {
   AppMenuPage({Key? key}) : super(key: key);
@@ -29,11 +29,11 @@ class AppMenuPage extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
         title: FadedScaleAnimation(
-          Text(
+          child: Text(
             'settings'.tr,
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
-          durationInMilliseconds: 400,
+          fadeDuration: const Duration(milliseconds: 400),
         ),
       ),
       body: SingleChildScrollView(
@@ -47,9 +47,14 @@ class AppMenuPage extends StatelessWidget {
               child: Row(
                 children: [
                   Expanded(
-                    flex: 3,
-                    child: SizedBox(
-                        height: 100, width: 120, child: BusinessLogoWidget()),
+                    flex: 4,
+                    child: Center(
+                      child: SizedBox(
+                        height: 100,
+                        width: 140,
+                        child: BusinessLogoWidget(),
+                      ),
+                    ),
                   ),
 
                   /// TODO: Localization remaining

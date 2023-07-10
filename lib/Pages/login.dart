@@ -4,14 +4,11 @@ import 'package:get/get.dart';
 
 import '/Components/custom_circular_button.dart';
 import '/Components/textfield.dart';
-import '/Config/app_config.dart';
 import '/Config/const.dart';
 import '/Config/utils.dart';
 import '/Controllers/AuthController/auth_controller.dart';
 import '/Pages/forget_screen.dart';
 import '/Services/socket_handlers.dart';
-import '/Theme/colors.dart';
-import 'Notification Services/notification_services.dart';
 import 'Tabs/View/TabsPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -42,24 +39,24 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FadedScaleAnimation(
-                      Container(
-                        width: 100,
-                        height: 100,
-                        child: Image(image: AssetImage(AppImages.retailIcon)),
+                      child: Container(
+                        // width: 100,
+                        // height: 100,
+                        child: Image(image: AssetImage(AppImages.retailLogo)),
                       ),
-                      durationInMilliseconds: 200,
+                      fadeDuration: const Duration(milliseconds: 200),
                     ),
-                    FadedScaleAnimation(
-                      Text(
-                        AppConfig.appName,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: Colors.black, fontSize: 18),
-                      ),
-                      durationInMilliseconds: 200,
-                    ),
-                    SizedBox(height: 20),
+                    // FadedScaleAnimation(
+                    //   child: Text(
+                    //     AppConfig.appName,
+                    //     style: Theme.of(context)
+                    //         .textTheme
+                    //         .bodyLarge!
+                    //         .copyWith(color: Colors.black, fontSize: 18),
+                    //   ),
+                    //   fadeDuration: const Duration(milliseconds: 200),
+                    // ),
+                    SizedBox(height: 50),
                   ],
                 ),
                 SingleChildScrollView(

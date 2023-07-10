@@ -32,7 +32,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     return Material(
       child: SafeArea(
         child: FadedSlideAnimation(
-          Column(
+          child: Column(
             children: [
               Align(alignment: Alignment.topRight, child: CloseButton()),
 
@@ -79,7 +79,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 FadedScaleAnimation(
-                                  CachedNetworkImage(
+                                  child: CachedNetworkImage(
                                     imageUrl: _modifier.imageUrl ?? "",
                                     imageBuilder: (context, imageProvider) =>
                                         Container(
@@ -96,7 +96,8 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
                                   ),
-                                  durationInMilliseconds: 400,
+                                  fadeDuration:
+                                      const Duration(milliseconds: 400),
                                 ),
                                 Flexible(
                                   child: Column(
@@ -316,7 +317,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
           ),
           beginOffset: Offset(0, 0.3),
           endOffset: Offset(0, 0),
-          curve: Curves.linearToEaseOut,
+          fadeCurve: Curves.linearToEaseOut,
         ),
       ),
     );

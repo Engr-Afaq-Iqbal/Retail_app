@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../Config/utils.dart';
 import '../Controllers/DashboardController/dashboardController.dart';
 import '../Pages/Notifications/notifications.dart';
 import '../Services/storage_services.dart';
@@ -157,11 +156,11 @@ class _CurvedContainerState extends State<CurvedContainer> {
                       width: 100,
                       child: ClipOval(
                         child: FadedScaleAnimation(
-                          CachedNetworkImage(
+                          child: CachedNetworkImage(
                             imageUrl:
                                 '${AppStorage.getLoggedUserData()?.staffUser.media?.displayUrl ?? ''}',
                           ),
-                          durationInMilliseconds: 400,
+                          fadeDuration: const Duration(milliseconds: 400),
                         ),
                         // CachedNetworkImage(
                         //   imageUrl: AppStorage.getLoggedUserData()

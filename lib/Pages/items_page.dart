@@ -1,13 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/ProductsModel/ProductModel.dart';
 import '/Models/ProductsModel/all_products_model.dart';
-import '../Config/utils.dart';
 import 'item_info.dart';
 
 class ItemsPage extends StatefulWidget {
@@ -61,7 +59,7 @@ class _ItemsPageState extends State<ItemsPage> {
                         softWrap: true,
                       ),
                       FadedScaleAnimation(
-                        InkWell(
+                        child: InkWell(
                           onTap: () {
                             // prodCartCtrlObj.item?.value = item;
                             // item = widget.category.products[index];
@@ -81,7 +79,7 @@ class _ItemsPageState extends State<ItemsPage> {
                             ),
                           ),
                         ),
-                        durationInMilliseconds: 400,
+                        fadeDuration: const Duration(milliseconds: 400),
                       ),
                     ],
                   ),
