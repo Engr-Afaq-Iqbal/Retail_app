@@ -2,9 +2,7 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../order_type/search_customer_page.dart';
-import 'AddSalesAndQuotation.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
 

@@ -57,8 +57,11 @@ void main() async {
   String currLang = sharedPreferences.getString("localeLanguage") ?? 'en';
   String currCountryCode =
       sharedPreferences.getString("localeCountryCode") ?? 'US';
+
   await GetStorage.init();
   initializeControllers();
+  Get.find<AuthController>().currentColor =
+      sharedPreferences.getString("themeColor") ?? 'FF008080';
   // NotificationServices.initialize();
   // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgoundHandler);
   // try {
@@ -181,6 +184,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     Get.find<AuthController>().initialDataCheck();
+
     super.initState();
   }
 

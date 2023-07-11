@@ -734,6 +734,7 @@ class AllProductsController extends GetxController {
 
       if (response == null) return;
       stopProgress();
+      Get.find<AllSalesController>().callFirstOrderPageForReceipt();
       Get.close(1);
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());

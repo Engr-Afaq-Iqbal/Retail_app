@@ -1,3 +1,5 @@
+import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:bizmodo_emenu/Pages/CreateOrder/createOrderPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Controllers/AllSalesController/allSalesController.dart';
@@ -37,6 +39,20 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
         elevation: 0,
         centerTitle: true,
         title: Text('View Sells Details'),
+        actions: [
+          CustomButton(
+            onTap: () {
+              Get.to(CreateOrderPage());
+            },
+            title: Text(
+              'Edit',
+              style: TextStyle(color: kWhiteColor),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+        ],
       ),
       body: SingleChildScrollView(
           child: Column(
@@ -251,7 +267,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${''}',
+                    '${AppFormat.doubleToStringUpTo2(double.parse('${double.parse('${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].finalTotal ?? '0.00'}') - double.parse('${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalPaid ?? '0.00'}')}').toString())}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ]),

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:bizmodo_emenu/Controllers/Tax%20Controller/TaxController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -216,6 +217,68 @@ class ProductsRetailController extends GetxController {
     return options;
   }
 
+  File? broucher;
+  File? image;
+
+  addProduct() async {
+    String _url = '${ApiUrls.createNewProductApi}';
+
+    Map<String, String> _fields = {};
+    _fields['name'] = '${productNameCtrl.text}';
+    _fields['brand_id'] = '45';
+    _fields['unit_id'] = '${unitID}';
+    _fields['category_id'] = '${categoryID}';
+    _fields['tax'] = '${applicableTaxId}';
+    _fields['type'] = '${productTypeStatus?.toLowerCase()}';
+    _fields['barcode_type'] = '${barCodeKey}';
+    _fields['sku'] = '${productSKUCtrl.text}';
+    _fields['alert_quantity'] = '${alertQtyCtrl.text}';
+    _fields['tax_type'] = '${taxTypeStatus?.toLowerCase()}';
+    _fields['weight'] = '${weightCtrl.text}';
+    _fields['product_custom_field1'] = '${customField1Ctrl.text}';
+    _fields['product_custom_field2'] = '${customField2Ctrl.text}';
+    _fields['product_custom_field3'] = '${customField3Ctrl.text}';
+    _fields['product_custom_field4'] = '${customField4Ctrl.text}';
+    _fields['product_description'] = '';
+    _fields['sub_unit_ids'] = '51';
+    _fields['preparation_time_in_minutes'] = '';
+    _fields['kitchen_id'] = '${printerID}';
+    _fields['type_of_product'] = '${typeOfProductID}';
+    _fields['sub_category_id'] = '${categoryID}';
+    _fields['enable_stock'] = '';
+    _fields['warranty_id'] = '$warrantyID';
+    _fields['has_module_data'] = '1';
+    _fields['repair_model_id'] = '';
+    _fields['enable_sr_no'] = '$enableProductID';
+    _fields['not_for_selling'] = '${notForSellingID}';
+    _fields['woocommerce_disable_sync'] = '$disableWooCommerceID';
+    _fields['single_dpp_inc_tax'] = '${incTaxCtrl.text}';
+    _fields['single_dpp'] = '${excTaxCtrl.text}';
+    _fields['profit_percent'] = '${marginCtrl.text}';
+    _fields['single_dsp'] = '${defaultSelllingExcCtrl.text}';
+    _fields['single_dsp_inc_tax'] = '${defaultSelllingIncCtrl.text}';
+    _fields['product_locations[0]'] = '30';
+    _fields['product_brochure'] = '${broucher?.path}';
+    _fields['image'] = '${image?.path}';
+    _fields['rack[0]'] = 'Assumenda dolores ad';
+    _fields['row[0]'] = 'Consectetur quia qu';
+    _fields['position[0]'] = 'Amet aut est quasi';
+    _fields['location_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
+    logger.i(_fields);
+
+    return await ApiServices.postMultiPartQuery(feedUrl: _url, files: _fields)
+        .then((response) async {
+      if (response == null) return;
+      stopProgress();
+      Get.close(1);
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
+
   Future createNewProduct() async {
     Map<String, String> _field = {
       'name': '${productNameCtrl.text}',
@@ -252,6 +315,8 @@ class ProductsRetailController extends GetxController {
       'single_dsp': '${defaultSelllingExcCtrl.text}',
       'single_dsp_inc_tax': '${defaultSelllingIncCtrl.text}',
       'product_locations[0]': '30',
+      'product_brochure': '${broucher?.path}',
+      'image': '${image?.path}',
       'rack[0]': 'Assumenda dolores ad',
       'row[0]': 'Consectetur quia qu',
       'position[0]': 'Amet aut est quasi',
@@ -259,7 +324,7 @@ class ProductsRetailController extends GetxController {
           '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}'
     };
 
-    return await ApiServices.postMethod(
+    return await ApiServices.postMultiPartQuery(
             feedUrl: ApiUrls.createNewProductApi, fields: _field)
         .then((_res) {
       if (_res == null) return null;

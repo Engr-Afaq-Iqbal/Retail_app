@@ -54,12 +54,13 @@ class _ProfileViewState extends State<ProfileView> {
                   imageUrl: AppStorage.getLoggedUserData()
                           ?.staffUser
                           .media
-                          ?.fileName ??
+                          ?.displayUrl ??
                       "",
                   imageBuilder: (context, imageProvider) => Container(
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
+                      //borderRadius: BorderRadius.circular(30),
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.cover,

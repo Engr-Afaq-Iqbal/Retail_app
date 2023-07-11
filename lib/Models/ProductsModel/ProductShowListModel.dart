@@ -91,7 +91,7 @@ class Datum {
   dynamic subCategory;
   String? unit;
   dynamic brand;
-  Tax? tax;
+  String? tax;
   String? sku;
   String? image;
   int? enableStock;
@@ -152,7 +152,7 @@ class Datum {
         subCategory: json["sub_category"],
         unit: json["unit"],
         brand: json["brand"],
-        tax: taxValues.map[json["tax"]],
+        tax: json["tax"],
         sku: json["sku"],
         image: json["image"],
         enableStock: json["enable_stock"],
@@ -191,7 +191,7 @@ class Datum {
         "sub_category": subCategory,
         "unit": unit,
         "brand": brand,
-        "tax": taxValues.reverse[tax],
+        "tax": tax,
         "sku": sku,
         "image": image,
         "enable_stock": enableStock,
@@ -435,9 +435,9 @@ class ProductVariationsDetails {
       };
 }
 
-enum Tax { VAT }
-
-final taxValues = EnumValues({"VAT": Tax.VAT});
+// enum Tax { VAT }
+//
+// final taxValues = EnumValues({"VAT": Tax.VAT});
 
 class Link {
   String? url;

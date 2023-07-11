@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import '../../Config/utils.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import '/Theme/style.dart';
-import 'AddProductsPage.dart';
 import 'ViewProductsPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -51,16 +50,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.small(
-          child: Icon(Icons.add),
-          backgroundColor:
-              Theme.of(context).colorScheme.primary.withOpacity(0.5),
-          onPressed: () {
-            Get.to(AddProductsPage(
-              isView: false,
-            ));
-          }),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      // floatingActionButton: FloatingActionButton.small(
+      //     child: Icon(Icons.add),
+      //     backgroundColor:
+      //         Theme.of(context).colorScheme.primary.withOpacity(0.5),
+      //     onPressed: () {
+      //       Get.to(AddProductsPage(
+      //         isView: false,
+      //       ));
+      //     }),
       appBar: AppBar(
         automaticallyImplyLeading: true,
         title: Container(
@@ -208,7 +207,7 @@ class _HomePageState extends State<HomePage> {
                                             flex: 1,
                                             child: Text(
                                               double.parse(
-                                                    '${0.00}',
+                                                    '${allProdCtrlObj.productShowListModel?.data?[index].maxPrice ?? ''}',
                                                   ).toStringAsFixed(2) +
                                                   ' /-',
                                               textAlign: TextAlign.center,

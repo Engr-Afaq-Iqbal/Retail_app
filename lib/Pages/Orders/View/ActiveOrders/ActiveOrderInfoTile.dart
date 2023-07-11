@@ -56,9 +56,9 @@ class ActiveOrderInfoTile extends StatelessWidget {
                             color: Colors.white,
                           ),
                     ),
-                    if (activeOrder.createdAt != null)
+                    if (activeOrder.transactionDate != null)
                       Text(
-                        AppFormat.hhmmDifference(activeOrder.createdAt),
+                        AppFormat.hhmmDifference(activeOrder.transactionDate),
                         style: Theme.of(context).textTheme.caption!.copyWith(
                               fontSize: 11.7,
                               fontWeight: FontWeight.bold,

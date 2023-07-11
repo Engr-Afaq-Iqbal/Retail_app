@@ -154,6 +154,8 @@ class AllSalesController extends GetxController {
       } else {
         allSaleOrders = _data;
       }
+      stopProgress();
+      //Get.close(1);
       update();
 
       /* fallback end status means is all item finished or not */
@@ -161,7 +163,6 @@ class AllSalesController extends GetxController {
           _page == allSaleOrders?.meta?.lastPage) {
         return true;
       }
-      stopProgress();
 
       return false;
     }).onError((error, stackTrace) {

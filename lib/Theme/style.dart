@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Controllers/AuthController/auth_controller.dart';
 import 'package:bizmodo_emenu/Services/storage_services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +17,10 @@ ThemeData appTheme = ThemeData(
   colorScheme: ColorScheme.fromSwatch(
     // primarySwatch: createMaterialColor(primaryColor),
     primarySwatch: createMaterialColor(Color(int.parse(
-        AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection ??
-            'ff591cd3',
+        Get.find<AuthController>().currentColor
+        // AppStorage.getLoggedUserData()?.staffUser.appSetting?.themeSelection ??
+        //     'FF008080'
+        ,
         radix: 16))), // createMaterialColor(primaryColor),
   ).copyWith(
     background: Color(0xffF8F9FD),

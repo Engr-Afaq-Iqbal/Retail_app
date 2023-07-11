@@ -152,41 +152,61 @@ class _CurvedContainerState extends State<CurvedContainer> {
                     //     radius: 32,
                     //   ),
                     // ),
-                    SizedBox(
-                      height: 35,
-                      width: 100,
-                      child: ClipOval(
-                        child: FadedScaleAnimation(
-                          CachedNetworkImage(
-                            imageUrl:
-                                '${AppStorage.getLoggedUserData()?.staffUser.media?.displayUrl ?? ''}',
-                          ),
-                          durationInMilliseconds: 400,
-                        ),
-                        // CachedNetworkImage(
-                        //   imageUrl: AppStorage.getLoggedUserData()
-                        //           ?.staffUser
-                        //           .media
-                        //           ?.fileName ??
-                        //       "",
-                        //   imageBuilder: (context, imageProvider) => Container(
-                        //     height: MediaQuery.of(context).size.height * 0.3,
-                        //     width: MediaQuery.of(context).size.width * 0.3,
-                        //     decoration: BoxDecoration(
-                        //       image: DecorationImage(
-                        //         image: imageProvider,
-                        //         fit: BoxFit.cover,
-                        //       ),
-                        //     ),
-                        //   ),
-                        //   placeholder: (context, url) =>
-                        //       progressIndicator(width: 100, height: 100),
-                        //   errorWidget: (context, url, error) => Icon(Icons.error),
-                        // ),
-                      ),
+
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          AppStorage.getLoggedUserData()
+                                  ?.staffUser
+                                  .media
+                                  ?.displayUrl ??
+                              ''),
+                      // child: Image.network(
+                      //   AppStorage.getLoggedUserData()
+                      //           ?.staffUser
+                      //           .media
+                      //           ?.displayUrl ??
+                      //       "",
+                      //   // height: 100,
+                      //   // width: 100,
+                      // ),
                     ),
+                    // Container(
+                    //   height: 35,
+                    //   width: 100,
+                    //   decoration: BoxDecoration(shape: BoxShape.circle),
+                    //   child: ClipOval(
+                    //     child: FadedScaleAnimation(
+                    //       CachedNetworkImage(
+                    //         imageUrl:
+                    //             '${AppStorage.getLoggedUserData()?.staffUser.media?.displayUrl ?? ''}',
+                    //       ),
+                    //       durationInMilliseconds: 400,
+                    //     ),
+                    //     // CachedNetworkImage(
+                    //     //   imageUrl: AppStorage.getLoggedUserData()
+                    //     //           ?.staffUser
+                    //     //           .media
+                    //     //           ?.fileName ??
+                    //     //       "",
+                    //     //   imageBuilder: (context, imageProvider) => Container(
+                    //     //     height: MediaQuery.of(context).size.height * 0.3,
+                    //     //     width: MediaQuery.of(context).size.width * 0.3,
+                    //     //     decoration: BoxDecoration(
+                    //     //       image: DecorationImage(
+                    //     //         image: imageProvider,
+                    //     //         fit: BoxFit.cover,
+                    //     //       ),
+                    //     //     ),
+                    //     //   ),
+                    //     //   placeholder: (context, url) =>
+                    //     //       progressIndicator(width: 100, height: 100),
+                    //     //   errorWidget: (context, url, error) => Icon(Icons.error),
+                    //     // ),
+                    //   ),
+                    // ),
                     SizedBox(
-                      width: 5,
+                      width: 15,
                     ),
                     Text(
                       '${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''} ${AppStorage.getLoggedUserData()?.staffUser.lastName ?? ''}',

@@ -1,5 +1,6 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
+import 'package:bizmodo_emenu/Config/enums.dart';
 
 import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
 import 'package:bizmodo_emenu/Pages/Receipts/searchInReceipts.dart';
@@ -190,6 +191,7 @@ class _ReceiptsState extends State<Receipts> {
                                   .allSaleOrders?.saleOrdersData.length ??
                               0,
                           itemBuilder: (context, index) {
+                            print(paymentStatusValues.reverse!);
                             return IntrinsicHeight(
                               child: GestureDetector(
                                   // onTap: () {
@@ -204,6 +206,7 @@ class _ReceiptsState extends State<Receipts> {
                                       // (allSalesCtrlObj.allSaleOrders!
                                       //         .saleOrdersData[index].isSuspend)
                                       //     ?
+
                                       ReceiptsTile(
                                 pastOrder: allSalesCtrlObj
                                     .allSaleOrders!.saleOrdersData[index],

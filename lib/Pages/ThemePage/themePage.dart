@@ -3,6 +3,7 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Controllers/ThemeController/themeController.dart';
 import '../../Theme/colors.dart';
@@ -17,11 +18,16 @@ class ThemePage extends StatefulWidget {
 class _ThemePageState extends State<ThemePage> {
   final ThemeController themeController = Get.find();
   int themeColors = 0xFF11cdef;
-  String selectedColor = 'ff591cd3';
+  String selectedColor = 'FF008080';
   var colorTheme = Colors.deepPurple;
 
+  addColorToSF() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('themeColor', selectedColor);
+  }
+
   List<String> colorsCode = [
-    'ff591cd3',
+    'FF008080',
     'ffFF0000',
     'FFFFFF00',
     'FF0000FF',
@@ -29,7 +35,6 @@ class _ThemePageState extends State<ThemePage> {
     'FF90EE90',
     'FFFFC0CB',
     'FFFFBF00',
-    'FF008080',
     'FF4B0082',
     'FF964B00',
   ];
@@ -42,7 +47,6 @@ class _ThemePageState extends State<ThemePage> {
     'Light Green Color',
     'Pink Color',
     'Amber Color',
-    'Teal Color',
     'Indigo Color',
     'Brown Color',
   ];
@@ -92,6 +96,7 @@ class _ThemePageState extends State<ThemePage> {
               CustomButton(
                 onTap: () async {
                   showProgress();
+                  addColorToSF();
                   themeController.setThemeColor(color: selectedColor);
                   themeController.setPrimaryColor(colorTheme);
                 },

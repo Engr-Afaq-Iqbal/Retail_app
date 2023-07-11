@@ -459,5 +459,6 @@ Map<String, String> english() {
     'inc_tax_req': 'Inc. tax required',
     'default_selling_price': 'Default Selling Price',
     'choose_file': 'Choose File',
+    'view_products': 'View Product',
   };
 }

@@ -1,7 +1,9 @@
+import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Config/DateTimeFormat.dart';
 import '../../Theme/style.dart';
 import '/Components/textfield.dart';
 
@@ -12,9 +14,16 @@ import '/Theme/colors.dart';
 class PaymentFields extends StatelessWidget {
   final bool isFirst;
   final List<PaymentAccount> enabledPaymentOptions;
+  String? remainingAmount;
   PaymentFields(
-      {this.isFirst = false, required this.enabledPaymentOptions, Key? key})
-      : super(key: key);
+      {this.isFirst = false,
+      required this.enabledPaymentOptions,
+      Key? key,
+      this.remainingAmount})
+      : super(key: key) {
+    amountCtrl.text =
+        '${AppFormat.doubleToStringUpTo2(Get.find<ReceiptsController>().totalAmount)}';
+  }
 
 //   @override
 //   State<PaymentFields> createState() => _PaymentFieldsState();

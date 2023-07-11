@@ -84,7 +84,7 @@ class OrderDetailsPage extends StatelessWidget {
                     ),
                   ),
                   AppStyles.p2p5(
-                      CustomerInfo(order.contact?.name, order.createdAt)),
+                      CustomerInfo(order.contact?.name, order.transactionDate)),
                 ],
               ),
             ),

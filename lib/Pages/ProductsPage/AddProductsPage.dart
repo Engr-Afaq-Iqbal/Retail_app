@@ -40,7 +40,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
 
   bool valuefirst = false;
   bool isEdit = false;
-  File? image;
+
   String frontPath = 'No file chosen';
   Future pickContactImage() async {
     try {
@@ -56,7 +56,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
         final imageTemporary = File(image.path);
         frontPath = image.path;
         setState(() {
-          this.image = imageTemporary;
+          productRetailCtrlObj.image = imageTemporary;
         });
       } else if (fileSizeInMB > 1) {
         return showToast("File size is greater than 1MB");
@@ -68,7 +68,6 @@ class _AddProductsPageState extends State<AddProductsPage> {
     }
   }
 
-  File? broucher;
   String imagePath = 'No file chosen';
 
   Future pickBroucherImage() async {
@@ -80,7 +79,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
         final imageTemporary = File(broucher.path);
         imagePath = broucher.path;
         setState(() {
-          this.broucher = imageTemporary;
+          productRetailCtrlObj.broucher = imageTemporary;
         });
       } else {
         return showToast("No Image picked");
@@ -752,10 +751,10 @@ class _AddProductsPageState extends State<AddProductsPage> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
                                   color: kHintColor.withOpacity(0.3)),
-                              child: (image != null)
+                              child: (productRetailCtrlObj.image != null)
                                   ? Center(
                                       child: Image.file(
-                                        image!,
+                                        productRetailCtrlObj.image!,
                                         fit: BoxFit.contain,
                                       ),
                                     )
@@ -1391,7 +1390,7 @@ class _AddProductsPageState extends State<AddProductsPage> {
                                 } else if (productRetailCtrlObj
                                     .productNameCtrl.text.isNotEmpty) {
                                   showProgress();
-                                  productRetailCtrlObj.createNewProduct();
+                                  productRetailCtrlObj.addProduct();
                                 }
                               },
                               bgColor: Theme.of(context).colorScheme.primary,
