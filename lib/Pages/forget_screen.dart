@@ -24,12 +24,12 @@ class ForgetPasswordScreen extends StatelessWidget {
           },
           icon: Icon(Icons.arrow_back, color: Colors.black),
         ),
-        title: FadedScaleAnimation(
-          SizedBox(
-              height: 50,
-              child: Image(image: AssetImage(AppImages.retailIcon))),
-          durationInMilliseconds: 400,
-        ),
+        // title: FadedScaleAnimation(
+        //   child: SizedBox(
+        //       height: 50,
+        //       child: Image(image: AssetImage(AppImages.retailIcon))),
+        //   fadeDuration: const Duration(milliseconds: 400),
+        // ),
       ),
       body: SizedBox(
         height: Get.height,
@@ -38,8 +38,13 @@ class ForgetPasswordScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image(
-              image: AssetImage(AppImages.appIcon),
+            FadedScaleAnimation(
+              child: Container(
+                // width: 100,
+                // height: 100,
+                child: Image(image: AssetImage(AppImages.retailLogo)),
+              ),
+              fadeDuration: const Duration(milliseconds: 200),
             ),
             SizedBox(
               width: 300,

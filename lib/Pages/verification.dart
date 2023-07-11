@@ -21,7 +21,7 @@ class Verification extends StatelessWidget {
             }),
       ),
       body: FadedSlideAnimation(
-        SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Container(
             height: MediaQuery.of(context).size.height -
                 AppBar().preferredSize.height -
@@ -89,7 +89,7 @@ class Verification extends StatelessWidget {
         ),
         beginOffset: Offset(0, 0.3),
         endOffset: Offset(0, 0),
-        curve: Curves.linearToEaseOut,
+        fadeCurve: Curves.linearToEaseOut,
       ),
     );
   }

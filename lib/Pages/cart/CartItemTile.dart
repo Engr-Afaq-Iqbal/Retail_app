@@ -33,8 +33,8 @@ class CartItemTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: FadedScaleAnimation(
-                  CachedNetworkImage(imageUrl: '${product.imageUrl}'),
-                  durationInMilliseconds: 400,
+                  child: CachedNetworkImage(imageUrl: '${product.imageUrl}'),
+                  fadeDuration: const Duration(milliseconds: 400),
                 ),
               ),
             ),

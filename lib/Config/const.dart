@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../Theme/colors.dart';
 import '/Components/custom_circular_button.dart';
+import '../Theme/colors.dart';
 import 'utils.dart';
 
 class AppConst {
@@ -126,9 +126,9 @@ class AppImages {
   static const String restroLogo =
       'assets/bizmodo_icons/BizModo Restro Logo.png';
   static const String retailIcon =
-      'assets/bizmodo_icons/Bizmodo_RetailIicon.png';
+      'assets/bizmodo_icons/Bizmodo Retail Icon.png';
   static const String retailLogo =
-      'assets/bizmodo_icons/Bizmodo_RetailLogo.png';
+      'assets/bizmodo_icons/Bizmodo Retail Logo.png';
 }
 
 class AppTextStyles {

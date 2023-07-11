@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import '/Components/custom_circular_button.dart';
 import '/Config/const.dart';
-import '/Theme/colors.dart';
 
 class OrderPlaced extends StatefulWidget {
   @override
@@ -16,7 +15,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FadedSlideAnimation(
-        SafeArea(
+        child: SafeArea(
           child: Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -51,13 +50,13 @@ class _OrderPlacedState extends State<OrderPlaced> {
                   flex: 2,
                 ),
                 FadedScaleAnimation(
-                  Container(
+                  child: Container(
                     width: MediaQuery.of(context).size.height * 0.42,
                     child: Image(
                       image: AssetImage("assets/order confirmed.png"),
                     ),
                   ),
-                  durationInMilliseconds: 400,
+                  fadeDuration: const Duration(milliseconds: 400),
                 ),
                 Spacer(),
                 Column(
@@ -117,7 +116,7 @@ class _OrderPlacedState extends State<OrderPlaced> {
         ),
         beginOffset: Offset(0, 0.3),
         endOffset: Offset(0, 0),
-        curve: Curves.linearToEaseOut,
+        fadeCurve: Curves.linearToEaseOut,
       ),
     );
   }
