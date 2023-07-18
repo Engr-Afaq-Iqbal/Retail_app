@@ -12,6 +12,7 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Theme/colors.dart';
+import '../SalesView/discount.dart';
 
 class CreateOrderPage extends StatefulWidget {
   const CreateOrderPage({Key? key}) : super(key: key);
@@ -27,16 +28,21 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
 
   @override
   void initState() {
-    allProdCtrlObj.searchProductList(term: '');
+    // allProdCtrlObj.searchProductList(term: '');
+    // allProdCtrlObj.fetchAllProducts();
+    // allProdCtrlObj.fetchSpecificUnit();
+    // allProductsCtrl.showingallItems(allProductsCtrl);
+    allProdCtrlObj.fetchAllProducts();
     super.initState();
   }
 
   void dispose() {
     allProdCtrlObj.finalTotal = 0.00;
     allProdCtrlObj.totalAmount.clear();
+    allProdCtrlObj.selectedQuantityList.clear();
+    allProdCtrlObj.selectedProducts.clear();
     allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel = null;
-
+    allProdCtrlObj.listProductsModel = null;
     super.dispose();
   }
 
@@ -65,6 +71,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     ),
                     Text(
                       '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
+                      overflow: TextOverflow.ellipsis,
                       style: appBarHeaderStyle,
                     ),
                     // Expanded(
@@ -84,12 +91,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     // ),
                   ],
                 ),
-                // Center(
-                //   child: Text(
-                //     '${contactCtrlObjj.nameCtrl.text} (${contactCtrlObjj.contactId})',
-                //     style: appBarHeaderStyle,
-                //   ),
-                // ),
                 SizedBox(
                   height: 10,
                 ),
@@ -103,7 +104,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   height: MediaQuery.of(context).size.height * 0.67,
                   child: GetBuilder<AllProductsController>(
                       builder: (AllProductsController allProdCtrlObj) {
-                    if (allProdCtrlObj.searchProductModel == null) {
+                    if (allProdCtrlObj.listProductsModel == null) {
                       return progressIndicator();
                     }
                     return ListView.builder(
@@ -112,7 +113,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                         physics: BouncingScrollPhysics(),
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
-                        itemCount: allProdCtrlObj.searchProductModel?.length,
+                        itemCount: allProdCtrlObj.productModelObjs.length,
                         itemBuilder: (context, index) {
                           return Container(
                             margin: EdgeInsets.only(
@@ -135,7 +136,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                     Expanded(
                                       flex: 2,
                                       child: Text(
-                                        '${allProdCtrlObj.searchProductModel?[index].name}',
+                                        '${allProdCtrlObj.productModelObjs[index].name}',
                                         overflow: TextOverflow.ellipsis,
                                         softWrap: true,
                                       ),
@@ -145,13 +146,13 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       flex: 1,
                                       child: Center(
                                         child: Text(
-                                          '${allProdCtrlObj.searchProductModel?[index].unit}',
+                                          '${allProdCtrlObj.productModelObjs[index].sku}',
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
 
-                                    //Quantity
+                                    // Quantity
                                     Expanded(
                                       flex: 1,
                                       child: AppFormField(
@@ -174,7 +175,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                     '0') {
                                               allProdCtrlObj
                                                       .totalAmount[index] =
-                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
+                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
                                               allProdCtrlObj
                                                   .calculateFinalAmount();
                                               debugPrint('Product Amount');
@@ -199,17 +200,42 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                CustomButton(
-                    onTap: () {
-                      //showProgress();
-                      Get.to(CheckOutPage());
-                      // allProdCtrlObj.orderCreate();
-                    },
-                    title: Text(
-                      'Finalize Order',
-                      style: TextStyle(color: kWhiteColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomButton(
+                      title: Text(
+                        'Discount',
+                        style: TextStyle(color: kWhiteColor),
+                      ),
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            //title: title != null ? Text(title) : null,
+                            contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 0),
+                            content: Discount(),
+                          ),
+                        );
+                      },
                     ),
-                    bgColor: Theme.of(context).colorScheme.primary)
+                    CustomButton(
+                        onTap: () {
+                          allProdCtrlObj.addSelectedItemsInList();
+                          //showProgress();
+                          Get.to(CheckOutPage(
+                            isReceipt: false,
+                          ));
+                          // allProdCtrlObj.orderCreate();
+                        },
+                        title: Text(
+                          'Finalize Order',
+                          style: TextStyle(color: kWhiteColor),
+                        ),
+                        bgColor: Theme.of(context).colorScheme.primary)
+                  ],
+                )
               ],
             ),
           ),

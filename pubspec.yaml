@@ -53,6 +53,11 @@ dependencies:
   flutter_typeahead: ^4.4.0
   geolocator: ^9.0.2
   geocoding: ^2.1.0
+  upgrader: ^6.5.0
+  mailer: ^6.0.1
+  flutter_pos_printer_platform: ^1.1.0
+  esc_pos_printer: ^4.1.0
+  esc_pos_utils: ^1.1.0
 
 
   #  tablemi.com

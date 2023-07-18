@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,9 @@ import '/Theme/style.dart';
 
 class CheckOutPage extends StatefulWidget {
   final orderData;
-  CheckOutPage({this.orderData, Key? key}) : super(key: key);
+  bool isReceipt;
+  CheckOutPage({this.orderData, this.isReceipt = true, Key? key})
+      : super(key: key);
 
   @override
   State<CheckOutPage> createState() => _CheckOutPageState();
@@ -29,15 +32,25 @@ class CheckOutPage extends StatefulWidget {
 class _CheckOutPageState extends State<CheckOutPage> {
   // final AppScreenController _appScreenCtrlObj = Get.find<AppScreenController>();
   final PaymentController _paymentCtrlObj = Get.find<PaymentController>();
+  final AllProductsController allProdCtrlObj =
+      Get.find<AllProductsController>();
 
   // int paymentWidgetIndex = 0;
 
   @override
   void initState() {
+    _paymentCtrlObj.sellNoteCtrl.clear();
+    _paymentCtrlObj.staffNoteCtrl.clear();
     try {
       // if payment widget list is empty then new payment fields widget add
       if (_paymentCtrlObj.paymentWidgetList.isEmpty)
-        _paymentCtrlObj.addPaymentWidget();
+        _paymentCtrlObj.addPaymentWidget(
+          totalAmount: double.tryParse(
+            (widget.isReceipt == true)
+                ? '${Get.find<ReceiptsController>().totalAmount ?? ''}'
+                : '${Get.find<AllProductsController>().finalTotal ?? ''}',
+          ),
+        );
     } catch (e) {
       logger.e('Error -> check_out -> initState -> addPaymentWidget => $e');
     }
@@ -104,13 +117,16 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       Expanded(
                         child: CustomButton(
                           onTap: () {
-                            if (Get.find<AllProductsController>()
-                                    .receiptPayment ==
-                                true) {
+                            showProgress();
+                            if (allProdCtrlObj.receiptPayment == true) {
                               print('inside add receipt method call');
-                              Get.find<AllProductsController>().addReceipt();
+                              allProdCtrlObj.addReceipt();
+                            } else if (allProdCtrlObj.isUpdate == true) {
+                              print('->> for Update Order');
+                              allProdCtrlObj.updateOrder();
                             } else {
-                              Get.find<AllProductsController>().orderCreate();
+                              print('->> for Create Order');
+                              allProdCtrlObj.orderCreate();
                             }
 
                             // if (widget.orderData != null) {
@@ -194,7 +210,13 @@ class _CheckOutPageState extends State<CheckOutPage> {
               bgColor: primaryColor,
               borderRadius: 10,
               onTap: () {
-                _paymentCtrlObj.addPaymentWidget();
+                _paymentCtrlObj.addPaymentWidget(
+                  totalAmount: double.tryParse(
+                    (Get.find<AllProductsController>().finalTotal != null)
+                        ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                        : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+                  ),
+                );
               },
             ),
 

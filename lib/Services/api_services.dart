@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
-import '../Config/const.dart';
+import '../Controllers/exception_controller.dart';
 import '/Config/app_config.dart';
 import '../Config/utils.dart';
 import 'storage_services.dart';
@@ -21,6 +21,9 @@ class ApiServices {
   //
   // }
 
+  static String exceptionFormat(url, code, res) =>
+      'EndPoint => $url\nStatus Code => $code\nResponse => $res';
+
   static Future<String?> getMethod({required String feedUrl}) async {
     var headers = {
       'Content-Type': 'application/json',
@@ -32,14 +35,31 @@ class ApiServices {
 
     request.headers.addAll(headers);
 
-    http.StreamedResponse response = await request.send();
-    String result = await response.stream.bytesToString();
-    logger.i(
-        'EndPoint => ${request.url}\nStatus Code => ${response.statusCode}\nResponse => $result');
-    if (response.statusCode == 200) {
-      return result;
-    }
-    return null;
+    return await request.send().then((http.StreamedResponse response) async {
+      String result = await response.stream.bytesToString();
+      logger.i(exceptionFormat(request.url, response.statusCode, result));
+      if (response.statusCode == 200) {
+        return result;
+      }
+
+      await ExceptionController().exceptionAlert(
+        resBody: result,
+        exceptionFormat:
+            exceptionFormat(request.url, response.statusCode, result),
+      );
+      return null;
+    }).onError((error, stackTrace) async {
+      print('Error => $error');
+      logger.e('StackTrace $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: 'Error: $error\n'
+            'ApiService -> postMethod\n'
+            'EndPoint => $feedUrl\n'
+            'StackTrace => $stackTrace',
+      );
+      return null;
+    });
   }
 
   static Future<String?> postMethod(
@@ -60,21 +80,28 @@ class ApiServices {
 
     return await request.send().then((http.StreamedResponse response) async {
       String result = await response.stream.bytesToString();
-      logger.i(
-          'EndPoint => ${request.url}\nStatus Code => ${response.statusCode}\nResponse => $result');
+      logger.i(exceptionFormat(request.url, response.statusCode, result));
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return result;
-      } else {
-        final jd = jsonDecode(result);
-
-        showToast(jd["message"]);
-
-        return null;
       }
-    }).onError((error, stackTrace) {
-      log('Error => $error');
-      logger.e('StackTrace => $stackTrace');
+
+      await ExceptionController().exceptionAlert(
+        resBody: result,
+        exceptionFormat:
+            exceptionFormat(request.url, response.statusCode, result),
+      );
+      return null;
+    }).onError((error, stackTrace) async {
+      print('Error => $error');
+      logger.e('StackTrace $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: 'Error: $error\n'
+            'ApiService -> postMethod\n'
+            'EndPoint => $feedUrl\n'
+            'StackTrace => $stackTrace',
+      );
       return null;
     });
   }
@@ -141,19 +168,31 @@ class ApiServices {
       request.headers.addAll(headers);
       http.StreamedResponse response = await request.send();
       String resBody = await response.stream.bytesToString();
-      logger.d(
-          'Submitted Fields => \nAPI Do => $feedUrl\nStatus Code => ${response.statusCode}\nResponse => $resBody');
+      logger.i(exceptionFormat(request.url, response.statusCode, resBody));
+      // logger.d(
+      //     'Submitted Fields => \nAPI Do => $feedUrl\nStatus Code => ${response.statusCode}\nResponse => $resBody');
       final jd = json.decode(resBody);
       logger.d('Decoded Response => $jd');
       if (returnAnyResponse) return resBody;
       if (response.statusCode == 200) {
         return resBody;
       } else {
+        await ExceptionController().exceptionAlert(
+          resBody: resBody,
+          exceptionFormat:
+              exceptionFormat(request.url, response.statusCode, resBody),
+        );
         return null;
       }
     } catch (error) {
+      print('Error => $error');
       logger.e(
           'Error: ApiService -> postMultiPartMethod -> API Do = $feedUrl, Error => $error');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat:
+            'Error: ApiService -> postMultiPartMethod -> API Do = $feedUrl, Error => $error',
+      );
       //AppConst.errorOccurAlert();
       return null;
     }

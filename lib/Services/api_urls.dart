@@ -20,6 +20,10 @@ class ApiUrls {
   static String updateTableStatus = "connector/api/table/status/update";
   // Products
   static String allProducts = "connector/api/product";
+  static String specificUnits = "connector/api/unit";
+
+  //Funds Transfer API
+  static String fundsTransferAPI = "connector/api/account/fund-transfer";
 
   // fetch the order types
   static String getOrderTypes = "connector/api/types-of-service";
@@ -163,6 +167,9 @@ class ApiUrls {
   /// order payment
   static String orderPaymentAPI =
       "${AppConfig.baseUrl}connector/api/order/payment/";
+
+  /// Payment Account Api
+  static String paymentAccountApi = "connector/api/payment-accounts";
 
   ///Register Apis
   static String openRegisterAPI =

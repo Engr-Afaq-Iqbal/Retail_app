@@ -75,7 +75,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
     allProdCtrlObj.finalTotal = 0.00;
     allProdCtrlObj.totalAmount.clear();
     allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel = null;
+    allProdCtrlObj.searchProductModel.clear();
 
     super.dispose();
   }

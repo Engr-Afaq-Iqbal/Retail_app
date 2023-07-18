@@ -21,8 +21,12 @@ class PaymentFields extends StatelessWidget {
       Key? key,
       this.remainingAmount})
       : super(key: key) {
-    amountCtrl.text =
-        '${AppFormat.doubleToStringUpTo2(Get.find<ReceiptsController>().totalAmount)}';
+    amountCtrl.text = remainingAmount ?? '';
+    transactionNoCtrl.clear();
+    paymentNoteCtrl.clear();
+    checkNoCtrl.clear();
+    // amountCtrl.text =
+    //     '${AppFormat.doubleToStringUpTo2(Get.find<ReceiptsController>().totalAmount)}';
   }
 
 //   @override
@@ -162,9 +166,9 @@ class PaymentFields extends StatelessWidget {
                                   //         );
                                 },
                                 buttonDecoration:
-                                    AppStyles.outlineBorderDecoration(),
+                                    AppStyles.outlineBorderDecoration(context),
                                 dropdownDecoration:
-                                    AppStyles.outlineBorderDecoration(),
+                                    AppStyles.outlineBorderDecoration(context),
                                 itemPadding: EdgeInsets.zero,
                                 itemHighlightColor: primaryColor,
                                 hint: Text(

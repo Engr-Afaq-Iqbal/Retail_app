@@ -17,22 +17,29 @@ class CustomButton extends StatelessWidget {
   final MainAxisSize btnTxtAxisSize;
   final Widget? btnChild;
   final bool isBtnRounded;
+  // final bool enableToolTip;
+  // final bool enableLoading;
+  // final bool isOutLinedButton;
 
-  CustomButton(
-      {Key? key,
-      this.title,
-      this.btnTxt,
-      this.leading,
-      this.onTap,
-      this.padding,
-      this.bgColor,
-      this.margin,
-      this.borderRadius,
-      this.height,
-      this.width,
-      this.btnTxtAxisSize = MainAxisSize.max,
-      this.btnChild,
-      this.isBtnRounded = false});
+  CustomButton({
+    Key? key,
+    this.title,
+    this.btnTxt,
+    this.leading,
+    this.onTap,
+    this.padding,
+    this.bgColor,
+    this.margin,
+    this.borderRadius,
+    this.height,
+    this.width,
+    this.btnTxtAxisSize = MainAxisSize.max,
+    this.btnChild,
+    this.isBtnRounded = false,
+    // this.enableToolTip = true,
+    // this.enableLoading = false,
+    // this.isOutLinedButton = false,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(

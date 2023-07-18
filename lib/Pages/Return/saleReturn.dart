@@ -76,6 +76,9 @@ class _SalesReturnState extends State<SalesReturn> {
   @override
   void initState() {
     print(widget.id);
+    print('Parent sale line id');
+    print(saleReturnCtrlObj
+        .editSaleReturnModelDart?.sellLines?[0].parentSellLineId);
     saleReturnCtrlObj.fetchEditSalesReturnList(id: widget.id);
 
     saleReturnCtrlObj.saleReturnDateCtrl.text =
@@ -90,6 +93,7 @@ class _SalesReturnState extends State<SalesReturn> {
         await saleReturnCtrlObj.editSaleReturnModelDart?.sellLines?.length ?? 0;
     print('length ;::::');
     print(length);
+
     for (int i = 0; i < length; i++) {
       saleReturnCtrlObj.returnQtyCtrl.add(TextEditingController());
     }
@@ -124,6 +128,9 @@ class _SalesReturnState extends State<SalesReturn> {
             padding: const EdgeInsets.all(10.0),
             child: GetBuilder<SaleReturnController>(
                 builder: (SaleReturnController saleReturnCtrl) {
+              print('Parent sale line id');
+              print(saleReturnCtrlObj
+                  .editSaleReturnModelDart?.sellLines?[0].parentSellLineId);
               if (saleReturnCtrl.editSaleReturnModelDart == null)
                 return progressIndicator();
               return Column(
@@ -233,7 +240,7 @@ class _SalesReturnState extends State<SalesReturn> {
                                     child: Center(
                                       child: Text(
                                         AppFormat.doubleToStringUpTo2(
-                                                '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPrice}') ??
+                                                '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPriceIncTax}') ??
                                             '0.00',
                                         overflow: TextOverflow.ellipsis,
                                       ),

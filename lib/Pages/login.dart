@@ -9,6 +9,7 @@ import '/Config/utils.dart';
 import '/Controllers/AuthController/auth_controller.dart';
 import '/Pages/forget_screen.dart';
 import '/Services/socket_handlers.dart';
+import 'Tabs/Controllers/BottomNavBarController.dart';
 import 'Tabs/View/TabsPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -154,6 +155,8 @@ class _LoginPageState extends State<LoginPage> {
                           // });
 
                           // Get.offAll(OrderTypeSelection());
+                          Get.find<BottomNavBarController>()
+                              .selectedNavBarIndexs = 0;
                           Get.offAll(TabsPage());
                         },
                         btnTxt: 'continue'.tr,

@@ -3,6 +3,8 @@ import 'package:bizmodo_emenu/Pages/CreateOrder/createOrderPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Controllers/AllSalesController/allSalesController.dart';
+import '../../../Controllers/ContactController/ContactController.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import '/Config/DateTimeFormat.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
@@ -17,14 +19,17 @@ class SalesViewDetailsPage extends StatefulWidget {
   final int index;
   SalesViewDetailsPage(
       {Key? key, required this.allSalesCtrlObj, required this.index})
-      : super(key: key) {}
+      : super(key: key);
 
   @override
   State<SalesViewDetailsPage> createState() => _SalesViewDetailsPageState();
 }
 
 class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
-  AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+  final AllSalesController allSalesCtrl = Get.find<AllSalesController>();
+  final ContactController contactCtrlObj = Get.find<ContactController>();
+  final AllProductsController allProdCtrlObj =
+      Get.find<AllProductsController>();
   @override
   void initState() {
     // TODO: implement initState
@@ -42,6 +47,19 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
         actions: [
           CustomButton(
             onTap: () {
+              allProdCtrlObj.editOrderFunction(widget
+                  .allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index]);
+              allProdCtrlObj.updateOrderId =
+                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].id}';
+              allProdCtrlObj.isUpdate = true;
+              allProdCtrlObj.update();
+              contactCtrlObj.nameCtrl.text =
+                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.name ?? ''}';
+
+              contactCtrlObj.contactId =
+                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.contactId ?? ''}';
+              contactCtrlObj.id =
+                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.id ?? ''}';
               Get.to(CreateOrderPage());
             },
             title: Text(

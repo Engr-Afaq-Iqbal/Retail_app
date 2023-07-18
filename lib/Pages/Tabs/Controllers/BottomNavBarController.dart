@@ -9,12 +9,12 @@ import '/Pages/Table/TablesPage.dart';
 import '../../HomePageRetail/homepageRetail.dart';
 
 class BottomNavBarController extends GetxController {
-  int _selectedNavBarIndex = 0;
+  int selectedNavBarIndexs = 0;
 
   // NavBar Selection Update
-  int get selectedNavBarIndex => _selectedNavBarIndex;
+  int get selectedNavBarIndex => selectedNavBarIndexs;
   set selectedNavBarIndex(int _ind) {
-    _selectedNavBarIndex = _ind;
+    selectedNavBarIndexs = _ind;
     update();
   }
 
@@ -23,45 +23,16 @@ class BottomNavBarController extends GetxController {
       icon: Icons.home_outlined,
       label: 'dashboard_drop',
       onTap: () {
-        print('Order Type Selection page');
+        print('Dashboard Page');
         // Get.to(() => OrderTypeSelection());
       },
-      //page: OrderTypeSelection(),
       page: HomePageRetail(),
     ),
-    // NavBarModel(
-    //   icon: Icons.shopping_bag_outlined,
-    //   label: 'orders',
-    //   onTap: () {
-    //     print('Order Page');
-    //     // Get.to(() => OrdersMain());
-    //   },
-    //   page: OrdersTabPage(),
-    // ),
-    // NavBarModel(
-    //   icon: Icons.table_restaurant_outlined,
-    //   label: 'table_drop',
-    //   onTap: () {
-    //     print('Table page');
-    //     // Get.to(() => TablePage());
-    //   },
-    //   page: TablesPage(isForBookedTables: true),
-    // ),
-    // NavBarModel(
-    //   icon: Icons.event_note_outlined,
-    //   label: 'booking_tab',
-    //   onTap: () {
-    //     print('Booking page');
-    //     // Get.to(() => TablePage());
-    //   },
-    //   page: BookingTabs(),
-    // ),
     NavBarModel(
       icon: Icons.menu,
       label: 'menu_drop',
       onTap: () {
         print('Menu Page');
-        // Get.to(() => AppMenuSettings());
       },
       page: AppMenuPage(),
     ),

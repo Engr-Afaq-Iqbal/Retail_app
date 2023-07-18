@@ -181,12 +181,14 @@ class AppStyles {
     fontWeight: FontWeight.w400,
   );
 
-  static outlineBorderDecoration({bool isBorderColorApply = true}) =>
+  static outlineBorderDecoration(context, {bool isBorderColorApply = true}) =>
       BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(
           width: 1,
-          color: isBorderColorApply ? primaryColor : Colors.transparent,
+          color: isBorderColorApply
+              ? Theme.of(context).colorScheme.primary
+              : Colors.transparent,
         ),
       );
 
@@ -202,6 +204,16 @@ class AppStyles {
     fontSize: 13.3,
     fontWeight: FontWeight.bold,
     color: Colors.black,
+  );
+
+  static TextStyle overlayTitleStyle = GoogleFonts.openSans().copyWith(
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle overlayMsgStyle = GoogleFonts.openSans().copyWith(
+    fontSize: 12.0,
+    fontWeight: FontWeight.w500,
   );
 
   /// Screen Bottom Spacings

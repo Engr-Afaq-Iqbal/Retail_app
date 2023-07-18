@@ -16,11 +16,11 @@ class DashboardController extends GetxController {
     'total_sales',
     'net',
     'invoice_due',
-    'total_sale_return',
-    'total_purchase',
-    'purchase_due',
-    'total_purchase_return',
-    'expense',
+    // 'total_sale_return',
+    // 'total_purchase',
+    // 'purchase_due',
+    // 'total_purchase_return',
+    // 'expense',
   ];
 
   List<String> iconsNames = [
@@ -33,6 +33,7 @@ class DashboardController extends GetxController {
     'stock',
     'customer_visits',
     'upload',
+    'funds_transfer'
   ];
 
   List<IconData> iconList = [
@@ -44,7 +45,8 @@ class DashboardController extends GetxController {
     FontAwesomeIcons.arrowUpRightDots,
     FontAwesomeIcons.boxesStacked,
     FontAwesomeIcons.personWalking,
-    FontAwesomeIcons.upload
+    FontAwesomeIcons.upload,
+    FontAwesomeIcons.moneyBill
   ];
 
   HomeTabModel? homeTabModel;
@@ -65,11 +67,11 @@ class DashboardController extends GetxController {
         '${homeTabModel?.totalSell ?? '0.00'}',
         '${homeTabModel?.net ?? '0.00'}',
         '${homeTabModel?.invoiceDue ?? '0.00'}',
-        '${homeTabModel?.totalSellReturn ?? '0.00'}',
-        '${homeTabModel?.totalPurchase ?? '0.00'}',
-        '${homeTabModel?.purchaseDue ?? '0.00'}',
-        '${homeTabModel?.totalPurchaseReturn ?? '0.00'}',
-        '${homeTabModel?.totalExpense ?? '0.00'}',
+        // '${homeTabModel?.totalSellReturn ?? '0.00'}',
+        // '${homeTabModel?.totalPurchase ?? '0.00'}',
+        // '${homeTabModel?.purchaseDue ?? '0.00'}',
+        // '${homeTabModel?.totalPurchaseReturn ?? '0.00'}',
+        // '${homeTabModel?.totalExpense ?? '0.00'}',
       ];
       print(namesData);
       print(' record${_res}');

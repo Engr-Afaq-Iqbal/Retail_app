@@ -1,17 +1,24 @@
 import 'dart:convert';
 
 import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
-import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
+import 'package:bizmodo_emenu/Models/UnitModels/UnitsModel.dart';
+import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
+
 import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ProductsModel/SearchProductModel.dart';
+import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
+import '../../Pages/PrintDesign/pdfGenerate.dart';
+import '../AllPrinterController/allPrinterController.dart';
 import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
+import '../Tax Controller/TaxController.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
@@ -25,12 +32,23 @@ class AllProductsController extends GetxController {
   CategoriesProductsModel? allCategoriesProductsData;
   PaymentController paymentCtrlObj = Get.find<PaymentController>();
   List<TextEditingController> productQuantityCtrl = [];
+  final TaxController taxCtrlObj = Get.find<TaxController>();
   final ContactController contactCtrlObj = Get.find<ContactController>();
   final OrderController orderCtrlObj = Get.find<OrderController>();
+  ProductCartController productCtrlCtrlObj = Get.find<ProductCartController>();
+  TextEditingController payTermCtrl = TextEditingController();
+  TextEditingController dateCtrl = TextEditingController();
+
   //String? totalAmount;
   List<String> totalAmount = [];
   double finalTotal = 0.00;
   String total = '0.00';
+  String? paytermStatusValue;
+  String? statusValue;
+  String? invoiceSchemaStatusValue;
+  bool isUpdate = false;
+  String updateOrderId = '';
+  bool isPDFView = false;
 
   //loading more variables:
   int allSaleOrdersPage = 1;
@@ -38,13 +56,89 @@ class AllProductsController extends GetxController {
   bool hasNextPage = true;
   RxBool isLoadMoreRunning = false.obs;
 
-  Future<void> fetchAllProducts() async {
-    isFetchingProduct.value = true;
-    String? response =
-        await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
-    if (response == null) return;
-    await AppStorage.setProductsData(response);
-    getAllProductsFromStorage(res: response);
+  // Future<void> fetchAllProducts() async {
+  //   isFetchingProduct.value = true;
+  //   String? response =
+  //       await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
+  //   if (response == null) return;
+  //   print('All Products length');
+  //   print(response.length);
+  //   await AppStorage.setProductsData(response);
+  //   getAllProductsFromStorage(res: response);
+  //   //print( getAllProductsFromStorage(res: response));
+  // }
+
+  ListProductsModel? listProductsModel;
+  Future fetchAllProducts({String? pageUrl}) async {
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.allProducts}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}')
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      listProductsModel = listProductsModelFromJson(_res);
+      print(listProductsModel?.data);
+      showingallItems();
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  List<Product> productModelObjs = [];
+  List<Product> selectedProducts = [];
+  List<String> selectedQuantityList = [];
+  List<String> unitIDs = [];
+  showingallItems() {
+    productModelObjs.clear();
+    var categoriesLength = listProductsModel?.data?.length ?? 0;
+    for (int i = 0; i < categoriesLength; i++) {
+      for (int j = 0; j < listProductsModel!.data![i].products!.length; j++) {
+        productModelObjs.add(listProductsModel!.data![i].products![j]);
+        productQuantityCtrl.add(TextEditingController());
+        totalAmount.add('0.00');
+
+        // unitIDs.add(checkUnits(
+        //     product: listProductsModel!.data![i].products, index: j));
+        // print(unitIDs);
+        //fetchSpecificUnit(unit: '${listProductsModel!.data![i].products![j].unitId}');
+      }
+    }
+    return null;
+  }
+
+  addSelectedItemsInList() {
+    for (int i = 0; i < productModelObjs.length; i++) {
+      if (productQuantityCtrl[i].text.isNotEmpty &&
+          productQuantityCtrl[i].text != '0') {
+        selectedProducts.add(productModelObjs[i]);
+        selectedQuantityList.add(productQuantityCtrl[i].text);
+      }
+    }
+    print(selectedQuantityList);
+  }
+
+  UnitsModel? unitsModel;
+  Future fetchSpecificUnit({String? pageUrl}) async {
+    await ApiServices.getMethod(feedUrl: pageUrl ?? '${ApiUrls.specificUnits}')
+        .then((_res) {
+      update();
+      if (_res == null) return null;
+      unitsModel = unitsModelFromJson(_res);
+      print(listProductsModel?.data);
+      update();
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      update();
+    });
+  }
+
+  checkUnits({List<Product>? product, required int index}) {
+    return product?.firstWhere(
+        (unitId) => product[index].unitId == unitsModel?.data?.first.id);
   }
 
   ProductShowListModel? productShowListModel;
@@ -73,7 +167,7 @@ class AllProductsController extends GetxController {
 
     allSaleOrdersPage += 1;
 
-    await fetchCustomerName(allSaleOrdersPage).then((bool? _isFinished) {
+    await fetchProductsList(allSaleOrdersPage).then((bool? _isFinished) {
       if (_isFinished == null) {
         allSaleOrdersPage -= 1;
       } else if (_isFinished) {
@@ -87,7 +181,7 @@ class AllProductsController extends GetxController {
   }
 
   // fetch all sale orders list
-  Future<bool?> fetchCustomerName(int _page) async {
+  Future<bool?> fetchProductsList(int _page) async {
     print('========================================');
     print('Function calling');
     return await ApiServices.getMethod(
@@ -124,8 +218,8 @@ class AllProductsController extends GetxController {
     isFetchingProduct.value = false;
   }
 
-  List<SearchProductModel>? searchProductModel;
-  List<SearchProductModel>? searchProductModelFinal;
+  List<SearchProductModel> searchProductModel = [];
+  // List<SearchProductModel>? searchProductModelFinal;
 
   /// Searching Product
   Future searchProductList({String? pageUrl, String? term}) async {
@@ -136,8 +230,7 @@ class AllProductsController extends GetxController {
       update();
       if (_res == null) return null;
       searchProductModel = searchProductModelFromJson(_res);
-      var length = searchProductModel?.length ?? 0;
-      for (int i = 0; i < length; i++) {
+      for (int i = 0; i < searchProductModel.length; i++) {
         productQuantityCtrl.add(TextEditingController());
         totalAmount.add('0.00');
       }
@@ -155,7 +248,7 @@ class AllProductsController extends GetxController {
     isFirstLoadRunning = true;
     hasNextPage = true;
     isLoadMoreRunning.value = false;
-    await fetchCustomerName(1);
+    await fetchProductsList(1);
     isFirstLoadRunning = false;
   }
 
@@ -164,6 +257,7 @@ class AllProductsController extends GetxController {
     for (int i = 0; i < totalAmount.length; i++) {
       finalTotal = double.parse('${totalAmount[i]}') + finalTotal;
     }
+    finalTotal = finalTotal + orderedTotalAmount;
     print('final Total = ${finalTotal}');
   }
 
@@ -182,149 +276,42 @@ class AllProductsController extends GetxController {
     return options;
   }
 
-  TextEditingController payTermCtrl = TextEditingController();
-  TextEditingController dateCtrl = TextEditingController();
-  String? paytermStatusValue;
-  String? statusValue;
-  String? invoiceSchemaStatusValue;
-  ProductCartController productCtrlCtrlObj = Get.find<ProductCartController>();
-
-  // ///Function to create order:::::
-  // sellCreate() async {
-  //   // if (orderCtrlObj.singleOrderData?.id == null) {
-  //   //   showToast('Reference for update order is missing!');
-  //   //   return;
-  //   // }
-  //
-  //   /// Working with 2nd approach
-  //   multipartSalePutMethod();
-  // }
-  //
-  // multipartSalePutMethod() async {
-  //   // API Method with url
-  //
-  //   String _url = '${ApiUrls.addSellApi}';
-  //   var length = searchProductModel?.length ?? 0;
-  //   /*
-  //   Approach 2 (Multipart Request simple )
-  //   */
-  //
-  //   Map<String, String> _fields = {};
-  //
-  //   _fields['location_id[0]'] =
-  //       '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
-  //   _fields['business_id[0]'] =
-  //       '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.staffUser.businessId}';
-  //   _fields['contact_id[0]'] = '552';
-  //   _fields['transaction_date[0]'] = '${dateCtrl.text}';
-  //   _fields['invoice_no[0]'] = '';
-  //   _fields['status[0]'] = '${statusValue}';
-  //   _fields['is_quotation[0]'] = 'true';
-  //   _fields['tax_rate_id[0]'] = '13';
-  //   _fields['discount_type[0]'] = '${productCtrlCtrlObj.discountType.text}';
-  //   _fields['discount_amount[0]'] = '${productCtrlCtrlObj.discoutCtrl.text}';
-  //   _fields['sale_note[0]'] = 'created from retail app';
-  //   _fields['staff_note[0]'] = 'staff note';
-  //   _fields['commission_agent[0]'] = '0';
-  //   _fields['shipping_details[0]'] =
-  //       '${productCtrlCtrlObj.shippingDetailsCtrl.text}';
-  //   _fields['shipping_address[0]'] =
-  //       '${productCtrlCtrlObj.shippingAddressCtrl.text}';
-  //   _fields['shipping_status[0]'] =
-  //       '${productCtrlCtrlObj.shippingStatusCtrl.text}';
-  //   _fields['delivered_to[0]'] = '${productCtrlCtrlObj.deliveredTo.text}';
-  //   _fields['shipping_charges[0]'] =
-  //       '${productCtrlCtrlObj.shippingChargeCtrl.text}';
-  //   _fields['packing_charge[0]'] = '0.00';
-  //   _fields['exchange_rate[0]'] = '0';
-  //   _fields['selling_price_group_id[0]'] = '0';
-  //   _fields['pay_term_number[0]'] = '${payTermCtrl.text}';
-  //   _fields['pay_term_type[0]'] = '${paytermStatusValue}';
-  //   _fields['is_recurring[0]'] = '1';
-  //   _fields['recur_interval[0]'] = 'months';
-  //   _fields['recur_interval_type[0]'] = '0';
-  //   _fields['subscription_repeat_on[0]'] = '0';
-  //   _fields['subscription_no[0]'] = 'abc';
-  //   _fields['recur_repetitions[0]'] = '20';
-  //   _fields['rp_redeemed[0]'] = '1';
-  //   _fields['rp_redeemed_amount[0]'] = '13.5';
-  //   _fields['types_of_service_id[0]'] = '0.00';
-  //   _fields['service_custom_field_1[0]'] = 'abc';
-  //   _fields['service_custom_field_2[0]'] = 'abc';
-  //   _fields['service_custom_field_3[0]'] = 'abc';
-  //   _fields['service_custom_field_4[0]'] = 'abc';
-  //   _fields['round_off_amount[0]'] = '0.00';
-  //   _fields['table_id[0]'] = '';
-  //   _fields['service_staff_id[0]'] = '1';
-  //   _fields['change_return[0]'] = '0';
-  //
-  //   ///products details
-  //   if (searchProductModel != null) {
-  //     for (int i = 0; i < length; i++) {
-  //       if (productQuantityCtrl[i].text.isNotEmpty) {
-  //         _fields['products[product_id][$i]'] =
-  //             '${searchProductModel?[i].productId}';
-  //         _fields['products[variation_id][$i]'] =
-  //             '${searchProductModel?[i].variationId}';
-  //         _fields['products[quantity][$i]'] = '1';
-  //         _fields['products[tax_rate_id][$i]'] = '13';
-  //         _fields['products[discount_amount][$i]'] = '0';
-  //         _fields['products[discount_type][$i]'] = 'fixed';
-  //         _fields['products[sub_unit_id][$i]'] = '0';
-  //         _fields['products[note][$i]'] = 'product testing';
-  //       }
-  //     }
-  //   }
-  //
-  //   ///further fields
-  //   _fields['products[unit_price_inc_tax][0]'] = '100';
-  //   _fields['products[enable_stock][0]'] = '0';
-  //   _fields['products[product_type][0]'] = 'test';
-  //   _fields['products[product_unit_id][0]'] = '34';
-  //   _fields['products[unit_price][0]'] = '10';
-  //   _fields['products[item_tax][0]'] = '13';
-  //   _fields['products[tax_id][0]'] = '13';
-  //
-  //   ///Payments
-  //   _fields['payments[amount][0]'] = '100';
-  //   _fields['payments[method][0]'] = 'cash';
-  //   _fields['payments[account_id][0]'] = '2';
-  //   _fields['payments[card_number][0]'] = '';
-  //   _fields['payments[card_holder_name][0]'] = '';
-  //   _fields['payments[card_transaction_number][0]'] = '';
-  //   _fields['payments[card_type][0]'] = '';
-  //   _fields['payments[card_month][0]'] = '';
-  //   _fields['payments[card_year][0]'] = '';
-  //   _fields['payments[card_security][0]'] = '';
-  //   _fields['payments[transaction_no_1][0]'] = '';
-  //   _fields['payments[transaction_no_2][0]'] = '';
-  //   _fields['payments[transaction_no_3][0]'] = '';
-  //   _fields['payments[bank_account_number][0]'] = '';
-  //   _fields['payments[note][0]'] = '';
-  //   _fields['payments[cheque_number][0]'] = '';
-  //   logger.i(_fields);
-  //
-  //   // return await request.send().then((response) async {
-  //   //   String result = await response.stream.bytesToString();
-  //   return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
-  //       .then((response) async {
-  //     // logger.i('EndPoint => ${_url}'
-  //     //     '\nStatus Code => {response.statusCode}'
-  //     //     '\nResponse => $response');
-  //
-  //     if (response == null) return;
-  //     // clearOnOrderPlaceSuccess();
-  //     stopProgress();
-  //     showToast('Finalize Created Successfully');
-  //     Get.to(HomePageRetail());
-  //     //await Get.to(() => OrderPlaced());
-  //     // Get.offAll(HomePage());
-  //   }).onError((error, stackTrace) {
-  //     debugPrint('Error => $error');
-  //     logger.e('StackTrace => $stackTrace');
-  //     return null;
-  //   });
-  // }
+  String subTotalAmount({double ordersItemsSubTotalAmount = 0.0}) {
+    double itemsPriceCount = 0.0;
+    double itemsTax = 0.0;
+    try {
+      for (int i = 0; i < selectedProducts.length; i++) {
+        // itemsPriceCount += _itr.productTotalPrice;
+        itemsPriceCount += double.parse(
+                '${selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax ?? 0.0}') *
+            double.parse(selectedQuantityList[i]);
+      }
+    } catch (e) {
+      logger.e('Error to calculate sub total amount => $e');
+    }
+    try {
+      // if (!taxCtrlObj.isTaxEnable) {
+      //   // koi calculation nahi because inclusive tax of items already calculate ho rahi han or sava ho rahi han itemspricecount variable main
+      // } else {
+      //   // itemsTax = (itemsPriceCount *
+      //   //         double.parse(
+      //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+      //   //                 '0')) /
+      //   //     (100 +
+      //   //         double.parse(
+      //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+      //   //                 '0'));
+      //   itemsPriceCount = itemsPriceCount - itemsTax;
+      // }
+      //finalAmountIncVAT = '${itemsPriceCount + itemsTax}';
+    } catch (e) {
+      logger.e('Error to calculate sub total amount with tax => $e');
+    }
+    print(itemsPriceCount);
+    return AppFormat.doubleToStringUpTo2(
+            '${itemsPriceCount + ordersItemsSubTotalAmount}') ??
+        '0';
+  }
 
   ///Function to create order:::::
   orderCreate() async {
@@ -341,23 +328,24 @@ class AllProductsController extends GetxController {
     // API Method with url
 
     String _url = '${ApiUrls.createOrder}'; //
-    var length = searchProductModel?.length ?? 0;
     /*
     Approach 2 (Multipart Request simple )
     */
 
     Map<String, String> _fields = {};
-    _fields['transaction_date'] = '${DateTime.now()}';
+    _fields['transaction_date'] =
+        '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
     _fields['contact_id'] = '${contactCtrlObj.id}';
     _fields['service_staff_id'] =
         '${AppStorage.getLoggedUserData()?.staffUser.id}';
     _fields['created_by'] = '${AppStorage.getLoggedUserData()?.staffUser.id}';
 
-    _fields['status'] = 'final';
+    _fields['status'] = '${statusValue != null ? statusValue : 'final'}';
     _fields['type'] = 'sell';
-    _fields['discounttype'] = 'fixed';
-    _fields['discount_amount'] = '0';
-    _fields['tax_id'] = '13';
+    _fields['discounttype'] = '${productCtrlCtrlObj.discountType.text}';
+    _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
+    _fields['tax_id'] = '';
+    //'${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1}';
     _fields['final_total'] = '${finalTotal}';
     _fields['exchange_rate'] = '0.00';
     _fields['packing_charge'] = '0.00';
@@ -366,25 +354,28 @@ class AllProductsController extends GetxController {
         '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.staffUser.businessId}';
     _fields['location_id'] =
         '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
-    _fields['shipping_charges'] = '0';
+    _fields['shipping_charges'] =
+        '${productCtrlCtrlObj.shippingChargeCtrl.text.isNotEmpty ? productCtrlCtrlObj.shippingChargeCtrl.text : '0'}';
     _fields['is_suspend'] = '0';
-    _fields['total_before_tax'] = '0.00';
+    _fields['total_before_tax'] = '${subTotalAmount()}';
     // request.fields['discount_type'] = 'Fixed';
     _fields['tax_amount'] = '0.00';
-    _fields['discount_amount'] = '0.00';
-    if (searchProductModel != null)
-      for (int i = 0; i < length; i++) {
-        if (productQuantityCtrl[i].text.isNotEmpty) {
-          _fields['product_id[$i]'] = '${searchProductModel?[i].productId}';
-          _fields['variation_id[$i]'] = '${searchProductModel?[i].variationId}';
-          _fields['quantity[$i]'] = '${productQuantityCtrl[i].text}';
-          _fields['line_discount_type[$i]'] = 'fixed';
-          _fields['unit_price_before_discount[$i]'] = '0.00';
-          _fields['unit_price[$i]'] = '0.00';
-          _fields['unit_price_inc_tax[$i]'] = '0.00';
-          _fields['item_tax[$i]'] = '0.00';
-        }
+    for (int i = 0; i < selectedProducts.length; i++) {
+      if (selectedQuantityList[i].isNotEmpty) {
+        _fields['product_id[$i]'] = '${selectedProducts[i].id}';
+        _fields['variation_id[$i]'] =
+            '${selectedProducts[i].productVariations?.first.variations?.first.id}';
+        _fields['quantity[$i]'] = '${selectedQuantityList[i]}';
+        _fields['line_discount_type[$i]'] = 'fixed';
+        _fields['unit_price_before_discount[$i]'] =
+            '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+        _fields['unit_price[$i]'] =
+            '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+        _fields['unit_price_inc_tax[$i]'] =
+            '${selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax}';
+        _fields['item_tax[$i]'] = '0.00';
       }
+    }
 
     if (paymentCtrlObj.totalPayingAmount() == 0) {
       _fields['payment_status'] = 'due';
@@ -434,9 +425,30 @@ class AllProductsController extends GetxController {
 
       if (response == null) return;
       // clearOnOrderPlaceSuccess();
+      try {
+        salesOrderModel = await saleOrderDataModelFromJson(
+            jsonDecode(response)['transaction_data'][0]); //
+
+        if (isPDFView == true) {
+          Get.to(PrintData(
+            saleOrderDataModel: salesOrderModel,
+          ));
+          isPDFView = false;
+        }
+
+        Get.find<AllPrinterController>().orderDataForPrinting = salesOrderModel;
+      } catch (e) {
+        debugPrint('Error -> created order response parsing: $e');
+      }
+      AppStorage.setPrintedInvoiceOrderIDs(
+          Get.find<AllPrinterController>().orderDataForPrinting?.id);
+      await Get.find<AllPrinterController>().printInvoiceOfOrder();
+
       stopProgress();
+      clearAllOtherFields();
       showToast('Finalize Created Successfully');
-      Get.to(TabsPage());
+      Get.close(3);
+      // Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
     }).onError((error, stackTrace) {
@@ -446,42 +458,7 @@ class AllProductsController extends GetxController {
     });
   }
 
-  //// method to submit payment for sell page
-  Future addPaymentForSellPage(String orderId) async {
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
-    };
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${ApiUrls.orderPaymentAPI}$orderId'));
-
-    fieldsForAddPayment(request);
-
-    logger.i(request.fields);
-
-    request.headers.addAll(headers);
-
-    return await request.send().then((http.StreamedResponse response) async {
-      String result = await response.stream.bytesToString();
-      logger.i(
-          'EndPoint => ${ApiUrls.orderPaymentAPI}$orderId\nStatus Code => ${response.statusCode}\nResponse => $result');
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        clearAllAddPaymentControllerInformation();
-        // addPaymentWidget();
-        Get.back(result: true);
-      } else {
-        final jd = jsonDecode(result);
-        showToast(jd["message"]);
-        return null;
-      }
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      return null;
-    });
-  }
+  SaleOrderDataModel? salesOrderModel;
 
   void clearAllAddPaymentControllerInformation() {
     paymentCtrlObj.amountCtrl.clear();
@@ -492,6 +469,20 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.fileNameCtrl.clear();
     paymentCtrlObj.paymentMethodCtrl.clear();
     paymentCtrlObj.accountIdCtrl.clear();
+  }
+
+  void clearAllOtherFields() {
+    statusValue = null;
+    productQuantityCtrl.clear();
+    listProductsModel = null;
+    paymentCtrlObj.amountCtrl.clear();
+    paymentCtrlObj.transactionNoCtrl.clear();
+    paymentCtrlObj.paymentMethodCtrl.clear();
+    paymentCtrlObj.accountIdCtrl.clear();
+    paymentCtrlObj.paymentMethodCtrl.clear();
+    paymentCtrlObj.staffNoteCtrl.clear();
+    paymentCtrlObj.sellNoteCtrl.clear();
+    paymentCtrlObj.paymentNoteCtrl.clear();
   }
 
   fieldsForAddPayment(http.MultipartRequest request) {
@@ -514,128 +505,6 @@ class AllProductsController extends GetxController {
     // }
 
     request.fields['note[0]'] = '${paymentCtrlObj.paymentNoteCtrl.text}';
-  }
-
-  ///Function to create sell:::::
-  sellCreate() async {
-    // if (orderCtrlObj.singleOrderData?.id == null) {
-    //   showToast('Reference for update order is missing!');
-    //   return;
-    // }
-
-    /// Working with 2nd approach
-    multipartSellPutMethod();
-  }
-
-  multipartSellPutMethod() async {
-    // API Method with url
-
-    String _url = '${ApiUrls.createOrder}'; //
-    var length = searchProductModel?.length ?? 0;
-    /*
-    Approach 2 (Multipart Request simple )
-    */
-
-    Map<String, String> _fields = {};
-    _fields['transaction_date'] = '${DateTime.now()}';
-    _fields['contact_id'] = '${contactCtrlObj.id}';
-    _fields['service_staff_id'] =
-        '${AppStorage.getLoggedUserData()?.staffUser.id}';
-    _fields['created_by'] = '${AppStorage.getLoggedUserData()?.staffUser.id}';
-
-    _fields['status'] = '${statusValue}';
-    _fields['type'] = 'sell';
-    _fields['discounttype'] = '${productCtrlCtrlObj.discountType.text}';
-    _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
-    _fields['tax_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1}';
-    _fields['final_total'] = '${finalTotal}';
-    _fields['exchange_rate'] = '0.00';
-    _fields['packing_charge'] = '0.00';
-    _fields['packing_charge_type'] = 'fixed';
-    _fields['business_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.staffUser.businessId}';
-    _fields['location_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.staffUser.locationId}';
-    _fields['shipping_charges'] =
-        '${productCtrlCtrlObj.shippingChargeCtrl.text}';
-    _fields['is_suspend'] = '0';
-    _fields['total_before_tax'] = '0.00';
-    // request.fields['discount_type'] = 'Fixed';
-    _fields['tax_amount'] = '0.00';
-    _fields['discount_amount'] = '0.00';
-    if (searchProductModel != null)
-      for (int i = 0; i < length; i++) {
-        if (productQuantityCtrl[i].text.isNotEmpty) {
-          _fields['product_id[$i]'] = '${searchProductModel?[i].productId}';
-          _fields['variation_id[$i]'] = '${searchProductModel?[i].variationId}';
-          _fields['quantity[$i]'] = '${productQuantityCtrl[i].text}';
-          _fields['line_discount_type[$i]'] = 'fixed';
-          _fields['unit_price_before_discount[$i]'] = '0.00';
-          _fields['unit_price[$i]'] = '0.00';
-          _fields['unit_price_inc_tax[$i]'] = '0.00';
-          _fields['item_tax[$i]'] = '0.00';
-        }
-      }
-
-    if (paymentCtrlObj.totalPayingAmount() == 0) {
-      _fields['payment_status'] = 'due';
-    } else {
-      _fields['payment_status'] =
-          paymentCtrlObj.totalPayingAmount() < double.parse('${finalTotal}')
-              ? 'partial'
-              : 'paid';
-    }
-    // for order suspend = due, cash = paid / partial,
-
-    // Get.find<PaymentController>().fieldsForCheckout(request);
-    /// OR
-    for (int checkoutIndex = 0;
-        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
-        checkoutIndex++) {
-      _fields['amount[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.text}';
-      _fields['method[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.paymentMethod}';
-      _fields['account_id[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
-      _fields['card_type[$checkoutIndex]'] = 'credit'; // debit
-
-      if (paymentCtrlObj.isSelectedPaymentOptionCheque(index: checkoutIndex)) {
-        _fields['cheque_number[$checkoutIndex]'] =
-            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
-      } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
-          index: checkoutIndex)) {
-        _fields['transaction_no_1[$checkoutIndex]'] =
-            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
-      }
-
-      _fields['note[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.text}';
-    }
-
-    logger.i(_fields);
-
-    // return await request.send().then((response) async {
-    //   String result = await response.stream.bytesToString();
-    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
-        .then((response) async {
-      // logger.i('EndPoint => ${_url}'
-      //     '\nStatus Code => {response.statusCode}'
-      //     '\nResponse => $response');
-
-      if (response == null) return;
-      // clearOnOrderPlaceSuccess();
-      stopProgress();
-      showToast('Finalize Created Successfully');
-      Get.to(TabsPage());
-      //await Get.to(() => OrderPlaced());
-      // Get.offAll(HomePage());
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      return null;
-    });
   }
 
   ListProductsModel? listProductModel;
@@ -737,6 +606,328 @@ class AllProductsController extends GetxController {
       Get.find<AllSalesController>().callFirstOrderPageForReceipt();
       Get.close(1);
       //await Get.to(() => OrderPlaced());
+      // Get.offAll(HomePage());
+    }).onError((error, stackTrace) {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      return null;
+    });
+  }
+
+  // ///work on edit order:::
+  // void addAllOrderedItemsInCart(SaleOrderDataModel singleOrderData) {
+  //   //itemCartList.clear();
+  //   for (SellLine sellLineItem in singleOrderData.sellLines) {
+  //     addOrderItemInCart(sellLineItem);
+  //   }
+  // }
+
+  void editOrderFunction(SaleOrderDataModel? saleOrderData) {
+    // List<String> sku = [];
+    List<String> sku2 = [];
+
+    productQuantityCtrl.clear();
+    // for (int i = 0; i < searchProductModel.length; i++) {
+    //   sku.add(searchProductModel[i].subSku ?? '');
+    // }
+    for (int i = 0; i < saleOrderData!.sellLines.length; i++) {
+      sku2.add(saleOrderData.sellLines[i].product?.sku ?? '');
+    }
+    for (int i = 0; i < productModelObjs.length; i++) {
+      productQuantityCtrl.add(TextEditingController(
+        text: getOrderedProductQuantity(i, saleOrderData),
+      ));
+    }
+    calculateFinalAmount();
+    print('${orderedTotalAmount}');
+    update();
+  }
+
+  double orderedTotalAmount = 0.00;
+
+  String getOrderedProductQuantity(
+      int allProductsIndex, SaleOrderDataModel saleOrderData) {
+    try {
+      // print(productModelObjs[allProductsIndex].sku);
+      print(saleOrderData.sellLines
+              .firstWhereOrNull((saleLine) =>
+                  saleLine.product?.sku ==
+                  productModelObjs[allProductsIndex].sku)
+              ?.quantity
+              .toString() ??
+          '');
+      orderedTotalAmount = ((saleOrderData.sellLines
+                      .firstWhereOrNull((saleLine) =>
+                          saleLine.product?.sku ==
+                          productModelObjs[allProductsIndex].sku)
+                      ?.quantity ??
+                  0) *
+              double.parse(productModelObjs[allProductsIndex]
+                      .productVariations
+                      ?.first
+                      .variations
+                      ?.first
+                      .sellPriceIncTax ??
+                  '0.00') +
+          orderedTotalAmount);
+
+      return saleOrderData.sellLines
+              .firstWhereOrNull((saleLine) =>
+                  saleLine.product?.sku ==
+                  productModelObjs[allProductsIndex].sku)
+              ?.quantity
+              .toString() ??
+          '';
+    } catch (e) {
+      debugPrint(
+          'Error -> getOrderedProductQuantity -> all_product_controller => $e');
+      return '';
+    }
+  }
+
+  ///update order function
+  updateOrder({bool isOnlyCheckout = false, bool isPay = false}) async {
+    // if (orderCtrlObj.singleOrderData?.id == null) {
+    //   showToast('Reference for update order is missing!');
+    //   return;
+    // }
+
+    // simplePutMethod();
+
+    /// Working with 2nd approach
+    multipartUpdatePutMethod();
+
+    /// Worked but old method and invoice no issue was there
+    // requestPutMethod();
+  }
+
+  multipartUpdatePutMethod() async {
+    print(updateOrderId);
+    // API Method with url
+    String _url =
+        '${ApiUrls.sellUpdateOrder}${updateOrderId}'; //orderCtrlObj.singleOrderData?.id
+
+    /*
+    Approach 2 (Multipart Request simple )
+    */
+
+    Map<String, String> _fields = {};
+
+    var _request = http.MultipartRequest('POST', Uri.parse(_url));
+    // if (isPay) {
+    //   Get.find<PaymentController>()
+    //       .fieldsForCheckout(_request, finalTotalAmount());
+    //   // checkoutFieldsForCart(request);
+    // } else {
+    //   activeOrderFields(_request);
+    // }
+    _fields = _request.fields;
+
+    int _productIteration = 0;
+
+    // _fields['is_suspend'] = '$isSuspend';
+    _fields['is_suspend'] = '0';
+
+    _fields['transaction_date'] =
+        '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
+
+    // order service type
+    // OrderServiceDataModel? _typesOfService = (orderCtrlObj.isOrderUpdating &&
+    //             !orderManageCtrlObj.isServiceTypeSelectionValueUpdated
+    //         ? orderCtrlObj.singleOrderData?.typesOfService
+    //         : orderManageCtrlObj.selectedOrderType) ??
+    //     orderCtrlObj.singleOrderData?.typesOfService;
+    // _fields['types_of_service_id'] = '${_typesOfService?.id}';
+
+    // table information (if dine-in)
+    // TableDataModel? _table = _typesOfService?.name == AppValues.dineIn
+    //     ? ((orderCtrlObj.isOrderUpdating &&
+    //                 !tableManageCtrlObj.isTableSelectionValueUpdated
+    //             ? orderCtrlObj.singleOrderData?.tableData
+    //             : (tableManageCtrlObj.selectedTables.isNotEmpty)
+    //                 ? tableManageCtrlObj.selectedTables.first
+    //                 : null) ??
+    //         orderCtrlObj.singleOrderData?.tableData)
+    //     : null;
+    // if (_table != null) _fields['table_id'] = '${_table.id}';
+
+    // res waiter id and created by ???
+    _fields['service_staff_id'] =
+        '${AppStorage.getLoggedUserData()?.staffUser.id}';
+    // _fields['created_by'] = '${AppStorage.getLoggedUserData()?.staffUser.id}';
+
+    _fields['contact_id'] = '${contactCtrlObj.id}';
+
+    _fields['status'] = 'final';
+    _fields['type'] = 'sell';
+    // payment sy related kam
+    _fields['total_before_tax'] = subTotalAmount();
+    _fields['tax_amount'] = ''; //'${taxCtrlObj.orderTaxAmount}';
+    if (orderCtrlObj.singleOrderData?.taxId != null)
+      _fields['tax_rate__id'] = '${orderCtrlObj.singleOrderData?.taxId}';
+    _fields['discounttype'] = '${productCtrlCtrlObj.discountType.text}';
+    _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
+
+    _fields['final_total'] = '${finalTotal}';
+    // AppFormat.doubleToStringUpTo2('${double.parse(finalAmount())}') ??
+    //     '${orderCtrlObj.singleOrderData?.finalTotal}';
+
+    // _fields['exchange_rate'] = '${orderCtrlObj.singleOrderData?.exchangeRate}';
+
+    _fields['packing_charge'] = '0.00';
+    // packingChargeCtrl.text.isEmpty
+    //     ? (orderManageCtrlObj.selectedOrderType?.packingCharge ?? '0')
+    //     : packingChargeCtrl.text;
+    _fields['packing_charge_type'] = 'fixed';
+    // orderManageCtrlObj.selectedOrderType?.packingChargeType ?? 'fixed';
+
+    _fields['shipping_charges'] = '0.00';
+    // shippingChargeCtrl.text.isEmpty ? '0' : shippingChargeCtrl.text;
+
+    _fields['no_of_person'] = '0';
+    // noOfPersonsCtrl.text.isEmpty ? '0' : noOfPersonsCtrl.text;
+
+    for (int i = 0; i < selectedProducts.length; i++) {
+      if (selectedQuantityList[i].isNotEmpty) {
+        _fields['product_id[$i]'] = '${selectedProducts[i].id}';
+        _fields['variation_id[$i]'] =
+            '${selectedProducts[i].productVariations?.first.variations?.first.id}';
+        _fields['quantity[$i]'] = '${selectedQuantityList[i]}';
+        if (selectedProducts[i].productTax != null) {
+          _fields['tax_rate_id[$i]'] = '${selectedProducts[i].productTax?.id}';
+        }
+        // _fields['tax_rate_id[$_productIteration]'] = '${_itr.productTax?.id}';
+        if (selectedProducts[i].productVariations != null) {
+          _fields['line_discount_type[$i]'] = 'fixed';
+          _fields['unit_price_before_discount[$i]'] =
+              '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+          _fields['unit_price[$i]'] =
+              '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+          _fields['unit_price_inc_tax[$i]'] =
+              '${selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax}';
+          _fields['item_tax[$i]'] = '0.00';
+        }
+      }
+    }
+
+    if (paymentCtrlObj.totalPayingAmount() == 0) {
+      _fields['payment_status'] = 'due';
+    } else {
+      _fields['payment_status'] =
+          paymentCtrlObj.totalPayingAmount() < double.parse('${finalTotal}')
+              ? 'partial'
+              : 'paid';
+    }
+    // for order suspend = due, cash = paid / partial,
+
+    // Get.find<PaymentController>().fieldsForCheckout(request);
+    /// OR
+    for (int checkoutIndex = 0;
+        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
+        checkoutIndex++) {
+      _fields['amount[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.text}';
+      _fields['method[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.paymentMethod}';
+      _fields['account_id[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
+      _fields['card_type[$checkoutIndex]'] = 'credit'; // debit
+
+      if (paymentCtrlObj.isSelectedPaymentOptionCheque(index: checkoutIndex)) {
+        _fields['cheque_number[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
+      } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
+          index: checkoutIndex)) {
+        _fields['transaction_no_1[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+      }
+
+      _fields['note[$checkoutIndex]'] =
+          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.text}';
+    }
+
+    // for (var _itr in selectedProducts) {
+    //   if (_itr.modifier.isNotEmpty) {
+    //     List<int> allModifierIds = [], allModifierVariationIds = [];
+    //     _itr.modifier?.forEach(
+    //       (_mod) {
+    //         if (!allModifierIds.contains(_mod.productModifier.id)) {
+    //           _mod.productModifier.variations.forEach(
+    //             (_vars) {
+    //               if (!allModifierVariationIds.contains(_vars.id)) {
+    //                 allModifierIds.add(_mod.productModifier.id);
+    //                 allModifierVariationIds.add(_vars.id);
+    //               }
+    //             },
+    //           );
+    //         }
+    //       },
+    //     );
+    //     _fields['parent_sell_line_id[$_productIteration]'] =
+    //         '$allModifierIds';
+    //     // request.fields['variation_id[$i]'] = '$allModifierVariationIds';
+    //   }
+    //
+    //   _productIteration++;
+    // }
+
+    // if (orderCtrlObj.singleOrderData != null &&
+    //     orderCtrlObj.singleOrderData!.sellLines.isNotEmpty)
+    //   for (var _itr in orderCtrlObj.singleOrderData!.sellLines) {
+    //     _fields['product_id[$_productIteration]'] = '${_itr.productId}';
+    //     _fields['variation_id[$_productIteration]'] = '${_itr.productId}';
+    //     _fields['quantity[$_productIteration]'] = '${_itr.quantity}';
+    //     _fields['unit_price[$_productIteration]'] = '${_itr.unitPrice}';
+    //     _fields['unit_price_inc_tax[$_productIteration]'] =
+    //         '${_itr.unitPriceIncTax}';
+    //     _productIteration++;
+    //   }
+
+    logger.i(_fields);
+
+    showProgress();
+    return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
+        .then((response) async {
+      // logger.i('EndPoint => ${_url}'
+      //     '\nStatus Code => {response.statusCode}'
+      //     '\nResponse => $response');
+
+      if (response == null) return;
+
+      /// -----
+      /// -----
+      /// Print invoice & kot on order edit
+      /// -----
+      /// -----
+      // Response Parsing for printing and auto print KOT and auto print Invoice
+      // try {
+      //   Get.find<AllPrinterController>().orderDataForPrinting =
+      //       saleOrderDataModelFromJson(jsonDecode(response)['transaction'][0]);
+      // } catch (e) {
+      //   debugPrint('Error -> created order response parsing: $e');
+      // }
+
+      // print slips in relevant kitchens
+      // await Get.find<AllPrinterController>()
+      //     .setCreatedOrderKitchensNonAutoPrints();
+      //
+      // // if the order type is not dine-in, invoice should print automatically
+      // if (orderManageCtrlObj.selectedOrderType?.name != AppValues.dineIn &&
+      //     (isOnlyCheckout || isPay)) {
+      //   await Get.find<AllPrinterController>().printInvoiceOfOrder();
+      // }
+      stopProgress();
+      // -----
+      showToast('Order Updated Successfully');
+      clearAllOtherFields();
+      isUpdate = false;
+      update();
+      //setting home page side area to order type selection
+      Get.offAll(HomePageRetail());
+
+      //to fetch the active orders
+      // Get.find<OrderController>().fetchActiveOrders();
+      clearAllAddPaymentControllerInformation();
       // Get.offAll(HomePage());
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');

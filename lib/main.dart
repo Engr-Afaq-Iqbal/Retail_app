@@ -4,10 +4,12 @@ import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenControl
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
+import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
 import 'package:bizmodo_emenu/Controllers/ProductController/PaymentController.dart';
 import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
+import 'package:bizmodo_emenu/Controllers/exception_controller.dart';
 import 'package:bizmodo_emenu/Controllers/register/RegisterController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '/Config/const.dart';
 import '/Controllers/AuthController/auth_controller.dart';
@@ -23,6 +26,7 @@ import '/Controllers/ContactController/ContactController.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Controllers/TableSelectionController/table_management_controller.dart';
+import 'Controllers/AllPrinterController/allPrinterController.dart';
 import 'Controllers/AllSalesController/allSalesController.dart';
 import 'Controllers/Booking Controller/BookingController.dart';
 import 'Controllers/ListUserController/ListUserController.dart';
@@ -83,16 +87,19 @@ void main() async {
   // }
 
   runApp(
-    Phoenix(
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<LanguageCubit>(
-            create: (context) => LanguageCubit(),
+    UpgradeAlert(
+      upgrader: MyUpgrader(),
+      child: Phoenix(
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<LanguageCubit>(
+              create: (context) => LanguageCubit(),
+            ),
+          ],
+          child: BizModoEMenu(
+            currLang,
+            currCountryCode,
           ),
-        ],
-        child: BizModoEMenu(
-          currLang,
-          currCountryCode,
         ),
       ),
     ),
@@ -106,12 +113,13 @@ void main() async {
 // }
 
 void initializeControllers() {
+  Get.put(ExceptionController());
   Get.put(ThemeController());
   Get.put(AuthController());
   Get.put(DashboardController());
   Get.put(NotificationsController());
   Get.put(TableSelectionController());
-
+  Get.put(AllPrinterController());
   Get.put(OrderTypeSelectionController());
   Get.put(ContactController());
   Get.put(OrderController());
@@ -134,6 +142,7 @@ void initializeControllers() {
   Get.put(ReceiptsController());
   Get.put(QuotationController());
   Get.put(UploadController());
+  Get.put(FundsController());
 }
 
 class BizModoEMenu extends StatefulWidget {
@@ -170,6 +179,18 @@ class _BizModoEMenuState extends State<BizModoEMenu> {
         },
       ),
     );
+  }
+}
+
+/// This class extends / subclasses Upgrader.
+class MyUpgrader extends Upgrader {
+  MyUpgrader() : super(debugLogging: true);
+
+  /// This method overrides super class method.
+  @override
+  void popNavigator(BuildContext context) {
+    print('this method overrides popNavigator');
+    super.popNavigator(context);
   }
 }
 

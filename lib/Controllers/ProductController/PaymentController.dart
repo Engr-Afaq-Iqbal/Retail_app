@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../Config/DateTimeFormat.dart';
 import '../../Config/const.dart';
 import '../../Services/storage_services.dart';
 import '../register/RegisterController.dart';
@@ -33,12 +34,13 @@ class PaymentController extends GetxController {
   /// payment widget list handlers
   RxList<PaymentFields> paymentWidgetList = <PaymentFields>[].obs;
 
-  addPaymentWidget({PaymentFields? paymentWidget}) {
+  addPaymentWidget({PaymentFields? paymentWidget, double? totalAmount}) {
     paymentWidgetList.add(
       paymentWidget ??
           PaymentFields(
             key: UniqueKey(),
             enabledPaymentOptions: getAllowedPayments(),
+            remainingAmount: _calculateRemainingAmountForCheckout(totalAmount),
           ),
     );
   }
@@ -94,30 +96,30 @@ class PaymentController extends GetxController {
 
     if (businessLocations.length > 1) {
       for (int i = 0; i < businessLocations.length; i++) {
-        if (businessLocations[i].id ==
-            regCtrlObj.openedRegisterStatus?.locationId) {
-          for (int j = 0;
-              j < businessLocations[i].paymentAccount!.length;
-              j++) {
-            if (businessLocations[i].paymentAccount?[j] != null &&
-                businessLocations[i].paymentAccount![j].isEnabled) {
-              _enabledPaymentOptionsList
-                  .add(businessLocations[i].paymentAccount![j]);
-            }
+        // if (businessLocations[i].id ==
+        //     regCtrlObj.openedRegisterStatus?.locationId) {
+        for (int j = 0; j < businessLocations[i].paymentAccount!.length; j++) {
+          if (businessLocations[i].paymentAccount?[j] != null &&
+              businessLocations[i].paymentAccount![j].isEnabled) {
+            _enabledPaymentOptionsList
+                .add(businessLocations[i].paymentAccount![j]);
+            print(businessLocations[0].paymentAccount![j]);
           }
         }
-      }
-    } else {
-      for (int j = 0; j < businessLocations.first.paymentAccount!.length; j++) {
-        if (businessLocations.first.paymentAccount?[j] != null &&
-            businessLocations.first.paymentAccount![j].isEnabled) {
-          _enabledPaymentOptionsList
-              .add(businessLocations.first.paymentAccount![j]);
-        }
+        // }
       }
     }
+    // else {
+    //   for (int j = 0; j < businessLocations.first.paymentAccount!.length; j++) {
+    //     if (businessLocations.first.paymentAccount?[j] != null &&
+    //         businessLocations.first.paymentAccount![j].isEnabled) {
+    //       _enabledPaymentOptionsList
+    //           .add(businessLocations.first.paymentAccount![j]);
+    //     }
+    //   }
+    // }
 
-    // logger.i('Payment options => $_enabledPaymentOptionsList');
+    logger.i('Payment options => $_enabledPaymentOptionsList');
     return _enabledPaymentOptionsList;
   }
 
@@ -128,6 +130,17 @@ class PaymentController extends GetxController {
   // addOrUpdatePaymentFieldsInformation() {
   //   // paymentInformation.addAllIf(condition, values);
   // }
+
+  String? _calculateRemainingAmountForCheckout(double? totalAmount) {
+    double enteredAmountToPay = totalAmount ?? 0.0;
+    if (paymentWidgetList.length > 0) {
+      for (var pay in paymentWidgetList) {
+        enteredAmountToPay -=
+            (double.tryParse('${pay.amountCtrl.text}') ?? 0.0);
+      }
+    }
+    return AppFormat.doubleToStringUpTo2(enteredAmountToPay.toString());
+  }
 
   /// helper functions
   bool isSelectedPaymentOptionCheque(

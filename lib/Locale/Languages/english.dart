@@ -460,5 +460,6 @@ Map<String, String> english() {
     'default_selling_price': 'Default Selling Price',
     'choose_file': 'Choose File',
     'view_products': 'View Product',
+    'funds_transfer': 'Funds Transfer',
   };
 }

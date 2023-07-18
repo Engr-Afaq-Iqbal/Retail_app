@@ -1,6 +1,9 @@
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
+import 'package:bizmodo_emenu/Pages/PrintDesign/pdfGenerate.dart';
+import 'package:bizmodo_emenu/Pages/PrintDesign/pos_print_layout.dart';
 import 'package:bizmodo_emenu/Pages/SalesView/paymentDetails.dart';
 import 'package:bizmodo_emenu/Pages/SalesView/shippingCharge.dart';
+import 'package:bizmodo_emenu/Pages/print_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -68,7 +71,8 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
       },
     );
 
-    allProdCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    allProdCtrlObj.dateCtrl.text =
+        '${AppFormat.dateDDMMYY(dateTime ?? DateTime.now())}';
     print(dateTime);
   }
 
@@ -102,8 +106,8 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                headings(txt: 'Add Sale'),
-                Divider(),
+                // headings(txt: 'Add Sale'),
+                // Divider(),
                 SizedBox(
                   height: 10,
                 ),
@@ -111,96 +115,70 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        headings(txt: 'Pay term:'),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppFormField(
-                              controller: allProdCtrlObj.payTermCtrl,
-                              labelText: '',
-                              width: width * 0.15,
-                            ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            DropdownButtonHideUnderline(
-                              child: DropdownButton2(
-                                isExpanded: true,
-                                hint: Align(
-                                    alignment: AlignmentDirectional.centerStart,
-                                    child: Text(
-                                      'Select',
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w400,
-                                        color: txtFieldHintColor,
-                                      ),
-                                    )),
-                                items: allProdCtrlObj.payTermList().map((e) {
-                                  return DropdownMenuItem(
-                                      value: e, child: Text(e));
-                                }).toList(),
-                                value: allProdCtrlObj.paytermStatusValue,
-                                dropdownDirection:
-                                    DropdownDirection.textDirection,
-                                dropdownPadding:
-                                    EdgeInsets.only(left: 5, right: 5),
-                                buttonPadding:
-                                    EdgeInsets.only(left: 15, right: 15),
-                                onChanged: (String? value) {
-                                  setState(() {
-                                    allProdCtrlObj.paytermStatusValue = value;
-                                  });
-                                },
-                                buttonHeight: height * 0.06,
-                                buttonWidth: width * 0.26,
-                                buttonDecoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: kWhiteColor),
-                                itemHeight: 40,
-                                itemPadding: EdgeInsets.zero,
-                                itemHighlightColor:
-                                    Theme.of(context).colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        headings(txt: 'Sale Date:'),
-                        AppFormField(
-                          width: width * 0.43,
-                          readOnly: true,
-                          controller: allSalesCtrlObj.dateCtrl,
-                          labelText: 'Select Date',
-                          prefixIcon: Icon(Icons.calendar_month),
-                          onTap: () {
-                            setState(() {
-                              _showDatePicker();
-
-                              //_show(context);
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     headings(txt: 'Pay term:'),
+                    //     Row(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       children: [
+                    //         AppFormField(
+                    //           controller: allProdCtrlObj.payTermCtrl,
+                    //           labelText: '',
+                    //           width: width * 0.15,
+                    //         ),
+                    //         SizedBox(
+                    //           width: 2,
+                    //         ),
+                    //         DropdownButtonHideUnderline(
+                    //           child: DropdownButton2(
+                    //             isExpanded: true,
+                    //             hint: Align(
+                    //                 alignment: AlignmentDirectional.centerStart,
+                    //                 child: Text(
+                    //                   'Select',
+                    //                   style: TextStyle(
+                    //                     fontSize: 13,
+                    //                     fontWeight: FontWeight.w400,
+                    //                     color: txtFieldHintColor,
+                    //                   ),
+                    //                 )),
+                    //             items: allProdCtrlObj.payTermList().map((e) {
+                    //               return DropdownMenuItem(
+                    //                   value: e, child: Text(e));
+                    //             }).toList(),
+                    //             value: allProdCtrlObj.paytermStatusValue,
+                    //             dropdownDirection:
+                    //                 DropdownDirection.textDirection,
+                    //             dropdownPadding:
+                    //                 EdgeInsets.only(left: 5, right: 5),
+                    //             buttonPadding:
+                    //                 EdgeInsets.only(left: 15, right: 15),
+                    //             onChanged: (String? value) {
+                    //               setState(() {
+                    //                 allProdCtrlObj.paytermStatusValue = value;
+                    //               });
+                    //             },
+                    //             buttonHeight: height * 0.06,
+                    //             buttonWidth: width * 0.26,
+                    //             buttonDecoration: BoxDecoration(
+                    //                 border: Border.all(
+                    //                     width: 1,
+                    //                     color: Theme.of(context)
+                    //                         .colorScheme
+                    //                         .primary),
+                    //                 borderRadius: BorderRadius.circular(15),
+                    //                 color: kWhiteColor),
+                    //             itemHeight: 40,
+                    //             itemPadding: EdgeInsets.zero,
+                    //             itemHighlightColor:
+                    //                 Theme.of(context).colorScheme.primary,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ],
+                    // ),
                     if (widget.isSale == false)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,49 +234,75 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Invoice Schema:'),
-                        DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                            isExpanded: true,
-                            hint: Align(
-                                alignment: AlignmentDirectional.centerStart,
-                                child: Text(
-                                  'Please Select',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                    color: txtFieldHintColor,
-                                  ),
-                                )),
-                            items: allProdCtrlObj.invoiceSchemaList().map((e) {
-                              return DropdownMenuItem(value: e, child: Text(e));
-                            }).toList(),
-                            value: allProdCtrlObj.invoiceSchemaStatusValue,
-                            dropdownDirection: DropdownDirection.textDirection,
-                            dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                            buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                            onChanged: (String? value) {
-                              setState(() {
-                                allProdCtrlObj.invoiceSchemaStatusValue = value;
-                              });
-                            },
-                            buttonHeight: height * 0.06,
-                            buttonWidth: width * 0.43,
-                            buttonDecoration: BoxDecoration(
-                                border: Border.all(
-                                    width: 1,
-                                    color:
-                                        Theme.of(context).colorScheme.primary),
-                                borderRadius: BorderRadius.circular(15),
-                                color: kWhiteColor),
-                            itemHeight: 40,
-                            itemPadding: EdgeInsets.zero,
-                            itemHighlightColor:
-                                Theme.of(context).colorScheme.primary,
-                          ),
+                        headings(txt: 'Sale Date:'),
+                        AppFormField(
+                          width: width * 0.43,
+                          readOnly: true,
+                          controller: allSalesCtrlObj.dateCtrl,
+                          labelText: 'Select Date',
+                          prefixIcon: Icon(Icons.calendar_month),
+                          onTap: () {
+                            setState(() {
+                              _showDatePicker();
+
+                              //_show(context);
+                            });
+                          },
                         ),
                       ],
                     ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     headings(txt: 'Invoice Schema:'),
+                    //     DropdownButtonHideUnderline(
+                    //       child: DropdownButton2(
+                    //         isExpanded: true,
+                    //         hint: Align(
+                    //             alignment: AlignmentDirectional.centerStart,
+                    //             child: Text(
+                    //               'Please Select',
+                    //               style: TextStyle(
+                    //                 fontSize: 13,
+                    //                 fontWeight: FontWeight.w400,
+                    //                 color: txtFieldHintColor,
+                    //               ),
+                    //             )),
+                    //         items: allProdCtrlObj.invoiceSchemaList().map((e) {
+                    //           return DropdownMenuItem(value: e, child: Text(e));
+                    //         }).toList(),
+                    //         value: allProdCtrlObj.invoiceSchemaStatusValue,
+                    //         dropdownDirection: DropdownDirection.textDirection,
+                    //         dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                    //         buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                    //         onChanged: (String? value) {
+                    //           setState(() {
+                    //             allProdCtrlObj.invoiceSchemaStatusValue = value;
+                    //           });
+                    //         },
+                    //         buttonHeight: height * 0.06,
+                    //         buttonWidth: width * 0.43,
+                    //         buttonDecoration: BoxDecoration(
+                    //             border: Border.all(
+                    //                 width: 1,
+                    //                 color:
+                    //                     Theme.of(context).colorScheme.primary),
+                    //             borderRadius: BorderRadius.circular(15),
+                    //             color: kWhiteColor),
+                    //         itemHeight: 40,
+                    //         itemPadding: EdgeInsets.zero,
+                    //         itemHighlightColor:
+                    //             Theme.of(context).colorScheme.primary,
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
                 SizedBox(
@@ -328,10 +332,10 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                         ),
                         // SearchSaleProducts(),
                         Container(
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.45,
                           child: GetBuilder<AllProductsController>(
                               builder: (AllProductsController allProdCtrlObj) {
-                            if (allProdCtrlObj.searchProductModel == null) {
+                            if (allProdCtrlObj.listProductsModel == null) {
                               return progressIndicator();
                             }
                             return ListView.builder(
@@ -341,7 +345,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
                                 itemCount:
-                                    allProdCtrlObj.searchProductModel?.length,
+                                    allProdCtrlObj.productModelObjs.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     margin: EdgeInsets.only(
@@ -362,7 +366,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                '${allProdCtrlObj.productModelObjs[index].name}',
                                                 overflow: TextOverflow.ellipsis,
                                                 softWrap: true,
                                               ),
@@ -382,6 +386,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                                       ? kWhiteColor
                                                       : Colors.transparent,
                                                   onChanged: (value) {
+                                                    //multiplying quantity with product amount
                                                     if (allProdCtrlObj
                                                             .productQuantityCtrl[
                                                                 index]
@@ -395,7 +400,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                                       allProdCtrlObj
                                                                   .totalAmount[
                                                               index] =
-                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
+                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
                                                       allProdCtrlObj
                                                           .calculateFinalAmount();
                                                       debugPrint(
@@ -411,7 +416,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                               flex: 1,
                                               child: Center(
                                                 child: Text(
-                                                  '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                  '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax)}',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
@@ -527,7 +532,9 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
-                                allProdCtrlObj.sellCreate();
+                                allProdCtrlObj.update();
+                                allProdCtrlObj.addSelectedItemsInList();
+                                allProdCtrlObj.orderCreate();
                               },
                               bgColor: Theme.of(context).colorScheme.primary,
                             ),
@@ -540,7 +547,10 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
-                                Get.back();
+                                allProdCtrlObj.isPDFView = false;
+                                allProdCtrlObj.addSelectedItemsInList();
+                                allProdCtrlObj.orderCreate();
+                                // Get.back();
                               },
                               bgColor: Theme.of(context).colorScheme.primary,
                             )

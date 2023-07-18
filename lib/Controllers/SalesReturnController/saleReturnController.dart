@@ -186,7 +186,7 @@ class SaleReturnController extends GetxController {
 
     Map<String, String> _fields = {};
     _fields['transaction_id'] = '${transactionIdCtrl.text}';
-    _fields['transaction_date'] = '${saleReturnDateCtrl.text}';
+    // _fields['transaction_date'] = AppFormat.dateYYYYMMDDHHMM24(DateTime.now());
     _fields['invoice_no'] = '${invoiceNbrCtrl.text}';
     _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
     _fields['discount_type'] = '${productCtrlCtrlObj.discountType.text}';
@@ -194,7 +194,7 @@ class SaleReturnController extends GetxController {
       for (int i = 0; i < length; i++) {
         if (returnQtyCtrl[i].text.isNotEmpty) {
           _fields['sell_line_id[$i]'] =
-              '${editSaleReturnModelDart?.sellLines?[i].productId}';
+              '${editSaleReturnModelDart?.sellLines?[i].id}';
           _fields['quantity[$i]'] = '${returnQtyCtrl[i].text}';
           _fields['unit_price_inc_tax[$i]'] =
               '${editSaleReturnModelDart?.sellLines?[i].unitPriceIncTax}';

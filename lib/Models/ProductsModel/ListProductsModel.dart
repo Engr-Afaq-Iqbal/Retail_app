@@ -87,7 +87,7 @@ class Datum {
   int? id;
   String? name;
   int? businessId;
-  dynamic shortCode;
+  String? shortCode;
   int? parentId;
   int? createdBy;
   dynamic woocommerceCatId;
@@ -130,7 +130,7 @@ class Datum {
         parentId: json["parent_id"],
         createdBy: json["created_by"],
         woocommerceCatId: json["woocommerce_cat_id"],
-        categoryType: categoryTypeValues.map[json["category_type"]]!,
+        categoryType: categoryTypeValues.map[json["category_type"]],
         description: json["description"],
         slug: json["slug"],
         deletedAt: json["deleted_at"],
@@ -140,7 +140,7 @@ class Datum {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        color: colorValues.map[json["color"]]!,
+        color: colorValues.map[json["color"]],
         image: json["image"],
         standardPurity: json["standard_purity"],
         products: json["products"] == null
@@ -228,15 +228,15 @@ class Product {
   dynamic expiryPeriodType;
   int? enableSrNo;
   String? weight;
-  ProductCustomField1? productCustomField1;
-  ProductCustomField? productCustomField2;
-  ProductCustomField? productCustomField3;
-  ProductCustomField4? productCustomField4;
+  String? productCustomField1;
+  String? productCustomField2;
+  String? productCustomField3;
+  String? productCustomField4;
   String? image;
   dynamic woocommerceMediaId;
   String? productDescription;
   int? createdBy;
-  dynamic preparationTimeInMinutes;
+  int? preparationTimeInMinutes;
   dynamic woocommerceProductId;
   int? woocommerceDisableSync;
   int? warrantyId;
@@ -250,15 +250,16 @@ class Product {
   int? modifierStatus;
   int? inputField;
   String? imageUrl;
+  ProductVariationsDetails? productVariationsDetails;
   Kitchen? kitchen;
   List<ProductVariation>? productVariations;
   ProductTax? productTax;
   Brand? brand;
   List<Modifier>? modifier;
   List<Product>? modifierSets;
-  List<dynamic>? productLocations;
+  List<ProductLocation>? productLocations;
   List<Variation>? variations;
-  Pivot? pivot;
+  ProductPivot? pivot;
 
   Product({
     this.id,
@@ -303,6 +304,7 @@ class Product {
     this.modifierStatus,
     this.inputField,
     this.imageUrl,
+    this.productVariationsDetails,
     this.kitchen,
     this.productVariations,
     this.productTax,
@@ -318,7 +320,7 @@ class Product {
         id: json["id"],
         name: json["name"],
         businessId: json["business_id"],
-        type: typeValues.map[json["type"]]!,
+        type: typeValues.map[json["type"]],
         unitId: json["unit_id"],
         secondaryUnitId: json["secondary_unit_id"],
         subUnitIds: json["sub_unit_ids"],
@@ -326,23 +328,19 @@ class Product {
         categoryId: json["category_id"],
         subCategoryId: json["sub_category_id"],
         tax: json["tax"],
-        taxType: taxTypeValues.map[json["tax_type"]]!,
+        taxType: taxTypeValues.map[json["tax_type"]],
         enableStock: json["enable_stock"],
         alertQuantity: json["alert_quantity"],
         sku: json["sku"],
-        barcodeType: barcodeTypeValues.map[json["barcode_type"]]!,
+        barcodeType: barcodeTypeValues.map[json["barcode_type"]],
         expiryPeriod: json["expiry_period"],
         expiryPeriodType: json["expiry_period_type"],
         enableSrNo: json["enable_sr_no"],
         weight: json["weight"],
-        productCustomField1:
-            productCustomField1Values.map[json["product_custom_field1"]]!,
-        productCustomField2:
-            productCustomFieldValues.map[json["product_custom_field2"]]!,
-        productCustomField3:
-            productCustomFieldValues.map[json["product_custom_field3"]]!,
-        productCustomField4:
-            productCustomField4Values.map[json["product_custom_field4"]]!,
+        productCustomField1: json["product_custom_field1"],
+        productCustomField2: json["product_custom_field2"],
+        productCustomField3: json["product_custom_field3"],
+        productCustomField4: json["product_custom_field4"],
         image: json["image"],
         woocommerceMediaId: json["woocommerce_media_id"],
         productDescription: json["product_description"],
@@ -367,6 +365,10 @@ class Product {
         modifierStatus: json["modifier_status"],
         inputField: json["input_field"],
         imageUrl: json["image_url"],
+        productVariationsDetails: json["product_variations_details"] == null
+            ? null
+            : ProductVariationsDetails.fromJson(
+                json["product_variations_details"]),
         kitchen:
             json["kitchen"] == null ? null : Kitchen.fromJson(json["kitchen"]),
         productVariations: json["product_variations"] == null
@@ -387,12 +389,14 @@ class Product {
                 json["modifier_sets"]!.map((x) => Product.fromJson(x))),
         productLocations: json["product_locations"] == null
             ? []
-            : List<dynamic>.from(json["product_locations"]!.map((x) => x)),
+            : List<ProductLocation>.from(json["product_locations"]!
+                .map((x) => ProductLocation.fromJson(x))),
         variations: json["variations"] == null
             ? []
             : List<Variation>.from(
                 json["variations"]!.map((x) => Variation.fromJson(x))),
-        pivot: json["pivot"] == null ? null : Pivot.fromJson(json["pivot"]),
+        pivot:
+            json["pivot"] == null ? null : ProductPivot.fromJson(json["pivot"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -416,14 +420,10 @@ class Product {
         "expiry_period_type": expiryPeriodType,
         "enable_sr_no": enableSrNo,
         "weight": weight,
-        "product_custom_field1":
-            productCustomField1Values.reverse[productCustomField1],
-        "product_custom_field2":
-            productCustomFieldValues.reverse[productCustomField2],
-        "product_custom_field3":
-            productCustomFieldValues.reverse[productCustomField3],
-        "product_custom_field4":
-            productCustomField4Values.reverse[productCustomField4],
+        "product_custom_field1": productCustomField1,
+        "product_custom_field2": productCustomField2,
+        "product_custom_field3": productCustomField3,
+        "product_custom_field4": productCustomField4,
         "image": image,
         "woocommerce_media_id": woocommerceMediaId,
         "product_description": productDescription,
@@ -442,6 +442,7 @@ class Product {
         "modifier_status": modifierStatus,
         "input_field": inputField,
         "image_url": imageUrl,
+        "product_variations_details": productVariationsDetails?.toJson(),
         "kitchen": kitchen?.toJson(),
         "product_variations": productVariations == null
             ? []
@@ -456,7 +457,7 @@ class Product {
             : List<dynamic>.from(modifierSets!.map((x) => x.toJson())),
         "product_locations": productLocations == null
             ? []
-            : List<dynamic>.from(productLocations!.map((x) => x)),
+            : List<dynamic>.from(productLocations!.map((x) => x.toJson())),
         "variations": variations == null
             ? []
             : List<dynamic>.from(variations!.map((x) => x.toJson())),
@@ -464,13 +465,12 @@ class Product {
       };
 }
 
-enum BarcodeType { C128, C39, EAN13, EMPTY }
+enum BarcodeType { C128, C39, EAN13 }
 
 final barcodeTypeValues = EnumValues({
   "C128": BarcodeType.C128,
   "C39": BarcodeType.C39,
-  "EAN13": BarcodeType.EAN13,
-  "": BarcodeType.EMPTY
+  "EAN13": BarcodeType.EAN13
 });
 
 class Brand {
@@ -557,8 +557,8 @@ class Kitchen {
         id: json["id"],
         businessId: json["business_id"],
         locationId: json["location_id"],
-        name: purpleNameValues.map[json["name"]]!,
-        description: descriptionEnumValues.map[json["description"]]!,
+        name: purpleNameValues.map[json["name"]],
+        description: descriptionEnumValues.map[json["description"]],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -677,12 +677,12 @@ class Printer {
   factory Printer.fromJson(Map<String, dynamic> json) => Printer(
         id: json["id"],
         businessId: json["business_id"],
-        name: printerNameValues.map[json["name"]]!,
-        connectionType: connectionTypeValues.map[json["connection_type"]]!,
+        name: printerNameValues.map[json["name"]],
+        connectionType: connectionTypeValues.map[json["connection_type"]],
         capabilityProfile:
-            capabilityProfileValues.map[json["capability_profile"]]!,
+            capabilityProfileValues.map[json["capability_profile"]],
         charPerLine: json["char_per_line"],
-        ipAddress: ipAddressValues.map[json["ip_address"]]!,
+        ipAddress: ipAddressValues.map[json["ip_address"]],
         port: json["port"],
         path: json["path"],
         createdBy: json["created_by"],
@@ -743,16 +743,16 @@ final purpleNameValues = EnumValues({
   "Veg 1": PurpleName.VEG_1
 });
 
-class Pivot {
+class ProductPivot {
   int? productId;
   int? modifierSetId;
 
-  Pivot({
+  ProductPivot({
     this.productId,
     this.modifierSetId,
   });
 
-  factory Pivot.fromJson(Map<String, dynamic> json) => Pivot(
+  factory ProductPivot.fromJson(Map<String, dynamic> json) => ProductPivot(
         productId: json["product_id"],
         modifierSetId: json["modifier_set_id"],
       );
@@ -763,29 +763,206 @@ class Pivot {
       };
 }
 
-enum ProductCustomField1 { EMPTY, FF, BH }
+class ProductLocation {
+  int? id;
+  int? businessId;
+  LocationId? locationId;
+  ProductLocationName? name;
+  Landmark? landmark;
+  Country? country;
+  City? state;
+  City? city;
+  String? zipCode;
+  int? invoiceSchemeId;
+  int? invoiceLayoutId;
+  int? saleInvoiceLayoutId;
+  int? sellingPriceGroupId;
+  int? printReceiptOnInvoice;
+  ReceiptPrinterType? receiptPrinterType;
+  int? printerId;
+  String? mobile;
+  dynamic alternateNumber;
+  Email? email;
+  String? website;
+  List<String>? featuredProducts;
+  int? isActive;
+  String? defaultPaymentAccounts;
+  dynamic customField1;
+  dynamic customField2;
+  dynamic customField3;
+  dynamic customField4;
+  dynamic deletedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  ProductLocationPivot? pivot;
 
-final productCustomField1Values = EnumValues({
-  "Bh": ProductCustomField1.BH,
-  "": ProductCustomField1.EMPTY,
-  "Ff": ProductCustomField1.FF
-});
+  ProductLocation({
+    this.id,
+    this.businessId,
+    this.locationId,
+    this.name,
+    this.landmark,
+    this.country,
+    this.state,
+    this.city,
+    this.zipCode,
+    this.invoiceSchemeId,
+    this.invoiceLayoutId,
+    this.saleInvoiceLayoutId,
+    this.sellingPriceGroupId,
+    this.printReceiptOnInvoice,
+    this.receiptPrinterType,
+    this.printerId,
+    this.mobile,
+    this.alternateNumber,
+    this.email,
+    this.website,
+    this.featuredProducts,
+    this.isActive,
+    this.defaultPaymentAccounts,
+    this.customField1,
+    this.customField2,
+    this.customField3,
+    this.customField4,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.pivot,
+  });
 
-enum ProductCustomField { EMPTY, FF, GG }
+  factory ProductLocation.fromJson(Map<String, dynamic> json) =>
+      ProductLocation(
+        id: json["id"],
+        businessId: json["business_id"],
+        locationId: locationIdValues.map[json["location_id"]],
+        name: productLocationNameValues.map[json["name"]],
+        landmark: landmarkValues.map[json["landmark"]],
+        country: countryValues.map[json["country"]],
+        state: cityValues.map[json["state"]],
+        city: cityValues.map[json["city"]],
+        zipCode: json["zip_code"],
+        invoiceSchemeId: json["invoice_scheme_id"],
+        invoiceLayoutId: json["invoice_layout_id"],
+        saleInvoiceLayoutId: json["sale_invoice_layout_id"],
+        sellingPriceGroupId: json["selling_price_group_id"],
+        printReceiptOnInvoice: json["print_receipt_on_invoice"],
+        receiptPrinterType:
+            receiptPrinterTypeValues.map[json["receipt_printer_type"]],
+        printerId: json["printer_id"],
+        mobile: json["mobile"],
+        alternateNumber: json["alternate_number"],
+        email: emailValues.map[json["email"]],
+        website: json["website"],
+        featuredProducts: json["featured_products"] == null
+            ? []
+            : List<String>.from(json["featured_products"]!.map((x) => x)),
+        isActive: json["is_active"],
+        defaultPaymentAccounts: json["default_payment_accounts"],
+        customField1: json["custom_field1"],
+        customField2: json["custom_field2"],
+        customField3: json["custom_field3"],
+        customField4: json["custom_field4"],
+        deletedAt: json["deleted_at"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        pivot: json["pivot"] == null
+            ? null
+            : ProductLocationPivot.fromJson(json["pivot"]),
+      );
 
-final productCustomFieldValues = EnumValues({
-  "": ProductCustomField.EMPTY,
-  "Ff": ProductCustomField.FF,
-  "Gg": ProductCustomField.GG
-});
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "business_id": businessId,
+        "location_id": locationIdValues.reverse[locationId],
+        "name": productLocationNameValues.reverse[name],
+        "landmark": landmarkValues.reverse[landmark],
+        "country": countryValues.reverse[country],
+        "state": cityValues.reverse[state],
+        "city": cityValues.reverse[city],
+        "zip_code": zipCode,
+        "invoice_scheme_id": invoiceSchemeId,
+        "invoice_layout_id": invoiceLayoutId,
+        "sale_invoice_layout_id": saleInvoiceLayoutId,
+        "selling_price_group_id": sellingPriceGroupId,
+        "print_receipt_on_invoice": printReceiptOnInvoice,
+        "receipt_printer_type":
+            receiptPrinterTypeValues.reverse[receiptPrinterType],
+        "printer_id": printerId,
+        "mobile": mobile,
+        "alternate_number": alternateNumber,
+        "email": emailValues.reverse[email],
+        "website": website,
+        "featured_products": featuredProducts == null
+            ? []
+            : List<dynamic>.from(featuredProducts!.map((x) => x)),
+        "is_active": isActive,
+        "default_payment_accounts": defaultPaymentAccounts,
+        "custom_field1": customField1,
+        "custom_field2": customField2,
+        "custom_field3": customField3,
+        "custom_field4": customField4,
+        "deleted_at": deletedAt,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "pivot": pivot?.toJson(),
+      };
+}
 
-enum ProductCustomField4 { EMPTY, FF, HY }
+enum City { ABU_DHABI }
 
-final productCustomField4Values = EnumValues({
-  "": ProductCustomField4.EMPTY,
-  "Ff": ProductCustomField4.FF,
-  "Hy": ProductCustomField4.HY
-});
+final cityValues = EnumValues({"Abu Dhabi": City.ABU_DHABI});
+
+enum Country { UNITED_ARAB_EMIRATES }
+
+final countryValues =
+    EnumValues({"United Arab Emirates": Country.UNITED_ARAB_EMIRATES});
+
+enum Email { RESTRO_BIZMODO_AE }
+
+final emailValues = EnumValues({"restro@bizmodo.ae": Email.RESTRO_BIZMODO_AE});
+
+enum Landmark { AL_FALAH }
+
+final landmarkValues = EnumValues({"Al Falah": Landmark.AL_FALAH});
+
+enum LocationId { BL0001 }
+
+final locationIdValues = EnumValues({"BL0001": LocationId.BL0001});
+
+enum ProductLocationName { RESTAURANT }
+
+final productLocationNameValues =
+    EnumValues({"Restaurant": ProductLocationName.RESTAURANT});
+
+class ProductLocationPivot {
+  int? productId;
+  int? locationId;
+
+  ProductLocationPivot({
+    this.productId,
+    this.locationId,
+  });
+
+  factory ProductLocationPivot.fromJson(Map<String, dynamic> json) =>
+      ProductLocationPivot(
+        productId: json["product_id"],
+        locationId: json["location_id"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "product_id": productId,
+        "location_id": locationId,
+      };
+}
+
+enum ReceiptPrinterType { BROWSER }
+
+final receiptPrinterTypeValues =
+    EnumValues({"browser": ReceiptPrinterType.BROWSER});
 
 class ProductTax {
   int? id;
@@ -817,7 +994,7 @@ class ProductTax {
   factory ProductTax.fromJson(Map<String, dynamic> json) => ProductTax(
         id: json["id"],
         businessId: json["business_id"],
-        name: productTaxNameValues.map[json["name"]]!,
+        name: productTaxNameValues.map[json["name"]],
         amount: json["amount"],
         isTaxGroup: json["is_tax_group"],
         forTaxGroup: json["for_tax_group"],
@@ -853,7 +1030,7 @@ final productTaxNameValues = EnumValues({"VAT": ProductTaxName.VAT});
 
 class ProductVariation {
   int? id;
-  dynamic variationTemplateId;
+  int? variationTemplateId;
   ProductVariationName? name;
   int? productId;
   int? isDummy;
@@ -876,7 +1053,7 @@ class ProductVariation {
       ProductVariation(
         id: json["id"],
         variationTemplateId: json["variation_template_id"],
-        name: productVariationNameValues.map[json["name"]]!,
+        name: productVariationNameValues.map[json["name"]],
         productId: json["product_id"],
         isDummy: json["is_dummy"],
         createdAt: json["created_at"] == null
@@ -905,32 +1082,22 @@ class ProductVariation {
       };
 }
 
-enum ProductVariationName {
-  DUMMY,
-  SMALL,
-  LARGE,
-  PEANUT_BUTTER,
-  EXTRA_PEANUT,
-  TEST
-}
+enum ProductVariationName { DUMMY, SIZE, COLORS }
 
 final productVariationNameValues = EnumValues({
+  "Colors": ProductVariationName.COLORS,
   "DUMMY": ProductVariationName.DUMMY,
-  "Extra Peanut": ProductVariationName.EXTRA_PEANUT,
-  "Large": ProductVariationName.LARGE,
-  "Peanut Butter": ProductVariationName.PEANUT_BUTTER,
-  "Small": ProductVariationName.SMALL,
-  "test": ProductVariationName.TEST
+  "Size": ProductVariationName.SIZE
 });
 
 class Variation {
   int? id;
-  ProductVariationName? name;
+  String? name;
   int? productId;
   String? subSku;
   int? productVariationId;
   dynamic woocommerceVariationId;
-  dynamic variationValueId;
+  int? variationValueId;
   String? defaultPurchasePrice;
   String? dppIncTax;
   String? profitPercent;
@@ -964,7 +1131,7 @@ class Variation {
 
   factory Variation.fromJson(Map<String, dynamic> json) => Variation(
         id: json["id"],
-        name: productVariationNameValues.map[json["name"]]!,
+        name: json["name"],
         productId: json["product_id"],
         subSku: json["sub_sku"],
         productVariationId: json["product_variation_id"],
@@ -994,7 +1161,7 @@ class Variation {
 
   Map<String, dynamic> toJson() => {
         "id": id,
-        "name": productVariationNameValues.reverse[name],
+        "name": name,
         "product_id": productId,
         "sub_sku": subSku,
         "product_variation_id": productVariationId,
@@ -1067,14 +1234,36 @@ class VariationLocationDetail {
       };
 }
 
+class ProductVariationsDetails {
+  int? productId;
+  String? qtyAvailable;
+
+  ProductVariationsDetails({
+    this.productId,
+    this.qtyAvailable,
+  });
+
+  factory ProductVariationsDetails.fromJson(Map<String, dynamic> json) =>
+      ProductVariationsDetails(
+        productId: json["product_id"],
+        qtyAvailable: json["qty_available"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "product_id": productId,
+        "qty_available": qtyAvailable,
+      };
+}
+
 enum TaxType { INCLUSIVE, EXCLUSIVE }
 
 final taxTypeValues = EnumValues(
     {"exclusive": TaxType.EXCLUSIVE, "inclusive": TaxType.INCLUSIVE});
 
-enum Type { SINGLE, VARIABLE, EMPTY, MODIFIER }
+enum Type { SINGLE, VARIABLE, COMBO, EMPTY, MODIFIER }
 
 final typeValues = EnumValues({
+  "combo": Type.COMBO,
   "": Type.EMPTY,
   "modifier": Type.MODIFIER,
   "single": Type.SINGLE,

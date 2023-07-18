@@ -66,6 +66,10 @@ class ProductCartController extends GetxController {
     shippingChargeCtrl.clear();
   }
 
+  double productTotalAmount(String? price, int quantity) {
+    return double.parse('${price ?? 0.0}') * quantity;
+  }
+
   // TODO: add item as new entry
   void updateCart(ProductModel? _item, {required bool isAdd}) {
     if (_item == null) return;

@@ -4,9 +4,14 @@
 
 import 'dart:convert';
 
-List<SearchProductModel> searchProductModelFromJson(String str) =>
-    List<SearchProductModel>.from(
+List<SearchProductModel> searchProductModelFromJson(String str) {
+  try {
+    return List<SearchProductModel>.from(
         json.decode(str).map((x) => SearchProductModel.fromJson(x)));
+  } catch (e) {
+    return [];
+  }
+}
 
 String searchProductModelToJson(List<SearchProductModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));

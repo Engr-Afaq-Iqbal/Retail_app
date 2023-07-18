@@ -191,36 +191,43 @@ class _ReceiptsState extends State<Receipts> {
                                   .allSaleOrders?.saleOrdersData.length ??
                               0,
                           itemBuilder: (context, index) {
-                            print(paymentStatusValues.reverse!);
+                            print(paymentStatusValues.reverse);
+
+                            print(paymentStatusValues.reverse?[allSalesCtrlObj
+                                .allSaleOrders
+                                ?.saleOrdersData[index]
+                                .paymentStatus]);
                             return IntrinsicHeight(
                               child: GestureDetector(
-                                  // onTap: () {
-                                  //   Get.to(SalesViewDetailsPage());
-                                  // },
-                                  // child: (allSalesCtrlObj
-                                  //             .allSaleOrders
-                                  //             ?.saleOrdersData[index]
-                                  //             .paymentStatus !=
-                                  //         PaymentStatus.PAID)
-                                  child:
-                                      // (allSalesCtrlObj.allSaleOrders!
-                                      //         .saleOrdersData[index].isSuspend)
-                                      //     ?
+                                // onTap: () {
+                                //   Get.to(SalesViewDetailsPage());
+                                // },
+                                // child: (allSalesCtrlObj
+                                //             .allSaleOrders
+                                //             ?.saleOrdersData[index]
+                                //             .paymentStatus !=
+                                //         PaymentStatus.PAID)
+                                child: (paymentStatusValues.reverse?[
+                                            allSalesCtrlObj
+                                                .allSaleOrders
+                                                ?.saleOrdersData[index]
+                                                .paymentStatus] ==
+                                        'Due')
+                                    ? ReceiptsTile(
+                                        pastOrder: allSalesCtrlObj
+                                            .allSaleOrders!
+                                            .saleOrdersData[index],
+                                        index: index,
+                                      )
+                                    : SizedBox(),
 
-                                      ReceiptsTile(
-                                pastOrder: allSalesCtrlObj
-                                    .allSaleOrders!.saleOrdersData[index],
-                                index: index,
-                              )
-                                  //      : SizedBox(),
-
-                                  //     SalesViewTile(
-                                  //   allSalesCtrlObj: allSalesCtrlObj,
-                                  //   index: index,
-                                  //   pastOrder: allSalesCtrlObj
-                                  //       .allSaleOrders!.saleOrdersData[index],
-                                  // )
-                                  ),
+                                //     SalesViewTile(
+                                //   allSalesCtrlObj: allSalesCtrlObj,
+                                //   index: index,
+                                //   pastOrder: allSalesCtrlObj
+                                //       .allSaleOrders!.saleOrdersData[index],
+                                // )
+                              ),
                             );
                             //   !allSalesCtrlObj.allSaleOrders!
                             //     .saleOrdersData[index].isSuspend
@@ -306,7 +313,9 @@ class _ReceiptsState extends State<Receipts> {
                 onTap: () {
                   Get.find<AllProductsController>().receiptPayment = true;
                   Get.find<AllProductsController>().update();
-                  Get.to(CheckOutPage());
+                  Get.to(CheckOutPage(
+                    isReceipt: true,
+                  ));
 
                   ///for cash
                   // if (selectedMethod == 1) {}
