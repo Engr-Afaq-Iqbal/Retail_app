@@ -4,6 +4,7 @@ import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_control
 import 'package:bizmodo_emenu/Models/UnitModels/UnitsModel.dart';
 import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Config/DateTimeFormat.dart';
@@ -14,7 +15,9 @@ import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ProductsModel/SearchProductModel.dart';
 import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
+import '../../Pages/PrintDesign/invoice_print_screen.dart';
 import '../../Pages/PrintDesign/pdfGenerate.dart';
+import '../../const/dimensions.dart';
 import '../AllPrinterController/allPrinterController.dart';
 import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
@@ -437,18 +440,26 @@ class AllProductsController extends GetxController {
           isPDFView = false;
         }
 
-        Get.find<AllPrinterController>().orderDataForPrinting = salesOrderModel;
+        // Get.find<AllPrinterController>().orderDataForPrinting = salesOrderModel;
       } catch (e) {
         debugPrint('Error -> created order response parsing: $e');
       }
-      AppStorage.setPrintedInvoiceOrderIDs(
-          Get.find<AllPrinterController>().orderDataForPrinting?.id);
-      await Get.find<AllPrinterController>().printInvoiceOfOrder();
+      // AppStorage.setPrintedInvoiceOrderIDs(
+      //     Get.find<AllPrinterController>().orderDataForPrinting?.id);
+      // await Get.find<AllPrinterController>().printInvoiceOfOrder();
 
       stopProgress();
+      Get.dialog(Dialog(
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+        insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+        child: InVoicePrintScreen(
+          order: salesOrderModel,
+        ),
+      ));
       clearAllOtherFields();
       showToast('Finalize Created Successfully');
-      Get.close(3);
+      // Get.close(3);
       // Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
