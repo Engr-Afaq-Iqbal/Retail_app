@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../exception_controller.dart';
 import '/Config/DateTimeFormat.dart';
 import '/Config/app_config.dart';
 import '/Config/const.dart';
@@ -581,89 +582,6 @@ class ProductCartController extends GetxController {
     var request = http.MultipartRequest(
         'POST', Uri.parse('${AppConfig.baseUrl}${ApiUrls.createOrder}'));
 
-    /*
-
-      _fields['business_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.id ?? AppStorage.getLoggedUserData()?.data.businessId}';
-    _fields['location_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? AppStorage.getLoggedUserData()?.data.locationId}';
-    _fields['selling_price_group_id'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.sellingPriceGroupId}';
-    _fields['invoice_no'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.invoiceSchemeId}';
-
-    // res waiter id and created by ???
-    _fields['res_waiter_id'] = '${AppStorage.getLoggedUserData()?.data.id}';
-    _fields['created_by'] = '${AppStorage.getLoggedUserData()?.data.id}';
-
-    /*
-    1 for Dine In / Walk In Customers
-    created contact first and that id need to pass for take away and delivery
-    */
-    _fields['contact_id'] = orderManageCtrlObj.contactId ?? '';
-    _fields['is_suspend'] =
-        '${(orderManageCtrlObj.selectedOrderType.value == orderManageCtrlObj.orderTypes.first) ? 1 : 0}';
-    _fields['type_of_service'] =
-        '${orderManageCtrlObj.orderTypes.firstWhere((orderType) => orderType == orderManageCtrlObj.selectedOrderType.value)}';
-
-    _fields['type'] = 'sell';
-    _fields['status'] = 'final'; // due, paid , partial ('final' value api me the)
-
-    // if user select Dine In of order type/service
-    _fields['res_table_id'] = '${tableManageCtrlObj.selectedTables.first.id}';
-
-    _fields['transaction_date'] = '${DateTime.now()}'; // on payment success
-
-    // payment sy related kam
-    _fields['total_before_tax'] = totalAmount();
-    _fields['discount_type'] = 'percentage';
-    _fields['tax_amount'] = '0';
-    _fields['discount_amount'] = '0'; // TODO _fields['tax_amount'] = totalTaxAmount();
-    _fields['final_total'] = finalAmount();
-    _fields['payment_status'] = 'due'; // for order suspend = due, cash = paid / partial,
-
-    for (int i = 0; i < itemCartList.length; i++) {
-      _fields['product_id[$i]'] = '${itemCartList[i].id}';
-      _fields['variation_id[$i]'] = '${itemCartList[i].id}';
-      _fields['quantity[$i]'] = '${itemCartList[i].quantity}';
-
-      if (itemCartList[i].productTax != null) {
-        _fields['tax_id[$i]'] = '${itemCartList[i].productTax?.id}';
-        _fields['item_tax[$i]'] = '${itemCartList[i].productTax?.amount}';
-      }
-
-      if (itemCartList[i].productVariations.isNotEmpty) {
-        _fields['line_discount_type[$i]'] = 'fixed';
-        _fields['unit_price_before_discount[$i]'] =
-            '${itemCartList[i].productVariations.first.variations.first.defaultSellPrice}';
-        _fields['unit_price[$i]'] =
-            '${itemCartList[i].productVariations.first.variations.first.defaultSellPrice}';
-        _fields['unit_price_inc_tax[$i]'] =
-            '${itemCartList[i].productVariations.first.variations.first.sellPriceIncTax}';
-      }
-      if (itemCartList[i].modifier.isNotEmpty) {
-        List<int> allModifierIds = [], allModifierVariationIds = [];
-        itemCartList[i].modifier.forEach(
-          (_mod) {
-            if (!allModifierIds.contains(_mod.productModifier.id)) {
-              _mod.productModifier.variations.forEach(
-                (_vars) {
-                  if (!allModifierVariationIds.contains(_vars.id)) {
-                    allModifierIds.add(_mod.productModifier.id);
-                    allModifierVariationIds.add(_vars.id);
-                  }
-                },
-              );
-            }
-          },
-        );
-        _fields['parent_sell_line_id[$i]'] = '$allModifierIds';
-        // _fields['variation_id[$i]'] = '$allModifierVariationIds';
-      }
-    }
-
-    */
-
     activeOrderFields(request);
 
     request.fields['business_id'] =
@@ -1155,9 +1073,15 @@ class ProductCartController extends GetxController {
           '\nStatusCode => ${_res.statusCode}'
           '\nResponse => ${_res.body}');
       if (_res.statusCode == 200) clearOnOrderPlaceSuccess();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.updateOrder, error, stackTrace),
+      );
       return null;
     });
   }

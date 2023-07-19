@@ -21,6 +21,9 @@ class ApiServices {
   //
   // }
 
+  static String methodExceptionFormat(method, url, error, stackTrace) =>
+      '$method, EndPoint: $url\nError: $error\nStackTrace: $stackTrace';
+
   static String exceptionFormat(url, code, res) =>
       'EndPoint => $url\nStatus Code => $code\nResponse => $res';
 

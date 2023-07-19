@@ -32,7 +32,10 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     // allProdCtrlObj.fetchAllProducts();
     // allProdCtrlObj.fetchSpecificUnit();
     // allProductsCtrl.showingallItems(allProductsCtrl);
+    allProdCtrlObj.productQuantityCtrl.clear();
+    allProdCtrlObj.selectedProducts.clear();
     allProdCtrlObj.fetchAllProducts();
+
     super.initState();
   }
 

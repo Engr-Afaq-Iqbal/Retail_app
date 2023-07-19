@@ -1,3 +1,4 @@
+import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -55,12 +56,10 @@ class DashboardController extends GetxController {
   }) async {
     await ApiServices.getMethod(
             feedUrl: pageUrl ??
-                '${ApiUrls.dashboardDataApi}') //&start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}
+                '${ApiUrls.dashboardDataApi}?start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}') //&start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}
         .then((_res) {
       update();
-      print(' not rece');
       if (_res == null) return null;
-      print(' receving');
 
       homeTabModel = homeTabModelFromJson(_res);
       namesData = [
@@ -75,6 +74,7 @@ class DashboardController extends GetxController {
       ];
       print(namesData);
       print(' record${_res}');
+      stopProgress();
       update();
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');

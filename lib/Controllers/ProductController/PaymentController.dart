@@ -95,20 +95,39 @@ class PaymentController extends GetxController {
     if (businessLocations.isEmpty) return [];
 
     if (businessLocations.length > 1) {
-      for (int i = 0; i < businessLocations.length; i++) {
+      for (int i = 0; i < 1; i++) {
+        //businessLocations.length
         // if (businessLocations[i].id ==
         //     regCtrlObj.openedRegisterStatus?.locationId) {
+        print('index ${i}');
         for (int j = 0; j < businessLocations[i].paymentAccount!.length; j++) {
           if (businessLocations[i].paymentAccount?[j] != null &&
               businessLocations[i].paymentAccount![j].isEnabled) {
             _enabledPaymentOptionsList
                 .add(businessLocations[i].paymentAccount![j]);
-            print(businessLocations[0].paymentAccount![j]);
+            print(businessLocations[i].paymentAccount![j].paymentMethodName);
           }
         }
         // }
       }
     }
+
+    // if (businessLocations.length > 1) {
+    //   for (int i = 0; i < businessLocations.length; i++) {
+    //     if (businessLocations[i].id ==
+    //         regCtrlObj.openedRegisterStatus?.locationId) {
+    //     print('index ${i}');
+    //     for (int j = 0; j < businessLocations[i].paymentAccount!.length; j++) {
+    //       if (businessLocations[i].paymentAccount?[j] != null &&
+    //           businessLocations[i].paymentAccount![j].isEnabled) {
+    //         _enabledPaymentOptionsList
+    //             .add(businessLocations[0].paymentAccount![j]);
+    //         print(businessLocations[0].paymentAccount![j].paymentMethodName);
+    //       }
+    //       }
+    //     }
+    //   }
+    // }
     // else {
     //   for (int j = 0; j < businessLocations.first.paymentAccount!.length; j++) {
     //     if (businessLocations.first.paymentAccount?[j] != null &&

@@ -1,5 +1,6 @@
 import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
+import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Pages/Profile_View/profile_view.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -71,8 +72,9 @@ class _CurvedContainerState extends State<CurvedContainer> {
         AppFormat.dateYYYYMMDDHHMM24(dateTimeList![0]);
     dashBoardCtrl.endDateCtrl.text =
         AppFormat.dateYYYYMMDDHHMM24(dateTimeList[1]);
+    showProgress();
     dashBoardCtrl.fetchDashboardData();
-    setState(() {});
+    dashBoardCtrl.update();
   }
 
   @override

@@ -19,6 +19,7 @@ import '../AllPrinterController/allPrinterController.dart';
 import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
 import '../Tax Controller/TaxController.dart';
+import '../exception_controller.dart';
 import '/Models/ProductsModel/all_products_model.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
@@ -451,9 +452,14 @@ class AllProductsController extends GetxController {
       // Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.updateOrder, error, stackTrace),
+      );
       return null;
     });
   }
@@ -929,9 +935,14 @@ class AllProductsController extends GetxController {
       // Get.find<OrderController>().fetchActiveOrders();
       clearAllAddPaymentControllerInformation();
       // Get.offAll(HomePage());
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.updateOrder, error, stackTrace),
+      );
       return null;
     });
   }

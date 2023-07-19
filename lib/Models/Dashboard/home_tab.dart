@@ -44,32 +44,33 @@ class HomeTabModel {
 
   factory HomeTabModel.fromJson(Map<String, dynamic> json) => HomeTabModel(
         totalPurchaseIncTax: json["total_purchase_inc_tax"] != null
-            ? json["total_purchase_inc_tax"]
+            ? '${json["total_purchase_inc_tax"]}'
             : '',
         totalPurchaseExcTax: json["total_purchase_exc_tax"] != null
-            ? json["total_purchase_exc_tax"]
+            ? '${json["total_purchase_exc_tax"]}'
             : '',
         purchaseDue: json["purchase_due"]?.toDouble(),
         totalShippingCharges: json["total_shipping_charges"] != null
-            ? json["total_shipping_charges"]
+            ? '${json["total_shipping_charges"]}'
             : '',
         totalAdditionalExpense: json["total_additional_expense"] != null
-            ? json["total_additional_expense"]
+            ? '${json["total_additional_expense"]}'
             : '',
         totalPurchase:
             json["total_purchase"] != null ? '${json["total_purchase"]}' : '',
         totalPurchaseReturn: json["total_purchase_return"] != null
-            ? json["total_purchase_return"]
-            : '',
+            ? '${json["total_purchase_return"]}'
+            : '0.00',
         totalPurchaseReturnPaid: json["total_purchase_return_paid"] != null
             ? json["total_purchase_return_paid"]
             : '',
         totalSellReturnPaid: json["total_sell_return_paid"] != null
             ? '${json["total_sell_return_paid"]}'
             : '',
-        totalSell: json["total_sell"] != null ? json["total_sell"] : '',
-        totalSellReturn:
-            json["total_sell_return"] != null ? json["total_sell_return"] : '',
+        totalSell: json["total_sell"] != null ? '${json["total_sell"]}' : '',
+        totalSellReturn: json["total_sell_return"] != null
+            ? '${json["total_sell_return"]}'
+            : '',
         invoiceDue: json["invoice_due"]?.toDouble(),
         totalExpense: json["total_expense"]?.toDouble(),
         net: json["net"]?.toDouble(),

@@ -165,22 +165,18 @@ class ApiUrls {
   static String storeSettingsAPI = "connector/api/app/setting/store";
 
   /// order payment
-  static String orderPaymentAPI =
-      "${AppConfig.baseUrl}connector/api/order/payment/";
+  static String orderPaymentAPI = "connector/api/order/payment/";
 
   /// Payment Account Api
   static String paymentAccountApi = "connector/api/payment-accounts";
 
   ///Register Apis
-  static String openRegisterAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register";
+  static String openRegisterAPI = "connector/api/cash-register";
 
-  static String closeRegisterAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register/close";
+  static String closeRegisterAPI = "connector/api/cash-register/close";
 
-  static String registersDetailsAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register";
+  static String registersDetailsAPI = "connector/api/cash-register";
 
   static String openedRegisterRecordsAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register/close-register";
+      "connector/api/cash-register/close-register";
 }
