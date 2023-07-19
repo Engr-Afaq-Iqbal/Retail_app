@@ -21,6 +21,7 @@ class PaymentFields extends StatelessWidget {
       Key? key,
       this.remainingAmount})
       : super(key: key) {
+    amountCtrl.clear();
     amountCtrl.text = remainingAmount ?? '';
     transactionNoCtrl.clear();
     paymentNoteCtrl.clear();
@@ -105,20 +106,23 @@ class PaymentFields extends StatelessWidget {
                 //     // }
                 //   },
                 // ),
-                AppFormField(
-                  padding: EdgeInsets.only(bottom: 5),
-                  labelText: 'amount'.tr,
-                  title: 'amount'.tr + ': *',
-                  controller: amountCtrl,
-                  keyboardType: TextInputType.number,
-                  // onChanged: (_) {
-                  //   paymentCtrlObj.addOrUpdatePaymentFieldsInformation(
-                  //       // {
-                  //       //   'payment_method': value,
-                  //       // },
-                  //       );
-                  // },
-                ),
+                GetBuilder<PaymentController>(
+                    builder: (PaymentController paymentCtrl) {
+                  return AppFormField(
+                    padding: EdgeInsets.only(bottom: 5),
+                    labelText: 'amount'.tr,
+                    title: 'amount'.tr + ': *',
+                    controller: amountCtrl,
+                    keyboardType: TextInputType.number,
+                    // onChanged: (_) {
+                    //   paymentCtrlObj.addOrUpdatePaymentFieldsInformation(
+                    //       // {
+                    //       //   'payment_method': value,
+                    //       // },
+                    //       );
+                    // },
+                  );
+                }),
 
                 if (!isFirst)
                   StatefulBuilder(

@@ -176,7 +176,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
         title: Text('payment_small'.tr),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        leading: AppStyles.backButton(onTap: closeCheckoutPage),
+        leading: AppStyles.backButton(onTap: () {
+          Get.back();
+        }),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(7.5),

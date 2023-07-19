@@ -3,7 +3,10 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
 import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
+import 'package:bizmodo_emenu/Pages/PrintDesign/pos_print_layout.dart';
+import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -251,10 +254,18 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                     CapabilityProfile profile = await CapabilityProfile.load();
                     Generator generator = Generator(
                         _paper80MM ? PaperSize.mm80 : PaperSize.mm58, profile);
-                    bytes += generator.text('Retail App Print');
+                    // bytes += generator.text('Retail App Print');
+                    bytes = await posInvoiceAndKotPrintLayout(
+                      generator,
+                      selectedSaleOrderData:
+                          Get.find<AllProductsController>().salesOrderModel!,
+                      isInvoice: true,
+                      isKOT: false,
+                    );
                     _printEscPos(bytes, generator);
                     print(_devices[index].address);
                     print(_devices[index].port);
+                    Get.offAll(TabsPage());
                     setState(() {
                       _searchingMode = false;
                     });

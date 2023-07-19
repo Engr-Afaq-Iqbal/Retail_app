@@ -6,11 +6,9 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as i;
-import 'package:path_provider/path_provider.dart';
 
 import '/Models/order_type_model/payment_line_model.dart';
 import '../../Config/DateTimeFormat.dart';
-import '../../Config/const.dart';
 import '../../Controllers/ProductController/product_cart_controller.dart';
 import '../../Services/storage_services.dart';
 import '/Models/order_type_model/SellLineModel.dart';
@@ -215,6 +213,46 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     );
 
   // Invoice Number / user
+
+  // Transaction Date & Time
+  // bytes += cl2(
+  //   cTxt1: (selectedSaleOrderData.transactionDate != null)
+  //       ? 'Date: ${AppFormat.dateOnly(selectedSaleOrderData.transactionDate!)}'
+  //       : null,
+  //   cTxt2:
+  //       'Time: ${AppFormat.timeOnly(selectedSaleOrderData.transactionDate!)} ',
+  // );
+
+  // Kitchen Name
+
+  // bytes += cl2(
+  //   cTxt1: '${selectedSaleOrderData.typesOfService?.name}',
+  //   cTxt2: (isKOT) ? 'Kitchen: ${kitchenName ?? ''}' : null,
+  // );
+
+  // Table Name & Service Staff
+  debugPrint(selectedSaleOrderData.toString());
+  // bytes += cl2(
+  //   cTxt1: (selectedSaleOrderData.tableData?.name == AppValues.dineIn)
+  //       ? 'Table: ${selectedSaleOrderData.tableData?.name ?? ''}'
+  //       : null,
+  //   cTxt2: 'Staff: ${selectedSaleOrderData.serviceStaff?.firstName ?? ''}',
+  // );
+
+  bytes += printDivider();
+  bytes += centeredTitle(
+    'Tax Invoice',
+  );
+  bytes += printDivider();
+  // Customer Information
+  bytes += cl2(
+    cTxt1: (selectedSaleOrderData.contact?.name != null)
+        ? 'Customer: ${selectedSaleOrderData.contact?.name ?? ''}'
+        : null,
+    cTxt2: (selectedSaleOrderData.contact?.mobile != null)
+        ? 'Mobile: ${selectedSaleOrderData.contact?.mobile ?? ''}'
+        : null,
+  );
   bytes += cl2(
     // Invoice Number
     cTxt1: (isInvoice)
@@ -224,39 +262,12 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     // Staff Name
     cTxt2: 'User: ${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''}',
   );
-
-  // Transaction Date & Time
   bytes += cl2(
     cTxt1: (selectedSaleOrderData.transactionDate != null)
         ? 'Date: ${AppFormat.dateOnly(selectedSaleOrderData.transactionDate!)}'
         : null,
     cTxt2:
         'Time: ${AppFormat.timeOnly(selectedSaleOrderData.transactionDate!)} ',
-  );
-
-  // Kitchen Name
-
-  bytes += cl2(
-    cTxt1: '${selectedSaleOrderData.typesOfService?.name}',
-    cTxt2: (isKOT) ? 'Kitchen: ${kitchenName ?? ''}' : null,
-  );
-
-  // Table Name & Service Staff
-  debugPrint(selectedSaleOrderData.toString());
-  bytes += cl2(
-    cTxt1: (selectedSaleOrderData.tableData?.name == AppValues.dineIn)
-        ? 'Table: ${selectedSaleOrderData.tableData?.name ?? ''}'
-        : null,
-    cTxt2: 'Staff: ${selectedSaleOrderData.serviceStaff?.firstName ?? ''}',
-  );
-  // Customer Information
-  bytes += cl2(
-    cTxt1: (selectedSaleOrderData.contact?.name != null)
-        ? 'Customer: ${selectedSaleOrderData.contact?.name ?? ''}'
-        : null,
-    cTxt2: (selectedSaleOrderData.contact?.mobile != null)
-        ? 'Mobile: ${selectedSaleOrderData.contact?.mobile ?? ''}'
-        : null,
   );
 
   // Table Name & Service Staff

@@ -13,6 +13,7 @@ import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Theme/colors.dart';
 import '../SalesView/discount.dart';
+import '../Tabs/View/TabsPage.dart';
 
 class CreateOrderPage extends StatefulWidget {
   const CreateOrderPage({Key? key}) : super(key: key);
@@ -54,6 +55,9 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Order'),
+        leading: AppStyles.backButton(onTap: () {
+          Get.offAll(TabsPage());
+        }),
       ),
       body: GestureDetector(
         onTap: () {
