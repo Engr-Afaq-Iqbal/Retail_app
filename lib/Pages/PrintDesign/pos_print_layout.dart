@@ -437,17 +437,20 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   debugPrint(selectedSaleOrderData.paymentLines.toString());
   if (isInvoice)
     for (PaymentLine e in selectedSaleOrderData.paymentLines) {
-      bytes += cl2(
-        cTxt1: (e.chequeNumber != null)
-            ? 'Cheque #: ${e.chequeNumber}'
-            : (e.transactionNo != null)
-                ? 'Tr #: ${e.transactionNo}'
-                : '',
-        cTxt2:
-            '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
-      );
+      if (isInvoice && e.transactionNo != null)
+        bytes += cl2(
+          cTxt1: (e.chequeNumber != null)
+              ? 'Cheque #: ${e.chequeNumber}'
+              : (e.transactionNo != null)
+                  ? 'Tr #: ${e.transactionNo}'
+                  : '',
+          cTxt2:
+              '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
+        );
       if (e.isReturn == 0)
-        bytes += cl2(cTxt1: '${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
+        bytes += cl2(
+            cTxt1:
+                'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
     }
 
   if (selectedSaleOrderData.totalPaid != null && isInvoice)
@@ -457,10 +460,13 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     bytes += cl2(cTxt2: 'Due ${anyAmountDue()}');
 
   // Divider
-  if (isInvoice) bytes += printDivider();
+  if (isInvoice && selectedSaleOrderData.additionalNotes != null)
+    bytes += printDivider();
   //Additional Notes
-  bytes += cl2(cTxt1: 'Note:');
-  bytes += cl2(cTxt1: '${selectedSaleOrderData.additionalNotes ?? ''}');
+  if (selectedSaleOrderData.additionalNotes != null)
+    bytes += cl2(cTxt1: 'Note:');
+  if (selectedSaleOrderData.additionalNotes != null)
+    bytes += cl2(cTxt1: '${selectedSaleOrderData.additionalNotes ?? ''}');
 
   // Footer
   if (isInvoice) bytes += printDivider();
