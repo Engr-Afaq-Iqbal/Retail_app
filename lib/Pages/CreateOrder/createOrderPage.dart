@@ -1,5 +1,7 @@
 import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:bizmodo_emenu/Config/utils.dart';
+import 'package:bizmodo_emenu/Controllers/ProductController/PaymentController.dart';
+import 'package:bizmodo_emenu/Pages/CreateOrder/selectionDialogue.dart';
 import 'package:bizmodo_emenu/Pages/checkout/check_out.dart';
 import 'package:bizmodo_emenu/Theme/style.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +14,7 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Theme/colors.dart';
+import '../../const/dimensions.dart';
 import '../SalesView/discount.dart';
 import '../Tabs/View/TabsPage.dart';
 
@@ -36,6 +39,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     allProdCtrlObj.productQuantityCtrl.clear();
     allProdCtrlObj.selectedProducts.clear();
     allProdCtrlObj.fetchAllProducts();
+    allProdCtrlObj.finalTotal = 0.00;
 
     super.initState();
   }
@@ -170,26 +174,28 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           isColor: index.isEven
                                               ? kWhiteColor
                                               : Colors.transparent,
+                                          // onEditingComp: (){
+                                          //
+                                          // },
                                           onChanged: (value) {
-                                            if (allProdCtrlObj
-                                                    .productQuantityCtrl[index]
-                                                    .text
-                                                    .isNotEmpty &&
-                                                allProdCtrlObj
-                                                        .productQuantityCtrl[
-                                                            index]
-                                                        .text !=
-                                                    '0') {
-                                              allProdCtrlObj
-                                                      .totalAmount[index] =
-                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
-                                              allProdCtrlObj
-                                                  .calculateFinalAmount();
-                                              debugPrint('Product Amount');
-                                              debugPrint(allProdCtrlObj
-                                                  .totalAmount[index]);
-                                              allProdCtrlObj.update();
-                                            }
+                                            // if (allProdCtrlObj
+                                            //         .productQuantityCtrl[index]
+                                            //         .text
+                                            //         .isNotEmpty &&
+                                            //     allProdCtrlObj
+                                            //             .productQuantityCtrl[
+                                            //                 index]
+                                            //             .text !=
+                                            // '0') {
+                                            allProdCtrlObj.totalAmount[index] =
+                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
+                                            allProdCtrlObj
+                                                .calculateFinalAmount();
+                                            debugPrint('Product Amount');
+                                            debugPrint(allProdCtrlObj
+                                                .totalAmount[index]);
+                                            allProdCtrlObj.update();
+                                            // }
                                           }),
                                     ),
                                   ],
@@ -229,15 +235,44 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     ),
                     CustomButton(
                         onTap: () {
-                          allProdCtrlObj.addSelectedItemsInList();
+                          allProdCtrlObj.isDirectCheckout = true;
+                          allProdCtrlObj.update();
+                          Get.dialog(Dialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.radiusSmall)),
+                            insetPadding:
+                                EdgeInsets.all(Dimensions.paddingSizeSmall),
+                            child: SelectionDialogue(),
+                          ));
+                        },
+                        title: Text(
+                          'Credit',
+                          style: TextStyle(color: kWhiteColor),
+                        ),
+                        bgColor: Theme.of(context).colorScheme.primary),
+                    CustomButton(
+                        onTap: () {
                           //showProgress();
+                          allProdCtrlObj.isDirectCheckout = false;
+                          allProdCtrlObj.update();
+                          // Get.find<PaymentController>()
+                          //     .paymentWidgetList[0]
+                          //     .amountCtrl
+                          //     .clear();
+                          // Get.find<PaymentController>()
+                          //         .paymentWidgetList[0]
+                          //         .amountCtrl
+                          //         .text =
+                          //     '${AppFormat.doubleToStringUpTo2('${allProdCtrlObj.finalTotal}')}';
+                          // Get.find<PaymentController>().update();
                           Get.to(CheckOutPage(
                             isReceipt: false,
                           ));
                           // allProdCtrlObj.orderCreate();
                         },
                         title: Text(
-                          'Finalize Order',
+                          'Pay',
                           style: TextStyle(color: kWhiteColor),
                         ),
                         bgColor: Theme.of(context).colorScheme.primary)

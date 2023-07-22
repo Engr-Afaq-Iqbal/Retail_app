@@ -312,6 +312,7 @@ class _ReceiptsState extends State<Receipts> {
               CustomButton(
                 onTap: () {
                   Get.find<AllProductsController>().receiptPayment = true;
+                  Get.find<AllProductsController>().finalTotal = 0.00;
                   Get.find<AllProductsController>().update();
                   Get.to(CheckOutPage(
                     isReceipt: true,

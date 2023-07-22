@@ -5,6 +5,10 @@ import 'package:get/get.dart';
 import '../../../Controllers/AllSalesController/allSalesController.dart';
 import '../../../Controllers/ContactController/ContactController.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
+import '../../../const/dimensions.dart';
+import '../../Orders/Components/AmountInfo.dart';
+import '../../PrintDesign/invoice_print_screen.dart';
+import '../../PrintDesign/pdfGenerate.dart';
 import '/Config/DateTimeFormat.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
@@ -15,11 +19,8 @@ import '/Theme/colors.dart';
 import '/Theme/style.dart';
 
 class SalesViewDetailsPage extends StatefulWidget {
-  final AllSalesController allSalesCtrlObj;
-  final int index;
-  SalesViewDetailsPage(
-      {Key? key, required this.allSalesCtrlObj, required this.index})
-      : super(key: key);
+  SaleOrderDataModel? salesOrderData;
+  SalesViewDetailsPage({Key? key, this.salesOrderData}) : super(key: key);
 
   @override
   State<SalesViewDetailsPage> createState() => _SalesViewDetailsPageState();
@@ -43,23 +44,20 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('View Sells Details'),
+        title: Text('Sale Order Details'),
         actions: [
           CustomButton(
             onTap: () {
-              allProdCtrlObj.editOrderFunction(widget
-                  .allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index]);
-              allProdCtrlObj.updateOrderId =
-                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].id}';
+              allProdCtrlObj.editOrderFunction(widget.salesOrderData);
+              allProdCtrlObj.updateOrderId = '${widget.salesOrderData?.id}';
               allProdCtrlObj.isUpdate = true;
               allProdCtrlObj.update();
               contactCtrlObj.nameCtrl.text =
-                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.name ?? ''}';
+                  '${widget.salesOrderData?.contact?.name ?? ''}';
 
               contactCtrlObj.contactId =
-                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.contactId ?? ''}';
-              contactCtrlObj.id =
-                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.id ?? ''}';
+                  '${widget.salesOrderData?.contact?.contactId ?? ''}';
+              contactCtrlObj.id = '${widget.salesOrderData?.contact?.id ?? ''}';
               Get.to(CreateOrderPage());
             },
             title: Text(
@@ -78,7 +76,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
         children: [
           ListTile(
             title: Text(
-              '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].invoiceNo ?? ''}',
+              '${widget.salesOrderData?.invoiceNo ?? ''}',
               style: AppTextStyles.style13w500,
             ),
             // subtitle: Text(
@@ -104,9 +102,8 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                 //   ),
                 // ),
                 AppStyles.p2p5(CustomerInfo(
-                    '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].contact?.name ?? ''}',
-                    widget.allSalesCtrlObj.allSaleOrders
-                        ?.saleOrdersData[widget.index].transactionDate)),
+                    '${widget.salesOrderData?.contact?.name ?? ''}',
+                    widget.salesOrderData?.transactionDate)),
               ],
             ),
           ),
@@ -128,9 +125,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
               shrinkWrap: true,
               padding: const EdgeInsets.all(0),
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: widget.allSalesCtrlObj.allSaleOrders
-                      ?.saleOrdersData[widget.index].sellLines.length ??
-                  0,
+              itemCount: widget.salesOrderData?.sellLines.length ?? 0,
               itemBuilder: (context, index) => Container(
                 color: Theme.of(context).scaffoldBackgroundColor,
                 child: GestureDetector(
@@ -177,7 +172,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                 ),
                 Text(
                   AppFormat.doubleToStringUpTo2(
-                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalBeforeTax ?? ''}',
+                        '${widget.salesOrderData?.totalBeforeTax ?? ''}',
                       ) ??
                       '',
                   style: Theme.of(context).textTheme.bodySmall,
@@ -198,7 +193,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                 ),
                 Text(
                   AppFormat.doubleToStringUpTo2(
-                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].taxAmount ?? ''}',
+                        '${widget.salesOrderData?.taxAmount ?? ''}',
                       ) ??
                       '',
                   style: Theme.of(context).textTheme.bodySmall,
@@ -220,7 +215,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                 ),
                 Text(
                   AppFormat.doubleToStringUpTo2(
-                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].discountAmount ?? ''}',
+                        '${widget.salesOrderData?.discountAmount ?? ''}',
                       ) ??
                       '',
                   style: Theme.of(context).textTheme.bodySmall,
@@ -241,7 +236,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                 ),
                 Text(
                   AppFormat.doubleToStringUpTo2(
-                          '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalPaid}') ??
+                          '${widget.salesOrderData?.totalPaid}') ??
                       '',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
@@ -262,7 +257,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                   ),
                   Text(
                     AppFormat.doubleToStringUpTo2(
-                          '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].finalTotal ?? ''}',
+                          '${widget.salesOrderData?.finalTotal ?? ''}',
                         ) ??
                         '',
                     style: Theme.of(context).textTheme.bodySmall,
@@ -285,13 +280,73 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   Text(
-                    '${AppFormat.doubleToStringUpTo2(double.parse('${double.parse('${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].finalTotal ?? '0.00'}') - double.parse('${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].totalPaid ?? '0.00'}')}').toString())}',
+                    '${AppFormat.doubleToStringUpTo2(double.parse('${double.parse('${widget.salesOrderData?.finalTotal ?? '0.00'}') - double.parse('${widget.salesOrderData?.totalPaid ?? '0.00'}')}').toString())}',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ]),
           ),
 
-          Container(height: 180.0, color: Theme.of(context).cardColor),
+          Divider(color: Theme.of(context).cardColor, thickness: 8.0),
+          // Container(height: 180.0, color: Theme.of(context).cardColor),
+
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CustomButton(
+                leading: Icon(
+                  Icons.print_outlined,
+                  color: kWhiteColor,
+                ),
+                title: Text(
+                  'Print Invoice',
+                  style: TextStyle(color: kWhiteColor),
+                ),
+                onTap: () {
+                  print('Past Order Data');
+                  Get.find<AllProductsController>().salesOrderModel =
+                      widget.salesOrderData;
+                  Get.dialog(Dialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.radiusSmall)),
+                    insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+                    child: InVoicePrintScreen(),
+                  ));
+                },
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              CustomButton(
+                leading: Icon(
+                  Icons.picture_as_pdf_outlined,
+                  color: kWhiteColor,
+                ),
+                title: Text(
+                  'Generate Pdf',
+                  style: TextStyle(color: kWhiteColor),
+                ),
+                onTap: () {
+                  print('Past Order Data');
+                  // Get.dialog(Dialog(
+                  //   shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(
+                  //           Dimensions.radiusSmall)),
+                  //   insetPadding:
+                  //   EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  //   child: InVoicePrintScreen(),
+                  // ));
+
+                  Get.to(PrintData(
+                    saleOrderDataModel: widget.salesOrderData,
+                  ));
+                },
+              ),
+            ],
+          )
         ],
       )),
       bottomNavigationBar: Column(
@@ -382,7 +437,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                   children: [
                     Text(
                       //order.sellLines[index].product?.name ?? '',
-                      '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].product?.name ?? ''}',
+                      '${widget.salesOrderData?.sellLines[index].product?.name ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -391,7 +446,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                     ),
                     Text(
                       // order.sellLines[index].product?.sku ?? '',
-                      '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].product?.sku ?? ''}',
+                      '${widget.salesOrderData?.sellLines[index].product?.sku ?? ''}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!
@@ -426,7 +481,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
               ? Text('qty'.tr.toUpperCase(), style: _headingTextStyle)
               : Text(
                   //'${order.sellLines[index].quantity}',
-                  '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].quantity ?? ''}',
+                  '${widget.salesOrderData?.sellLines[index].quantity ?? ''}',
                   style: Theme.of(context)
                       .textTheme
                       .headlineMedium!
@@ -451,7 +506,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                   // AppFormat.doubleToStringUpTo2(
                   //         order.sellLines[index].unitPriceIncTax) ??
                   AppFormat.doubleToStringUpTo2(
-                        '${widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].unitPrice ?? ''}',
+                        '${widget.salesOrderData?.sellLines[index].unitPrice ?? ''}',
                       ) ??
                       '0',
                   style: Theme.of(context)
@@ -465,7 +520,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
         isHeading
             ? Text('total'.tr, style: _headingTextStyle)
             : Text(
-                '${double.parse(widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].unitPrice ?? '0') * double.parse(widget.allSalesCtrlObj.allSaleOrders?.saleOrdersData[widget.index].sellLines[index].quantity.toString() ?? '0')}',
+                '${double.parse(widget.salesOrderData?.sellLines[index].unitPrice ?? '0') * double.parse(widget.salesOrderData?.sellLines[index].quantity.toString() ?? '0')}',
                 // Get.find<ProductCartController>().totalItemPrice(
                 //     order.sellLines[index].unitPriceIncTax,
                 //     order.sellLines[index].quantity),

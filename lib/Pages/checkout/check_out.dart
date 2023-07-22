@@ -11,6 +11,8 @@ import '../../Components/custom_circular_button.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ProductController/PaymentController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../const/dimensions.dart';
+import '../CreateOrder/selectionDialogue.dart';
 import '/Components/textfield.dart';
 
 import '/Config/utils.dart';
@@ -43,14 +45,24 @@ class _CheckOutPageState extends State<CheckOutPage> {
     _paymentCtrlObj.staffNoteCtrl.clear();
     try {
       // if payment widget list is empty then new payment fields widget add
-      if (_paymentCtrlObj.paymentWidgetList.isEmpty)
+      if (_paymentCtrlObj.paymentWidgetList.isEmpty) {
         _paymentCtrlObj.addPaymentWidget(
           totalAmount: double.tryParse(
-            (widget.isReceipt == true)
-                ? '${Get.find<ReceiptsController>().totalAmount ?? ''}'
-                : '${Get.find<AllProductsController>().finalTotal ?? ''}',
+            (Get.find<AllProductsController>().finalTotal != 0.00)
+                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
           ),
         );
+      } else if (_paymentCtrlObj.paymentWidgetList.isNotEmpty) {
+        _paymentCtrlObj.paymentWidgetList.clear();
+        _paymentCtrlObj.addPaymentWidget(
+          totalAmount: double.tryParse(
+            (Get.find<AllProductsController>().finalTotal != 0.00)
+                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+          ),
+        );
+      }
     } catch (e) {
       logger.e('Error -> check_out -> initState -> addPaymentWidget => $e');
     }
@@ -117,17 +129,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       Expanded(
                         child: CustomButton(
                           onTap: () {
-                            showProgress();
-                            if (allProdCtrlObj.receiptPayment == true) {
-                              print('inside add receipt method call');
-                              allProdCtrlObj.addReceipt();
-                            } else if (allProdCtrlObj.isUpdate == true) {
-                              print('->> for Update Order');
-                              allProdCtrlObj.updateOrder();
-                            } else {
-                              print('->> for Create Order');
-                              allProdCtrlObj.orderCreate();
-                            }
+                            Get.dialog(Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusSmall)),
+                              insetPadding:
+                                  EdgeInsets.all(Dimensions.paddingSizeSmall),
+                              child: SelectionDialogue(),
+                            ));
 
                             // if (widget.orderData != null) {
                             //   _paymentCtrlObj
@@ -209,12 +218,12 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
             CustomButton(
               btnTxt: 'add_payment_row'.tr,
-              bgColor: primaryColor,
+              bgColor: Theme.of(context).colorScheme.primary,
               borderRadius: 10,
               onTap: () {
                 _paymentCtrlObj.addPaymentWidget(
                   totalAmount: double.tryParse(
-                    (Get.find<AllProductsController>().finalTotal != null)
+                    (Get.find<AllProductsController>().finalTotal != 0.00)
                         ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
                         : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
                   ),

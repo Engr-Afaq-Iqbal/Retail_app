@@ -125,7 +125,8 @@ class AllSalesController extends GetxController {
 
       allSaleOrdersPage += 1;
 
-      await fetchAllSalesList(allSaleOrdersPage).then((bool? _isFinished) {
+      await fetchAllSalesList(page: allSaleOrdersPage)
+          .then((bool? _isFinished) {
         if (_isFinished == null) {
           allSaleOrdersPage -= 1;
         } else if (_isFinished) {
@@ -140,17 +141,17 @@ class AllSalesController extends GetxController {
 
   SaleOrderModel? allSaleOrders;
   // fetch all sale orders list
-  Future<bool?> fetchAllSalesList(int _page,
-      {String global_search = ''}) async {
+  Future<bool?> fetchAllSalesList(
+      {int page = 0, String global_search = ''}) async {
     print('========================================');
     print('Function calling');
     return await ApiServices.getMethod(
             feedUrl:
-                '${ApiUrls.allOrders}?page=$_page&per_page=20&global_search=${global_search}')
+                '${ApiUrls.allOrders}?page=$page&per_page=20&global_search=${global_search}')
         .then((_res) {
       if (_res == null) return null;
       final _data = saleOrderModelFromJson(_res);
-      if (_page > 1 && allSaleOrders != null) {
+      if (page > 1 && allSaleOrders != null) {
         allSaleOrders!.saleOrdersData.addAll(_data.saleOrdersData);
       } else {
         allSaleOrders = _data;
@@ -161,7 +162,7 @@ class AllSalesController extends GetxController {
 
       /* fallback end status means is all item finished or not */
       if (allSaleOrders?.meta?.lastPage != null &&
-          _page == allSaleOrders?.meta?.lastPage) {
+          page == allSaleOrders?.meta?.lastPage) {
         return true;
       }
 
@@ -179,7 +180,7 @@ class AllSalesController extends GetxController {
     isFirstLoadRunning = true;
     hasNextPage = true;
     isLoadMoreRunning.value = false;
-    await fetchAllSalesList(1);
+    await fetchAllSalesList(page: 1);
     isFirstLoadRunning = false;
   }
 

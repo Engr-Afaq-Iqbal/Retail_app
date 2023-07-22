@@ -73,7 +73,8 @@ class _SearchInReceiptsState extends State<SearchInReceipts> {
                 child: CustomButton(
                     onTap: () {
                       showProgress();
-                      allSalesCtrl.fetchAllSalesList(1,
+                      allSalesCtrl.fetchAllSalesList(
+                          page: 1,
                           global_search: allSalesCtrl.searchReceiptCtrl.text
                           //  global_search: allSalesCtrl.searchReceiptCtrl.text
                           );

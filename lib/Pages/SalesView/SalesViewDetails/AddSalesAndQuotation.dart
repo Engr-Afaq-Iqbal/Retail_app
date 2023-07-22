@@ -14,10 +14,14 @@ import '../../../Components/productHeadings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Config/utils.dart';
+import '../../../Controllers/ProductController/PaymentController.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 
+import '../../../const/dimensions.dart';
+import '../../CreateOrder/selectionDialogue.dart';
+import '../../checkout/check_out.dart';
 import '../discount.dart';
 
 class AddSalesAndQuotation extends StatefulWidget {
@@ -81,7 +85,9 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
     // TODO: implement initState
     allSalesCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(DateTime.now())}';
     allSalesCtrlObj.salesAndQuotStatus = widget.isSale ?? false;
-    allProdCtrlObj.searchProductList(term: '');
+    // allProdCtrlObj.searchProductList(term: '');
+    allProdCtrlObj.fetchAllProducts();
+    allProdCtrlObj.finalTotal = 0.00;
     super.initState();
   }
 
@@ -338,6 +344,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             if (allProdCtrlObj.listProductsModel == null) {
                               return progressIndicator();
                             }
+                            print(allProdCtrlObj.productModelObjs.length);
                             return ListView.builder(
                                 padding: EdgeInsetsDirectional.only(
                                     top: 5, bottom: 5, start: 10, end: 10),
@@ -387,28 +394,17 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                                                       : Colors.transparent,
                                                   onChanged: (value) {
                                                     //multiplying quantity with product amount
-                                                    if (allProdCtrlObj
-                                                            .productQuantityCtrl[
-                                                                index]
-                                                            .text
-                                                            .isNotEmpty &&
-                                                        allProdCtrlObj
-                                                                .productQuantityCtrl[
-                                                                    index]
-                                                                .text !=
-                                                            '0') {
-                                                      allProdCtrlObj
-                                                                  .totalAmount[
-                                                              index] =
-                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
-                                                      allProdCtrlObj
-                                                          .calculateFinalAmount();
-                                                      debugPrint(
-                                                          'Product Amount');
-                                                      debugPrint(allProdCtrlObj
-                                                          .totalAmount[index]);
-                                                      allProdCtrlObj.update();
-                                                    }
+
+                                                    allProdCtrlObj.totalAmount[
+                                                            index] =
+                                                        '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
+                                                    allProdCtrlObj
+                                                        .calculateFinalAmount();
+                                                    debugPrint(
+                                                        'Product Amount');
+                                                    debugPrint(allProdCtrlObj
+                                                        .totalAmount[index]);
+                                                    allProdCtrlObj.update();
                                                   }),
                                             ),
                                             //unit
@@ -505,57 +501,83 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             if (widget.isSale == false)
                               CustomButton(
                                 title: Text(
-                                  'Checkout',
+                                  'Pay',
                                   style: TextStyle(color: kWhiteColor),
                                 ),
                                 onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      //title: title != null ? Text(title) : null,
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 15, horizontal: 0),
-                                      content: PaymentFields(),
-                                    ),
-                                  );
+                                  allProdCtrlObj.isDirectCheckout = false;
+                                  allProdCtrlObj.update();
+                                  Get.to(CheckOutPage(
+                                    isReceipt: false,
+                                  ));
+                                  // showDialog(
+                                  //   context: context,
+                                  //   builder: (context) => AlertDialog(
+                                  //     //title: title != null ? Text(title) : null,
+                                  //     contentPadding:
+                                  //         const EdgeInsets.symmetric(
+                                  //             vertical: 15, horizontal: 0),
+                                  //     content: PaymentFields(),
+                                  //   ),
+                                  // );
                                 },
                               ),
                           ],
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomButton(
-                              title: Text(
-                                'Save',
-                                style: TextStyle(color: kWhiteColor),
-                              ),
-                              onTap: () {
-                                allProdCtrlObj.update();
-                                allProdCtrlObj.addSelectedItemsInList();
-                                allProdCtrlObj.orderCreate();
-                              },
-                              bgColor: Theme.of(context).colorScheme.primary,
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            CustomButton(
-                              title: Text(
-                                'Save & Print',
-                                style: TextStyle(color: kWhiteColor),
-                              ),
-                              onTap: () {
-                                allProdCtrlObj.isPDFView = false;
-                                allProdCtrlObj.addSelectedItemsInList();
-                                allProdCtrlObj.orderCreate();
-                                // Get.back();
-                              },
-                              bgColor: Theme.of(context).colorScheme.primary,
-                            )
-                          ],
-                        )
+                        CustomButton(
+                          title: Text(
+                            'Credit',
+                            style: TextStyle(color: kWhiteColor),
+                          ),
+                          onTap: () {
+                            allProdCtrlObj.isDirectCheckout = true;
+                            Get.dialog(Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusSmall)),
+                              insetPadding:
+                                  EdgeInsets.all(Dimensions.paddingSizeSmall),
+                              child: SelectionDialogue(),
+                            ));
+                            // allProdCtrlObj.update();
+                            // allProdCtrlObj.addSelectedItemsInList();
+                            // allProdCtrlObj.orderCreate();
+                          },
+                          bgColor: Theme.of(context).colorScheme.primary,
+                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     CustomButton(
+                        //       title: Text(
+                        //         'Save',
+                        //         style: TextStyle(color: kWhiteColor),
+                        //       ),
+                        //       onTap: () {
+                        //         allProdCtrlObj.update();
+                        //         allProdCtrlObj.addSelectedItemsInList();
+                        //         allProdCtrlObj.orderCreate();
+                        //       },
+                        //       bgColor: Theme.of(context).colorScheme.primary,
+                        //     ),
+                        //     SizedBox(
+                        //       width: 5,
+                        //     ),
+                        //     CustomButton(
+                        //       title: Text(
+                        //         'Save & Print',
+                        //         style: TextStyle(color: kWhiteColor),
+                        //       ),
+                        //       onTap: () {
+                        //         allProdCtrlObj.isPDFView = false;
+                        //         allProdCtrlObj.addSelectedItemsInList();
+                        //         allProdCtrlObj.orderCreate();
+                        //         // Get.back();
+                        //       },
+                        //       bgColor: Theme.of(context).colorScheme.primary,
+                        //     )
+                        //   ],
+                        // )
                       ],
                     ),
                   ),

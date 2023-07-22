@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,13 +9,14 @@ import 'package:printing/printing.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
+import '../../Models/ReceiptModel.dart';
 import '../../Services/storage_services.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import 'package:http/http.dart' as http;
 
-class PrintData extends StatelessWidget {
-  SaleOrderDataModel? saleOrderDataModel;
-  PrintData({Key? key, this.saleOrderDataModel}) : super(key: key);
+class ReceiptPdfGenerate extends StatelessWidget {
+  final SingleReceiptModel? singleReceiptModel;
+  ReceiptPdfGenerate({Key? key, this.singleReceiptModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,18 +28,20 @@ class PrintData extends StatelessWidget {
 
   Future<Uint8List> _generatePdf(PdfPageFormat format) async {
     final pdf = pw.Document();
+
+    // final netImage = NetworkImage(
+    //     '${AppStorage.getBusinessDetailsData()?.businessData?.logo}');
     final url = AppStorage.getBusinessDetailsData()?.businessData?.logo;
-    print(AppStorage.getBusinessDetailsData()?.businessData?.logo);
     final response = await http.get(Uri.parse(url!));
     final Uint8List imageBytes = response.bodyBytes;
     final pdfImage = pw.MemoryImage(imageBytes);
 
-    pdf.addPage(invoicePrintPage(
-      format,
-      itemList: Get.find<ProductCartController>().itemCartList,
-      saleOrderDataModel: saleOrderDataModel,
-      image: pdfImage,
-    ));
+    pdf.addPage(
+      invoicePrintPage(format,
+          itemList: Get.find<ProductCartController>().itemCartList,
+          singleReceiptModel: singleReceiptModel,
+          image: pdfImage),
+    );
 
     return pdf.save();
   }
@@ -53,7 +55,7 @@ class PrintData extends StatelessWidget {
     String? mobile,
     String? shippingAddress,
     List<ProductModel> itemList = const [],
-    SaleOrderDataModel? saleOrderDataModel,
+    SingleReceiptModel? singleReceiptModel,
     pw.MemoryImage? image,
   }) {
     return pw.Page(
@@ -62,6 +64,7 @@ class PrintData extends StatelessWidget {
         crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
           // Slip Title
+
           pw.Image(
               pw.MemoryImage(
                   image!.bytes), // Convert MemoryImage to ImageProvider
@@ -69,24 +72,23 @@ class PrintData extends StatelessWidget {
               width: 200,
               height: 100),
           pw.Center(
-              child: pw.Text('Retail Invoice',
+              child: pw.Text('Retail',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold))),
-          pw.Divider(),
 
           pw.Center(
               child: pw.Text(
-                  '${saleOrderDataModel?.contact?.city ?? ''}, ${saleOrderDataModel?.contact?.country ?? ''}')),
+                  '${singleReceiptModel?.contact?.city ?? ''}, ${singleReceiptModel?.contact?.country ?? ''}')),
           pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
                 printBasicInfoWidget(
                     title: 'Contact No.: ',
-                    titleVal: '${saleOrderDataModel?.contact?.mobile}'),
-                if (saleOrderDataModel?.contact?.email != null)
+                    titleVal: '${singleReceiptModel?.contact?.mobile}'),
+                if (singleReceiptModel?.contact?.email != null)
                   printBasicInfoWidget(
                       title: 'Email: ',
-                      titleVal: '${saleOrderDataModel?.contact?.email ?? ''}'),
+                      titleVal: '${singleReceiptModel?.contact?.email ?? ''}'),
               ]),
           // pw.Divider(),
           // pw.Center(
@@ -94,25 +96,31 @@ class PrintData extends StatelessWidget {
           //         style: pw.TextStyle(
           //             fontSize: 18, fontWeight: pw.FontWeight.bold))),
 
+          pw.Divider(),
+          pw.Center(
+              child: pw.Text('Receipt',
+                  style: pw.TextStyle(
+                      fontSize: 18, fontWeight: pw.FontWeight.bold))),
+          pw.Divider(),
+          pw.SizedBox(height: 10),
           printBasicInfoWidget(
               title: 'Customer Name: ',
-              titleVal: '${saleOrderDataModel?.contact?.name}'),
+              titleVal: '${singleReceiptModel?.contact?.name}'),
           pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
                 printBasicInfoWidget(
-                    title: 'Inv No. ',
-                    titleVal: '${saleOrderDataModel?.invoiceNo}'),
+                    title: 'Salesman: ',
+                    titleVal: '${singleReceiptModel?.salesPerson?.firstName}'),
                 printBasicInfoWidget(
-                    title: 'Invoice Date. ',
+                    title: 'Receipt Date: ',
                     titleVal:
-                        '${AppFormat.dateYYYYMMDDHHMM24(saleOrderDataModel?.transactionDate)}'),
+                        '${AppFormat.dateYYYYMMDDHHMM24(singleReceiptModel?.transactionDate)}'),
               ]),
 
-          pw.SizedBox(height: 15),
-
-          // Order Items Table
+          pw.SizedBox(height: 10),
           pw.Divider(),
+          // Order Items Table
           pw.Table(
             //border: pw.TableBorder.all(width: 0.8),
 
@@ -132,7 +140,7 @@ class PrintData extends StatelessWidget {
                     flex: 7,
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('Product',
+                      child: pw.Text('Reference No',
                           style: pw.TextStyle(
                               fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
@@ -141,25 +149,7 @@ class PrintData extends StatelessWidget {
                     flex: 3,
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('QTY',
-                          style: pw.TextStyle(
-                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                    ),
-                  ),
-                  pw.Expanded(
-                    flex: 5,
-                    child: pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('Unit Price',
-                          style: pw.TextStyle(
-                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                    ),
-                  ),
-                  pw.Expanded(
-                    flex: 3,
-                    child: pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('Subtotal',
+                      child: pw.Text('Amount',
                           style: pw.TextStyle(
                               fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
@@ -170,7 +160,7 @@ class PrintData extends StatelessWidget {
           ),
           pw.Divider(),
           pw.Column(children: [
-            ...List.generate(saleOrderDataModel!.sellLines.length, (index) {
+            ...List.generate(singleReceiptModel!.paymentLines!.length, (index) {
               return pw.Table(
                 //border: pw.TableBorder.all(width: 0.8),
 
@@ -181,7 +171,7 @@ class PrintData extends StatelessWidget {
                         flex: 2,
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                          child: pw.Text('${index + 1}',
+                          child: pw.Text('$index',
                               style: pw.TextStyle(
                                   fontSize: 16,
                                   fontWeight: pw.FontWeight.bold)),
@@ -192,8 +182,7 @@ class PrintData extends StatelessWidget {
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
-                              AppFormat.removeArabic(
-                                  '${saleOrderDataModel.sellLines[index].product?.name}'),
+                              '${singleReceiptModel.paymentLines?[index].paymentRefNo}',
                               style: pw.TextStyle(
                                   fontSize: 16,
                                   fontWeight: pw.FontWeight.bold)),
@@ -204,31 +193,7 @@ class PrintData extends StatelessWidget {
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
-                              '${saleOrderDataModel.sellLines[index].quantity}',
-                              style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
-                        ),
-                      ),
-                      pw.Expanded(
-                        flex: 5,
-                        child: pw.Padding(
-                          padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                          child: pw.Text(
-                              '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.sellLines[index].unitPriceIncTax)}',
-                              style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
-                        ),
-                      ),
-                      pw.Expanded(
-                        flex: 3,
-                        child: pw.Padding(
-                          padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                          child: pw.Text(
-                              AppFormat.doubleToStringUpTo2(
-                                      '${double.parse('${saleOrderDataModel.sellLines[index].unitPriceIncTax ?? 0.0}') * double.parse('${saleOrderDataModel.sellLines[index].quantity ?? 0.0}')}') ??
-                                  '0.0',
+                              '${AppFormat.doubleToStringUpTo2(singleReceiptModel.paymentLines?[index].amount)}',
                               style: pw.TextStyle(
                                   fontSize: 16,
                                   fontWeight: pw.FontWeight.bold)),
@@ -250,32 +215,22 @@ class PrintData extends StatelessWidget {
               finalDetails(
                   txt1: 'Subtotal:',
                   txt2:
-                      '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.totalBeforeTax)}'),
-              pw.SizedBox(height: 5),
-              finalDetails(
-                  txt1: 'Discount:',
-                  txt2: '${saleOrderDataModel.discountAmount ?? '0.00'}'),
+                      '${AppFormat.doubleToStringUpTo2(singleReceiptModel.totalBeforeTax)}'),
               pw.SizedBox(height: 5),
               finalDetails(
                   txt1: 'Tax (VAT):',
                   txt2:
-                      '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.taxAmount)}'),
+                      '${AppFormat.doubleToStringUpTo2(singleReceiptModel.taxAmount)}'),
               pw.SizedBox(height: 5),
               finalDetails(
                   txt1: 'Total:',
                   txt2:
-                      '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.finalTotal)}'),
-              pw.SizedBox(height: 5),
-              finalDetails(
-                  txt1: 'Total paid:',
-                  txt2: '${saleOrderDataModel.totalPaid ?? '0.00'}'),
+                      '${AppFormat.doubleToStringUpTo2(singleReceiptModel.finalTotal)}'),
               pw.SizedBox(height: 5),
             ],
           ),
           pw.SizedBox(height: 15),
           pw.Divider(),
-          pw.SizedBox(height: 10),
-          pw.Center(child: pw.Text('Thank You Visit Again!')),
         ],
       ),
     );
@@ -312,10 +267,9 @@ class PrintData extends StatelessWidget {
     return pw.Padding(
       padding: pw.EdgeInsets.symmetric(vertical: 2.5),
       child: pw.Row(
-        // mainAxisAlignment: ,
         children: [
-          if (title != null) pw.Text(title ?? ''),
-          if (titleVal != null) pw.Text(titleVal ?? ''),
+          pw.Text(title ?? ''),
+          pw.Text(titleVal ?? ''),
           pw.SizedBox(),
         ],
       ),

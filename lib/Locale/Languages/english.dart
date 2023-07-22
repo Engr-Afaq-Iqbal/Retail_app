@@ -212,7 +212,6 @@ Map<String, String> english() {
     'pending': 'Pending',
     'accepted': 'Accepted',
     'enterLocation': 'Search location',
-    'item': 'ITEM(S)',
     'sandwich': 'Veg Sandwich',
     'cheese': 'Extra Cheese',
     'chicken': 'Fried Chicken',
@@ -461,5 +460,6 @@ Map<String, String> english() {
     'choose_file': 'Choose File',
     'view_products': 'View Product',
     'funds_transfer': 'Funds Transfer',
+    'paper_size': 'Paper Size'
   };
 }

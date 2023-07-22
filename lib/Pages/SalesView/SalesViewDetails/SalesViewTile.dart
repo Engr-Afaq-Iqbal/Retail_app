@@ -1,20 +1,19 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Config/enums.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Models/order_type_model/SaleOrderModel.dart';
-import '../../../Theme/colors.dart';
-import '/Config/const.dart';
+import '../../../const/dimensions.dart';
+import '../../PrintDesign/invoice_print_screen.dart';
+import '../../PrintDesign/pdfGenerate.dart';
 import '/Pages/Orders/Components/AmountInfo.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
-import '/Theme/style.dart';
 
 class SalesViewTile extends StatelessWidget {
-  AllSalesController allSalesCtrlObj;
+  final AllSalesController allSalesCtrlObj;
   final SaleOrderDataModel pastOrder;
-  int index;
+  final int index;
   SalesViewTile(
       {Key? key,
       required this.allSalesCtrlObj,
@@ -48,6 +47,50 @@ class SalesViewTile extends StatelessWidget {
                     amount: '${pastOrder.finalTotal ?? '0.00'}',
                     status: 'Amount',
                   ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       print('Past Order Data');
+                  //       Get.find<AllProductsController>().salesOrderModel =
+                  //           pastOrder;
+                  //       Get.dialog(Dialog(
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(
+                  //                 Dimensions.radiusSmall)),
+                  //         insetPadding:
+                  //             EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  //         child: InVoicePrintScreen(),
+                  //       ));
+                  //     },
+                  //     child: Icon(
+                  //       Icons.print_outlined,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     )),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       print('Past Order Data');
+                  //       // Get.dialog(Dialog(
+                  //       //   shape: RoundedRectangleBorder(
+                  //       //       borderRadius: BorderRadius.circular(
+                  //       //           Dimensions.radiusSmall)),
+                  //       //   insetPadding:
+                  //       //   EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  //       //   child: InVoicePrintScreen(),
+                  //       // ));
+                  //
+                  //       Get.to(PrintData(
+                  //         saleOrderDataModel: pastOrder,
+                  //       ));
+                  //     },
+                  //     child: Icon(
+                  //       Icons.picture_as_pdf_outlined,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     )),
                 ],
               )
             ],

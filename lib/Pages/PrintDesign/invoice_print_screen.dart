@@ -3,26 +3,26 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
-import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:bizmodo_emenu/Pages/PrintDesign/pos_print_layout.dart';
+import 'package:bizmodo_emenu/Pages/PrintDesign/pos_receipt_print_layout.dart';
 import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
+import 'package:bizmodo_emenu/Theme/colors.dart';
+import 'package:bizmodo_emenu/Theme/style.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart' as i;
 
 import '../../Controllers/AllPrinterController/allPrinterController.dart';
 import '../../const/dimensions.dart';
 
 class InVoicePrintScreen extends StatefulWidget {
-  final SaleOrderDataModel? order;
-  // final List<OrderDetailsModel>? orderDetails;
-  const InVoicePrintScreen({
+  InVoicePrintScreen({
     Key? key,
-    required this.order,
   }) : super(key: key);
 
   @override
@@ -30,40 +30,35 @@ class InVoicePrintScreen extends StatefulWidget {
 }
 
 class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
-  PrinterType _defaultPrinterType = PrinterType.bluetooth;
-  final bool _isBle = GetPlatform.isIOS;
-  final PrinterManager _printerManager = PrinterManager.instance;
-  final List<BluetoothPrinter> _devices = <BluetoothPrinter>[];
-  StreamSubscription<PrinterDevice>? _subscription;
+  AllPrinterController allPrinterCtrl = Get.find<AllPrinterController>();
+
   StreamSubscription<BTStatus>? _subscriptionBtStatus;
-  BTStatus _currentStatus = BTStatus.none;
-  List<int>? pendingTask;
-  String _ipAddress = '';
-  String _port = '9100';
-  bool _paper80MM = true;
+
+  String ipAddress = '';
+  String port = '9100';
+
   final TextEditingController _ipController = TextEditingController();
   final TextEditingController _portController = TextEditingController();
-  BluetoothPrinter? _selectedPrinter;
   bool _searchingMode = true;
 
   @override
   void initState() {
-    if (Platform.isWindows) _defaultPrinterType = PrinterType.usb;
+    if (Platform.isWindows) allPrinterCtrl.defaultPrinterType = PrinterType.usb;
     super.initState();
-    _portController.text = _port;
-    _scan();
+    _portController.text = port;
+    allPrinterCtrl.scan();
 
     // subscription to listen change status of bluetooth connection
     _subscriptionBtStatus =
         PrinterManager.instance.stateBluetooth.listen((status) {
       log(' ----------------- status bt $status ------------------ ');
-      _currentStatus = status;
+      allPrinterCtrl.currentStatus = status;
 
-      if (status == BTStatus.connected && pendingTask != null) {
+      if (status == BTStatus.connected && allPrinterCtrl.pendingTask != null) {
         Future.delayed(const Duration(milliseconds: 1000), () {
-          PrinterManager.instance
-              .send(type: PrinterType.bluetooth, bytes: pendingTask!);
-          pendingTask = null;
+          PrinterManager.instance.send(
+              type: PrinterType.bluetooth, bytes: allPrinterCtrl.pendingTask!);
+          allPrinterCtrl.pendingTask = null;
         });
       }
     });
@@ -71,7 +66,7 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
 
   @override
   void dispose() {
-    _subscription?.cancel();
+    allPrinterCtrl.subscription?.cancel();
     _subscriptionBtStatus?.cancel();
     _portController.dispose();
     _ipController.dispose();
@@ -79,30 +74,14 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
   }
 
   // method to scan devices according PrinterType
-  void _scan() {
-    _devices.clear();
-    _subscription = _printerManager
-        .discovery(type: _defaultPrinterType, isBle: _isBle)
-        .listen((device) {
-      _devices.add(BluetoothPrinter(
-        deviceName: device.name,
-        address: device.address,
-        isBle: _isBle,
-        vendorId: device.vendorId,
-        productId: device.productId,
-        typePrinter: _defaultPrinterType,
-      ));
-      setState(() {});
-    });
-  }
 
   void _setPort(String value) {
     if (value.isEmpty) value = '9100';
-    _port = value;
+    port = value;
     var device = BluetoothPrinter(
       deviceName: value,
-      address: _ipAddress,
-      port: _port,
+      address: ipAddress,
+      port: port,
       typePrinter: PrinterType.network,
       state: false,
     );
@@ -110,11 +89,11 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
   }
 
   void _setIpAddress(String value) {
-    _ipAddress = value;
+    ipAddress = value;
     BluetoothPrinter device = BluetoothPrinter(
       deviceName: value,
-      address: _ipAddress,
-      port: _port,
+      address: ipAddress,
+      port: port,
       typePrinter: PrinterType.network,
       state: false,
     );
@@ -122,82 +101,16 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
   }
 
   void _selectDevice(BluetoothPrinter device) async {
-    if (_selectedPrinter != null) {
-      if ((device.address != _selectedPrinter!.address) ||
+    if (allPrinterCtrl.selectedPrinters != null) {
+      if ((device.address != allPrinterCtrl.selectedPrinters!.address) ||
           (device.typePrinter == PrinterType.usb &&
-              _selectedPrinter!.vendorId != device.vendorId)) {
+              allPrinterCtrl.selectedPrinters!.vendorId != device.vendorId)) {
         await PrinterManager.instance
-            .disconnect(type: _selectedPrinter!.typePrinter);
+            .disconnect(type: allPrinterCtrl.selectedPrinters!.typePrinter);
       }
     }
-
-    _selectedPrinter = device;
+    allPrinterCtrl.selectedPrinters = device;
     setState(() {});
-  }
-
-  Future _printReceipt(i.Image image) async {
-    i.Image resized = i.copyResize(image, width: _paper80MM ? 500 : 365);
-    CapabilityProfile profile = await CapabilityProfile.load();
-    Generator generator =
-        Generator(_paper80MM ? PaperSize.mm80 : PaperSize.mm58, profile);
-    List<int> bytes = [];
-    bytes += generator.image(resized);
-    _printEscPos(bytes, generator);
-  }
-
-  /// print ticket
-  void _printEscPos(List<int> bytes, Generator generator) async {
-    if (_selectedPrinter == null) return;
-    var bluetoothPrinter = _selectedPrinter!;
-
-    switch (bluetoothPrinter.typePrinter) {
-      case PrinterType.usb:
-        bytes += generator.feed(2);
-        bytes += generator.cut();
-        await _printerManager.connect(
-          type: bluetoothPrinter.typePrinter,
-          model: UsbPrinterInput(
-            name: bluetoothPrinter.deviceName,
-            productId: bluetoothPrinter.productId,
-            vendorId: bluetoothPrinter.vendorId,
-          ),
-        );
-        break;
-      case PrinterType.bluetooth:
-        bytes += generator.cut();
-        await _printerManager.connect(
-          type: bluetoothPrinter.typePrinter,
-          model: BluetoothPrinterInput(
-            name: bluetoothPrinter.deviceName,
-            address: bluetoothPrinter.address!,
-            isBle: bluetoothPrinter.isBle!,
-          ),
-        );
-        print('BT function');
-        pendingTask = null;
-        if (Platform.isIOS || Platform.isAndroid) pendingTask = bytes;
-        break;
-      case PrinterType.network:
-        bytes += generator.feed(2);
-        bytes += generator.cut();
-        await _printerManager.connect(
-          type: bluetoothPrinter.typePrinter,
-          model: TcpPrinterInput(ipAddress: bluetoothPrinter.address!),
-        );
-        break;
-      default:
-    }
-    if (bluetoothPrinter.typePrinter == PrinterType.bluetooth) {
-      try {
-        if (kDebugMode) {
-          print('------$_currentStatus');
-        }
-        _printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
-        pendingTask = null;
-      } catch (_) {}
-    } else {
-      _printerManager.send(type: bluetoothPrinter.typePrinter, bytes: bytes);
-    }
   }
 
   @override
@@ -205,166 +118,238 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
     return // _searchingMode ?
         SingleChildScrollView(
       padding: EdgeInsets.all(Dimensions.fontSizeLarge),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'paper_size'.tr,
-          ),
-          Row(children: [
-            Expanded(
-                child: RadioListTile(
-              title: Text('80_mm'.tr),
-              groupValue: _paper80MM,
-              dense: true,
-              contentPadding: EdgeInsets.zero,
-              value: true,
-              onChanged: (bool? value) {
-                _paper80MM = true;
-                setState(() {});
+      child: GetBuilder<AllPrinterController>(
+          builder: (AllPrinterController allPrinterCtrlObj) {
+        if (allPrinterCtrlObj.bluetoothDevices == []) {
+          return progressIndicator();
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'paper_size'.tr,
+                  style: appBarHeaderStyle,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.15,
+                ),
+                CustomButton(
+                  title: Text(''),
+                  leading: Icon(
+                    Icons.refresh,
+                    color: kWhiteColor,
+                  ),
+                  onTap: () {
+                    allPrinterCtrl.scan();
+                  },
+                )
+              ],
+            ),
+            Row(children: [
+              Expanded(
+                  child: RadioListTile(
+                title: Text('80 mm'),
+                groupValue: allPrinterCtrlObj.paper80MM,
+                dense: true,
+                contentPadding: EdgeInsets.zero,
+                value: true,
+                onChanged: (bool? value) {
+                  allPrinterCtrlObj.paper80MM = true;
+                  allPrinterCtrlObj.update();
+                  setState(() {});
+                },
+              )),
+              Expanded(
+                  child: RadioListTile(
+                title: Text('58 mm'),
+                groupValue: allPrinterCtrlObj.paper80MM,
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                value: false,
+                onChanged: (bool? value) {
+                  allPrinterCtrlObj.paper80MM = false;
+                  allPrinterCtrlObj.update();
+                  setState(() {});
+                },
+              )),
+            ]),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
+            ListView.builder(
+              itemCount: allPrinterCtrlObj.bluetoothDevices.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      bottom: Dimensions.paddingSizeSmall),
+                  child: InkWell(
+                    onTap: () async {
+                      _selectDevice(allPrinterCtrlObj.bluetoothDevices[index]);
+                      allPrinterCtrl.selectedPrinters =
+                          allPrinterCtrlObj.bluetoothDevices[index];
+                      List<int> bytes = [];
+                      CapabilityProfile profile =
+                          await CapabilityProfile.load();
+                      Generator generator = Generator(
+                          allPrinterCtrlObj.paper80MM
+                              ? PaperSize.mm80
+                              : PaperSize.mm58,
+                          profile);
+                      // bytes += generator.text('Retail App Print');
+                      print(Get.find<AllProductsController>().receiptPayment);
+                      if (Get.find<AllProductsController>().receiptPayment ==
+                          true) {
+                        print('Inside Invoce print screen');
+                        bytes = await posReceiptLayout(
+                          generator,
+                          singleReceiptModel: Get.find<AllProductsController>()
+                              .receiptData
+                              ?.data?[0],
+                        );
+                        allPrinterCtrlObj.printEscPos(bytes, generator);
+                      } else {
+                        bytes = await posInvoiceAndKotPrintLayout(
+                          generator,
+                          selectedSaleOrderData:
+                              Get.find<AllProductsController>()
+                                  .salesOrderModel!,
+                          isInvoice: true,
+                          isKOT: false,
+                        );
+                        allPrinterCtrlObj.printEscPos(bytes, generator);
+                      }
+
+                      print(allPrinterCtrlObj.bluetoothDevices[index].address);
+                      print(allPrinterCtrlObj.bluetoothDevices[index].port);
+                      Get.offAll(TabsPage());
+                      setState(() {
+                        _searchingMode = false;
+                      });
+                    },
+                    child: Stack(children: [
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                                '${allPrinterCtrlObj.bluetoothDevices[index].deviceName}'),
+                            Platform.isAndroid &&
+                                    allPrinterCtrlObj.defaultPrinterType ==
+                                        PrinterType.usb
+                                ? const SizedBox()
+                                : Visibility(
+                                    visible: !Platform.isWindows,
+                                    child: Text(
+                                        "${allPrinterCtrlObj.bluetoothDevices[index].address}"),
+                                  ),
+                            index !=
+                                    allPrinterCtrlObj.bluetoothDevices.length -
+                                        1
+                                ? Divider(
+                                    color: Theme.of(context).disabledColor)
+                                : const SizedBox(),
+                          ]),
+                      (allPrinterCtrl.selectedPrinters != null &&
+                              ((allPrinterCtrlObj.bluetoothDevices[index]
+                                                  .typePrinter ==
+                                              PrinterType.usb &&
+                                          Platform.isWindows
+                                      ? allPrinterCtrlObj
+                                              .bluetoothDevices[index]
+                                              .deviceName ==
+                                          allPrinterCtrl
+                                              .selectedPrinters!.deviceName
+                                      : allPrinterCtrlObj
+                                                  .bluetoothDevices[index]
+                                                  .vendorId !=
+                                              null &&
+                                          allPrinterCtrl
+                                                  .selectedPrinters!.vendorId ==
+                                              allPrinterCtrlObj
+                                                  .bluetoothDevices[index]
+                                                  .vendorId) ||
+                                  (allPrinterCtrlObj.bluetoothDevices[index]
+                                              .address !=
+                                          null &&
+                                      allPrinterCtrl
+                                              .selectedPrinters!.address ==
+                                          allPrinterCtrlObj
+                                              .bluetoothDevices[index]
+                                              .address)))
+                          ? const Positioned(
+                              top: 5,
+                              right: 5,
+                              child: Icon(Icons.check, color: Colors.green),
+                            )
+                          : const SizedBox(),
+                    ]),
+                  ),
+                );
               },
-            )),
-            Expanded(
-                child: RadioListTile(
-              title: Text('58_mm'.tr),
-              groupValue: _paper80MM,
-              contentPadding: EdgeInsets.zero,
-              dense: true,
-              value: false,
-              onChanged: (bool? value) {
-                _paper80MM = false;
-                setState(() {});
-              },
-            )),
-          ]),
-          const SizedBox(height: Dimensions.paddingSizeSmall),
-          ListView.builder(
-            itemCount: _devices.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (context, index) {
-              return Padding(
-                padding:
-                    const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
-                child: InkWell(
-                  onTap: () async {
-                    _selectDevice(_devices[index]);
-                    _selectedPrinter = _devices[index];
-                    List<int> bytes = [];
-                    CapabilityProfile profile = await CapabilityProfile.load();
-                    Generator generator = Generator(
-                        _paper80MM ? PaperSize.mm80 : PaperSize.mm58, profile);
-                    // bytes += generator.text('Retail App Print');
-                    bytes = await posInvoiceAndKotPrintLayout(
-                      generator,
-                      selectedSaleOrderData:
-                          Get.find<AllProductsController>().salesOrderModel!,
-                      isInvoice: true,
-                      isKOT: false,
-                    );
-                    _printEscPos(bytes, generator);
-                    print(_devices[index].address);
-                    print(_devices[index].port);
-                    Get.offAll(TabsPage());
+            ),
+            Visibility(
+              visible:
+                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
+                      Platform.isWindows,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: TextFormField(
+                  controller: _ipController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(signed: true),
+                  decoration: InputDecoration(
+                    label: Text('ip_address'.tr),
+                    prefixIcon: const Icon(Icons.wifi, size: 24),
+                  ),
+                  onChanged: _setIpAddress,
+                ),
+              ),
+            ),
+            Visibility(
+              visible:
+                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
+                      Platform.isWindows,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: TextFormField(
+                  controller: _portController,
+                  keyboardType:
+                      const TextInputType.numberWithOptions(signed: true),
+                  decoration: InputDecoration(
+                    label: Text('port'.tr),
+                    prefixIcon: const Icon(Icons.numbers_outlined, size: 24),
+                  ),
+                  onChanged: _setPort,
+                ),
+              ),
+            ),
+            Visibility(
+              visible:
+                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
+                      Platform.isWindows,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 10.0),
+                child: OutlinedButton(
+                  onPressed: () async {
+                    if (_ipController.text.isNotEmpty)
+                      _setIpAddress(_ipController.text);
                     setState(() {
                       _searchingMode = false;
                     });
                   },
-                  child: Stack(children: [
-                    Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('${_devices[index].deviceName}'),
-                          Platform.isAndroid &&
-                                  _defaultPrinterType == PrinterType.usb
-                              ? const SizedBox()
-                              : Visibility(
-                                  visible: !Platform.isWindows,
-                                  child: Text("${_devices[index].address}"),
-                                ),
-                          index != _devices.length - 1
-                              ? Divider(color: Theme.of(context).disabledColor)
-                              : const SizedBox(),
-                        ]),
-                    (_selectedPrinter != null &&
-                            ((_devices[index].typePrinter == PrinterType.usb &&
-                                        Platform.isWindows
-                                    ? _devices[index].deviceName ==
-                                        _selectedPrinter!.deviceName
-                                    : _devices[index].vendorId != null &&
-                                        _selectedPrinter!.vendorId ==
-                                            _devices[index].vendorId) ||
-                                (_devices[index].address != null &&
-                                    _selectedPrinter!.address ==
-                                        _devices[index].address)))
-                        ? const Positioned(
-                            top: 5,
-                            right: 5,
-                            child: Icon(Icons.check, color: Colors.green),
-                          )
-                        : const SizedBox(),
-                  ]),
-                ),
-              );
-            },
-          ),
-          Visibility(
-            visible: _defaultPrinterType == PrinterType.network &&
-                Platform.isWindows,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: TextFormField(
-                controller: _ipController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(signed: true),
-                decoration: InputDecoration(
-                  label: Text('ip_address'.tr),
-                  prefixIcon: const Icon(Icons.wifi, size: 24),
-                ),
-                onChanged: _setIpAddress,
-              ),
-            ),
-          ),
-          Visibility(
-            visible: _defaultPrinterType == PrinterType.network &&
-                Platform.isWindows,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: TextFormField(
-                controller: _portController,
-                keyboardType:
-                    const TextInputType.numberWithOptions(signed: true),
-                decoration: InputDecoration(
-                  label: Text('port'.tr),
-                  prefixIcon: const Icon(Icons.numbers_outlined, size: 24),
-                ),
-                onChanged: _setPort,
-              ),
-            ),
-          ),
-          Visibility(
-            visible: _defaultPrinterType == PrinterType.network &&
-                Platform.isWindows,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10.0),
-              child: OutlinedButton(
-                onPressed: () async {
-                  if (_ipController.text.isNotEmpty)
-                    _setIpAddress(_ipController.text);
-                  setState(() {
-                    _searchingMode = false;
-                  });
-                },
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4, horizontal: 50),
-                  child: Text("print_ticket".tr, textAlign: TextAlign.center),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 50),
+                    child: Text("print_ticket".tr, textAlign: TextAlign.center),
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        );
+      }),
     );
     //     : InvoiceDialog(
     //   order: widget.order, orderDetails: widget.orderDetails,
@@ -572,26 +557,26 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
 //
 // }
 
-class PriceWidget extends StatelessWidget {
-  final String title;
-  final String value;
-  final double fontSize;
-  const PriceWidget(
-      {Key? key,
-      required this.title,
-      required this.value,
-      required this.fontSize})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(
-        title,
-      ),
-      Text(
-        value,
-      ),
-    ]);
-  }
-}
+// class PriceWidget extends StatelessWidget {
+//   final String title;
+//   final String value;
+//   final double fontSize;
+//   const PriceWidget(
+//       {Key? key,
+//       required this.title,
+//       required this.value,
+//       required this.fontSize})
+//       : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+//       Text(
+//         title,
+//       ),
+//       Text(
+//         value,
+//       ),
+//     ]);
+//   }
+// }

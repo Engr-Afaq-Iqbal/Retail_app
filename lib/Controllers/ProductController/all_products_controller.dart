@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
 import 'package:bizmodo_emenu/Models/UnitModels/UnitsModel.dart';
 import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
+import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,10 +14,12 @@ import '../../Config/utils.dart';
 import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ProductsModel/SearchProductModel.dart';
+import '../../Models/ReceiptModel.dart';
 import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
 import '../../Pages/PrintDesign/invoice_print_screen.dart';
 import '../../Pages/PrintDesign/pdfGenerate.dart';
+import '../../Pages/PrintDesign/receiptPdfGenerate.dart';
 import '../../const/dimensions.dart';
 import '../AllPrinterController/allPrinterController.dart';
 import '../AllSalesController/allSalesController.dart';
@@ -53,6 +56,7 @@ class AllProductsController extends GetxController {
   bool isUpdate = false;
   String updateOrderId = '';
   bool isPDFView = false;
+  bool isDirectCheckout = false;
 
   //loading more variables:
   int allSaleOrdersPage = 1;
@@ -393,28 +397,41 @@ class AllProductsController extends GetxController {
 
     // Get.find<PaymentController>().fieldsForCheckout(request);
     /// OR
-    for (int checkoutIndex = 0;
-        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
-        checkoutIndex++) {
-      _fields['amount[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.text}';
-      _fields['method[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.paymentMethod}';
-      _fields['account_id[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
-      _fields['card_type[$checkoutIndex]'] = 'credit'; // debit
 
-      if (paymentCtrlObj.isSelectedPaymentOptionCheque(index: checkoutIndex)) {
-        _fields['cheque_number[$checkoutIndex]'] =
-            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
-      } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
-          index: checkoutIndex)) {
-        _fields['transaction_no_1[$checkoutIndex]'] =
-            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+    if (isDirectCheckout == false)
+      for (int checkoutIndex = 0;
+          checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
+          checkoutIndex++) {
+        _fields['amount[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.text}';
+        _fields['method[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.paymentMethod}';
+        _fields['account_id[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
+        _fields['card_type[$checkoutIndex]'] = 'credit'; // debit
+
+        if (paymentCtrlObj.isSelectedPaymentOptionCheque(
+            index: checkoutIndex)) {
+          _fields['cheque_number[$checkoutIndex]'] =
+              '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
+        } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
+            index: checkoutIndex)) {
+          _fields['transaction_no_1[$checkoutIndex]'] =
+              '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+        }
+
+        _fields['note[$checkoutIndex]'] =
+            '${paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.text}';
       }
 
-      _fields['note[$checkoutIndex]'] =
-          '${paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.text}';
+    if (isDirectCheckout == true) {
+      _fields['amount[0]'] = '';
+      _fields['method[0]'] = 'credit';
+      _fields['account_id[0]'] = '';
+      _fields['card_type[0]'] = 'credit';
+      _fields['cheque_number[0]'] = '';
+      _fields['transaction_no_1[0]'] = '';
+      _fields['note[0]'] = '';
     }
 
     logger.i(_fields);
@@ -433,7 +450,21 @@ class AllProductsController extends GetxController {
         salesOrderModel = await saleOrderDataModelFromJson(
             jsonDecode(response)['transaction_data'][0]); //
 
+        stopProgress();
+        showToast('Finalize Created Successfully');
+        if (isPDFView == false) {
+          print('inside print invoice');
+
+          Get.dialog(Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+            insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: InVoicePrintScreen(),
+          ));
+        }
+
         if (isPDFView == true) {
+          Get.offAll(TabsPage());
           Get.to(PrintData(
             saleOrderDataModel: salesOrderModel,
           ));
@@ -448,17 +479,17 @@ class AllProductsController extends GetxController {
       //     Get.find<AllPrinterController>().orderDataForPrinting?.id);
       // await Get.find<AllPrinterController>().printInvoiceOfOrder();
 
-      stopProgress();
-      Get.dialog(Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
-        insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-        child: InVoicePrintScreen(
-          order: salesOrderModel,
-        ),
-      ));
+      // Get.dialog(Dialog(
+      //   shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+      //   insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+      //   child: InVoicePrintScreen(
+      //     order: salesOrderModel,
+      //   ),
+      // ));
+
       clearAllOtherFields();
-      showToast('Finalize Created Successfully');
+
       // Get.close(3);
       // Get.to(TabsPage());
       //await Get.to(() => OrderPlaced());
@@ -486,6 +517,14 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.fileNameCtrl.clear();
     paymentCtrlObj.paymentMethodCtrl.clear();
     paymentCtrlObj.accountIdCtrl.clear();
+    for (int checkoutIndex = 0;
+        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
+        checkoutIndex++) {
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.clear();
+    }
   }
 
   void clearAllOtherFields() {
@@ -500,6 +539,14 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.staffNoteCtrl.clear();
     paymentCtrlObj.sellNoteCtrl.clear();
     paymentCtrlObj.paymentNoteCtrl.clear();
+    for (int checkoutIndex = 0;
+        checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
+        checkoutIndex++) {
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].amountCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.clear();
+      paymentCtrlObj.paymentWidgetList[checkoutIndex].paymentNoteCtrl.clear();
+    }
   }
 
   fieldsForAddPayment(http.MultipartRequest request) {
@@ -562,6 +609,8 @@ class AllProductsController extends GetxController {
     multipartReceiptPutMethod();
   }
 
+  ReceiptModel? receiptData;
+
   multipartReceiptPutMethod() async {
     // API Method with url
     // PaymentController _paymentCtrlObj = Get.find<PaymentController>();
@@ -619,9 +668,52 @@ class AllProductsController extends GetxController {
       //     '\nResponse => $response');
 
       if (response == null) return;
+
+      receiptData = await receiptModelFromJson(response);
+
+      //   for (int i = 0; i < receiptData!.data!.length; i++) {
       stopProgress();
-      Get.find<AllSalesController>().callFirstOrderPageForReceipt();
-      Get.close(1);
+      try {
+        print('here before printing call function');
+        if (isPDFView == false)
+          Get.dialog(Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+            insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: InVoicePrintScreen(),
+          ));
+      } catch (e) {
+        print('Error -> $e');
+      }
+
+      // }
+
+      try {
+        if (isPDFView == true) {
+          Get.offAll(TabsPage());
+          for (int i = 0; i < receiptData!.data!.length; i++) {
+            Get.to(ReceiptPdfGenerate(
+              singleReceiptModel: receiptData?.data?[i],
+            ))?.then((value) {
+              print('Inside -> then ');
+              print(
+                  'PDF generated for receipt ${receiptData?.data?[i].invoiceNo}');
+              // Get.to(
+              //     ReceiptPdfGenerate(singleReceiptModel: receiptData?.data?[i]));
+            });
+          }
+
+          isPDFView = false;
+        }
+      } catch (error) {
+        debugPrint('Error -> $error');
+      }
+      update();
+      clearAllOtherFields();
+      clearAllAddPaymentControllerInformation();
+
+      // Get.find<AllSalesController>().callFirstOrderPageForReceipt();
+      // Get.close(1);
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
     }).onError((error, stackTrace) {

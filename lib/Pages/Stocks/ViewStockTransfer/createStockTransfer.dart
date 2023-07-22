@@ -425,7 +425,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                       allProdCtrlObj
                                                                   .totalAmount[
                                                               index] =
-                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
+                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
                                                       allProdCtrlObj
                                                           .calculateFinalAmount();
                                                       debugPrint(

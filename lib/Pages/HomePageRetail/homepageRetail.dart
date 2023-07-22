@@ -7,7 +7,6 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
 import '../../Controllers/FundsController/fundsController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
-import '../../Services/storage_services.dart';
 import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
 import '../FundsTransfer/fundsTransfer.dart';
@@ -102,7 +101,10 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               // Get.to(CustomerSearch(
                               //   dashBoardId: 3,
                               // ));
-                              Get.to(Return());
+                              Get.to(CustomerSearch(
+                                dashBoardId: 3,
+                              ));
+                              // Get.to(Return());
                             }
                             if (index == 4) {
                               Get.to(CustomerSearch(
@@ -145,7 +147,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
               ),
             ),
             SizedBox(
-              height: 20,
+              height: 15,
             ),
             GetBuilder<DashboardController>(
                 builder: (DashboardController dashboardCtrlObj) {
@@ -153,7 +155,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                 return progressIndicator();
               } else
                 return Container(
-                  height: height * 0.2,
+                  height: height * 0.29,
                   width: width * 0.85,
                   child: GridView.builder(
                     padding: EdgeInsets.zero,

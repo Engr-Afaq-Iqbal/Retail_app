@@ -23,6 +23,7 @@ class PaymentFields extends StatelessWidget {
       : super(key: key) {
     amountCtrl.clear();
     amountCtrl.text = remainingAmount ?? '';
+    selectedPaymentOption = enabledPaymentOptions.first;
     transactionNoCtrl.clear();
     paymentNoteCtrl.clear();
     checkNoCtrl.clear();
@@ -45,7 +46,6 @@ class PaymentFields extends StatelessWidget {
   final TextEditingController transactionNoCtrl = TextEditingController();
   final TextEditingController checkNoCtrl = TextEditingController();
   final TextEditingController paymentNoteCtrl = TextEditingController();
-  TextEditingController paymentMethidCtrl = TextEditingController();
 
   // @override
   // void initState() {

@@ -213,6 +213,7 @@ import '../CreateOrder/createOrderPage.dart';
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
@@ -373,7 +374,10 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                       } else if (widget.dashBoardId == 2) {
                                         Get.to(CreateOrderPage());
                                       } else if (widget.dashBoardId == 3) {
-                                        Get.to(Return());
+                                        Get.to(SalesView(
+                                          isSalesReturn: true,
+                                        ));
+                                        // Get.to(Return());
                                       } else if (widget.dashBoardId == 4) {
                                         Get.to(Receipts());
                                         contactCtrlObj.update();

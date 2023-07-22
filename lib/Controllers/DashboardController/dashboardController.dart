@@ -12,16 +12,18 @@ import '../../Services/storage_services.dart';
 class DashboardController extends GetxController {
   TextEditingController startDateCtrl = TextEditingController();
   TextEditingController endDateCtrl = TextEditingController();
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
   List<String> namesData = [];
   List<String> names = [
     'total_sales',
-    'net',
+    //'net',
     'invoice_due',
-    // 'total_sale_return',
+    'total_sale_return',
     // 'total_purchase',
     // 'purchase_due',
     // 'total_purchase_return',
-    // 'expense',
+    'expense',
   ];
 
   List<String> iconsNames = [
@@ -56,7 +58,7 @@ class DashboardController extends GetxController {
   }) async {
     await ApiServices.getMethod(
             feedUrl: pageUrl ??
-                '${ApiUrls.dashboardDataApi}?start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}') //&start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}
+                '${ApiUrls.dashboardDataApi}?start=${AppFormat.dateYYMMDD(startDate)}&end=${AppFormat.dateYYMMDD(endDate)}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}') //&start=${startDateCtrl.text}&end=${endDateCtrl.text}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}
         .then((_res) {
       update();
       if (_res == null) return null;
@@ -64,13 +66,13 @@ class DashboardController extends GetxController {
       homeTabModel = homeTabModelFromJson(_res);
       namesData = [
         '${homeTabModel?.totalSell ?? '0.00'}',
-        '${homeTabModel?.net ?? '0.00'}',
+        //'${homeTabModel?.net ?? '0.00'}',
         '${homeTabModel?.invoiceDue ?? '0.00'}',
-        // '${homeTabModel?.totalSellReturn ?? '0.00'}',
+        '${homeTabModel?.totalSellReturn ?? '0.00'}',
         // '${homeTabModel?.totalPurchase ?? '0.00'}',
         // '${homeTabModel?.purchaseDue ?? '0.00'}',
         // '${homeTabModel?.totalPurchaseReturn ?? '0.00'}',
-        // '${homeTabModel?.totalExpense ?? '0.00'}',
+        '${homeTabModel?.totalExpense ?? '0.00'}',
       ];
       print(namesData);
       print(' record${_res}');

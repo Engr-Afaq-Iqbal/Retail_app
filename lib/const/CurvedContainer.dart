@@ -1,16 +1,14 @@
-import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Pages/Profile_View/profile_view.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
-
 import '../Controllers/DashboardController/dashboardController.dart';
 import '../Pages/Notifications/notifications.dart';
 import '../Services/storage_services.dart';
+import 'dimensions.dart';
 
 class CurvedContainer extends StatefulWidget {
   @override
@@ -69,9 +67,11 @@ class _CurvedContainerState extends State<CurvedContainer> {
     );
 
     dashBoardCtrl.startDateCtrl.text =
-        AppFormat.dateYYYYMMDDHHMM24(dateTimeList![0]);
+        AppFormat.dateYYYYMMDDHHMM24(dateTimeList?[0] ?? DateTime.now());
+    dashBoardCtrl.startDate = dateTimeList?[0] ?? DateTime.now();
     dashBoardCtrl.endDateCtrl.text =
-        AppFormat.dateYYYYMMDDHHMM24(dateTimeList[1]);
+        AppFormat.dateYYYYMMDDHHMM24(dateTimeList?[1] ?? DateTime.now());
+    dashBoardCtrl.endDate = dateTimeList?[1] ?? DateTime.now();
     showProgress();
     dashBoardCtrl.fetchDashboardData();
     dashBoardCtrl.update();
