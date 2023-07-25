@@ -84,6 +84,7 @@ class AllProductsController extends GetxController {
   List<Product> selectedProducts = [];
   List<String> selectedQuantityList = [];
   List<String> unitIDs = [];
+  List<String> unitListStatusIds = [];
   showingallItems() {
     productModelObjs.clear();
     var categoriesLength = listProductsModel?.data?.length ?? 0;
@@ -91,26 +92,25 @@ class AllProductsController extends GetxController {
       for (int j = 0; j < listProductsModel!.data![i].products!.length; j++) {
         productModelObjs.add(listProductsModel!.data![i].products![j]);
         productQuantityCtrl.add(TextEditingController());
-        unitListStatus.add('Pieces');
-        // print('checkingggg responsee');
-        // print(checkUnitsInList(
-        //     id: listProductsModel!.data![i].products![j].id,
-        //     product: listProductsModel!.data![i].products,
-        //     index: i));
+        unitListStatusIds
+            .add(listProductsModel!.data![i].products![j].unitId.toString());
         totalAmount.add('0.00');
-
-        // unitIDs.add(checkUnits(
-        //     product: listProductsModel!.data![i].products, index: j));
-        // print(unitIDs);
-        //fetchSpecificUnit(unit: '${listProductsModel!.data![i].products![j].unitId}');
       }
     }
 
+    print('checkingggg responsee');
     for (int i = 0; i < productModelObjs.length; i++) {
-      print('checkingggg responsee');
-      checkUnitsTesting(index: i, product: productModelObjs);
-      print(checkUnitsTesting(index: i, product: productModelObjs));
+      // checkUnits(product: productModelObjs[i]);
+      unitListStatus.add(checkUnits(product: productModelObjs[i]));
     }
+
+    for (int i = 0; i < productModelObjs.length; i++) {
+      nestedist.add(addingSpecifiedUnitsInList(product: productModelObjs[i]));
+      // print(addingSpecifiedUnitsInList(product: productModelObjs[i]));
+    }
+    print('Nested Listtt');
+    print(nestedist);
+
     return null;
   }
 
@@ -121,19 +121,59 @@ class AllProductsController extends GetxController {
         product[index].unitId == unitListModel?.data?.first.baseUnitId));
   }
 
-  checkUnits({List<Product>? product, required int index}) {
-    return product?.firstWhere(
-        (unitId) => product[index].unitId == unitListModel?.data?.first.id);
+  // checkUnits({
+  //   List<Product>? product,
+  // }) {
+  //   return product?.firstWhereOrNull(
+  //       (product) => product.unitId == unitListModel?.data?.first.id);
+  // }
+
+  ///function to show the unit id actual names...
+  checkUnits({
+    Product? product,
+  }) {
+    return unitListModel?.data
+        ?.firstWhereOrNull((i) => i.id == product?.unitId)
+        ?.actualName;
   }
 
-  checkUnitsTesting({List<Product>? product, required int index}) {
-    print(index);
-    print(product?[index].unitId);
-    print(unitListModel?.data?.first.id);
-    return product?.firstWhere((unitId) =>
-        unitId == (unitListModel?.data?.firstWhere((i) => i == unitId).id));
-    // return product
-    //     ?.firstWhere((unitId) => unitId == (unitListModel?.data?.first.id));
+  checkUnitsActualBaseMultiplier({
+    String? unitName,
+  }) {
+    print(unitListModel?.data
+        ?.firstWhereOrNull((i) => i.actualName == unitName)
+        ?.id);
+    return unitListModel?.data
+            ?.firstWhereOrNull((i) => i.actualName == unitName)
+            ?.baseUnitMultiplier ??
+        '1.00';
+  }
+
+  List<String> unitStatusList() {
+    return ['Pieces', 'Cartoons', 'Gram'];
+  }
+
+  List<List<String>> nestedist = [];
+  addingSpecifiedUnitsInList({
+    Product? product,
+  }) {
+    List<String> names = [];
+    // names.add('Pieces');
+    // names.add('Plate');
+    names.add(checkUnits(product: product));
+    for (int i = 0; i < unitListModel!.data!.length; i++) {
+      // if (unitListModel?.data?[i].baseUnitId == product?.unitId)
+      if (unitListModel?.data?[i].baseUnitId != null) {
+        if (product?.unitId == unitListModel?.data?[i].baseUnitId) {
+          names.add(unitListModel?.data?[i].actualName ?? '');
+        }
+      }
+    }
+    print('Product Id: ${product?.id} Names:: $names');
+    return names;
+    // return unitListModel?.data
+    //     ?.firstWhereOrNull((i) => i.id == product?.unitId)
+    //     ?.actualName;
   }
 
   addSelectedItemsInList() {

@@ -173,6 +173,8 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
       if (image != null) bytes += printer.image(image);
     });
 
+    debugPrint(AppStorage.getBusinessDetailsData()?.businessData?.logo);
+
     // Print image:
     // final ByteData data = await rootBundle.load(
     //     'https://manage.bizmodo.ae/uploads/business_logos/1682843394_Elegant%20Logo%20small.png');

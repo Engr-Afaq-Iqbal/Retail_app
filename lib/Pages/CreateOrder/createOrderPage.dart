@@ -50,10 +50,6 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     super.dispose();
   }
 
-  List<String> unitStatusList() {
-    return ['Pieces', 'Cartoons'];
-  }
-
   String? unitStatus;
 
   @override
@@ -108,10 +104,10 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   height: 10,
                 ),
                 ProductHeadings(
-                  txt1: 'Product Name',
-                  txt2: 'Qty',
-                  txt3: 'Unit',
-                ),
+                    txt1: 'Product Name',
+                    txt2: 'Unit',
+                    txt3: 'Stock',
+                    txt4: 'Qty'),
                 // SearchProducts(),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.67,
@@ -152,48 +148,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                         '${allProdCtrlObj.productModelObjs[index].name} ',
                                         overflow: TextOverflow.ellipsis,
                                         softWrap: true,
-                                        style: TextStyle(fontSize: 12),
+                                        style: TextStyle(fontSize: 10),
                                       ),
                                     ),
-                                    //unit
-                                    // Expanded(
-                                    //   flex: 1,
-                                    //   child: Center(
-                                    //     child: Text(
-                                    //       '${allProdCtrlObj.productModelObjs[index].sku}',
-                                    //       overflow: TextOverflow.ellipsis,
-                                    //       style: TextStyle(fontSize: 12),
-                                    //     ),
-                                    //   ),
-                                    // ),
 
-                                    // Quantity
-                                    Expanded(
-                                      flex: 1,
-                                      child: AppFormField(
-                                          controller: allProdCtrlObj
-                                              .productQuantityCtrl[index],
-                                          padding: EdgeInsets.only(right: 5),
-                                          isOutlineBorder: false,
-                                          isColor: index.isEven
-                                              ? kWhiteColor
-                                              : Colors.transparent,
-                                          // onEditingComp: (){
-                                          //
-                                          // },
-                                          onChanged: (value) {
-                                            allProdCtrlObj.totalAmount[index] =
-                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
-                                            allProdCtrlObj
-                                                .calculateFinalAmount();
-                                            debugPrint('Product Amount');
-                                            debugPrint(allProdCtrlObj
-                                                .totalAmount[index]);
-                                            allProdCtrlObj.update();
-                                            // }
-                                          }),
-                                    ),
-
+                                    // Unit
                                     Container(
                                       // height:
                                       //     MediaQuery.of(context).size.height *
@@ -213,7 +172,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                     fontWeight:
                                                         FontWeight.w500),
                                               )),
-                                          items: unitStatusList()
+                                          items: allProdCtrlObj.nestedist[
+                                                  index] //unitStatusList()
                                               .map((String items) {
                                             return DropdownMenuItem(
                                               value: items,
@@ -246,14 +206,24 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           dropdownPadding:
                                               EdgeInsets.only(left: 5),
                                           buttonPadding: EdgeInsets.only(
-                                              left: 20, right: 2),
+                                              left: 10, right: 2),
                                           onChanged: (String? value) {
                                             setState(() {
                                               allProdCtrlObj
                                                       .unitListStatus[index] =
                                                   value!;
-                                              print(allProdCtrlObj
+
+                                              allProdCtrlObj
+                                                      .totalAmount[index] =
+                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: value) ?? '1.00')}';
+                                              debugPrint(allProdCtrlObj
+                                                  .totalAmount[index]);
+                                              debugPrint(allProdCtrlObj
                                                   .unitListStatus[index]);
+
+                                              allProdCtrlObj
+                                                  .calculateFinalAmount();
+                                              allProdCtrlObj.update();
                                             });
                                           },
                                           // buttonHeight: 40,
@@ -271,13 +241,52 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           //     borderRadius:
                                           //         BorderRadius.circular(15)),
                                           // itemHeight: 40,
-                                          icon: SizedBox(),
+                                          //icon: SizedBox(),
                                           itemPadding: EdgeInsets.zero,
                                           itemHighlightColor: Theme.of(context)
                                               .colorScheme
                                               .primary,
                                         ),
                                       ),
+                                    ),
+
+                                    // Stock
+                                    Expanded(
+                                      flex: 1,
+                                      child: Center(
+                                        child: Text(
+                                          '${double.parse(allProdCtrlObj.productModelObjs[index].productVariationsDetails?.qtyAvailable ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 10),
+                                        ),
+                                      ),
+                                    ),
+
+                                    //Quantity
+                                    Expanded(
+                                      flex: 1,
+                                      child: AppFormField(
+                                          controller: allProdCtrlObj
+                                              .productQuantityCtrl[index],
+                                          padding: EdgeInsets.only(right: 5),
+                                          isOutlineBorder: false,
+                                          isColor: index.isEven
+                                              ? kWhiteColor
+                                              : Colors.transparent,
+                                          // onEditingComp: (){
+                                          //
+                                          // },
+                                          onChanged: (value) {
+                                            allProdCtrlObj.totalAmount[index] =
+                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
+                                            allProdCtrlObj
+                                                .calculateFinalAmount();
+                                            debugPrint('Product Amount');
+                                            debugPrint(allProdCtrlObj
+                                                .totalAmount[index]);
+                                            allProdCtrlObj.update();
+                                            // }
+                                          }),
                                     ),
                                   ],
                                 ),
