@@ -116,8 +116,6 @@ class _SalesViewState extends State<SalesView> {
                                     }
                                   },
                                   child: SalesViewTile(
-                                    allSalesCtrlObj: allSalesCtrlObj,
-                                    index: index,
                                     pastOrder: allSalesCtrlObj
                                         .allSaleOrders!.saleOrdersData[index],
                                   )),

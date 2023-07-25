@@ -20,7 +20,7 @@ class ApiUrls {
   static String updateTableStatus = "connector/api/table/status/update";
   // Products
   static String allProducts = "connector/api/product";
-  static String specificUnits = "connector/api/unit";
+  static String unitListApi = "connector/api/unit";
 
   //Funds Transfer API
   static String fundsTransferAPI = "connector/api/account/fund-transfer";

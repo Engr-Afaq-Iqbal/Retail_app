@@ -1,25 +1,13 @@
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Models/order_type_model/SaleOrderModel.dart';
-import '../../../const/dimensions.dart';
-import '../../PrintDesign/invoice_print_screen.dart';
-import '../../PrintDesign/pdfGenerate.dart';
 import '/Pages/Orders/Components/AmountInfo.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
 
 class SalesViewTile extends StatelessWidget {
-  final AllSalesController allSalesCtrlObj;
   final SaleOrderDataModel pastOrder;
-  final int index;
-  SalesViewTile(
-      {Key? key,
-      required this.allSalesCtrlObj,
-      required this.index,
-      required this.pastOrder})
-      : super(key: key);
+  SalesViewTile({Key? key, required this.pastOrder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +23,7 @@ class SalesViewTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${allSalesCtrlObj.allSaleOrders?.saleOrdersData[index].invoiceNo}',
+                '${pastOrder.invoiceNo}',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!

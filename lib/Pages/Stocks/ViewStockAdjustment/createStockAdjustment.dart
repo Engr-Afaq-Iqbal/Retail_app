@@ -22,9 +22,9 @@ class CreateStockAdjustment extends StatefulWidget {
 }
 
 class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
-  StockTransferController stockAdjustmentCtrlObj =
+  StockTransferController stockTransferCtrlObj =
       Get.find<StockTransferController>();
-  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+  // AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -66,23 +66,23 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
       },
     );
 
-    stockAdjustmentCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    stockTransferCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
     print(dateTime);
   }
 
   void dispose() {
-    stockAdjustmentCtrlObj.searchCtrl.clear();
-    allProdCtrlObj.finalTotal = 0.00;
-    allProdCtrlObj.totalAmount.clear();
-    allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel.clear();
+    stockTransferCtrlObj.searchCtrl.clear();
+    stockTransferCtrlObj.finalTotal = 0.00;
+    stockTransferCtrlObj.totalAmount.clear();
+    stockTransferCtrlObj.productQuantityCtrl.clear();
+    stockTransferCtrlObj.searchProductModel.clear();
 
     super.dispose();
   }
 
   @override
   void initState() {
-    allProdCtrlObj.searchProductList(term: '');
+    stockTransferCtrlObj.searchProductList(term: '');
     // TODO: implement initState
     super.initState();
   }
@@ -118,7 +118,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                         AppFormField(
                           width: width * 0.43,
                           readOnly: true,
-                          controller: stockAdjustmentCtrlObj.dateCtrl,
+                          controller: stockTransferCtrlObj.dateCtrl,
                           labelText: 'Select Date',
                           prefixIcon: Icon(Icons.calendar_month),
                           onTap: () {
@@ -212,9 +212,11 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height * 0.4,
-                          child: GetBuilder<AllProductsController>(
-                              builder: (AllProductsController allProdCtrlObj) {
-                            if (allProdCtrlObj.searchProductModel == null) {
+                          child: GetBuilder<StockTransferController>(builder:
+                              (StockTransferController stockTransferCtrl) {
+                            if (stockTransferCtrlObj.searchProductModel ==
+                                    null &&
+                                stockTransferCtrlObj.searchProductModel == []) {
                               return progressIndicator();
                             }
                             return ListView.builder(
@@ -223,8 +225,8 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                 physics: ScrollPhysics(),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
-                                itemCount:
-                                    allProdCtrlObj.searchProductModel?.length,
+                                itemCount: stockTransferCtrlObj
+                                    .searchProductModel.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     margin: EdgeInsets.only(
@@ -245,7 +247,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                '${stockTransferCtrlObj.searchProductModel[index].name}',
                                                 overflow: TextOverflow.ellipsis,
                                                 softWrap: true,
                                               ),
@@ -255,7 +257,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                             Expanded(
                                               flex: 1,
                                               child: AppFormField(
-                                                  controller: allProdCtrlObj
+                                                  controller: stockTransferCtrl
                                                           .productQuantityCtrl[
                                                       index],
                                                   padding:
@@ -265,16 +267,17 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                                       ? kWhiteColor
                                                       : Colors.transparent,
                                                   onChanged: (value) {
-                                                    allProdCtrlObj.totalAmount[
+                                                    stockTransferCtrl
+                                                                .totalAmount[
                                                             index] =
-                                                        '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
-                                                    allProdCtrlObj
+                                                        '${double.parse('${stockTransferCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : stockTransferCtrlObj.productQuantityCtrl[index].text}') * double.parse('${stockTransferCtrlObj.searchProductModel[index].sellingPrice.toString()}')}';
+                                                    stockTransferCtrl
                                                         .calculateFinalAmount();
                                                     debugPrint(
                                                         'Product Amount');
-                                                    debugPrint(allProdCtrlObj
+                                                    debugPrint(stockTransferCtrl
                                                         .totalAmount[index]);
-                                                    allProdCtrlObj.update();
+                                                    stockTransferCtrl.update();
                                                   }),
                                             ),
                                             //unit
@@ -282,7 +285,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                               flex: 1,
                                               child: Center(
                                                 child: Text(
-                                                  '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                  '${AppFormat.doubleToStringUpTo2(stockTransferCtrlObj.searchProductModel[index].sellingPrice)}',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
@@ -292,7 +295,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                               flex: 1,
                                               child: Center(
                                                 child: Text(
-                                                  '${allProdCtrlObj.totalAmount[index]}',
+                                                  '${stockTransferCtrl.totalAmount[index]}',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 ),
@@ -326,11 +329,11 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                       children: [
                         headings(txt: 'Total amount recovered:'),
                         AppFormField(
-                          controller: stockAdjustmentCtrlObj.totalAmountRecCtrl,
+                          controller: stockTransferCtrlObj.totalAmountRecCtrl,
                         ),
                         headings(txt: 'Reason:'),
                         AppFormField(
-                          controller: stockAdjustmentCtrlObj.reasonCtrl,
+                          controller: stockTransferCtrlObj.reasonCtrl,
                           labelText: 'Reason',
                         ),
                         Row(
@@ -346,7 +349,9 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                   ),
                                   onTap: () {
                                     showProgress();
-                                    stockAdjustmentCtrlObj
+                                    stockTransferCtrlObj
+                                        .addSelectedItemsInList();
+                                    stockTransferCtrlObj
                                         .createStockAdjustment();
                                   },
                                   bgColor:

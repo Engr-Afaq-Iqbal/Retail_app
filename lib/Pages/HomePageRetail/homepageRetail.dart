@@ -11,7 +11,6 @@ import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
 import '../FundsTransfer/fundsTransfer.dart';
 import '../Orders/View/OrdersTabPage.dart';
-import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
 import '../ProductsPage/home_page.dart';
@@ -37,6 +36,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
     //   Get.find<AllProductsController>().getAllProductsFromStorage();
     // }
     dashBoardCtrl.fetchDashboardData();
+    Get.find<AllProductsController>().fetchUnitList();
     Get.find<FundsController>().fetchPaymentAccountList();
     super.initState();
   }

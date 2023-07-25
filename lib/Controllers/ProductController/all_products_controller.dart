@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
-import 'package:bizmodo_emenu/Models/UnitModels/UnitsModel.dart';
 import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,15 +11,14 @@ import '../../Config/utils.dart';
 
 import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
-import '../../Models/ProductsModel/SearchProductModel.dart';
 import '../../Models/ReceiptModel.dart';
+import '../../Models/UnitModels/UnitListModel.dart';
 import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
 import '../../Pages/PrintDesign/invoice_print_screen.dart';
 import '../../Pages/PrintDesign/pdfGenerate.dart';
 import '../../Pages/PrintDesign/receiptPdfGenerate.dart';
 import '../../const/dimensions.dart';
-import '../AllPrinterController/allPrinterController.dart';
 import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
 import '../Tax Controller/TaxController.dart';
@@ -64,18 +61,6 @@ class AllProductsController extends GetxController {
   bool hasNextPage = true;
   RxBool isLoadMoreRunning = false.obs;
 
-  // Future<void> fetchAllProducts() async {
-  //   isFetchingProduct.value = true;
-  //   String? response =
-  //       await ApiServices.getMethod(feedUrl: ApiUrls.allProducts);
-  //   if (response == null) return;
-  //   print('All Products length');
-  //   print(response.length);
-  //   await AppStorage.setProductsData(response);
-  //   getAllProductsFromStorage(res: response);
-  //   //print( getAllProductsFromStorage(res: response));
-  // }
-
   ListProductsModel? listProductsModel;
   Future fetchAllProducts({String? pageUrl}) async {
     await ApiServices.getMethod(
@@ -106,6 +91,12 @@ class AllProductsController extends GetxController {
       for (int j = 0; j < listProductsModel!.data![i].products!.length; j++) {
         productModelObjs.add(listProductsModel!.data![i].products![j]);
         productQuantityCtrl.add(TextEditingController());
+        unitListStatus.add('Pieces');
+        // print('checkingggg responsee');
+        // print(checkUnitsInList(
+        //     id: listProductsModel!.data![i].products![j].id,
+        //     product: listProductsModel!.data![i].products,
+        //     index: i));
         totalAmount.add('0.00');
 
         // unitIDs.add(checkUnits(
@@ -114,7 +105,35 @@ class AllProductsController extends GetxController {
         //fetchSpecificUnit(unit: '${listProductsModel!.data![i].products![j].unitId}');
       }
     }
+
+    for (int i = 0; i < productModelObjs.length; i++) {
+      print('checkingggg responsee');
+      checkUnitsTesting(index: i, product: productModelObjs);
+      print(checkUnitsTesting(index: i, product: productModelObjs));
+    }
     return null;
+  }
+
+  checkUnitsInList({int? id, List<Product>? product, required int index}) {
+    print(product?.firstWhere((unitId) =>
+        product[index].unitId == unitListModel?.data?.first.baseUnitId));
+    return (product?.firstWhere((unitId) =>
+        product[index].unitId == unitListModel?.data?.first.baseUnitId));
+  }
+
+  checkUnits({List<Product>? product, required int index}) {
+    return product?.firstWhere(
+        (unitId) => product[index].unitId == unitListModel?.data?.first.id);
+  }
+
+  checkUnitsTesting({List<Product>? product, required int index}) {
+    print(index);
+    print(product?[index].unitId);
+    print(unitListModel?.data?.first.id);
+    return product?.firstWhere((unitId) =>
+        unitId == (unitListModel?.data?.firstWhere((i) => i == unitId).id));
+    // return product
+    //     ?.firstWhere((unitId) => unitId == (unitListModel?.data?.first.id));
   }
 
   addSelectedItemsInList() {
@@ -128,25 +147,27 @@ class AllProductsController extends GetxController {
     print(selectedQuantityList);
   }
 
-  UnitsModel? unitsModel;
-  Future fetchSpecificUnit({String? pageUrl}) async {
-    await ApiServices.getMethod(feedUrl: pageUrl ?? '${ApiUrls.specificUnits}')
+  ///Function to fetch the list of units
+  UnitListModel? unitListModel;
+  List<String> unitListStatus = [];
+  Future fetchUnitList({String? pageUrl}) async {
+    await ApiServices.getMethod(feedUrl: pageUrl ?? '${ApiUrls.unitListApi}')
         .then((_res) {
       update();
       if (_res == null) return null;
-      unitsModel = unitsModelFromJson(_res);
+      unitListModel = unitListModelFromJson(_res);
       print(listProductsModel?.data);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
-  }
-
-  checkUnits({List<Product>? product, required int index}) {
-    return product?.firstWhere(
-        (unitId) => product[index].unitId == unitsModel?.data?.first.id);
   }
 
   ProductShowListModel? productShowListModel;
@@ -224,30 +245,6 @@ class AllProductsController extends GetxController {
     print('get all products from storage');
     print(allCategoriesProductsData?.categories.length);
     isFetchingProduct.value = false;
-  }
-
-  List<SearchProductModel> searchProductModel = [];
-  // List<SearchProductModel>? searchProductModelFinal;
-
-  /// Searching Product
-  Future searchProductList({String? pageUrl, String? term}) async {
-    await ApiServices.getMethod(
-            feedUrl: pageUrl ??
-                '${ApiUrls.searchProductListApi}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&term=${term}') //
-        .then((_res) {
-      update();
-      if (_res == null) return null;
-      searchProductModel = searchProductModelFromJson(_res);
-      for (int i = 0; i < searchProductModel.length; i++) {
-        productQuantityCtrl.add(TextEditingController());
-        totalAmount.add('0.00');
-      }
-      update();
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      update();
-    });
   }
 
   // initial order page load function
@@ -416,8 +413,13 @@ class AllProductsController extends GetxController {
               '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
         } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
             index: checkoutIndex)) {
-          _fields['transaction_no_1[$checkoutIndex]'] =
+          for (int tranIndex = 0; tranIndex < 8; tranIndex++) {
+            _fields['transaction_no_$tranIndex'] = '';
+          }
+          _fields['transaction_no_$checkoutIndex'] =
               '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+          // _fields['transaction_no_1[$checkoutIndex]'] =
+          //     '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
         }
 
         _fields['note[$checkoutIndex]'] =
@@ -557,6 +559,7 @@ class AllProductsController extends GetxController {
         '${paymentCtrlObj.accountIdCtrl.text}'; //'27';
     // '${paymentWidgetList[checkoutIndex].selectedPaymentOption?.account?.id}';
     request.fields['card_type[0]'] = 'credit'; // debit
+
     request.fields['transaction_no_1[0]'] =
         '${paymentCtrlObj.transactionNoCtrl.text}';
 
@@ -947,7 +950,12 @@ class AllProductsController extends GetxController {
             '${paymentCtrlObj.paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
       } else if (!paymentCtrlObj.isSelectedPaymentOptionCash(
           index: checkoutIndex)) {
-        _fields['transaction_no_1[$checkoutIndex]'] =
+        // _fields['transaction_no_1[$checkoutIndex]'] =
+        //     '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+        for (int tranIndex = 0; tranIndex < 8; tranIndex++) {
+          _fields['transaction_no_$tranIndex'] = '';
+        }
+        _fields['transaction_no_$checkoutIndex'] =
             '${paymentCtrlObj.paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
       }
 

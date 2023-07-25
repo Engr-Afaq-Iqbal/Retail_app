@@ -24,7 +24,7 @@ class CreateStockTransfer extends StatefulWidget {
 class _CreateStockTransferState extends State<CreateStockTransfer> {
   StockTransferController stockTranCtrlObj =
       Get.find<StockTransferController>();
-  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+  // AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
@@ -85,15 +85,17 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
   void initState() {
     // TODO: implement initState
     stockTranCtrlObj.fetchStatusList();
-    allProdCtrlObj.searchProductList(term: '');
+    stockTranCtrlObj.searchProductList(term: '');
     super.initState();
   }
 
   void dispose() {
-    allProdCtrlObj.finalTotal = 0.00;
-    allProdCtrlObj.totalAmount.clear();
-    allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel.clear();
+    stockTranCtrlObj.finalTotal = 0.00;
+    stockTranCtrlObj.totalAmount.clear();
+    stockTranCtrlObj.productQuantityCtrl.clear();
+    stockTranCtrlObj.searchProductModel.clear();
+    stockTranCtrlObj.selectedProducts.clear();
+    stockTranCtrlObj.selectedQuantityList.clear();
 
     super.dispose();
   }
@@ -148,51 +150,57 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           headings(txt: 'Status:*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'Please Select',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: getStatusList().map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value: stockTransferCtrlObj.statusValue,
-                              dropdownDirection:
-                                  DropdownDirection.textDirection,
-                              dropdownPadding:
-                                  EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockTransferCtrlObj.statusValue = value;
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
+                          GetBuilder<StockTransferController>(
+                              builder: (StockTransferController stockCtrl) {
+                            if (stockCtrl.statusListModel == null) {
+                              return progressIndicator();
+                            }
+                            return DropdownButtonHideUnderline(
+                              child: DropdownButton2(
+                                isExpanded: true,
+                                hint: Align(
+                                    alignment: AlignmentDirectional.centerStart,
+                                    child: Text(
+                                      'Please Select',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w400,
+                                        color: txtFieldHintColor,
+                                      ),
+                                    )),
+                                items: getStatusList().map((e) {
+                                  return DropdownMenuItem(
+                                      value: e, child: Text(e));
+                                }).toList(),
+                                value: stockTransferCtrlObj.statusValue,
+                                dropdownDirection:
+                                    DropdownDirection.textDirection,
+                                dropdownPadding:
+                                    EdgeInsets.only(left: 5, right: 5),
+                                buttonPadding:
+                                    EdgeInsets.only(left: 15, right: 15),
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    stockTransferCtrlObj.statusValue = value;
+                                  });
+                                },
+                                buttonHeight: height * 0.06,
+                                buttonWidth: width * 0.43,
+                                buttonDecoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary),
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: kWhiteColor),
+                                itemHeight: 40,
+                                itemPadding: EdgeInsets.zero,
+                                itemHighlightColor:
+                                    Theme.of(context).colorScheme.primary,
+                              ),
+                            );
+                          }),
                         ],
                       ),
                     ],
@@ -368,9 +376,10 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                           ),
                           Container(
                             height: MediaQuery.of(context).size.height * 0.4,
-                            child: GetBuilder<AllProductsController>(builder:
-                                (AllProductsController allProdCtrlObj) {
-                              if (allProdCtrlObj.searchProductModel == null) {
+                            child: GetBuilder<StockTransferController>(builder:
+                                (StockTransferController stockTransferCtrl) {
+                              if (stockTransferCtrl.searchProductModel ==
+                                  null) {
                                 return progressIndicator();
                               }
                               return ListView.builder(
@@ -379,8 +388,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                   physics: ScrollPhysics(),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      allProdCtrlObj.searchProductModel?.length,
+                                  itemCount: stockTransferCtrl
+                                      .searchProductModel.length,
                                   itemBuilder: (context, index) {
                                     return Container(
                                       margin: EdgeInsets.only(
@@ -401,7 +410,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                               Expanded(
                                                 flex: 2,
                                                 child: Text(
-                                                  '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                  '${stockTransferCtrl.searchProductModel[index].name}',
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   softWrap: true,
@@ -412,7 +421,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                               Expanded(
                                                 flex: 1,
                                                 child: AppFormField(
-                                                    controller: allProdCtrlObj
+                                                    controller: stockTransferCtrl
                                                             .productQuantityCtrl[
                                                         index],
                                                     padding: EdgeInsets.only(
@@ -422,17 +431,20 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                         ? kWhiteColor
                                                         : Colors.transparent,
                                                     onChanged: (value) {
-                                                      allProdCtrlObj
+                                                      stockTransferCtrl
                                                                   .totalAmount[
                                                               index] =
-                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
-                                                      allProdCtrlObj
+                                                          '${double.parse('${stockTransferCtrl.productQuantityCtrl[index].text.isEmpty ? '0.00' : stockTransferCtrl.productQuantityCtrl[index].text}') * double.parse('${stockTransferCtrl.searchProductModel[index].sellingPrice.toString()}')}';
+                                                      stockTransferCtrl
                                                           .calculateFinalAmount();
                                                       debugPrint(
                                                           'Product Amount');
-                                                      debugPrint(allProdCtrlObj
-                                                          .totalAmount[index]);
-                                                      allProdCtrlObj.update();
+                                                      debugPrint(
+                                                          stockTranCtrlObj
+                                                                  .totalAmount[
+                                                              index]);
+                                                      stockTransferCtrl
+                                                          .update();
                                                     }),
                                               ),
                                               //unit
@@ -440,7 +452,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                 flex: 1,
                                                 child: Center(
                                                   child: Text(
-                                                    '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                    '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.searchProductModel[index].sellingPrice)}',
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -450,7 +462,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                 flex: 1,
                                                 child: Center(
                                                   child: Text(
-                                                    '${allProdCtrlObj.totalAmount[index]}',
+                                                    '${stockTransferCtrl.totalAmount[index]}',
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ),
@@ -495,7 +507,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                 children: [
                                   headings(
                                       txt:
-                                          'Total Amount: ${allProdCtrlObj.finalTotal}'),
+                                          'Total Amount: ${stockTranCtrlObj.finalTotal}'),
                                   CustomButton(
                                     title: Text(
                                       'Save',
@@ -503,6 +515,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                     ),
                                     onTap: () {
                                       showProgress();
+                                      stockTranCtrlObj.addSelectedItemsInList();
                                       stockTranCtrlObj.createStockTransfer();
                                     },
                                     bgColor:

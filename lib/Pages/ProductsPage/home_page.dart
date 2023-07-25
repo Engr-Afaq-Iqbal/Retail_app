@@ -1,8 +1,8 @@
+import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Config/utils.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
-import '/Theme/style.dart';
 import 'ViewProductsPage.dart';
 
 class HomePage extends StatefulWidget {
@@ -79,7 +79,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               onChanged: (value) {
-                allProdCtrlObj.searchProductList(term: '${value}');
+                Get.find<StockTransferController>()
+                    .searchProductList(term: '${value}');
               },
             )),
         // actions: [buildItemsInCartButton()],
@@ -94,26 +95,55 @@ class _HomePageState extends State<HomePage> {
                     ///SKU
                     Expanded(
                       flex: 1,
-                      child: Text('sku'.tr, style: appBarHeaderStyle),
+                      child: Text('sku'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
 
                     ///Product name
                     Expanded(
-                      flex: 4,
-                      child: Text('product_name'.tr, style: appBarHeaderStyle),
+                      flex: 3,
+                      child: Text('product_name'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
 
                     ///Price
                     Expanded(
                       flex: 1,
-                      child: Text('price'.tr, style: appBarHeaderStyle),
+                      child: Text('price'.tr,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.bold)),
                     ),
 
                     Expanded(
                         flex: 1,
                         child: Text(
                           'stock'.tr,
-                          style: appBarHeaderStyle,
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
+                        )),
+                    Expanded(
+                        flex: 1,
+                        child: Text(
+                          'Pieces',
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium!
+                              .copyWith(
+                                  fontSize: 12, fontWeight: FontWeight.bold),
                         )),
                   ],
                 ),
@@ -178,7 +208,7 @@ class _HomePageState extends State<HomePage> {
                                                   .textTheme
                                                   .titleSmall!
                                                   .copyWith(
-                                                      fontSize: 12,
+                                                      fontSize: 10,
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
@@ -186,7 +216,7 @@ class _HomePageState extends State<HomePage> {
 
                                           ///Product name
                                           Expanded(
-                                            flex: 3,
+                                            flex: 2,
                                             child: Text(
                                               allProdCtrlObj
                                                       .productShowListModel
@@ -196,7 +226,7 @@ class _HomePageState extends State<HomePage> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium!
-                                                  .copyWith(fontSize: 12),
+                                                  .copyWith(fontSize: 10),
                                               overflow: TextOverflow.ellipsis,
                                               softWrap: true,
                                             ),
@@ -210,12 +240,12 @@ class _HomePageState extends State<HomePage> {
                                                     '${allProdCtrlObj.productShowListModel?.data?[index].maxPrice ?? ''}',
                                                   ).toStringAsFixed(2) +
                                                   ' /-',
-                                              textAlign: TextAlign.center,
+                                              textAlign: TextAlign.right,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .titleMedium!
                                                   .copyWith(
-                                                      fontSize: 12,
+                                                      fontSize: 10,
                                                       fontWeight:
                                                           FontWeight.bold),
                                             ),
@@ -226,8 +256,27 @@ class _HomePageState extends State<HomePage> {
                                               child: Center(
                                                 child: Text(
                                                   double.parse(
-                                                          '${allProdCtrlObj.productShowListModel?.data?[index].productVariationsDetails?.qtyAvailable ?? '0.00'}')
+                                                          '${allProdCtrlObj.productShowListModel?.data?[index].currentStock ?? '0.00'}')
                                                       .toStringAsFixed(2),
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontSize: 10,
+                                                      ),
+                                                ),
+                                              )),
+                                          Expanded(
+                                              flex: 1,
+                                              child: Center(
+                                                child: Text(
+                                                  '${allProdCtrlObj.productShowListModel?.data?[index].unit ?? ''}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
+                                                        fontSize: 10,
+                                                      ),
                                                 ),
                                               )),
                                         ],

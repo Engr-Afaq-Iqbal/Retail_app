@@ -129,9 +129,8 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                               ///TODO unit id to text
                               titleWithText(
                                   headingTxt: 'unit'.tr + ':*',
-                                  bodyText: widget.productModelObjs
-                                          .data?[widget.index].unit ??
-                                      '- -'),
+                                  bodyText:
+                                      '${widget.productModelObjs.data?[widget.index].unit ?? '- -'}'),
                             ],
                           ),
 
@@ -143,9 +142,8 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                             children: [
                               titleWithText(
                                   headingTxt: 'category'.tr + ':',
-                                  bodyText: widget.productModelObjs
-                                          .data?[widget.index].category ??
-                                      '- -'),
+                                  bodyText:
+                                      '${widget.productModelObjs.data?[widget.index].category ?? '- -'}'),
                               // Expanded(
                               //   child: CheckboxListTile(
                               //       value: productRetailCtrlObj.manageValue,
@@ -453,9 +451,8 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                           children: [
                             titleWithText(
                                 headingTxt: 'applicable_tax'.tr + ':',
-                                bodyText: widget.productModelObjs
-                                        .data?[widget.index].tax ??
-                                    '- -'),
+                                bodyText:
+                                    '${widget.productModelObjs.data?[widget.index].tax ?? '- -'}'),
                             titleWithText(
                                 headingTxt: 'selling_price_tax_type'.tr + ':',
                                 bodyText:

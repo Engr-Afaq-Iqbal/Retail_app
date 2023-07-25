@@ -37,10 +37,12 @@ class ReceiptPdfGenerate extends StatelessWidget {
     final pdfImage = pw.MemoryImage(imageBytes);
 
     pdf.addPage(
-      invoicePrintPage(format,
-          itemList: Get.find<ProductCartController>().itemCartList,
-          singleReceiptModel: singleReceiptModel,
-          image: pdfImage),
+      invoicePrintPage(
+        format,
+        itemList: Get.find<ProductCartController>().itemCartList,
+        singleReceiptModel: singleReceiptModel,
+        image: pdfImage,
+      ),
     );
 
     return pdf.save();
@@ -56,7 +58,7 @@ class ReceiptPdfGenerate extends StatelessWidget {
     String? shippingAddress,
     List<ProductModel> itemList = const [],
     SingleReceiptModel? singleReceiptModel,
-    pw.MemoryImage? image,
+    required pw.MemoryImage image,
   }) {
     return pw.Page(
       pageFormat: format,
@@ -67,7 +69,7 @@ class ReceiptPdfGenerate extends StatelessWidget {
 
           pw.Image(
               pw.MemoryImage(
-                  image!.bytes), // Convert MemoryImage to ImageProvider
+                  image.bytes), // Convert MemoryImage to ImageProvider
               fit: pw.BoxFit.contain,
               width: 200,
               height: 100),

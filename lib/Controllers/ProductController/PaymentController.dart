@@ -248,8 +248,13 @@ class PaymentController extends GetxController {
         request.fields['cheque_number[$checkoutIndex]'] =
             '${paymentWidgetList[checkoutIndex].checkNoCtrl.text}';
       } else if (!isSelectedPaymentOptionCash(index: checkoutIndex)) {
-        request.fields['transaction_no_1[$checkoutIndex]'] =
+        for (int tranIndex = 0; tranIndex < 8; tranIndex++) {
+          request.fields['transaction_no_$tranIndex'] = '';
+        }
+        request.fields['transaction_no_$checkoutIndex'] =
             '${paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
+        // request.fields['transaction_no_1[$checkoutIndex]'] =
+        //     '${paymentWidgetList[checkoutIndex].transactionNoCtrl.text}';
       }
 
       request.fields['note[$checkoutIndex]'] =

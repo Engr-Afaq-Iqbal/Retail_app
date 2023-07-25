@@ -87,13 +87,14 @@ class Datum {
   int? id;
   String? product;
   String? type;
-  String? category;
+  Category? category;
   dynamic subCategory;
   String? unit;
   dynamic brand;
   String? tax;
   String? sku;
   String? image;
+  String? weight;
   int? enableStock;
   int? isInactive;
   int? notForSelling;
@@ -110,6 +111,8 @@ class Datum {
   int? woocommerceDisableSync;
   String? imageUrl;
   List<dynamic>? media;
+  List<ProductVariation>? productVariations;
+  dynamic deviceModal;
   ProductVariationsDetails? productVariationsDetails;
   List<ProductLocation>? productLocations;
 
@@ -124,6 +127,7 @@ class Datum {
     this.tax,
     this.sku,
     this.image,
+    this.weight,
     this.enableStock,
     this.isInactive,
     this.notForSelling,
@@ -140,6 +144,8 @@ class Datum {
     this.woocommerceDisableSync,
     this.imageUrl,
     this.media,
+    this.productVariations,
+    this.deviceModal,
     this.productVariationsDetails,
     this.productLocations,
   });
@@ -148,13 +154,14 @@ class Datum {
         id: json["id"],
         product: json["product"],
         type: json["type"],
-        category: json["category"],
+        category: categoryValues.map[json["category"]],
         subCategory: json["sub_category"],
         unit: json["unit"],
         brand: json["brand"],
         tax: json["tax"],
         sku: json["sku"],
         image: json["image"],
+        weight: json["weight"],
         enableStock: json["enable_stock"],
         isInactive: json["is_inactive"],
         notForSelling: json["not_for_selling"],
@@ -173,6 +180,11 @@ class Datum {
         media: json["media"] == null
             ? []
             : List<dynamic>.from(json["media"]!.map((x) => x)),
+        productVariations: json["product_variations"] == null
+            ? []
+            : List<ProductVariation>.from(json["product_variations"]!
+                .map((x) => ProductVariation.fromJson(x))),
+        deviceModal: json["device_modal"],
         productVariationsDetails: json["product_variations_details"] == null
             ? null
             : ProductVariationsDetails.fromJson(
@@ -187,13 +199,14 @@ class Datum {
         "id": id,
         "product": product,
         "type": type,
-        "category": category,
+        "category": categoryValues.reverse[category],
         "sub_category": subCategory,
         "unit": unit,
         "brand": brand,
         "tax": tax,
         "sku": sku,
         "image": image,
+        "weight": weight,
         "enable_stock": enableStock,
         "is_inactive": isInactive,
         "not_for_selling": notForSelling,
@@ -210,6 +223,10 @@ class Datum {
         "woocommerce_disable_sync": woocommerceDisableSync,
         "image_url": imageUrl,
         "media": media == null ? [] : List<dynamic>.from(media!.map((x) => x)),
+        "product_variations": productVariations == null
+            ? []
+            : List<dynamic>.from(productVariations!.map((x) => x.toJson())),
+        "device_modal": deviceModal,
         "product_variations_details": productVariationsDetails?.toJson(),
         "product_locations": productLocations == null
             ? []
@@ -217,15 +234,19 @@ class Datum {
       };
 }
 
+enum Category { BREAKFAST }
+
+final categoryValues = EnumValues({"الفطور   Breakfast": Category.BREAKFAST});
+
 class ProductLocation {
   int? id;
   int? businessId;
   LocationId? locationId;
-  Name? name;
+  ProductLocationName? name;
   Landmark? landmark;
   Country? country;
-  City? state;
-  City? city;
+  String? state;
+  String? city;
   String? zipCode;
   int? invoiceSchemeId;
   int? invoiceLayoutId;
@@ -289,11 +310,11 @@ class ProductLocation {
         id: json["id"],
         businessId: json["business_id"],
         locationId: locationIdValues.map[json["location_id"]],
-        name: nameValues.map[json["name"]],
+        name: productLocationNameValues.map[json["name"]],
         landmark: landmarkValues.map[json["landmark"]],
         country: countryValues.map[json["country"]],
-        state: cityValues.map[json["state"]],
-        city: cityValues.map[json["city"]],
+        state: json["state"],
+        city: json["city"],
         zipCode: json["zip_code"],
         invoiceSchemeId: json["invoice_scheme_id"],
         invoiceLayoutId: json["invoice_layout_id"],
@@ -330,11 +351,11 @@ class ProductLocation {
         "id": id,
         "business_id": businessId,
         "location_id": locationIdValues.reverse[locationId],
-        "name": nameValues.reverse[name],
+        "name": productLocationNameValues.reverse[name],
         "landmark": landmarkValues.reverse[landmark],
         "country": countryValues.reverse[country],
-        "state": cityValues.reverse[state],
-        "city": cityValues.reverse[city],
+        "state": state,
+        "city": city,
         "zip_code": zipCode,
         "invoice_scheme_id": invoiceSchemeId,
         "invoice_layout_id": invoiceLayoutId,
@@ -364,10 +385,6 @@ class ProductLocation {
       };
 }
 
-enum City { ABU_DHABI }
-
-final cityValues = EnumValues({"Abu Dhabi": City.ABU_DHABI});
-
 enum Country { UNITED_ARAB_EMIRATES }
 
 final countryValues =
@@ -385,9 +402,10 @@ enum LocationId { BL0001 }
 
 final locationIdValues = EnumValues({"BL0001": LocationId.BL0001});
 
-enum Name { RESTAURANT }
+enum ProductLocationName { RESTAURANT }
 
-final nameValues = EnumValues({"Restaurant": Name.RESTAURANT});
+final productLocationNameValues =
+    EnumValues({"Restaurant": ProductLocationName.RESTAURANT});
 
 class Pivot {
   int? productId;
@@ -414,6 +432,198 @@ enum ReceiptPrinterType { BROWSER }
 final receiptPrinterTypeValues =
     EnumValues({"browser": ReceiptPrinterType.BROWSER});
 
+class ProductVariation {
+  int? id;
+  dynamic variationTemplateId;
+  ProductVariationName? name;
+  int? productId;
+  int? isDummy;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  List<Variation>? variations;
+
+  ProductVariation({
+    this.id,
+    this.variationTemplateId,
+    this.name,
+    this.productId,
+    this.isDummy,
+    this.createdAt,
+    this.updatedAt,
+    this.variations,
+  });
+
+  factory ProductVariation.fromJson(Map<String, dynamic> json) =>
+      ProductVariation(
+        id: json["id"],
+        variationTemplateId: json["variation_template_id"],
+        name: productVariationNameValues.map[json["name"]]!,
+        productId: json["product_id"],
+        isDummy: json["is_dummy"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        variations: json["variations"] == null
+            ? []
+            : List<Variation>.from(
+                json["variations"]!.map((x) => Variation.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "variation_template_id": variationTemplateId,
+        "name": productVariationNameValues.reverse[name],
+        "product_id": productId,
+        "is_dummy": isDummy,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "variations": variations == null
+            ? []
+            : List<dynamic>.from(variations!.map((x) => x.toJson())),
+      };
+}
+
+enum ProductVariationName { DUMMY }
+
+final productVariationNameValues =
+    EnumValues({"DUMMY": ProductVariationName.DUMMY});
+
+class Variation {
+  int? id;
+  ProductVariationName? name;
+  int? productId;
+  String? subSku;
+  int? productVariationId;
+  dynamic woocommerceVariationId;
+  dynamic variationValueId;
+  String? defaultPurchasePrice;
+  String? dppIncTax;
+  String? profitPercent;
+  String? defaultSellPrice;
+  String? sellPriceIncTax;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic deletedAt;
+  List<dynamic>? comboVariations;
+  List<GroupPrice>? groupPrices;
+
+  Variation({
+    this.id,
+    this.name,
+    this.productId,
+    this.subSku,
+    this.productVariationId,
+    this.woocommerceVariationId,
+    this.variationValueId,
+    this.defaultPurchasePrice,
+    this.dppIncTax,
+    this.profitPercent,
+    this.defaultSellPrice,
+    this.sellPriceIncTax,
+    this.createdAt,
+    this.updatedAt,
+    this.deletedAt,
+    this.comboVariations,
+    this.groupPrices,
+  });
+
+  factory Variation.fromJson(Map<String, dynamic> json) => Variation(
+        id: json["id"],
+        name: productVariationNameValues.map[json["name"]]!,
+        productId: json["product_id"],
+        subSku: json["sub_sku"],
+        productVariationId: json["product_variation_id"],
+        woocommerceVariationId: json["woocommerce_variation_id"],
+        variationValueId: json["variation_value_id"],
+        defaultPurchasePrice: json["default_purchase_price"],
+        dppIncTax: json["dpp_inc_tax"],
+        profitPercent: json["profit_percent"],
+        defaultSellPrice: json["default_sell_price"],
+        sellPriceIncTax: json["sell_price_inc_tax"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        deletedAt: json["deleted_at"],
+        comboVariations: json["combo_variations"] == null
+            ? []
+            : List<dynamic>.from(json["combo_variations"]!.map((x) => x)),
+        groupPrices: json["group_prices"] == null
+            ? []
+            : List<GroupPrice>.from(
+                json["group_prices"]!.map((x) => GroupPrice.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": productVariationNameValues.reverse[name],
+        "product_id": productId,
+        "sub_sku": subSku,
+        "product_variation_id": productVariationId,
+        "woocommerce_variation_id": woocommerceVariationId,
+        "variation_value_id": variationValueId,
+        "default_purchase_price": defaultPurchasePrice,
+        "dpp_inc_tax": dppIncTax,
+        "profit_percent": profitPercent,
+        "default_sell_price": defaultSellPrice,
+        "sell_price_inc_tax": sellPriceIncTax,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "deleted_at": deletedAt,
+        "combo_variations": comboVariations == null
+            ? []
+            : List<dynamic>.from(comboVariations!.map((x) => x)),
+        "group_prices": groupPrices == null
+            ? []
+            : List<dynamic>.from(groupPrices!.map((x) => x.toJson())),
+      };
+}
+
+class GroupPrice {
+  int? id;
+  int? variationId;
+  int? priceGroupId;
+  String? priceIncTax;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+
+  GroupPrice({
+    this.id,
+    this.variationId,
+    this.priceGroupId,
+    this.priceIncTax,
+    this.createdAt,
+    this.updatedAt,
+  });
+
+  factory GroupPrice.fromJson(Map<String, dynamic> json) => GroupPrice(
+        id: json["id"],
+        variationId: json["variation_id"],
+        priceGroupId: json["price_group_id"],
+        priceIncTax: json["price_inc_tax"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "variation_id": variationId,
+        "price_group_id": priceGroupId,
+        "price_inc_tax": priceIncTax,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+      };
+}
+
 class ProductVariationsDetails {
   int? productId;
   String? qtyAvailable;
@@ -434,10 +644,6 @@ class ProductVariationsDetails {
         "qty_available": qtyAvailable,
       };
 }
-
-// enum Tax { VAT }
-//
-// final taxValues = EnumValues({"VAT": Tax.VAT});
 
 class Link {
   String? url;
