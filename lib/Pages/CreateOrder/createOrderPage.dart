@@ -292,7 +292,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           // },
                                           onChanged: (value) {
                                             allProdCtrlObj.totalAmount[index] =
-                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.selectedUnitsNames[index]) ?? '1.00')}';
+                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
                                             allProdCtrlObj
                                                 .calculateFinalAmount();
                                             debugPrint('Product Amount');
