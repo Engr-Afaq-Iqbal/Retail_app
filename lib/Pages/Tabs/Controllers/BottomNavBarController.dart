@@ -3,9 +3,6 @@ import 'package:get/get.dart';
 
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
-import '/Pages/Booking/tab_bar_booking.dart';
-import '/Pages/Orders/View/OrdersTabPage.dart';
-import '/Pages/Table/TablesPage.dart';
 import '../../HomePageRetail/homepageRetail.dart';
 
 class BottomNavBarController extends GetxController {

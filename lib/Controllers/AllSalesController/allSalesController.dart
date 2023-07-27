@@ -11,6 +11,7 @@ import '../../Pages/SalesView/SalesViewDetails/SalesView.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../ContactController/ContactController.dart';
+import '../exception_controller.dart';
 
 enum SalesTabsPage {
   Sales,
@@ -167,9 +168,14 @@ class AllSalesController extends GetxController {
       }
 
       return false;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return null;
     });
   }
@@ -197,9 +203,14 @@ class AllSalesController extends GetxController {
       if (_res == null) return null;
       salesOrderModel = specifiedSellModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -239,9 +250,14 @@ class AllSalesController extends GetxController {
       stopProgress();
 
       return false;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return null;
     });
   }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../../Components/productHeadings.dart';
+import '../../../Components/p4Headings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
@@ -95,7 +95,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Create Stock Adjustment'),
+        title: Text('create_stock_adjustment'.tr),
       ),
       body: GestureDetector(
         onTap: () {
@@ -114,12 +114,12 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Date:*'),
+                        headings(txt: 'date'.tr + ':*'),
                         AppFormField(
                           width: width * 0.43,
                           readOnly: true,
                           controller: stockTransferCtrlObj.dateCtrl,
-                          labelText: 'Select Date',
+                          labelText: 'select_date'.tr,
                           prefixIcon: Icon(Icons.calendar_month),
                           onTap: () {
                             setState(() {
@@ -136,14 +136,14 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          headings(txt: 'Adjustment Type:*'),
+                          headings(txt: 'adjustment_type'.tr + ':*'),
                           DropdownButtonHideUnderline(
                             child: DropdownButton2(
                               isExpanded: true,
                               hint: Align(
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Text(
-                                    'Please Select',
+                                    'please_select'.tr,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -204,11 +204,11 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProductHeadings(
-                          txt1: 'Product Name',
-                          txt2: 'QTY',
-                          txt3: 'Price',
-                          txt4: 'Total',
+                        Product4Headings(
+                          txt1: 'product_name'.tr,
+                          txt2: 'qty'.tr,
+                          txt3: 'price'.tr,
+                          txt4: 'total'.tr,
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height * 0.4,
@@ -327,14 +327,14 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Total amount recovered:'),
+                        headings(txt: 'total_amount_recovered'.tr + ':'),
                         AppFormField(
                           controller: stockTransferCtrlObj.totalAmountRecCtrl,
                         ),
-                        headings(txt: 'Reason:'),
+                        headings(txt: 'reason'.tr + ':'),
                         AppFormField(
                           controller: stockTransferCtrlObj.reasonCtrl,
-                          labelText: 'Reason',
+                          labelText: 'reason'.tr,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -344,7 +344,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                               children: [
                                 CustomButton(
                                   title: Text(
-                                    'Save',
+                                    'save'.tr,
                                     style: TextStyle(color: kWhiteColor),
                                   ),
                                   onTap: () {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-import '../../Pages/Tabs/Controllers/BottomNavBarController.dart';
+import '../exception_controller.dart';
 import '/Config/app_config.dart';
 import '/Config/utils.dart';
 import '/Models/business_n_register/BusinessModel.dart';
@@ -84,9 +84,14 @@ class AuthController extends GetxController {
       // await Get.find<RegisterController>().fetchRegisterStatus();
 
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return false;
     });
   }
@@ -145,9 +150,14 @@ class AuthController extends GetxController {
       print('Token APi Calling');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }

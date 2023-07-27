@@ -60,13 +60,13 @@ class StockTransferController extends GetxController {
         NavBarModel(
           identifier: OrderTabsPage.ActiveOrders,
           icon: 'Icons.order',
-          label: 'Stock Transfer',
+          label: 'stock_transfer'.tr,
           page: ViewStockTransfer(), //StockTransfer(),
         ),
         NavBarModel(
           identifier: OrderTabsPage.PastOrders,
           icon: 'Icons.order',
-          label: 'Stock Adjustment',
+          label: 'stock_ adjustment'.tr,
           page: ViewStockAdjustment(),
         ),
       ];

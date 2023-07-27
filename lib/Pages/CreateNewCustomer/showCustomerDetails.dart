@@ -38,7 +38,7 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Customer Details',
+          'customer_details'.tr,
         ),
       ),
       body: Container(
@@ -65,7 +65,7 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     Text(
-                      'Customer Information',
+                      'customer_information'.tr,
                       style: appBarHeaderStyle,
                     )
                   ],
@@ -74,7 +74,7 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                   height: h * 0.02,
                 ),
                 AppFormField(
-                  labelText: 'Prefix',
+                  labelText: 'prefix'.tr,
                   readOnly: true,
                   controller: contactCtrl.prefixCtrl,
                 ),
@@ -84,16 +84,16 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                     if (v!.isEmpty) return 'field_required'.tr;
                     return null;
                   },
-                  labelText: 'First Name',
+                  labelText: 'first_name'.tr,
                   controller: contactCtrl.firstNameCtrl,
                 ),
                 AppFormField(
-                  labelText: 'Middle Name',
+                  labelText: 'middle_name'.tr,
                   readOnly: true,
                   controller: contactCtrl.middleNameCtrl,
                 ),
                 AppFormField(
-                  labelText: 'Last Name',
+                  labelText: 'last_name'.tr,
                   readOnly: true,
                   controller: contactCtrl.lastNameCtrl,
                 ),
@@ -103,7 +103,7 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                   //   if (v!.isEmpty) return 'field_required'.tr;
                   //   return null;
                   // },
-                  labelText: 'Business Name',
+                  labelText: 'business_name'.tr,
                   controller: contactCtrl.businessNameCtrl,
                 ),
                 // mobile phone
@@ -119,28 +119,28 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
                 ),
                 AppFormField(
                   readOnly: true,
-                  labelText: 'Alternate Contact Number',
+                  labelText: 'alternate_contact_number'.tr,
                   controller: contactCtrl.alternateMblNbrNumberCtrl,
                 ),
                 // street
                 AppFormField(
                   readOnly: true,
-                  labelText: 'Landline',
+                  labelText: 'landline'.tr,
                   controller: contactCtrl.landLineCtrl,
                 ),
                 // villa, building, apartment
                 AppFormField(
-                  labelText: 'Email',
+                  labelText: 'email'.tr,
                   readOnly: true,
                   controller: contactCtrl.emailCtrl,
                 ),
                 AppFormField(
-                  labelText: 'TRN',
+                  labelText: 'trn'.tr,
                   readOnly: true,
                   controller: contactCtrl.trnCtrl,
                 ),
                 AppFormField(
-                  labelText: 'License',
+                  labelText: 'license_small'.tr,
                   readOnly: true,
                   controller: contactCtrl.licenseCtrl,
                 ),

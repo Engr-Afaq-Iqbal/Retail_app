@@ -93,7 +93,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'From: ',
+                        text1: 'from'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -121,7 +121,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                           color: Colors.black),
                       orderInfoRow(
                         context,
-                        text1: 'To: ',
+                        text1: 'to'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -149,7 +149,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Date: ',
+                        text1: 'date'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -183,7 +183,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Shipping: ',
+                        text1: 'shipping'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -211,7 +211,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                           color: Colors.black),
                       orderInfoRow(
                         context,
-                        text1: 'Final Amount: ',
+                        text1: 'final_amount'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -242,7 +242,8 @@ class _ViwStockTileState extends State<ViwStockTile> {
                           ?.data[widget.index].additionalNotes !=
                       null)
                     Text(
-                      'Note: ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
+                      'note'.tr +
+                          ': ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!

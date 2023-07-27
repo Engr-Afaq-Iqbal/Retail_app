@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../Pages/register/OpenRegisterPage.dart';
 import '../../Services/storage_services.dart';
+import '../exception_controller.dart';
 import '/Config/utils.dart';
 import '/Models/business_n_register/BusinessModel.dart';
 import '/Models/business_n_register/RegisterRecordModel.dart';
@@ -75,9 +76,14 @@ class RegisterController extends GetxController {
       cashInHandCtrl.clear();
       businessLocationCtrl.clear();
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return false;
     });
   }
@@ -116,9 +122,14 @@ class RegisterController extends GetxController {
       Get.offAll(() => OpenRegisterPage());
 
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return false;
     });
   }
@@ -137,9 +148,14 @@ class RegisterController extends GetxController {
       }
 
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return false;
     });
   }
@@ -166,9 +182,14 @@ class RegisterController extends GetxController {
       // }
 
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return false;
     });
   }

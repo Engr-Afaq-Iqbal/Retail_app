@@ -1,13 +1,9 @@
-import 'package:animation_wrappers/Animations/faded_scale_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import '/Pages/Tabs/Controllers/BottomNavBarController.dart';
-import '/Theme/colors.dart';
-import '../../../Config/const.dart';
 import '../../../Controllers/OrderController/order_type_controller.dart';
-import '../../Notifications/notifications.dart';
 
 class TabsPage extends StatefulWidget {
   const TabsPage({Key? key}) : super(key: key);

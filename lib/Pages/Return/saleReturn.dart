@@ -105,9 +105,6 @@ class _SalesReturnState extends State<SalesReturn> {
     saleReturnCtrlObj.totalReturnTax = '0.00';
     saleReturnCtrlObj.subtotal.clear();
     saleReturnCtrlObj.totalAmount = '0.00';
-    // for (var controller in saleReturnCtrlObj.returnQtyCtrl) {
-    //   controller.dispose();
-    // }
     super.dispose();
   }
 
@@ -117,7 +114,7 @@ class _SalesReturnState extends State<SalesReturn> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Sale Return'),
+        title: Text('sale_return'.tr),
       ),
       body: GestureDetector(
         onTap: () {
@@ -136,12 +133,12 @@ class _SalesReturnState extends State<SalesReturn> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                      'Invoice No: ${saleReturnCtrl.editSaleReturnModelDart?.invoiceNo}'),
-                  Text(
-                      'Customer Name: ${saleReturnCtrl.editSaleReturnModelDart?.contact?.name}'),
-                  Text(
-                      'Date: ${saleReturnCtrl.editSaleReturnModelDart?.transactionDate}'),
+                  Text('invoice_nbr'.tr +
+                      ': ${saleReturnCtrl.editSaleReturnModelDart?.invoiceNo}'),
+                  Text('customer_name'.tr +
+                      ': ${saleReturnCtrl.editSaleReturnModelDart?.contact?.name}'),
+                  Text('date'.tr +
+                      ': ${saleReturnCtrl.editSaleReturnModelDart?.transactionDate}'),
                   SizedBox(
                     height: 10,
                   ),
@@ -149,7 +146,7 @@ class _SalesReturnState extends State<SalesReturn> {
                     width: MediaQuery.of(context).size.width * 0.8,
                     readOnly: true,
                     controller: saleReturnCtrl.saleReturnDateCtrl,
-                    labelText: 'Return Date',
+                    labelText: 'return_date'.tr,
                     prefixIcon: Icon(Icons.calendar_month),
                     onTap: () {
                       setState(() {
@@ -168,7 +165,7 @@ class _SalesReturnState extends State<SalesReturn> {
                         Expanded(
                           flex: 3,
                           child: Text(
-                            'Product Name',
+                            'product_name'.tr,
                             style: TextStyle(color: kWhiteColor),
                           ),
                         ),
@@ -176,7 +173,7 @@ class _SalesReturnState extends State<SalesReturn> {
                           flex: 1,
                           child: Center(
                             child: Text(
-                              'Price',
+                              'price'.tr,
                               style: TextStyle(color: kWhiteColor),
                             ),
                           ),
@@ -185,7 +182,7 @@ class _SalesReturnState extends State<SalesReturn> {
                           flex: 1,
                           child: Center(
                             child: Text(
-                              'QTY',
+                              'qty'.tr,
                               style: TextStyle(color: kWhiteColor),
                             ),
                           ),
@@ -193,7 +190,7 @@ class _SalesReturnState extends State<SalesReturn> {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            'Return QTY',
+                            'return_qty'.tr,
                             style: TextStyle(color: kWhiteColor),
                           ),
                         )
@@ -270,7 +267,8 @@ class _SalesReturnState extends State<SalesReturn> {
                                                 .returnQtyCtrl[index].text) >
                                             double.parse(
                                                 '${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].quantity}')) {
-                                          showToast('Quantity not available');
+                                          showToast(
+                                              'quantity_not_available'.tr);
                                           print('value is greater');
                                         } else {
                                           saleReturnCtrl.subtotal[index] =
@@ -304,7 +302,8 @@ class _SalesReturnState extends State<SalesReturn> {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                      'Subtotal:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.subtotal[index])}',
+                                      'subtotal'.tr +
+                                          ':- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.subtotal[index])}',
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -347,12 +346,12 @@ class _SalesReturnState extends State<SalesReturn> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text(
-                      'Total Return Discount:- ${productCtrlCtrlObj.discoutCtrl.text}'),
-                  Text(
-                      'Total Return Tax:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalReturnTax)}'),
-                  Text(
-                      'Return Total Amount:- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalAmount)}'),
+                  Text('total_return_discount'.tr +
+                      ':- ${productCtrlCtrlObj.discoutCtrl.text}'),
+                  Text('total_return_tax'.tr +
+                      ':- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalReturnTax)}'),
+                  Text('return_total_amount'.tr +
+                      ':- ${AppFormat.doubleToStringUpTo2(saleReturnCtrl.totalAmount)}'),
                   SizedBox(
                     height: 20,
                   ),
@@ -373,7 +372,7 @@ class _SalesReturnState extends State<SalesReturn> {
                         },
                         bgColor: Theme.of(context).colorScheme.primary,
                         btnChild: Text(
-                          'Save',
+                          'save'.tr,
                           style: Theme.of(context)
                               .textTheme
                               .titleMedium!

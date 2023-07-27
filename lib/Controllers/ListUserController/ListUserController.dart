@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../exception_controller.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
 import '../../Config/utils.dart';
@@ -43,9 +44,14 @@ class ListUserController extends GetxController {
       if (_res == null) return null;
       listuserModel = listUserModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -67,9 +73,14 @@ class ListUserController extends GetxController {
       debugPrint('Response::::');
       debugPrint(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
     return true;

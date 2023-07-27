@@ -12,7 +12,7 @@ String productShowListModelToJson(ProductShowListModel data) =>
 
 class ProductShowListModel {
   int? currentPage;
-  List<Datum>? data;
+  List<ProductShow>? data;
   String? firstPageUrl;
   int? from;
   int? lastPage;
@@ -46,7 +46,8 @@ class ProductShowListModel {
         currentPage: json["current_page"],
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<ProductShow>.from(
+                json["data"]!.map((x) => ProductShow.fromJson(x))),
         firstPageUrl: json["first_page_url"],
         from: json["from"],
         lastPage: json["last_page"],
@@ -83,7 +84,7 @@ class ProductShowListModel {
       };
 }
 
-class Datum {
+class ProductShow {
   int? id;
   String? product;
   String? type;
@@ -116,7 +117,7 @@ class Datum {
   ProductVariationsDetails? productVariationsDetails;
   List<ProductLocation>? productLocations;
 
-  Datum({
+  ProductShow({
     this.id,
     this.product,
     this.type,
@@ -150,7 +151,7 @@ class Datum {
     this.productLocations,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory ProductShow.fromJson(Map<String, dynamic> json) => ProductShow(
         id: json["id"],
         product: json["product"],
         type: json["type"],

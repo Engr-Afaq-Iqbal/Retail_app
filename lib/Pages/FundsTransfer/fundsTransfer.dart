@@ -112,7 +112,7 @@ class _FundsTransferState extends State<FundsTransfer> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Funds Transfer'),
+        title: Text('funds_transfer'.tr),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -121,7 +121,7 @@ class _FundsTransferState extends State<FundsTransfer> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              headings(txt: 'Funds From:'),
+              headings(txt: 'funds_from'.tr + ':'),
               Container(
                 height: MediaQuery.of(context).size.height * 0.06,
                 width: MediaQuery.of(context).size.width,
@@ -183,7 +183,7 @@ class _FundsTransferState extends State<FundsTransfer> {
                   );
                 }),
               ),
-              headings(txt: 'Funds To:'),
+              headings(txt: 'funds_to'.tr + ':'),
               Container(
                 height: MediaQuery.of(context).size.height * 0.06,
                 width: MediaQuery.of(context).size.width,
@@ -246,18 +246,18 @@ class _FundsTransferState extends State<FundsTransfer> {
                   );
                 }),
               ),
-              headings(txt: 'Amount:'),
+              headings(txt: 'amount'.tr + ':'),
               SizedBox(
                 height: 5,
               ),
               AppFormField(
                 padding: EdgeInsets.only(bottom: 5),
-                labelText: 'Amount',
-                title: 'Amount' + ': *',
+                labelText: 'amount'.tr,
+                title: 'amount'.tr + ': *',
                 controller: fundsCtrlObj.amountCtrl,
                 keyboardType: TextInputType.number,
               ),
-              headings(txt: 'Transaction Date:'),
+              headings(txt: 'transaction_date'.tr + ':'),
               SizedBox(
                 height: 5,
               ),
@@ -265,7 +265,7 @@ class _FundsTransferState extends State<FundsTransfer> {
                 // width: MediaQuery.of(context).size.width * 0.43,
                 readOnly: true,
                 controller: fundsCtrlObj.dateCtrl,
-                labelText: 'Select Date',
+                labelText: 'select_date'.tr,
                 prefixIcon: Icon(Icons.calendar_month),
                 onTap: () {
                   setState(() {
@@ -275,7 +275,7 @@ class _FundsTransferState extends State<FundsTransfer> {
                   });
                 },
               ),
-              headings(txt: 'Document:'),
+              headings(txt: 'document'.tr + ':'),
               GestureDetector(
                 onTap: () {
                   pickContactImage();
@@ -306,7 +306,7 @@ class _FundsTransferState extends State<FundsTransfer> {
               SizedBox(
                 height: 10,
               ),
-              headings(txt: 'Note:'),
+              headings(txt: 'note'.tr + ':'),
               SizedBox(
                 height: 5,
               ),
@@ -314,12 +314,12 @@ class _FundsTransferState extends State<FundsTransfer> {
                 // width: MediaQuery.of(context).size.width * 0.43,
                 readOnly: false,
                 controller: fundsCtrlObj.noteCtrl,
-                labelText: 'Enter Notes',
+                labelText: 'enter_notes'.tr,
                 maxLines: 1,
               ),
               CustomButton(
                 title: Text(
-                  'Submit',
+                  'submit'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
                 onTap: () {

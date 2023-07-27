@@ -6,6 +6,7 @@ import '../../Config/utils.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
+import '../exception_controller.dart';
 
 class AllKitchenController extends GetxController {
   AllKitchenModel? allKitchenModel;
@@ -18,9 +19,14 @@ class AllKitchenController extends GetxController {
       if (_res == null) return null;
       allKitchenModel = allKitchenModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }

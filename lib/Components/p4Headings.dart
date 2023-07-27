@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../Theme/colors.dart';
 
-class ProductHeadings extends StatelessWidget {
+class Product4Headings extends StatelessWidget {
   final String? txt1;
   final String? txt2;
   final String? txt3;
   final String? txt4;
-  ProductHeadings({Key? key, this.txt1, this.txt2, this.txt3, this.txt4})
+  Product4Headings({Key? key, this.txt1, this.txt2, this.txt3, this.txt4})
       : super(key: key);
 
   @override

@@ -79,7 +79,7 @@ class _ReceiptsState extends State<Receipts> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text('Issue Receipts'),
+        title: Text('issue_receipts'.tr),
         actions: [
           GestureDetector(
             onTap: () {
@@ -140,7 +140,7 @@ class _ReceiptsState extends State<Receipts> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Customer Name:'),
+                  Text('customer_name'.tr + ':'),
                   Center(
                     child: Text(
                       '${contactCtrl.nameCtrl.text} (${contactCtrl.contactId})',
@@ -264,7 +264,8 @@ class _ReceiptsState extends State<Receipts> {
                   width: 150,
                   child: Center(
                     child: Text(
-                      'Total (AED) = ${AppFormat.doubleToStringUpTo2(receiptCtrlObj.totalAmount)}',
+                      'total'.tr +
+                          ' (AED) = ${AppFormat.doubleToStringUpTo2(receiptCtrlObj.totalAmount)}',
                       style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -328,7 +329,7 @@ class _ReceiptsState extends State<Receipts> {
                   // }
                 },
                 title: Text(
-                  'SUBMIT',
+                  'submit'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
               ),

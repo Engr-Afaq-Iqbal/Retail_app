@@ -268,7 +268,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
           //controller: searchCtrl,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Enter some text',
+            hintText: 'enter_some_text'.tr,
             hintStyle: TextStyle(color: Colors.grey),
           ),
           onChanged: (value) {

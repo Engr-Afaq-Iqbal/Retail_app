@@ -18,7 +18,7 @@ class _NotificationsState extends State<Notifications> {
 
   @override
   void initState() {
-    notificationCtrlObj.fetchNotificationsList();
+    // notificationCtrlObj.fetchNotificationsList();
     // TODO: implement initState
     super.initState();
   }

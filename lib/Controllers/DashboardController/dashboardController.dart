@@ -8,6 +8,7 @@ import '../../Models/Dashboard/home_tab.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
+import '../exception_controller.dart';
 
 class DashboardController extends GetxController {
   TextEditingController startDateCtrl = TextEditingController();
@@ -78,9 +79,14 @@ class DashboardController extends GetxController {
       print(' record${_res}');
       stopProgress();
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }

@@ -73,9 +73,14 @@ class AllProductsController extends GetxController {
       print(listProductsModel?.data);
       showingallItems();
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -83,7 +88,9 @@ class AllProductsController extends GetxController {
   List<Product> productModelObjs = [];
   List<Product> selectedProducts = [];
   List<String> selectedQuantityList = [];
-  List<String> unitIDs = [];
+  List<String> selectedUnitsList = [];
+  List<String> selectedUnitsNames = [];
+  // List<String> selected
   List<String> unitListStatusIds = [];
   showingallItems() {
     productModelObjs.clear();
@@ -108,25 +115,14 @@ class AllProductsController extends GetxController {
       nestedist.add(addingSpecifiedUnitsInList(product: productModelObjs[i]));
       // print(addingSpecifiedUnitsInList(product: productModelObjs[i]));
     }
-    print('Nested Listtt');
-    print(nestedist);
 
     return null;
   }
 
   checkUnitsInList({int? id, List<Product>? product, required int index}) {
-    print(product?.firstWhere((unitId) =>
-        product[index].unitId == unitListModel?.data?.first.baseUnitId));
     return (product?.firstWhere((unitId) =>
         product[index].unitId == unitListModel?.data?.first.baseUnitId));
   }
-
-  // checkUnits({
-  //   List<Product>? product,
-  // }) {
-  //   return product?.firstWhereOrNull(
-  //       (product) => product.unitId == unitListModel?.data?.first.id);
-  // }
 
   ///function to show the unit id actual names...
   checkUnits({
@@ -140,13 +136,27 @@ class AllProductsController extends GetxController {
   checkUnitsActualBaseMultiplier({
     String? unitName,
   }) {
-    print(unitListModel?.data
-        ?.firstWhereOrNull((i) => i.actualName == unitName)
-        ?.id);
     return unitListModel?.data
             ?.firstWhereOrNull((i) => i.actualName == unitName)
             ?.baseUnitMultiplier ??
         '1.00';
+  }
+
+  checkSelectedUnitsIds({
+    String? unitName,
+  }) {
+    return unitListModel?.data
+        ?.firstWhereOrNull((i) => i.actualName == unitName)
+        ?.id
+        .toString();
+  }
+
+  checkUnitValueWithGivenId({
+    String? idNumber,
+  }) {
+    return unitListModel?.data
+        ?.firstWhereOrNull((i) => i.id == idNumber)
+        ?.baseUnitMultiplier;
   }
 
   List<String> unitStatusList() {
@@ -182,6 +192,8 @@ class AllProductsController extends GetxController {
           productQuantityCtrl[i].text != '0') {
         selectedProducts.add(productModelObjs[i]);
         selectedQuantityList.add(productQuantityCtrl[i].text);
+        selectedUnitsList.add(unitListStatusIds[i]);
+        selectedUnitsNames.add(unitListStatus[i]);
       }
     }
     print(selectedQuantityList);
@@ -321,7 +333,8 @@ class AllProductsController extends GetxController {
     return options;
   }
 
-  String subTotalAmount({double ordersItemsSubTotalAmount = 0.0}) {
+  String subTotalAmount(
+      {List<Product>? items, double ordersItemsSubTotalAmount = 0.0}) {
     double itemsPriceCount = 0.0;
     double itemsTax = 0.0;
     try {
@@ -329,26 +342,29 @@ class AllProductsController extends GetxController {
         // itemsPriceCount += _itr.productTotalPrice;
         itemsPriceCount += double.parse(
                 '${selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax ?? 0.0}') *
-            double.parse(selectedQuantityList[i]);
+            double.parse(selectedQuantityList[i]) *
+            double.parse(checkUnitsActualBaseMultiplier(
+                    unitName: selectedUnitsNames[i]) ??
+                '1.00');
       }
     } catch (e) {
       logger.e('Error to calculate sub total amount => $e');
     }
     try {
-      // if (!taxCtrlObj.isTaxEnable) {
-      //   // koi calculation nahi because inclusive tax of items already calculate ho rahi han or sava ho rahi han itemspricecount variable main
-      // } else {
-      //   // itemsTax = (itemsPriceCount *
-      //   //         double.parse(
-      //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
-      //   //                 '0')) /
-      //   //     (100 +
-      //   //         double.parse(
-      //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
-      //   //                 '0'));
-      //   itemsPriceCount = itemsPriceCount - itemsTax;
-      // }
-      //finalAmountIncVAT = '${itemsPriceCount + itemsTax}';
+      if (!taxCtrlObj.isTaxEnable) {
+        // koi calculation nahi because inclusive tax of items already calculate ho rahi han or sava ho rahi han itemspricecount variable main
+      } else {
+        // itemsTax = (itemsPriceCount *
+        //         double.parse(
+        //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+        //                 '0')) /
+        //     (100 +
+        //         double.parse(
+        //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+        //                 '0'));
+        itemsPriceCount = itemsPriceCount - itemsTax;
+      }
+      // finalAmountIncVAT = '${itemsPriceCount + itemsTax}';
     } catch (e) {
       logger.e('Error to calculate sub total amount with tax => $e');
     }
@@ -357,6 +373,44 @@ class AllProductsController extends GetxController {
             '${itemsPriceCount + ordersItemsSubTotalAmount}') ??
         '0';
   }
+
+  // String subTotalAmounta({double ordersItemsSubTotalAmount = 0.0}) {
+  //   double itemsPriceCount = 0.0;
+  //   double itemsTax = 0.0;
+  //   try {
+  //     for (int i = 0; i < selectedProducts.length; i++) {
+  //       // itemsPriceCount += _itr.productTotalPrice;
+  //       itemsPriceCount += double.parse(
+  //               '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice ?? 0.0}') *
+  //           double.parse(selectedQuantityList[i]);
+  //     }
+  //     // itemsPriceCount = finalTotal - itemsPriceCount;
+  //   } catch (e) {
+  //     logger.e('Error to calculate sub total amount => $e');
+  //   }
+  //   try {
+  //     // if (!taxCtrlObj.isTaxEnable) {
+  //     //   // koi calculation nahi because inclusive tax of items already calculate ho rahi han or sava ho rahi han itemspricecount variable main
+  //     // } else {
+  //     //   // itemsTax = (itemsPriceCount *
+  //     //   //         double.parse(
+  //     //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+  //     //   //                 '0')) /
+  //     //   //     (100 +
+  //     //   //         double.parse(
+  //     //   //             taxCtrlObj.listTaxModel?.data?[0].amount.toString() ??
+  //     //   //                 '0'));
+  //     //   itemsPriceCount = itemsPriceCount - itemsTax;
+  //     // }
+  //     //finalAmountIncVAT = '${itemsPriceCount + itemsTax}';
+  //   } catch (e) {
+  //     logger.e('Error to calculate sub total amount with tax => $e');
+  //   }
+  //   print(itemsPriceCount);
+  //   return AppFormat.doubleToStringUpTo2(
+  //           '${itemsPriceCount + ordersItemsSubTotalAmount}') ??
+  //       '0';
+  // }
 
   ///Function to create order:::::
   orderCreate() async {
@@ -389,8 +443,6 @@ class AllProductsController extends GetxController {
     _fields['type'] = 'sell';
     _fields['discounttype'] = '${productCtrlCtrlObj.discountType.text}';
     _fields['discount_amount'] = '${productCtrlCtrlObj.discoutCtrl.text}';
-    _fields['tax_id'] = '';
-    //'${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1}';
     _fields['final_total'] = '${finalTotal}';
     _fields['exchange_rate'] = '0.00';
     _fields['packing_charge'] = '0.00';
@@ -404,21 +456,28 @@ class AllProductsController extends GetxController {
     _fields['is_suspend'] = '0';
     _fields['total_before_tax'] = '${subTotalAmount()}';
     // request.fields['discount_type'] = 'Fixed';
-    _fields['tax_amount'] = '0.00';
+    _fields['tax_amount'] = '${taxCtrlObj.orderTaxAmount}';
     for (int i = 0; i < selectedProducts.length; i++) {
       if (selectedQuantityList[i].isNotEmpty) {
         _fields['product_id[$i]'] = '${selectedProducts[i].id}';
         _fields['variation_id[$i]'] =
             '${selectedProducts[i].productVariations?.first.variations?.first.id}';
-        _fields['quantity[$i]'] = '${selectedQuantityList[i]}';
+        _fields['quantity[$i]'] =
+            '${double.parse(selectedQuantityList[i]) * double.parse(checkUnitsActualBaseMultiplier(unitName: selectedUnitsNames[i]) ?? '1.00')}';
         _fields['line_discount_type[$i]'] = 'fixed';
         _fields['unit_price_before_discount[$i]'] =
-            '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+            '${double.parse(selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice ?? '0.00')}'; //* double.parse(checkUnitsActualBaseMultiplier(unitName: selectedUnitsNames[i]) ?? '1.00')
         _fields['unit_price[$i]'] =
-            '${selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice}';
+            '${double.parse(selectedProducts[i].productVariations?.first.variations?.first.defaultSellPrice ?? '0.00')}'; //* double.parse(checkUnitsActualBaseMultiplier(unitName: selectedUnitsNames[i]) ?? '1.00')
         _fields['unit_price_inc_tax[$i]'] =
-            '${selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax}';
-        _fields['item_tax[$i]'] = '0.00';
+            '${double.parse(selectedProducts[i].productVariations?.first.variations?.first.sellPriceIncTax ?? '0.00')}'; //* double.parse(checkUnitsActualBaseMultiplier(unitName: selectedUnitsNames[i]) ?? '1.00')
+
+        if (selectedProducts[i].productTax != null) {
+          _fields['tax_id'] = '${selectedProducts[i].productTax?.id}';
+        }
+        _fields['item_tax[$i]'] =
+            '${taxCtrlObj.inlineTaxAmount(selectedProducts[i])}';
+        _fields['sub_unit_id[$i]'] = '${selectedUnitsList[i]}';
       }
     }
 
@@ -559,6 +618,11 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.fileNameCtrl.clear();
     paymentCtrlObj.paymentMethodCtrl.clear();
     paymentCtrlObj.accountIdCtrl.clear();
+    nestedist.clear();
+    unitListStatusIds.clear();
+    unitListStatus.clear();
+    selectedUnitsList.clear();
+    selectedUnitsNames.clear();
     for (int checkoutIndex = 0;
         checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
         checkoutIndex++) {
@@ -581,6 +645,11 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.staffNoteCtrl.clear();
     paymentCtrlObj.sellNoteCtrl.clear();
     paymentCtrlObj.paymentNoteCtrl.clear();
+    nestedist.clear();
+    unitListStatusIds.clear();
+    unitListStatus.clear();
+    selectedUnitsList.clear();
+    selectedUnitsNames.clear();
     for (int checkoutIndex = 0;
         checkoutIndex < paymentCtrlObj.paymentWidgetList.length;
         checkoutIndex++) {
@@ -945,6 +1014,7 @@ class AllProductsController extends GetxController {
         _fields['variation_id[$i]'] =
             '${selectedProducts[i].productVariations?.first.variations?.first.id}';
         _fields['quantity[$i]'] = '${selectedQuantityList[i]}';
+        _fields['sub_unit_id[$i]'] = '${selectedUnitsList[i]}';
         if (selectedProducts[i].productTax != null) {
           _fields['tax_rate_id[$i]'] = '${selectedProducts[i].productTax?.id}';
         }

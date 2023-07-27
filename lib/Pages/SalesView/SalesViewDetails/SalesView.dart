@@ -2,14 +2,13 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Controllers/ContactController/ContactController.dart';
 import '../../Return/saleReturn.dart';
 import '../../order_type/search_customer_page.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
 
 class SalesView extends StatefulWidget {
-  bool isSalesReturn;
+  final bool isSalesReturn;
   SalesView({Key? key, this.isSalesReturn = false}) : super(key: key);
 
   @override
@@ -61,7 +60,7 @@ class _SalesViewState extends State<SalesView> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Sales'),
+        title: Text('sale'.tr),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: (widget.isSalesReturn)

@@ -33,7 +33,7 @@ class SalesViewTile extends StatelessWidget {
                 children: [
                   AmountInfo(
                     amount: '${pastOrder.finalTotal ?? '0.00'}',
-                    status: 'Amount',
+                    status: 'amount'.tr,
                   ),
                   // SizedBox(
                   //   width: 5,
@@ -92,7 +92,7 @@ class SalesViewTile extends StatelessWidget {
               //if (pastOrder.totalAmountRecovered != null)
               AmountInfo(
                 amount: '${pastOrder.totalPaid ?? '0.00'}',
-                status: 'Paid',
+                status: 'paid'.tr,
               ),
             ],
           ),

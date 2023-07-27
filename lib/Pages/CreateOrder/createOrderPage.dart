@@ -6,9 +6,8 @@ import 'package:bizmodo_emenu/Theme/style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
-import '../../Components/productHeadings.dart';
+import '../../Components/p4Headings.dart';
 import '../../Components/textfield.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ContactController/ContactController.dart';
@@ -34,6 +33,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   void initState() {
     allProdCtrlObj.productQuantityCtrl.clear();
     allProdCtrlObj.selectedProducts.clear();
+    allProdCtrlObj.selectedUnitsList.clear();
+    allProdCtrlObj.nestedist.clear();
+    allProdCtrlObj.unitListStatusIds.clear();
+    allProdCtrlObj.unitListStatus.clear();
+    allProdCtrlObj.selectedUnitsNames.clear();
     allProdCtrlObj.fetchAllProducts();
     allProdCtrlObj.finalTotal = 0.00;
 
@@ -44,6 +48,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
     allProdCtrlObj.finalTotal = 0.00;
     allProdCtrlObj.totalAmount.clear();
     allProdCtrlObj.selectedQuantityList.clear();
+    allProdCtrlObj.selectedUnitsList.clear();
     allProdCtrlObj.selectedProducts.clear();
     allProdCtrlObj.productQuantityCtrl.clear();
     allProdCtrlObj.listProductsModel = null;
@@ -56,7 +61,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Order'),
+        title: Text('create_order'.tr),
         leading: AppStyles.backButton(onTap: () {
           Get.offAll(TabsPage());
         }),
@@ -74,7 +79,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text('Customer Name:'),
+                    Text('customer_name'.tr + ':'),
                     SizedBox(
                       width: 40,
                     ),
@@ -103,11 +108,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 SizedBox(
                   height: 10,
                 ),
-                ProductHeadings(
-                    txt1: 'Product Name',
-                    txt2: 'Unit',
-                    txt3: 'Stock',
-                    txt4: 'Qty'),
+                Product4Headings(
+                    txt1: 'product_name'.tr,
+                    txt2: 'unit'.tr,
+                    txt3: 'stock'.tr,
+                    txt4: 'qty'.tr),
                 // SearchProducts(),
                 Container(
                   height: MediaQuery.of(context).size.height * 0.67,
@@ -213,6 +218,12 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                       .unitListStatus[index] =
                                                   value!;
 
+                                              allProdCtrlObj.unitListStatusIds[
+                                                      index] =
+                                                  allProdCtrlObj
+                                                      .checkSelectedUnitsIds(
+                                                          unitName: value);
+
                                               allProdCtrlObj
                                                       .totalAmount[index] =
                                                   '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: value) ?? '1.00')}';
@@ -255,7 +266,10 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       flex: 1,
                                       child: Center(
                                         child: Text(
-                                          '${double.parse(allProdCtrlObj.productModelObjs[index].productVariationsDetails?.qtyAvailable ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                          AppFormat.doubleToStringUpTo2(
+                                                '${double.parse(allProdCtrlObj.productModelObjs[index].productVariationsDetails?.qtyAvailable ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                              ) ??
+                                              '0.00',
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 10),
                                         ),
@@ -278,7 +292,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           // },
                                           onChanged: (value) {
                                             allProdCtrlObj.totalAmount[index] =
-                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}')}';
+                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.selectedUnitsNames[index]) ?? '1.00')}';
                                             allProdCtrlObj
                                                 .calculateFinalAmount();
                                             debugPrint('Product Amount');
@@ -299,7 +313,8 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
 
                 Center(
                   child: Text(
-                    'Total (AED) = ${AppFormat.doubleToStringUpTo2('${allProdCtrlObj.finalTotal}')}',
+                    'total'.tr +
+                        ' (AED) = ${AppFormat.doubleToStringUpTo2('${allProdCtrlObj.finalTotal}')}',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -308,7 +323,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                   children: [
                     CustomButton(
                       title: Text(
-                        'Discount',
+                        'discount'.tr,
                         style: TextStyle(color: kWhiteColor),
                       ),
                       onTap: () {
@@ -337,7 +352,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                           ));
                         },
                         title: Text(
-                          'Credit',
+                          'credit'.tr,
                           style: TextStyle(color: kWhiteColor),
                         ),
                         bgColor: Theme.of(context).colorScheme.primary),
@@ -362,7 +377,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                           // allProdCtrlObj.orderCreate();
                         },
                         title: Text(
-                          'Pay',
+                          'pay'.tr,
                           style: TextStyle(color: kWhiteColor),
                         ),
                         bgColor: Theme.of(context).colorScheme.primary)

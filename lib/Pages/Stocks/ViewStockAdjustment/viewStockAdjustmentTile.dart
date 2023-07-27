@@ -96,7 +96,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Location: ',
+                        text1: 'location'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -120,7 +120,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                       AppConst.dividerLine(height: 12, width: 1),
                       orderInfoRow(
                         context,
-                        text1: 'Trans. Date: ',
+                        text1: 'transaction_date'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -151,7 +151,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: 'Total Amount: ',
+                        text1: 'total_amount'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -175,7 +175,7 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                       AppConst.dividerLine(height: 12, width: 1),
                       orderInfoRow(
                         context,
-                        text1: 'Amount received: ',
+                        text1: 'amount_received'.tr + ': ',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -206,7 +206,8 @@ class _ViwStockAdjustmentTileState extends State<ViwStockAdjustmentTile> {
                           ?.data[widget.index].additionalNotes ==
                       null)
                     Text(
-                      'Reason: ${widget.stockAdjustmentCtrlObj.viewStockAdjustmentModel?.data[widget.index].additionalNotes ?? '- -'}',
+                      'reason'.tr +
+                          ': ${widget.stockAdjustmentCtrlObj.viewStockAdjustmentModel?.data[widget.index].additionalNotes ?? '- -'}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!

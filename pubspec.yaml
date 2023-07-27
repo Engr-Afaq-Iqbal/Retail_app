@@ -50,7 +50,7 @@ dependencies:
   overlay_support: ^2.1.0
   font_awesome_flutter: ^10.4.0
   data_table_2: ^2.3.11
-  flutter_typeahead: ^4.4.0
+#  flutter_typeahead: ^4.4.0
   geolocator: ^9.0.2
   geocoding: ^2.1.0
   upgrader: ^6.5.0

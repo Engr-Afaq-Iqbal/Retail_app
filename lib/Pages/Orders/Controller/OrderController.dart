@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../Controllers/exception_controller.dart';
 import '../../Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
 import '../../Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '/Config/app_config.dart';
 import '/Config/enums.dart';
 import '/Config/utils.dart';
-import '/Controllers/TableSelectionController/table_management_controller.dart';
 import '/Models/NavBarModel.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
@@ -72,9 +72,14 @@ class OrderController extends GetxController {
       }
 
       return false;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return null;
     });
   }
@@ -303,7 +308,6 @@ class OrderController extends GetxController {
 
   void resetUpdateValues() {
     _isOrderUpdating = false;
-    Get.find<TableSelectionController>().isTableSelectionValueUpdated = false;
     Get.find<OrderTypeSelectionController>()
       ..isServiceTypeSelectionValueUpdated = false;
   }

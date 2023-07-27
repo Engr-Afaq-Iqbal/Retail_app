@@ -51,7 +51,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
       } else if (fileSizeInMB > 1) {
         return showToast("File size is greater than 1MB");
       } else {
-        return showToast("No Image picked");
+        return showToast('no_image_picked'.tr);
       }
     } on PlatformException catch (ex) {
       print('Failed to pick Image: $ex');
@@ -76,7 +76,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
       } else if (fileSizeInMB > 1) {
         return showToast("File size is greater than 1MB");
       } else {
-        return showToast("No Image picked");
+        return showToast('no_image_picked'.tr);
       }
     } on PlatformException catch (ex) {
       print('Failed to pick Image: $ex');
@@ -120,7 +120,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                             },
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text(
-                              'Individual',
+                              'individual'.tr,
                               style: TextStyle(color: blackColor),
                             )),
                       ),
@@ -142,7 +142,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                             },
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text(
-                              'Business',
+                              'business'.tr,
                               style: TextStyle(color: blackColor),
                             )),
                       ),
@@ -154,7 +154,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     children: [
                       AppFormField(
                         fontWeight: false,
-                        labelText: 'Prefix',
+                        labelText: 'prefix'.tr,
                         controller: contactCtrlObj.prefixCtrl,
                       ),
                       AppFormField(
@@ -163,17 +163,17 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                           if (v!.isEmpty) return 'field_required'.tr;
                           return null;
                         },
-                        labelText: 'First Name',
+                        labelText: 'first_name'.tr,
                         controller: contactCtrlObj.firstNameCtrl,
                       ),
                       AppFormField(
                         fontWeight: false,
-                        labelText: 'Middle Name',
+                        labelText: 'middle_name'.tr,
                         controller: contactCtrlObj.middleNameCtrl,
                       ),
                       AppFormField(
                         fontWeight: false,
-                        labelText: 'Last Name',
+                        labelText: 'last_name'.tr,
                         controller: contactCtrlObj.lastNameCtrl,
                       ),
                     ],
@@ -187,7 +187,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                       if (v!.isEmpty) return 'field_required'.tr;
                       return null;
                     },
-                    labelText: 'Business Name',
+                    labelText: 'business_name'.tr,
                     controller: contactCtrlObj.businessNameCtrl,
                   ),
                 // mobile phone
@@ -205,19 +205,19 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                 AppFormField(
                   fontWeight: false,
                   readOnly: true,
-                  labelText: 'Alternate Contact Number',
+                  labelText: 'alternate_contact_number'.tr,
                   controller: contactCtrlObj.alternateMblNbrNumberCtrl,
                 ),
                 // street
                 AppFormField(
                   fontWeight: false,
-                  labelText: 'Landline',
+                  labelText: 'landline'.tr,
                   controller: contactCtrlObj.landLineCtrl,
                 ),
                 // villa, building, apartment
                 AppFormField(
                   fontWeight: false,
-                  labelText: 'Email',
+                  labelText: 'email'.tr,
                   controller: contactCtrlObj.emailCtrl,
                 ),
 
@@ -230,7 +230,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                         hint: Align(
                             alignment: AlignmentDirectional.centerStart,
                             child: Text(
-                              'Assigned To',
+                              'assigned_to'.tr,
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400,
@@ -281,11 +281,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
 
                 AppFormField(
                   fontWeight: false,
-                  labelText: 'TRN',
+                  labelText: 'trn'.tr,
                   controller: contactCtrlObj.trnCtrl,
                 ),
                 Text(
-                  'TRN Upload',
+                  'trn_upload'.tr,
                   style: appBarHeaderStyle,
                 ),
                 GestureDetector(
@@ -317,11 +317,11 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                 ),
                 AppFormField(
                   fontWeight: false,
-                  labelText: 'License',
+                  labelText: 'license_small'.tr,
                   controller: contactCtrlObj.licenseCtrl,
                 ),
                 Text(
-                  'License Upload',
+                  'license_upload'.tr,
                   style: appBarHeaderStyle,
                 ),
                 GestureDetector(

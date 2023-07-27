@@ -13,6 +13,7 @@ import '../../Models/CustomerVisits/customerVisitListModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
+import '../exception_controller.dart';
 
 class CustomerVisitsController extends GetxController {
   bool valuefirst = false;
@@ -87,9 +88,14 @@ class CustomerVisitsController extends GetxController {
       if (_res == null) return null;
       customerVisitsListModel = customerVisitsListModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -120,9 +126,14 @@ class CustomerVisitsController extends GetxController {
       print('Customer visitt: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -159,9 +170,14 @@ class CustomerVisitsController extends GetxController {
       print('Status Update: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -189,9 +205,14 @@ class CustomerVisitsController extends GetxController {
       print('Customer Visit Updated: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -205,9 +226,14 @@ class CustomerVisitsController extends GetxController {
       if (_res == null) return null;
       print('Customer visit deleted successfully');
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -234,9 +260,14 @@ class CustomerVisitsController extends GetxController {
       print('Check out Data: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -261,9 +292,14 @@ class CustomerVisitsController extends GetxController {
       print('Check In Data: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }

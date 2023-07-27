@@ -175,8 +175,8 @@ class ReceiptPdfGenerate extends StatelessWidget {
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text('$index',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -186,8 +186,8 @@ class ReceiptPdfGenerate extends StatelessWidget {
                           child: pw.Text(
                               '${singleReceiptModel.paymentLines?[index].paymentRefNo}',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -197,8 +197,8 @@ class ReceiptPdfGenerate extends StatelessWidget {
                           child: pw.Text(
                               '${AppFormat.doubleToStringUpTo2(singleReceiptModel.paymentLines?[index].amount)}',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                     ],

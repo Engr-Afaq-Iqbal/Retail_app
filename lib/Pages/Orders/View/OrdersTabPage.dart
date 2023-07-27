@@ -33,7 +33,7 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Stock Transfer'),
+        title: Text('stock_transfer'.tr),
       ),
       body: DefaultTabController(
         length: StockTransferController.stockTabsList().length,

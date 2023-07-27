@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../exception_controller.dart';
 import '/Config/utils.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
@@ -18,9 +19,14 @@ class NotificationsController extends GetxController {
       if (_res == null) return null;
       notificationShowingModelObj = notificationShowingModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
     });
   }
 
@@ -37,9 +43,14 @@ class NotificationsController extends GetxController {
       print('Notification marked: ');
       print(_res);
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }

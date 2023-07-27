@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Components/custom_circular_button.dart';
-import '../../../Components/productHeadings.dart';
+import '../../../Components/p4Headings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Config/utils.dart';
@@ -99,8 +99,9 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        title:
-            widget.isSale == false ? Text('Add Sale') : Text('Add Quotation'),
+        title: widget.isSale == false
+            ? Text('add_sale'.tr)
+            : Text('add_quotation'.tr),
       ),
       body: GestureDetector(
         onTap: () {
@@ -189,14 +190,14 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          headings(txt: 'Status:*'),
+                          headings(txt: 'status'.tr + ':*'),
                           DropdownButtonHideUnderline(
                             child: DropdownButton2(
                               isExpanded: true,
                               hint: Align(
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Text(
-                                    'Please Select',
+                                    'please_select'.tr,
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w400,
@@ -240,12 +241,12 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Sale Date:'),
+                        headings(txt: 'sale_date'.tr + ':'),
                         AppFormField(
                           width: width * 0.43,
                           readOnly: true,
                           controller: allSalesCtrlObj.dateCtrl,
-                          labelText: 'Select Date',
+                          labelText: 'select_date'.tr,
                           prefixIcon: Icon(Icons.calendar_month),
                           onTap: () {
                             setState(() {
@@ -330,11 +331,11 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                         //   controller: allSalesCtrlObj.searchCtrl,
                         //   labelText: 'Search products for stock',
                         // ),
-                        ProductHeadings(
-                          txt1: 'Product Name',
-                          txt2: 'QTY',
-                          txt3: 'Price',
-                          txt4: 'Total',
+                        Product4Headings(
+                          txt1: 'product_name'.tr,
+                          txt2: 'qty'.tr,
+                          txt3: 'price'.tr,
+                          txt4: 'total'.tr,
                         ),
                         // SearchSaleProducts(),
                         Container(
@@ -459,7 +460,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                           children: [
                             CustomButton(
                               title: Text(
-                                'Discount',
+                                'discount'.tr,
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
@@ -479,7 +480,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             ),
                             CustomButton(
                               title: Text(
-                                'Shipping',
+                                'shipping'.tr,
                                 style: TextStyle(color: kWhiteColor),
                               ),
                               onTap: () {
@@ -501,7 +502,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                             if (widget.isSale == false)
                               CustomButton(
                                 title: Text(
-                                  'Pay',
+                                  'pay'.tr,
                                   style: TextStyle(color: kWhiteColor),
                                 ),
                                 onTap: () {
@@ -526,7 +527,7 @@ class _AddSalesAndQuotationState extends State<AddSalesAndQuotation> {
                         ),
                         CustomButton(
                           title: Text(
-                            'Credit',
+                            'credit'.tr,
                             style: TextStyle(color: kWhiteColor),
                           ),
                           onTap: () {

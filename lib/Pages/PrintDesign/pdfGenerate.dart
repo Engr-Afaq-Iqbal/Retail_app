@@ -183,8 +183,8 @@ class PrintData extends StatelessWidget {
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text('${index + 1}',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -195,8 +195,8 @@ class PrintData extends StatelessWidget {
                               AppFormat.removeArabic(
                                   '${saleOrderDataModel.sellLines[index].product?.name}'),
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -206,8 +206,8 @@ class PrintData extends StatelessWidget {
                           child: pw.Text(
                               '${saleOrderDataModel.sellLines[index].quantity}',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -217,8 +217,8 @@ class PrintData extends StatelessWidget {
                           child: pw.Text(
                               '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.sellLines[index].unitPriceIncTax)}',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                       pw.Expanded(
@@ -230,8 +230,8 @@ class PrintData extends StatelessWidget {
                                       '${double.parse('${saleOrderDataModel.sellLines[index].unitPriceIncTax ?? 0.0}') * double.parse('${saleOrderDataModel.sellLines[index].quantity ?? 0.0}')}') ??
                                   '0.0',
                               style: pw.TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: pw.FontWeight.bold)),
+                                fontSize: 16,
+                              )),
                         ),
                       ),
                     ],

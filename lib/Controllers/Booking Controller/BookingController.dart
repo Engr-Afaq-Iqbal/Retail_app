@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../exception_controller.dart';
 import '/Config/utils.dart';
 import '/Models/BookingModels/bookingListModel.dart';
 import '/Services/api_services.dart';
@@ -40,9 +41,14 @@ class BookingController extends GetxController {
       if (_res == null) return null;
       bookingListModelObj = bookingListModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
     });
   }
 
@@ -72,9 +78,14 @@ class BookingController extends GetxController {
       if (_res == null) return null;
 
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }

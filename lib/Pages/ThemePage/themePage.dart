@@ -57,7 +57,7 @@ class _ThemePageState extends State<ThemePage> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Change Theme',
+          'change_theme'.tr,
         ),
       ),
       body: Container(
@@ -101,7 +101,7 @@ class _ThemePageState extends State<ThemePage> {
                   themeController.setPrimaryColor(colorTheme);
                 },
                 title: Text(
-                  'Save',
+                  'save'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
               )

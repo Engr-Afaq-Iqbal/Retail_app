@@ -8,7 +8,6 @@ import '/Pages/Orders/Components/AmountInfo.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
 import '/Pages/Orders/Components/StaffInfo.dart';
 import '/Pages/Orders/Components/TableInfo.dart';
-import '/Pages/Orders/View/OrderDetails/OrderDetailsPage.dart';
 import '/Theme/style.dart';
 
 class StockAdjustmentInfoTile extends StatelessWidget {
@@ -18,7 +17,7 @@ class StockAdjustmentInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => OrderDetailsPage(pastOrder)),
+      //onTap: () => Get.to(() => OrderDetailsPage(pastOrder)),
       child: Container(
         decoration: BoxDecoration(
           border: Border.symmetric(

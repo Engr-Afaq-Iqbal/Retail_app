@@ -44,7 +44,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Sale Order Details'),
+        title: Text('sale_order_details'.tr),
         actions: [
           CustomButton(
             onTap: () {
@@ -61,7 +61,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
               Get.to(CreateOrderPage());
             },
             title: Text(
-              'Edit',
+              'edit'.tr,
               style: TextStyle(color: kWhiteColor),
             ),
           ),
@@ -301,7 +301,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                   color: kWhiteColor,
                 ),
                 title: Text(
-                  'Print Invoice',
+                  'print_invoice'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
                 onTap: () {
@@ -326,7 +326,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
                   color: kWhiteColor,
                 ),
                 title: Text(
-                  'Generate Pdf',
+                  'generate_pdf'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
                 onTap: () {

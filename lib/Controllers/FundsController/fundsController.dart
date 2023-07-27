@@ -7,6 +7,7 @@ import '../../Config/utils.dart';
 import '../../Models/PaymentMethodModel/paymentAccountModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
+import '../exception_controller.dart';
 
 class FundsController extends GetxController {
   TextEditingController amountCtrl = TextEditingController();
@@ -28,9 +29,14 @@ class FundsController extends GetxController {
       if (_res == null) return null;
       paymentAccountModel = paymentAccountModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }

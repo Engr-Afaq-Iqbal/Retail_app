@@ -1,18 +1,19 @@
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../Components/p5Headings.dart';
 import '../../Config/utils.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import 'ViewProductsPage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage();
+class ItemsPage extends StatefulWidget {
+  const ItemsPage();
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ItemsPageState createState() => _ItemsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ItemsPageState extends State<ItemsPage> {
   // final PageController _pageController = PageController();
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -90,62 +91,12 @@ class _HomePageState extends State<HomePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                child: Row(
-                  children: [
-                    ///SKU
-                    Expanded(
-                      flex: 1,
-                      child: Text('sku'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
-
-                    ///Product name
-                    Expanded(
-                      flex: 3,
-                      child: Text('product_name'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
-
-                    ///Price
-                    Expanded(
-                      flex: 1,
-                      child: Text('price'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 12, fontWeight: FontWeight.bold)),
-                    ),
-
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          'stock'.tr,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                        )),
-                    Expanded(
-                        flex: 1,
-                        child: Text(
-                          'Pieces',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium!
-                              .copyWith(
-                                  fontSize: 12, fontWeight: FontWeight.bold),
-                        )),
-                  ],
+                child: Product5Headings(
+                  txt1: 'sku'.tr,
+                  txt2: 'product_name'.tr,
+                  txt3: 'price'.tr,
+                  txt4: 'stock'.tr,
+                  txt5: 'Pieces'.tr,
                 ),
               ),
               Divider(
@@ -181,9 +132,8 @@ class _HomePageState extends State<HomePage> {
                                 onTap: () {
                                   Get.to(ViewProductsPage(
                                     isView: true,
-                                    productModelObjs:
-                                        allProdCtrlObj.productShowListModel!,
-                                    index: index,
+                                    productModelObjs: allProdCtrlObj
+                                        .productShowListModel?.data?[index],
                                   ));
                                 },
                                 child: Container(

@@ -13,6 +13,7 @@ import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../ProductController/product_cart_controller.dart';
+import '../exception_controller.dart';
 
 class SaleReturnController extends GetxController {
   bool isTrue = false;
@@ -46,9 +47,14 @@ class SaleReturnController extends GetxController {
       }
       saleReturnListModel = saleReturnListModelFromJson(_res);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -71,9 +77,14 @@ class SaleReturnController extends GetxController {
       }
       stopProgress();
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }
@@ -220,9 +231,14 @@ class SaleReturnController extends GetxController {
       Get.close(1);
       //await Get.to(() => OrderPlaced());
       // Get.offAll(HomePage());
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return null;
     });
   }

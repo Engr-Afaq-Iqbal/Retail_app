@@ -196,7 +196,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Advance Balance: ',
+              'advacne_balance'.tr + ': ',
               style: orderMapAppBarTextStyle,
             ),
 

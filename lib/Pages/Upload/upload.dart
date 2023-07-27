@@ -69,7 +69,7 @@ class _UploadState extends State<Upload> {
               height: 20,
             ),
             Text(
-              'Upload Image:',
+              'upload_photo'.tr + ':',
               style: appBarHeaderStyle,
             ),
             SizedBox(
@@ -107,7 +107,7 @@ class _UploadState extends State<Upload> {
                 uploadCtrl.addImage();
               },
               title: Text(
-                'Upload',
+                'upload'.tr,
                 style: TextStyle(color: kWhiteColor),
               ),
             )

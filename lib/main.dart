@@ -25,7 +25,6 @@ import '/Controllers/AuthController/auth_controller.dart';
 import '/Controllers/ContactController/ContactController.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
-import '/Controllers/TableSelectionController/table_management_controller.dart';
 import 'Controllers/AllPrinterController/allPrinterController.dart';
 import 'Controllers/AllSalesController/allSalesController.dart';
 import 'Controllers/Booking Controller/BookingController.dart';
@@ -118,7 +117,6 @@ void initializeControllers() {
   Get.put(AuthController());
   Get.put(DashboardController());
   Get.put(NotificationsController());
-  Get.put(TableSelectionController());
   Get.put(AllPrinterController());
   Get.put(OrderTypeSelectionController());
   Get.put(ContactController());

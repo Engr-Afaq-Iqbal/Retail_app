@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 import '../../Config/const.dart';
 import '/Theme/colors.dart';
-import '../booking/booking_row.dart';
-import '../booking/tablePastbooking.dart';
-import '../booking/tableUpcomingbooking.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -42,7 +38,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   // <---- Use a Builder Widget to get the context this this DefaultTabController
                   builder: (ctx) {
                     // Here we need to use ctx instead of context otherwise it will give null
-                    final TabController? tabController = DefaultTabController.of(ctx);
+                    final TabController? tabController =
+                        DefaultTabController.of(ctx);
 
                     tabController?.addListener(() {
                       if (!tabController.indexIsChanging) {
@@ -67,14 +64,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         //title: Text('Tabs Demo'),
                       ),
-                      body: TabBarView(
-                        children: [
-                          TableUpcomingbooking(),
-                          TablePastbooking(),
-                          // _buildWidgetA(),
-                          // _buildWidgetB(),
-                        ],
-                      ),
+                      // body: TabBarView(
+                      //   children: [
+                      //     TableUpcomingbooking(),
+                      //     TablePastbooking(),
+                      //     // _buildWidgetA(),
+                      //     // _buildWidgetB(),
+                      //   ],
+                      // ),
                     );
                   },
                 ),
@@ -86,14 +83,15 @@ class _RegisterPageState extends State<RegisterPage> {
               width: 1,
             ),
             Container(
-                constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width * 0.29,
-                  maxWidth: MediaQuery.of(context).size.width * 0.29,
-                ),
-                //height: MediaQuery.of(context).size.height,
-                // width: MediaQuery.of(context).size.width * 0.29,
-                // color: strikeThroughColor,
-                child: BottomWidget())
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width * 0.29,
+                maxWidth: MediaQuery.of(context).size.width * 0.29,
+              ),
+              //height: MediaQuery.of(context).size.height,
+              // width: MediaQuery.of(context).size.width * 0.29,
+              // color: strikeThroughColor,
+              // child: BottomWidget()
+            )
           ],
         ),
       ),

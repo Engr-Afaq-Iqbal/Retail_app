@@ -28,7 +28,7 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            'Choose option',
+            'choose_options'.tr,
             style: appBarHeaderStyle,
           ),
           Divider(),
@@ -57,7 +57,7 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
                   }
                 },
                 title: Text(
-                  'Save',
+                  'save'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
               ),
@@ -84,7 +84,7 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
                   }
                 },
                 title: Text(
-                  'Save & Print',
+                  'saveAndPrint'.tr,
                   style: TextStyle(color: kWhiteColor),
                 ),
               )

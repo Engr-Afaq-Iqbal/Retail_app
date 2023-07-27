@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
 import '../ListUserController/ListUserController.dart';
+import '../exception_controller.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/create_contact_response_model.dart';
 import '/Models/order_type_model/customer_contact_model.dart';
@@ -94,9 +95,14 @@ class ContactController extends GetxController {
       customerContacts = contactModelFromJson(_res);
       update();
       return customerContacts;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       debugPrint('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -109,9 +115,14 @@ class ContactController extends GetxController {
       customerContacts = contactModelFromJson(_res);
       update();
       return customerContacts;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       debugPrint('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -139,9 +150,14 @@ class ContactController extends GetxController {
       }
 
       return false;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       return null;
     });
   }
@@ -222,9 +238,14 @@ class ContactController extends GetxController {
       if (_res == null) return null;
       contactId = createContactResponseModelFromJson(_res).data.contactId;
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       debugPrint('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -268,9 +289,14 @@ class ContactController extends GetxController {
       Get.back();
       contactId = createContactResponseModelFromJson(_res).data.contactId;
       return true;
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       debugPrint('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       throw '$error';
     });
   }
@@ -331,9 +357,14 @@ class ContactController extends GetxController {
       getSpecificContactModel = getSpecificContactModelFromJson(_res);
       functionStoreValue(getSpecificContactModel);
       update();
-    }).onError((error, stackTrace) {
+    }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.unitListApi, error, stackTrace),
+      );
       update();
     });
   }

@@ -3,7 +3,7 @@ import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as i;
 
@@ -151,7 +151,39 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   }
 
   /// Layout
-  // Business Logo
+  // // Business Logo
+  // if (isInvoice) {
+  //   Future<List<int>> fetchNetworkImage(String? imageUrl) async {
+  //     if (imageUrl == null) return [];
+  //     try {
+  //       File file = await DefaultCacheManager()
+  //           .getSingleFile(imageUrl, key: 'bizmodo_business_logo');
+  //
+  //       return await file.readAsBytes();
+  //     } catch (e) {
+  //       var response = await http.get(Uri.parse(imageUrl));
+  //       return response.bodyBytes;
+  //     }
+  //   }
+  //
+  //   await fetchNetworkImage(
+  //           AppStorage.getBusinessDetailsData()?.businessData?.logo)
+  //       .then((img) {
+  //     final i.Image? image = i.decodeImage(img);
+  //     if (image != null) bytes += printer.image(image);
+  //   });
+  //
+  //   debugPrint(AppStorage.getBusinessDetailsData()?.businessData?.logo);
+  //
+  //   // Print image:
+  //   // final ByteData data = await rootBundle.load(
+  //   //     'https://manage.bizmodo.ae/uploads/business_logos/1682843394_Elegant%20Logo%20small.png');
+  //   // final Uint8List imgBytes = data.buffer.asUint8List();
+  //   // i.Image img = i.decodeImage(imgBytes)!;
+  //   // bytes += printer.imageRaster(img);
+  //
+  //   // printer.image();
+  // }
   if (isInvoice) {
     Future<List<int>> fetchNetworkImage(String? imageUrl) async {
       if (imageUrl == null) return [];
@@ -167,13 +199,11 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     }
 
     await fetchNetworkImage(
-            AppStorage.getBusinessDetailsData()?.businessData?.logo)
+        AppStorage.getBusinessDetailsData()?.businessData?.logo)
         .then((img) {
       final i.Image? image = i.decodeImage(img);
       if (image != null) bytes += printer.image(image);
     });
-
-    debugPrint(AppStorage.getBusinessDetailsData()?.businessData?.logo);
 
     // Print image:
     // final ByteData data = await rootBundle.load(

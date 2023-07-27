@@ -32,7 +32,7 @@ class _SearchInReceiptsState extends State<SearchInReceipts> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Search Receipts',
+                'search_receipts'.tr,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(),
               ),
               MouseRegion(
@@ -51,7 +51,7 @@ class _SearchInReceiptsState extends State<SearchInReceipts> {
           ),
           Divider(),
           Text(
-            'Receipts',
+            'receipt'.tr,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(),
           ),
           SizedBox(
@@ -60,7 +60,7 @@ class _SearchInReceiptsState extends State<SearchInReceipts> {
           AppFormField(
             isLabel: false,
             //isDense: false,
-            labelText: 'Search Receipts',
+            labelText: 'search_receipts'.tr,
             controller: allSalesCtrl.searchReceiptCtrl,
           ),
           Divider(),
@@ -82,7 +82,7 @@ class _SearchInReceiptsState extends State<SearchInReceipts> {
                       //
                       // }
                     },
-                    btnTxt: 'Search',
+                    btnTxt: 'search'.tr,
                     bgColor: Theme.of(context).colorScheme.primary,
                     borderRadius: 10),
               ),
