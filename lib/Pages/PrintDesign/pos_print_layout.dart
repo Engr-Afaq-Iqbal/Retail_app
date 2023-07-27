@@ -184,7 +184,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   //
   //   // printer.image();
   // }
-  if (isInvoice) {
+
     Future<List<int>> fetchNetworkImage(String? imageUrl) async {
       if (imageUrl == null) return [];
       try {
@@ -213,7 +213,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     // bytes += printer.imageRaster(img);
 
     // printer.image();
-  }
+
   // Slip Title / Business Name
   bytes += centeredBoldTitle(
     AppStorage.getBusinessDetailsData()?.businessData?.name ?? '',
