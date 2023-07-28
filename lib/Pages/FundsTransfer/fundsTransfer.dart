@@ -106,11 +106,13 @@ class _FundsTransferState extends State<FundsTransfer> {
     fundsCtrlObj.clearAllFields();
     fundsCtrlObj.dateCtrl.text =
         '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
-    fundsCtrlObj.checkingFundsFromLocation();
-    // fundsCtrlObj.fromStatusCtrl.text =
-    //     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.last.name}';
+    // fundsCtrlObj.checkingFundsFromLocation();
+    fundsCtrlObj.fromStatusCtrl.text =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.name}';
+    // print(
+    //     'Name : ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.locationId}');
     print(
-        'Name : ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.locationId}');
+        'New Name : ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.name}');
     super.initState();
   }
 

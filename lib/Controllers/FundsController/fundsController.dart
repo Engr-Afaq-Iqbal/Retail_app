@@ -47,7 +47,9 @@ class FundsController extends GetxController {
     List<String> paymentAccountsList = [];
     var length = paymentAccountModel?.data?.length ?? 0;
     for (int i = 0; i < length; i++) {
-      paymentAccountsList.add('${paymentAccountModel?.data?[i].name}' ?? '');
+      if ('${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.name}' !=
+          '${paymentAccountModel?.data?[i].name}')
+        paymentAccountsList.add('${paymentAccountModel?.data?[i].name}' ?? '');
     }
     return paymentAccountsList;
   }
@@ -81,7 +83,7 @@ class FundsController extends GetxController {
     Map<String, String> _fields = {};
 
     _fields['from_account'] =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.last.defaultPaymentAccounts?.cash?.account}';
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.id}';
 
     _fields['to_account'] = '${toStatusValue}';
     _fields['amount'] = '${amountCtrl.text}';
