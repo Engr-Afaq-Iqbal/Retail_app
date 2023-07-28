@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
+import 'package:bizmodo_emenu/Controllers/AppController/appController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
 import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
@@ -112,6 +113,7 @@ void main() async {
 // }
 
 void initializeControllers() {
+  Get.put(AppController());
   Get.put(ExceptionController());
   Get.put(ThemeController());
   Get.put(AuthController());

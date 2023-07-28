@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:whatsapp/whatsapp.dart';
 
+import '../../Controllers/AppController/appController.dart';
 import '/Components/BusinessLogoWidget.dart';
 import '/Config/const.dart';
 import '/Config/utils.dart';
@@ -106,16 +107,17 @@ class AppMenuPage extends StatelessWidget {
                   ),
                   listTile(
                     onTap: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext ctx) {
-                            return Settings(
-                              allowToNaviGate: false,
-                            );
-                          },
-                        ),
-                      );
+                      await AppController().syncApplication();
+                    },
+                    title: 'sync_application'.tr,
+                    context: context,
+                    iconData: Icons.sync_outlined,
+                  ),
+                  listTile(
+                    onTap: () async {
+                      Get.to(Settings(
+                        allowToNaviGate: false,
+                      ));
                     },
                     title: 'change_language'.tr,
                     context: context,

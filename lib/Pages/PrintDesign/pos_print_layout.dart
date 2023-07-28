@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +19,6 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   Generator printer, {
   required SaleOrderDataModel selectedSaleOrderData,
   List<SellLine>? items,
-  required bool isInvoice,
-  required bool isKOT,
   String? kitchenName,
 }) async {
   double totalPayedAmount() {
@@ -185,34 +184,36 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   //   // printer.image();
   // }
 
-    Future<List<int>> fetchNetworkImage(String? imageUrl) async {
-      if (imageUrl == null) return [];
-      try {
-        File file = await DefaultCacheManager()
-            .getSingleFile(imageUrl, key: 'bizmodo_business_logo');
+  Future<List<int>> fetchNetworkImage(String? imageUrl) async {
+    if (imageUrl == null) return [];
+    try {
+      File file =
+          await DefaultCacheManager().getSingleFile(imageUrl, key: imageUrl);
 
-        return await file.readAsBytes();
-      } catch (e) {
-        var response = await http.get(Uri.parse(imageUrl));
-        return response.bodyBytes;
-      }
+      debugPrint('File => ${file.path}');
+
+      return await file.readAsBytes();
+    } catch (e) {
+      var response = await http.get(Uri.parse(imageUrl));
+      return response.bodyBytes;
     }
+  }
 
-    await fetchNetworkImage(
-        AppStorage.getBusinessDetailsData()?.businessData?.logo)
-        .then((img) {
-      final i.Image? image = i.decodeImage(img);
-      if (image != null) bytes += printer.image(image);
-    });
+  await fetchNetworkImage(
+          AppStorage.getBusinessDetailsData()?.businessData?.logo)
+      .then((img) {
+    final i.Image? image = i.decodeImage(img);
+    if (image != null) bytes += printer.image(image);
+  });
 
-    // Print image:
-    // final ByteData data = await rootBundle.load(
-    //     'https://manage.bizmodo.ae/uploads/business_logos/1682843394_Elegant%20Logo%20small.png');
-    // final Uint8List imgBytes = data.buffer.asUint8List();
-    // i.Image img = i.decodeImage(imgBytes)!;
-    // bytes += printer.imageRaster(img);
+  // Print image:
+  // final ByteData data = await rootBundle.load(
+  //     'https://manage.bizmodo.ae/uploads/business_logos/1682843394_Elegant%20Logo%20small.png');
+  // final Uint8List imgBytes = data.buffer.asUint8List();
+  // i.Image img = i.decodeImage(imgBytes)!;
+  // bytes += printer.imageRaster(img);
 
-    // printer.image();
+  // printer.image();
 
   // Slip Title / Business Name
   bytes += centeredBoldTitle(
@@ -232,17 +233,20 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}',
   );
 
+  bytes += centeredBoldTitle(
+    AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name ??
+        '',
+  );
+
   ///
   ///
   /// TODO: Invoice Label ke setting add krni han...
   ///
   ///
-  // Tax Invoice Label
-  if (isInvoice) bytes += centeredBoldTitle(AppStorage.getPrintInvoiceTitle());
-  if (isInvoice)
-    bytes += centeredTitle(
-      '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
-    );
+  // Tax Invoice Labelbytes += centeredBoldTitle(AppStorage.getPrintInvoiceTitle());
+  bytes += centeredTitle(
+    '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
+  );
 
   // Invoice Number / user
 
@@ -271,10 +275,10 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   //   cTxt2: 'Staff: ${selectedSaleOrderData.serviceStaff?.firstName ?? ''}',
   // );
 
-  bytes += printDivider();
-  bytes += centeredTitle(
-    'Tax Invoice',
-  );
+  // bytes += printDivider();
+  // bytes += centeredTitle(
+  //   'Tax Invoice',
+  // );
   bytes += printDivider();
   // Customer Information
   bytes += cl2(
@@ -289,9 +293,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   );
   bytes += cl2(
     // Invoice Number
-    cTxt1: (isInvoice)
-        ? 'Invoice: ${selectedSaleOrderData.invoiceNo ?? ''}'
-        : null,
+    cTxt1: 'Invoice: ${selectedSaleOrderData.invoiceNo ?? ''}',
 
     // Staff Name
     cTxt2: 'User: ${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''}',
@@ -336,8 +338,8 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     cTxt2: 'Item',
     cTxt3: 'Qty',
     isBold: true,
-    cTxt4: (isInvoice) ? 'Price' : null,
-    cTxt5: (isInvoice) ? 'Total' : null,
+    cTxt4: 'Price',
+    cTxt5: 'Total',
   );
 
   // Divider
@@ -405,15 +407,13 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
               */
         // Item Quantity
         cTxt3:
-            '${items != null ? items[index].quantity : selectedSaleOrderData.sellLines[index].quantity}',
+            '${double.parse('${selectedSaleOrderData.sellLines[index].quantity}') / double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: selectedSaleOrderData.sellLines[index].subUnitId)}')} ${Get.find<AllProductsController>().checkUnitsShortName(unitId: int.parse(selectedSaleOrderData.sellLines[index].subUnitId))}',
         // Price
-        cTxt4: (isInvoice)
-            ? '${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.sellLines[index].unitPriceIncTax}') ?? ''}'
-            : null,
+        cTxt4:
+            '${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.sellLines[index].unitPriceIncTax}') ?? ''}',
         // Total
-        cTxt5: (isInvoice)
-            ? '${AppFormat.doubleToStringUpTo2('${Get.find<ProductCartController>().productTotalAmount(selectedSaleOrderData.sellLines[index].unitPriceIncTax, selectedSaleOrderData.sellLines[index].quantity)}') ?? ''}'
-            : null,
+        cTxt5:
+            '${AppFormat.doubleToStringUpTo2('${Get.find<ProductCartController>().productTotalAmount(selectedSaleOrderData.sellLines[index].unitPriceIncTax, selectedSaleOrderData.sellLines[index].quantity)}') ?? ''}',
       );
     },
   );
@@ -426,31 +426,30 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   bytes += cl2(
     // Total Items
     cTxt1: 'Items: ${selectedSaleOrderData.sellLines.length}',
-    cTxt2: (isInvoice)
-        ? 'Sub Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.totalBeforeTax}')}'
-        : null,
+    cTxt2:
+        'Sub Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.totalBeforeTax}')}',
   );
   bytes += cl2(
     // Total Quantity
     cTxt1: 'Qty: ${totalQuantity(selectedSaleOrderData.sellLines)}',
     // Total Quantity
-    cTxt2: (isInvoice)
+    cTxt2: (selectedSaleOrderData.taxAmount != null &&
+            selectedSaleOrderData.taxAmount != '0.00')
         ? 'VAT: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.taxAmount}')}'
         : null,
   );
 
-  if (isInvoice)
-    bytes += cl2(
-      cTxt1: '',
-      cTxt2:
-          'Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.finalTotal}')}',
-    );
+  bytes += cl2(
+    cTxt1: '',
+    cTxt2:
+        'Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.finalTotal}')}',
+  );
 
   // Divider
   bytes += printDivider();
 
   //Payment heading
-  if (isInvoice) bytes += cl2(cTxt1: 'Payment');
+  bytes += cl2(cTxt1: 'Payment');
 
   //Date & Time
   // if ((selectedSaleOrderData.sellDue == null ||
@@ -469,33 +468,29 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   //       '',
   // );
   debugPrint(selectedSaleOrderData.paymentLines.toString());
-  if (isInvoice)
-    for (PaymentLine e in selectedSaleOrderData.paymentLines) {
-      if (isInvoice && e.transactionNo != null)
-        bytes += cl2(
-          cTxt1: (e.chequeNumber != null)
-              ? 'Cheque #: ${e.chequeNumber}'
-              : (e.transactionNo != null)
-                  ? 'Tr #: ${e.transactionNo}'
-                  : '',
-          cTxt2:
-              '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
-        );
-      if (e.isReturn == 0)
-        bytes += cl2(
-            cTxt1:
-                'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
-    }
+  for (PaymentLine e in selectedSaleOrderData.paymentLines) {
+    if (e.transactionNo != null)
+      bytes += cl2(
+        cTxt1: (e.chequeNumber != null)
+            ? 'Cheque #: ${e.chequeNumber}'
+            : (e.transactionNo != null)
+                ? 'Tr #: ${e.transactionNo}'
+                : '',
+        cTxt2:
+            '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
+      );
+    if (e.isReturn == 0)
+      bytes += cl2(
+          cTxt1: 'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
+  }
 
-  if (selectedSaleOrderData.totalPaid != null && isInvoice)
+  if (selectedSaleOrderData.totalPaid != null)
     bytes += cl2(cTxt2: 'Total Paid Amount ${selectedSaleOrderData.totalPaid}');
 
-  if (anyAmountDue() != null && isInvoice)
-    bytes += cl2(cTxt2: 'Due ${anyAmountDue()}');
+  if (anyAmountDue() != null) bytes += cl2(cTxt2: 'Due ${anyAmountDue()}');
 
   // Divider
-  if (isInvoice && selectedSaleOrderData.additionalNotes != null)
-    bytes += printDivider();
+  if (selectedSaleOrderData.additionalNotes != null) bytes += printDivider();
   //Additional Notes
   if (selectedSaleOrderData.additionalNotes != null)
     bytes += cl2(cTxt1: 'Note:');
@@ -503,7 +498,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     bytes += cl2(cTxt1: '${selectedSaleOrderData.additionalNotes ?? ''}');
 
   // Footer
-  if (isInvoice) bytes += printDivider();
-  if (isInvoice) bytes += centeredBoldTitle('Thank You... Visit Again...');
+  bytes += printDivider();
+  bytes += centeredBoldTitle('Thank You... Visit Again...');
   return bytes;
 }

@@ -2,7 +2,6 @@ import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:bizmodo_emenu/Theme/style.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 
 import '../../Components/custom_circular_button.dart';
 import '../../Config/utils.dart';
@@ -36,7 +35,6 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomButton(
-                width: MediaQuery.of(context).size.width * 0.31,
                 onTap: () {
                   showProgress();
                   allProdCtrlObj.update();
@@ -62,7 +60,6 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
                 ),
               ),
               CustomButton(
-                width: MediaQuery.of(context).size.width * 0.31,
                 onTap: () {
                   showProgress();
                   allProdCtrlObj.update();

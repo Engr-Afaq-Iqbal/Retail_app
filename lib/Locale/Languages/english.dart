@@ -523,5 +523,7 @@ Map<String, String> english() {
     'funds_to': 'Funds To',
     'document': 'Document',
     'enter_notes': 'Enter Notes',
+    'person_name': 'Person Name',
+    'sync_application': 'Sync Application',
   };
 }

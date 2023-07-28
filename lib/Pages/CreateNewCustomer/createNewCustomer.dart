@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -29,6 +28,8 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
   @override
   void initState() {
     listUserCtrl.fetchListUsers();
+    contactCtrlObj.clearAllContactCtrl();
+
     // TODO: implement initState
     super.initState();
   }
@@ -149,36 +150,6 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     ],
                   );
                 }),
-                if (contactCtrlObj.indiviualYes == true)
-                  Column(
-                    children: [
-                      AppFormField(
-                        fontWeight: false,
-                        labelText: 'prefix'.tr,
-                        controller: contactCtrlObj.prefixCtrl,
-                      ),
-                      AppFormField(
-                        fontWeight: false,
-                        validator: (String? v) {
-                          if (v!.isEmpty) return 'field_required'.tr;
-                          return null;
-                        },
-                        labelText: 'first_name'.tr,
-                        controller: contactCtrlObj.firstNameCtrl,
-                      ),
-                      AppFormField(
-                        fontWeight: false,
-                        labelText: 'middle_name'.tr,
-                        controller: contactCtrlObj.middleNameCtrl,
-                      ),
-                      AppFormField(
-                        fontWeight: false,
-                        labelText: 'last_name'.tr,
-                        controller: contactCtrlObj.lastNameCtrl,
-                      ),
-                    ],
-                  ),
-
                 if (contactCtrlObj.businessYes == true)
                   // Business name
                   AppFormField(
@@ -190,6 +161,41 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     labelText: 'business_name'.tr,
                     controller: contactCtrlObj.businessNameCtrl,
                   ),
+                if (contactCtrlObj.indiviualYes == true ||
+                    contactCtrlObj.businessYes == true)
+                  AppFormField(
+                    fontWeight: false,
+                    validator: (String? v) {
+                      if (v!.isEmpty) return 'field_required'.tr;
+                      return null;
+                    },
+                    labelText: contactCtrlObj.businessYes == true
+                        ? 'person_name'.tr
+                        : 'first_name'.tr,
+                    controller: contactCtrlObj.firstNameCtrl,
+                  ),
+                if (contactCtrlObj.indiviualYes == true)
+                  Column(
+                    children: [
+                      // AppFormField(
+                      //   fontWeight: false,
+                      //   labelText: 'prefix'.tr,
+                      //   controller: contactCtrlObj.prefixCtrl,
+                      // ),
+
+                      // AppFormField(
+                      //   fontWeight: false,
+                      //   labelText: 'middle_name'.tr,
+                      //   controller: contactCtrlObj.middleNameCtrl,
+                      // ),
+                      AppFormField(
+                        fontWeight: false,
+                        labelText: 'last_name'.tr,
+                        controller: contactCtrlObj.lastNameCtrl,
+                      ),
+                    ],
+                  ),
+
                 // mobile phone
                 AppFormField(
                   fontWeight: false,
@@ -204,15 +210,16 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                 // city
                 AppFormField(
                   fontWeight: false,
-                  readOnly: true,
                   labelText: 'alternate_contact_number'.tr,
                   controller: contactCtrlObj.alternateMblNbrNumberCtrl,
+                  keyboardType: TextInputType.number,
                 ),
                 // street
                 AppFormField(
                   fontWeight: false,
                   labelText: 'landline'.tr,
                   controller: contactCtrlObj.landLineCtrl,
+                  keyboardType: TextInputType.number,
                 ),
                 // villa, building, apartment
                 AppFormField(
@@ -220,69 +227,70 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                   labelText: 'email'.tr,
                   controller: contactCtrlObj.emailCtrl,
                 ),
-
-                GetBuilder<ListUserController>(
-                    builder: (ListUserController listUserCtrll) {
-                  if (listUserCtrll.listuserModel != null)
-                    return DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                        isExpanded: true,
-                        hint: Align(
-                            alignment: AlignmentDirectional.centerStart,
-                            child: Text(
-                              'assigned_to'.tr,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                                color: txtFieldHintColor,
-                              ),
-                            )),
-                        items: contactCtrlObj
-                            .assignedToList(listUserCtrll)
-                            .map((e) {
-                          return DropdownMenuItem(
-                              value: e,
-                              child: Text(
-                                e,
-                                style: TextStyle(fontSize: 14),
-                              ));
-                        }).toList(),
-                        value: contactCtrlObj.statusValue,
-                        dropdownDirection: DropdownDirection.textDirection,
-                        dropdownMaxHeight:
-                            MediaQuery.of(context).size.height * 0.2,
-                        dropdownPadding: EdgeInsets.only(left: 5, right: 5),
-                        buttonPadding: EdgeInsets.only(left: 15, right: 15),
-                        onChanged: (String? value) {
-                          setState(() {
-                            contactCtrlObj.statusValue = value;
-                          });
-                        },
-                        // buttonHeight: height * 0.06,
-                        // buttonWidth: width * 0.43,
-                        buttonDecoration: BoxDecoration(
-                            border: Border.all(
-                                width: 1,
-                                color: Theme.of(context).colorScheme.primary),
-                            borderRadius: BorderRadius.circular(15),
-                            color: kWhiteColor),
-                        itemHeight: 40,
-                        itemPadding: EdgeInsets.zero,
-                        itemHighlightColor:
-                            Theme.of(context).colorScheme.primary,
-                      ),
-                    );
-                  else
-                    return progressIndicator();
-                }),
-                SizedBox(
-                  height: 20,
-                ),
+                //
+                // GetBuilder<ListUserController>(
+                //     builder: (ListUserController listUserCtrll) {
+                //   if (listUserCtrll.listuserModel != null)
+                //     return DropdownButtonHideUnderline(
+                //       child: DropdownButton2(
+                //         isExpanded: true,
+                //         hint: Align(
+                //             alignment: AlignmentDirectional.centerStart,
+                //             child: Text(
+                //               'assigned_to'.tr,
+                //               style: TextStyle(
+                //                 fontSize: 13,
+                //                 fontWeight: FontWeight.w400,
+                //                 color: txtFieldHintColor,
+                //               ),
+                //             )),
+                //         items: contactCtrlObj
+                //             .assignedToList(listUserCtrll)
+                //             .map((e) {
+                //           return DropdownMenuItem(
+                //               value: e,
+                //               child: Text(
+                //                 e,
+                //                 style: TextStyle(fontSize: 14),
+                //               ));
+                //         }).toList(),
+                //         value: contactCtrlObj.statusValue,
+                //         dropdownDirection: DropdownDirection.textDirection,
+                //         dropdownMaxHeight:
+                //             MediaQuery.of(context).size.height * 0.2,
+                //         dropdownPadding: EdgeInsets.only(left: 5, right: 5),
+                //         buttonPadding: EdgeInsets.only(left: 15, right: 15),
+                //         onChanged: (String? value) {
+                //           setState(() {
+                //             contactCtrlObj.statusValue = value;
+                //           });
+                //         },
+                //         // buttonHeight: height * 0.06,
+                //         // buttonWidth: width * 0.43,
+                //         buttonDecoration: BoxDecoration(
+                //             border: Border.all(
+                //                 width: 1,
+                //                 color: Theme.of(context).colorScheme.primary),
+                //             borderRadius: BorderRadius.circular(15),
+                //             color: kWhiteColor),
+                //         itemHeight: 40,
+                //         itemPadding: EdgeInsets.zero,
+                //         itemHighlightColor:
+                //             Theme.of(context).colorScheme.primary,
+                //       ),
+                //     );
+                //   else
+                //     return progressIndicator();
+                // }),
+                // SizedBox(
+                //   height: 20,
+                // ),
 
                 AppFormField(
                   fontWeight: false,
                   labelText: 'trn'.tr,
                   controller: contactCtrlObj.trnCtrl,
+                  keyboardType: TextInputType.number,
                 ),
                 Text(
                   'trn_upload'.tr,

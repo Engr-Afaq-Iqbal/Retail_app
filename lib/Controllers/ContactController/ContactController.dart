@@ -258,15 +258,18 @@ class ContactController extends GetxController {
       "mobile": "${mobileNumberCtrl.text}",
     };
     _field["supplier_business_name"] = "${businessNameCtrl.text}";
-    _field["prefix"] = "${prefixCtrl.text}";
-    _field["middle_name"] = "${middleNameCtrl.text}";
+    // _field["prefix"] = "${prefixCtrl.text}";
+    // _field["middle_name"] = "${middleNameCtrl.text}";
     _field["last_name"] = "${lastNameCtrl.text}";
     // _field["pay_term_number"] = '7';
     // _field["pay_term_type"] = "months";
     _field["landline"] = "${landLineCtrl.text}";
     _field["alternate_number"] = "${alternateMblNbrNumberCtrl.text}";
+    _field["tax_number"] = "${trnCtrl.text}";
+    _field["custom_field1"] = "${licenseCtrl.text}";
     _field["email"] = "${emailCtrl.text}";
-    _field["assigned_to"] = "${statusValue}";
+
+    // _field["assigned_to"] = "${statusValue}";
 
     // _field["customer_group_id"] = "fuga";
     // _field["contact_id"] = "reprehenderit";
@@ -317,6 +320,8 @@ class ContactController extends GetxController {
     alternateMblNbrNumberCtrl.clear();
     landLineCtrl.clear();
     emailCtrl.clear();
+    trnCtrl.clear();
+    licenseCtrl.clear();
   }
 
   // initial order page load function

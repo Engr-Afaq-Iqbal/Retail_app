@@ -216,8 +216,6 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                           selectedSaleOrderData:
                               Get.find<AllProductsController>()
                                   .salesOrderModel!,
-                          isInvoice: true,
-                          isKOT: false,
                         );
                         allPrinterCtrlObj.printEscPos(bytes, generator);
                       }

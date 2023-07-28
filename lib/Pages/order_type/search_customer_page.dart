@@ -393,7 +393,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15, vertical: 10),
                                         child: Text(
-                                          '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
+                                          '${contactCtrlObj.customerContacts!.contactDataList[index].supplierBusinessName != null ? contactCtrlObj.customerContacts!.contactDataList[index].supplierBusinessName : contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
                                         ),
                                       ),
                                     ),

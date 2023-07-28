@@ -9,6 +9,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
 import '../../Config/DateTimeFormat.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
 import '../../Services/storage_services.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
@@ -69,14 +70,43 @@ class PrintData extends StatelessWidget {
               width: 200,
               height: 100),
           pw.Center(
-              child: pw.Text('Retail Invoice',
+              child: pw.Text(
+                  AppStorage.getBusinessDetailsData()?.businessData?.name ?? '',
                   style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold))),
+                      fontSize: 16, fontWeight: pw.FontWeight.bold))),
+          pw.Center(
+            child: pw.Text(
+                '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
+                '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
+                '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}'),
+          ),
+          pw.Center(
+            child: pw.Text(
+                'Mobile: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.mobile ?? ''}, '
+                'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}'),
+          ),
+          pw.Center(
+            child: pw.Text(
+                AppStorage.getBusinessDetailsData()
+                        ?.businessData
+                        ?.locations
+                        .first
+                        .name ??
+                    '',
+                style:
+                    pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.Center(
+            child: pw.Text(
+              '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
+            ),
+          ),
+          // pw.Center(
+          //     child: pw.Text('Retail Invoice',
+          //         style: pw.TextStyle(
+          //             fontSize: 16, fontWeight: pw.FontWeight.bold))),
           pw.Divider(),
 
-          pw.Center(
-              child: pw.Text(
-                  '${saleOrderDataModel?.contact?.city ?? ''}, ${saleOrderDataModel?.contact?.country ?? ''}')),
           pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
@@ -188,7 +218,7 @@ class PrintData extends StatelessWidget {
                         ),
                       ),
                       pw.Expanded(
-                        flex: 7,
+                        flex: 6,
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
@@ -200,11 +230,11 @@ class PrintData extends StatelessWidget {
                         ),
                       ),
                       pw.Expanded(
-                        flex: 3,
+                        flex: 4,
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
-                              '${saleOrderDataModel.sellLines[index].quantity}',
+                              '${double.parse('${saleOrderDataModel.sellLines[index].quantity}') / double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel.sellLines[index].subUnitId)}')}  / ${Get.find<AllProductsController>().checkUnitsShortName(unitId: saleOrderDataModel.sellLines[index].subUnitId)}',
                               style: pw.TextStyle(
                                 fontSize: 16,
                               )),

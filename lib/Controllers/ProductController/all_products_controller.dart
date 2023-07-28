@@ -133,6 +133,14 @@ class AllProductsController extends GetxController {
         ?.actualName;
   }
 
+  checkUnitsShortName({
+    int? unitId,
+  }) {
+    return unitListModel?.data
+        ?.firstWhereOrNull((i) => i.id == unitId)
+        ?.shortName;
+  }
+
   checkUnitsActualBaseMultiplier({
     String? unitName,
   }) {
@@ -152,11 +160,12 @@ class AllProductsController extends GetxController {
   }
 
   checkUnitValueWithGivenId({
-    String? idNumber,
+    int? idNumber,
   }) {
     return unitListModel?.data
-        ?.firstWhereOrNull((i) => i.id == idNumber)
-        ?.baseUnitMultiplier;
+            ?.firstWhereOrNull((i) => i.id == idNumber)
+            ?.baseUnitMultiplier ??
+        1;
   }
 
   List<String> unitStatusList() {

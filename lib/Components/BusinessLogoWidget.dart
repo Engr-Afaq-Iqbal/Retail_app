@@ -18,10 +18,13 @@ class BusinessLogoWidget extends StatelessWidget {
       children: [
         FadedScaleAnimation(
           child: CachedNetworkImage(
-            cacheKey: 'bizmodo_business_logo',
+            // cacheKey: 'bizmodo_business_logo',
+            cacheKey:
+                '${AppStorage.getBusinessDetailsData()?.businessData?.logo}',
             imageUrl:
                 '${AppStorage.getBusinessDetailsData()?.businessData?.logo}',
             height: 50,
+            useOldImageOnUrlChange: false,
             errorWidget: (_, __, ___) => SizedBox(),
           ),
           fadeDuration: Duration(milliseconds: 400),
