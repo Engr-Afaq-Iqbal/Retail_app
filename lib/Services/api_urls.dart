@@ -20,6 +20,10 @@ class ApiUrls {
   static String updateTableStatus = "connector/api/table/status/update";
   // Products
   static String allProducts = "connector/api/product";
+
+  ///Product list Api
+  static String productListApi = "connector/api/product/list?";
+
   static String unitListApi = "connector/api/unit";
 
   //Funds Transfer API
@@ -142,9 +146,6 @@ class ApiUrls {
 
   ///Searh product list Api
   static String searchProductListApi = "connector/api/product/search";
-
-  ///Product list Api
-  static String productListApi = "connector/api/product/list?";
 
   ///Product list Api
   static String uploadApi = "connector/api/user/google/file";

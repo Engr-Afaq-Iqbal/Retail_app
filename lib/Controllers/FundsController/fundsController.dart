@@ -7,12 +7,14 @@ import '../../Config/utils.dart';
 import '../../Models/PaymentMethodModel/paymentAccountModel.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
+import '../../Services/storage_services.dart';
 import '../exception_controller.dart';
 
 class FundsController extends GetxController {
   TextEditingController amountCtrl = TextEditingController();
   TextEditingController dateCtrl = TextEditingController();
   TextEditingController noteCtrl = TextEditingController();
+  TextEditingController fromStatusCtrl = TextEditingController();
   String? fromStatus;
   String? fromStatusValue;
   String? toStatus;
@@ -47,8 +49,18 @@ class FundsController extends GetxController {
     for (int i = 0; i < length; i++) {
       paymentAccountsList.add('${paymentAccountModel?.data?[i].name}' ?? '');
     }
-
     return paymentAccountsList;
+  }
+
+  checkingFundsFromLocation() {
+    var length = paymentAccountModel?.data?.length ?? 0;
+    for (int i = 0; i < length; i++) {
+      if ('${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.locationId}' ==
+          '${paymentAccountModel?.data?[i].name}') {
+        fromStatusCtrl.text = '${paymentAccountModel?.data?[i].name}';
+        print('Matching id ${paymentAccountModel?.data?[i].name}');
+      }
+    }
   }
 
   clearAllFields() {
@@ -68,7 +80,8 @@ class FundsController extends GetxController {
     String _url = '${ApiUrls.fundsTransferAPI}';
     Map<String, String> _fields = {};
 
-    _fields['from_account'] = '${fromStatusValue}';
+    _fields['from_account'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.last.defaultPaymentAccounts?.cash?.account}';
 
     _fields['to_account'] = '${toStatusValue}';
     _fields['amount'] = '${amountCtrl.text}';

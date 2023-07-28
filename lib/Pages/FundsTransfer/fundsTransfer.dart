@@ -11,6 +11,7 @@ import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
+import '../../Services/storage_services.dart';
 import '../../Theme/colors.dart';
 import '../../Theme/style.dart';
 
@@ -105,6 +106,11 @@ class _FundsTransferState extends State<FundsTransfer> {
     fundsCtrlObj.clearAllFields();
     fundsCtrlObj.dateCtrl.text =
         '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
+    fundsCtrlObj.checkingFundsFromLocation();
+    // fundsCtrlObj.fromStatusCtrl.text =
+    //     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.last.name}';
+    print(
+        'Name : ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.locationId}');
     super.initState();
   }
 
@@ -122,67 +128,75 @@ class _FundsTransferState extends State<FundsTransfer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               headings(txt: 'funds_from'.tr + ':'),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.06,
-                width: MediaQuery.of(context).size.width,
-                child: GetBuilder<FundsController>(
-                    builder: (FundsController fundsCtrl) {
-                  return DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            'please_select'.tr,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                          )),
-                      items: fundsCtrl.paymentAccountList().map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: Text(items),
-                          ),
-                        );
-                      }).toList(),
-                      value: fundsCtrlObj.fromStatus,
-                      dropdownWidth: MediaQuery.of(context).size.width * 0.5,
-                      dropdownDecoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                      dropdownMaxHeight:
-                          MediaQuery.of(context).size.height * 0.7,
-                      dropdownPadding: EdgeInsets.only(left: 5),
-                      buttonPadding: EdgeInsets.only(left: 10, right: 10),
-                      onChanged: (String? value) {
-                        setState(() {
-                          fundsCtrlObj.fromStatus = value;
-                          fundsCtrl.fromStatusValue = fundsCtrl
-                              .paymentAccountModel
-                              ?.data?[fundsCtrl
-                                  .paymentAccountList()
-                                  .indexOf(value!)]
-                              .id
-                              .toString();
-                          print(fundsCtrl.fromStatusValue);
-                        });
-                      },
-                      buttonDecoration: BoxDecoration(
-                          color: kWhiteColor,
-                          border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).colorScheme.primary),
-                          borderRadius: BorderRadius.circular(15)),
-                      itemHeight: 40,
-                      itemPadding: EdgeInsets.zero,
-                      itemHighlightColor: Theme.of(context).colorScheme.primary,
-                    ),
-                  );
-                }),
+              AppFormField(
+                padding: EdgeInsets.only(bottom: 5),
+                labelText: 'funds_from'.tr,
+                // title: 'amount'.tr + ': *',
+                readOnly: true,
+                controller: fundsCtrlObj.fromStatusCtrl,
+                // keyboardType: TextInputType.number,
               ),
+              // Container(
+              //   height: MediaQuery.of(context).size.height * 0.06,
+              //   width: MediaQuery.of(context).size.width,
+              //   child: GetBuilder<FundsController>(
+              //       builder: (FundsController fundsCtrl) {
+              //     return DropdownButtonHideUnderline(
+              //       child: DropdownButton2(
+              //         isExpanded: true,
+              //         hint: Align(
+              //             alignment: AlignmentDirectional.centerStart,
+              //             child: Text(
+              //               'please_select'.tr,
+              //               style: TextStyle(
+              //                   color: Colors.black,
+              //                   fontSize: 12,
+              //                   fontWeight: FontWeight.w500),
+              //             )),
+              //         items: fundsCtrl.paymentAccountList().map((String items) {
+              //           return DropdownMenuItem(
+              //             value: items,
+              //             child: Padding(
+              //               padding:
+              //                   const EdgeInsets.symmetric(horizontal: 10.0),
+              //               child: Text(items),
+              //             ),
+              //           );
+              //         }).toList(),
+              //         value: fundsCtrlObj.fromStatus,
+              //         dropdownWidth: MediaQuery.of(context).size.width * 0.5,
+              //         dropdownDecoration:
+              //             BoxDecoration(borderRadius: BorderRadius.circular(5)),
+              //         dropdownMaxHeight:
+              //             MediaQuery.of(context).size.height * 0.7,
+              //         dropdownPadding: EdgeInsets.only(left: 5),
+              //         buttonPadding: EdgeInsets.only(left: 10, right: 10),
+              //         onChanged: (String? value) {
+              //           setState(() {
+              //             fundsCtrlObj.fromStatus = value;
+              //             fundsCtrl.fromStatusValue = fundsCtrl
+              //                 .paymentAccountModel
+              //                 ?.data?[fundsCtrl
+              //                     .paymentAccountList()
+              //                     .indexOf(value!)]
+              //                 .id
+              //                 .toString();
+              //             print(fundsCtrl.fromStatusValue);
+              //           });
+              //         },
+              //         buttonDecoration: BoxDecoration(
+              //             color: kWhiteColor,
+              //             border: Border.all(
+              //                 width: 1,
+              //                 color: Theme.of(context).colorScheme.primary),
+              //             borderRadius: BorderRadius.circular(15)),
+              //         itemHeight: 40,
+              //         itemPadding: EdgeInsets.zero,
+              //         itemHighlightColor: Theme.of(context).colorScheme.primary,
+              //       ),
+              //     );
+              //   }),
+              // ),
               headings(txt: 'funds_to'.tr + ':'),
               Container(
                 height: MediaQuery.of(context).size.height * 0.06,
