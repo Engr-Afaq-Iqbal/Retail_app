@@ -168,10 +168,6 @@ class AllProductsController extends GetxController {
         1;
   }
 
-  List<String> unitStatusList() {
-    return ['Pieces', 'Cartoons', 'Gram'];
-  }
-
   List<List<String>> nestedist = [];
   addingSpecifiedUnitsInList({
     Product? product,

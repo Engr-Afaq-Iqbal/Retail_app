@@ -499,7 +499,7 @@ class Brand {
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
         id: json["id"],
         businessId: json["business_id"],
-        name: descriptionEnumValues.map[json["name"]]!,
+        name: descriptionEnumValues.map[json["name"]],
         description: json["description"],
         createdBy: json["created_by"],
         useForRepair: json["use_for_repair"],

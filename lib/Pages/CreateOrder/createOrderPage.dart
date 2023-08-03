@@ -12,6 +12,7 @@ import '../../Components/textfield.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../Services/storage_services.dart';
 import '../../Theme/colors.dart';
 import '../../const/dimensions.dart';
 import '../SalesView/discount.dart';
@@ -282,7 +283,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       child: AppFormField(
                                           controller: allProdCtrlObj
                                               .productQuantityCtrl[index],
-                                          padding: EdgeInsets.only(right: 5),
+                                          padding: EdgeInsets.all(0),
                                           isOutlineBorder: false,
                                           isColor: index.isEven
                                               ? kWhiteColor
@@ -291,14 +292,61 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           //
                                           // },
                                           onChanged: (value) {
-                                            allProdCtrlObj.totalAmount[index] =
-                                                '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
-                                            allProdCtrlObj
-                                                .calculateFinalAmount();
-                                            debugPrint('Product Amount');
-                                            debugPrint(allProdCtrlObj
-                                                .totalAmount[index]);
-                                            allProdCtrlObj.update();
+                                            // if (double.parse(allProdCtrlObj
+                                            //             .productModelObjs[index]
+                                            //             .productVariationsDetails
+                                            //             ?.qtyAvailable ??
+                                            //         '0.00') <=
+                                            //     0.00) {
+                                            //   print(' in first if');
+                                            //
+                                            // } else
+                                            if (double.parse(allProdCtrlObj
+                                                            .productModelObjs[
+                                                                index]
+                                                            .productVariationsDetails
+                                                            ?.qtyAvailable ??
+                                                        '0.00') <=
+                                                    0.00 &&
+                                                AppStorage.getBusinessDetailsData()
+                                                        ?.businessData
+                                                        ?.posSettings
+                                                        ?.allowOverselling ==
+                                                    '1') {
+                                              print(' in second if');
+                                              allProdCtrlObj
+                                                      .totalAmount[index] =
+                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
+                                              allProdCtrlObj
+                                                  .calculateFinalAmount();
+                                              debugPrint('Product Amount');
+                                              debugPrint(allProdCtrlObj
+                                                  .totalAmount[index]);
+                                              allProdCtrlObj.update();
+                                            } else if (double.parse(allProdCtrlObj
+                                                        .productModelObjs[index]
+                                                        .productVariationsDetails
+                                                        ?.qtyAvailable ??
+                                                    '0.00') >
+                                                0.00) {
+                                              print(' in third if');
+                                              allProdCtrlObj
+                                                      .totalAmount[index] =
+                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
+                                              allProdCtrlObj
+                                                  .calculateFinalAmount();
+                                              debugPrint('Product Amount');
+                                              debugPrint(allProdCtrlObj
+                                                  .totalAmount[index]);
+                                              allProdCtrlObj.update();
+                                            } else {
+                                              allProdCtrlObj
+                                                  .productQuantityCtrl[index]
+                                                  .text = '';
+
+                                              showToast('Stock not available');
+                                            }
+
                                             // }
                                           }),
                                     ),
