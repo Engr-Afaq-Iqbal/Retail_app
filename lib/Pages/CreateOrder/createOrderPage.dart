@@ -292,37 +292,36 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           //
                                           // },
                                           onChanged: (value) {
-                                            // if (double.parse(allProdCtrlObj
-                                            //             .productModelObjs[index]
-                                            //             .productVariationsDetails
-                                            //             ?.qtyAvailable ??
-                                            //         '0.00') <=
-                                            //     0.00) {
-                                            //   print(' in first if');
-                                            //
-                                            // } else
                                             if (double.parse(allProdCtrlObj
-                                                            .productModelObjs[
-                                                                index]
-                                                            .productVariationsDetails
-                                                            ?.qtyAvailable ??
-                                                        '0.00') <=
-                                                    0.00 &&
-                                                AppStorage.getBusinessDetailsData()
-                                                        ?.businessData
-                                                        ?.posSettings
-                                                        ?.allowOverselling ==
-                                                    '1') {
-                                              print(' in second if');
-                                              allProdCtrlObj
-                                                      .totalAmount[index] =
-                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
-                                              allProdCtrlObj
-                                                  .calculateFinalAmount();
-                                              debugPrint('Product Amount');
-                                              debugPrint(allProdCtrlObj
-                                                  .totalAmount[index]);
-                                              allProdCtrlObj.update();
+                                                        .productModelObjs[index]
+                                                        .productVariationsDetails
+                                                        ?.qtyAvailable ??
+                                                    '0.00') <=
+                                                0.00) {
+                                              if (AppStorage
+                                                          .getBusinessDetailsData()
+                                                      ?.businessData
+                                                      ?.posSettings
+                                                      ?.allowOverselling ==
+                                                  '1') {
+                                                print('in allow if');
+                                                allProdCtrlObj
+                                                        .totalAmount[index] =
+                                                    '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
+                                                allProdCtrlObj
+                                                    .calculateFinalAmount();
+                                                debugPrint('Product Amount');
+                                                debugPrint(allProdCtrlObj
+                                                    .totalAmount[index]);
+                                                allProdCtrlObj.update();
+                                              } else {
+                                                allProdCtrlObj
+                                                    .productQuantityCtrl[index]
+                                                    .text = '';
+
+                                                showToast(
+                                                    'Stock not available');
+                                              }
                                             } else if (double.parse(allProdCtrlObj
                                                         .productModelObjs[index]
                                                         .productVariationsDetails
@@ -339,15 +338,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                               debugPrint(allProdCtrlObj
                                                   .totalAmount[index]);
                                               allProdCtrlObj.update();
-                                            } else {
-                                              allProdCtrlObj
-                                                  .productQuantityCtrl[index]
-                                                  .text = '';
-
-                                              showToast('Stock not available');
                                             }
-
-                                            // }
                                           }),
                                     ),
                                   ],
