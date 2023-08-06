@@ -11,6 +11,7 @@ import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
 import '../FundsTransfer/fundsTransfer.dart';
 import '../Orders/View/OrdersTabPage.dart';
+import '../Receipts/receipts.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
 import '../ProductsPage/ItemsPage.dart';
@@ -107,10 +108,10 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               // Get.to(Return());
                             }
                             if (index == 4) {
-                              Get.to(CustomerSearch(
-                                dashBoardId: 4,
-                              ));
-                              // Get.to(Receipts());
+                              // Get.to(CustomerSearch(
+                              //   dashBoardId: 4,
+                              // ));
+                              Get.to(Receipts());
                             }
                             if (index == 5) {
                               // Get.to(SalesTabPage());

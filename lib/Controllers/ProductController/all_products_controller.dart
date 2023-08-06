@@ -786,6 +786,7 @@ class AllProductsController extends GetxController {
 
       if (response == null) return;
 
+      receiptPayment = false;
       receiptData = await receiptModelFromJson(response);
 
       //   for (int i = 0; i < receiptData!.data!.length; i++) {
@@ -804,27 +805,30 @@ class AllProductsController extends GetxController {
       }
 
       // }
-
-      try {
-        if (isPDFView == true) {
-          Get.offAll(TabsPage());
-          for (int i = 0; i < receiptData!.data!.length; i++) {
-            Get.to(ReceiptPdfGenerate(
-              singleReceiptModel: receiptData?.data?[i],
-            ))?.then((value) {
-              print('Inside -> then ');
-              print(
-                  'PDF generated for receipt ${receiptData?.data?[i].invoiceNo}');
-              // Get.to(
-              //     ReceiptPdfGenerate(singleReceiptModel: receiptData?.data?[i]));
-            });
-          }
-
-          isPDFView = false;
-        }
-      } catch (error) {
-        debugPrint('Error -> $error');
-      }
+      Get.offAll(TabsPage());
+      // try {
+      //   if (isPDFView == true) {
+      //     // Get.offAll(TabsPage());
+      //     Get.to(ReceiptPdfGenerate(
+      //       singleReceiptModel: receiptData?.data?.first,
+      //     ));
+      //     // for (int i = 0; i < receiptData!.data!.length; i++) {
+      //     //   Get.to(ReceiptPdfGenerate(
+      //     //     singleReceiptModel: receiptData?.data?[i],
+      //     //   ))?.then((value) {
+      //     //     print('Inside -> then ');
+      //     //     print(
+      //     //         'PDF generated for receipt ${receiptData?.data?[i].invoiceNo}');
+      //     //     // Get.to(
+      //     //     //     ReceiptPdfGenerate(singleReceiptModel: receiptData?.data?[i]));
+      //     //   });
+      //     // }
+      //
+      //     isPDFView = false;
+      //   }
+      // } catch (error) {
+      //   debugPrint('Error -> $error');
+      // }
       update();
       clearAllOtherFields();
       clearAllAddPaymentControllerInformation();

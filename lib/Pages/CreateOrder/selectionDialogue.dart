@@ -41,6 +41,7 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
                   if (allProdCtrlObj.receiptPayment == true) {
                     print('inside add receipt method call');
                     allProdCtrlObj.isPDFView = true;
+                    allProdCtrlObj.update();
                     allProdCtrlObj.addReceipt();
                   } else if (allProdCtrlObj.isUpdate == true) {
                     print('->> for Update Order');
