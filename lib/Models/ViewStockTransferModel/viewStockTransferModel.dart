@@ -12,7 +12,7 @@ String viewStockTransferModelToJson(ViewStockTransferModel data) =>
 
 class ViewStockTransferModel {
   int currentPage;
-  List<Datum> data;
+  List<StockTransferData> data;
   String firstPageUrl;
   int from;
   int lastPage;
@@ -44,7 +44,8 @@ class ViewStockTransferModel {
   factory ViewStockTransferModel.fromJson(Map<String, dynamic> json) =>
       ViewStockTransferModel(
         currentPage: json["current_page"],
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: List<StockTransferData>.from(
+            json["data"].map((x) => StockTransferData.fromJson(x))),
         firstPageUrl: json["first_page_url"],
         from: json["from"] != null ? json["from"] : 0,
         lastPage: json["last_page"],
@@ -75,7 +76,7 @@ class ViewStockTransferModel {
       };
 }
 
-class Datum {
+class StockTransferData {
   int id;
   DateTime transactionDate;
   String refNo;
@@ -87,7 +88,7 @@ class Datum {
   int dtRowId;
   String status;
 
-  Datum({
+  StockTransferData({
     required this.id,
     required this.transactionDate,
     required this.refNo,
@@ -100,7 +101,8 @@ class Datum {
     required this.status,
   });
 
-  factory Datum.fromJson(Map<String, dynamic> json) => Datum(
+  factory StockTransferData.fromJson(Map<String, dynamic> json) =>
+      StockTransferData(
         id: json["id"],
         transactionDate: DateTime.parse(json["transaction_date"]),
         refNo: json["ref_no"],

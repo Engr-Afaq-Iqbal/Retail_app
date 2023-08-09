@@ -17,24 +17,24 @@ import '../../Models/order_type_model/SaleOrderModel.dart';
 
 Future<List<int>> posInvoiceAndKotPrintLayout(
   Generator printer, {
-  required SaleOrderDataModel selectedSaleOrderData,
+  SaleOrderDataModel? selectedSaleOrderData,
   List<SellLine>? items,
   String? kitchenName,
 }) async {
   double totalPayedAmount() {
     double totalPayed = 0;
-    selectedSaleOrderData.paymentLines.forEach((element) {
+    selectedSaleOrderData?.paymentLines.forEach((element) {
       totalPayed += double.parse('${element.amount ?? 0}');
     });
     return totalPayed;
   }
 
   double? anyAmountDue({bool isDueValue = false}) {
-    if (selectedSaleOrderData.sellDue != null &&
-        selectedSaleOrderData.sellDue! > 0)
-      return selectedSaleOrderData.sellDue!;
-    else if (selectedSaleOrderData.finalTotal != null) {
-      double due = double.parse('${selectedSaleOrderData.finalTotal ?? 0}') -
+    if (selectedSaleOrderData?.sellDue != null &&
+        ((selectedSaleOrderData?.sellDue ?? 0.00) >= 0))
+      return selectedSaleOrderData?.sellDue!;
+    else if (selectedSaleOrderData?.finalTotal != null) {
+      double due = double.parse('${selectedSaleOrderData?.finalTotal ?? 0}') -
           totalPayedAmount();
       if (due > 0) return due;
     }
@@ -42,10 +42,10 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   }
 
   List<int> bytes = [];
-  String totalQuantity(List<SellLine> allSellItems) {
+  String totalQuantity(List<SellLine>? allSellItems) {
     int totalProducts = 0;
     try {
-      allSellItems.forEach((element) {
+      allSellItems?.forEach((element) {
         totalProducts += double.parse('${element.quantity}').toInt();
       });
     } catch (_e) {
@@ -282,28 +282,28 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   bytes += printDivider();
   // Customer Information
   bytes += cl2(
-    cTxt1: (selectedSaleOrderData.contact?.name != null)
-        ? 'Customer: ${selectedSaleOrderData.contact?.name ?? ''}'
+    cTxt1: (selectedSaleOrderData?.contact?.name != null)
+        ? 'Customer: ${selectedSaleOrderData?.contact?.name ?? ''}'
         : null,
   );
   bytes += cl2(
-    cTxt1: (selectedSaleOrderData.contact?.mobile != null)
-        ? 'Mobile: ${selectedSaleOrderData.contact?.mobile ?? ''}'
+    cTxt1: (selectedSaleOrderData?.contact?.mobile != null)
+        ? 'Mobile: ${selectedSaleOrderData?.contact?.mobile ?? ''}'
         : null,
   );
   bytes += cl2(
     // Invoice Number
-    cTxt1: 'Invoice: ${selectedSaleOrderData.invoiceNo ?? ''}',
+    cTxt1: 'Invoice: ${selectedSaleOrderData?.invoiceNo ?? ''}',
 
     // Staff Name
     cTxt2: 'User: ${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''}',
   );
   bytes += cl2(
-    cTxt1: (selectedSaleOrderData.transactionDate != null)
-        ? 'Date: ${AppFormat.dateOnly(selectedSaleOrderData.transactionDate!)}'
+    cTxt1: (selectedSaleOrderData?.transactionDate != null)
+        ? 'Date: ${AppFormat.dateOnly(selectedSaleOrderData?.transactionDate ?? DateTime.now())}'
         : null,
     cTxt2:
-        'Time: ${AppFormat.timeOnly(selectedSaleOrderData.transactionDate!)} ',
+        'Time: ${AppFormat.timeOnly(selectedSaleOrderData?.transactionDate ?? DateTime.now())} ',
   );
 
   // Table Name & Service Staff
@@ -347,14 +347,14 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
 
   // Items Table
   List.generate(
-    items != null ? items.length : selectedSaleOrderData.sellLines.length,
+    items != null ? items.length : selectedSaleOrderData?.sellLines.length ?? 0,
     (index) {
       bytes += cl5(
         // Serial Number
         cTxt1: '${index + 1}',
         // Item Details
         cTxt2: AppFormat.removeArabic(
-                '${items != null ? items[index].product?.name : selectedSaleOrderData.sellLines[index].product?.name}')
+                '${items != null ? items[index].product?.name : selectedSaleOrderData?.sellLines[index].product?.name}')
             .trim(),
         /* Item Variation & Modifiers
               if (selectedSaleOrderData
@@ -407,13 +407,13 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
               */
         // Item Quantity
         cTxt3:
-            '${double.parse('${selectedSaleOrderData.sellLines[index].quantity}') / double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: selectedSaleOrderData.sellLines[index].subUnitId)}')} ${Get.find<AllProductsController>().checkUnitsShortName(unitId: int.parse(selectedSaleOrderData.sellLines[index].subUnitId))}',
+            '${double.parse('${selectedSaleOrderData?.sellLines[index].quantity}') / double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: selectedSaleOrderData?.sellLines[index].subUnitId)}')} ${Get.find<AllProductsController>().checkUnitsShortName(unitId: selectedSaleOrderData?.sellLines[index].subUnitId)}',
         // Price
         cTxt4:
-            '${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.sellLines[index].unitPriceIncTax}') ?? ''}',
+            '${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData?.sellLines[index].unitPriceIncTax}') ?? ''}',
         // Total
         cTxt5:
-            '${AppFormat.doubleToStringUpTo2('${Get.find<ProductCartController>().productTotalAmount(selectedSaleOrderData.sellLines[index].unitPriceIncTax, selectedSaleOrderData.sellLines[index].quantity)}') ?? ''}',
+            '${AppFormat.doubleToStringUpTo2('${Get.find<ProductCartController>().productTotalAmount(selectedSaleOrderData?.sellLines[index].unitPriceIncTax, selectedSaleOrderData?.sellLines[index].quantity ?? 0)}') ?? ''}',
       );
     },
   );
@@ -425,24 +425,24 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   // Totals Information
   bytes += cl2(
     // Total Items
-    cTxt1: 'Items: ${selectedSaleOrderData.sellLines.length}',
+    cTxt1: 'Items: ${selectedSaleOrderData?.sellLines.length}',
     cTxt2:
-        'Sub Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.totalBeforeTax}')}',
+        'Sub Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData?.totalBeforeTax}')}',
   );
   bytes += cl2(
     // Total Quantity
-    cTxt1: 'Qty: ${totalQuantity(selectedSaleOrderData.sellLines)}',
+    cTxt1: 'Qty: ${totalQuantity(selectedSaleOrderData?.sellLines)}',
     // Total Quantity
-    cTxt2: (selectedSaleOrderData.taxAmount != null &&
-            selectedSaleOrderData.taxAmount != '0.00')
-        ? 'VAT: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.taxAmount}')}'
+    cTxt2: (selectedSaleOrderData?.taxAmount != null &&
+            selectedSaleOrderData?.taxAmount != '0.00')
+        ? 'VAT: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData?.taxAmount}')}'
         : null,
   );
 
   bytes += cl2(
     cTxt1: '',
     cTxt2:
-        'Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData.finalTotal}')}',
+        'Total: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData?.finalTotal}')}',
   );
 
   // Divider
@@ -467,35 +467,54 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   //           .capitalize ??
   //       '',
   // );
-  debugPrint(selectedSaleOrderData.paymentLines.toString());
-  for (PaymentLine e in selectedSaleOrderData.paymentLines) {
-    if (e.transactionNo != null)
+  debugPrint(selectedSaleOrderData?.paymentLines.toString());
+  // for (PaymentLine e in selectedSaleOrderData.paymentLines) {
+  //   if (e.transactionNo != null)
+  //     bytes += cl2(
+  //       cTxt1: (e.chequeNumber != null)
+  //           ? 'Cheque #: ${e.chequeNumber}'
+  //           : (e.transactionNo != null)
+  //               ? 'Tr #: ${e.transactionNo}'
+  //               : '',
+  //       cTxt2:
+  //           '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
+  //     );
+  //   if (e.isReturn == 0)
+  //     bytes += cl2(
+  //         cTxt1: 'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
+  // }
+
+  var length = selectedSaleOrderData?.paymentLines.length ?? 0;
+  for (int i = 0; i < length; i++) {
+    if (selectedSaleOrderData?.paymentLines[i].transactionNo != null)
       bytes += cl2(
-        cTxt1: (e.chequeNumber != null)
-            ? 'Cheque #: ${e.chequeNumber}'
-            : (e.transactionNo != null)
-                ? 'Tr #: ${e.transactionNo}'
+        cTxt1: (selectedSaleOrderData?.paymentLines[i].chequeNumber != null)
+            ? 'Cheque #: ${selectedSaleOrderData?.paymentLines[i].chequeNumber}'
+            : (selectedSaleOrderData?.paymentLines[i].transactionNo != null)
+                ? 'Tr #: ${selectedSaleOrderData?.paymentLines[i].transactionNo}'
                 : '',
         cTxt2:
-            '${(e.isReturn == 1) ? 'Return Amount' : '${e.method}'}: ${AppFormat.doubleToStringUpTo2(e.amount)}',
+            '${(selectedSaleOrderData?.paymentLines[i].isReturn == 1) ? 'Return Amount' : '${selectedSaleOrderData?.paymentLines[i].method}'}: ${AppFormat.doubleToStringUpTo2(selectedSaleOrderData?.paymentLines[i].amount)}',
       );
-    if (e.isReturn == 0)
+    if (selectedSaleOrderData?.paymentLines[i].isReturn == 0)
       bytes += cl2(
-          cTxt1: 'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(e.paidOn)}');
+          cTxt1:
+              'Transaction Date: ${AppFormat.dateYYYYMMDDHHMM24(selectedSaleOrderData?.paymentLines[i].paidOn)}');
   }
 
-  if (selectedSaleOrderData.totalPaid != null)
-    bytes += cl2(cTxt2: 'Total Paid Amount ${selectedSaleOrderData.totalPaid}');
+  if (selectedSaleOrderData?.totalPaid != null)
+    bytes +=
+        cl2(cTxt2: 'Total Paid Amount ${selectedSaleOrderData?.totalPaid}');
 
   if (anyAmountDue() != null) bytes += cl2(cTxt2: 'Due ${anyAmountDue()}');
 
   // Divider
-  if (selectedSaleOrderData.additionalNotes != null) bytes += printDivider();
+  if (selectedSaleOrderData?.additionalNotes != null) bytes += printDivider();
   //Additional Notes
-  if (selectedSaleOrderData.additionalNotes != null)
+  if (selectedSaleOrderData?.additionalNotes != null)
     bytes += cl2(cTxt1: 'Note:');
-  if (selectedSaleOrderData.additionalNotes != null)
-    bytes += cl2(cTxt1: '${selectedSaleOrderData.additionalNotes ?? ''}');
+  if (selectedSaleOrderData?.additionalNotes != null)
+    bytes += cl2(cTxt1: '${selectedSaleOrderData?.additionalNotes ?? ''}');
 
   // Footer
   bytes += printDivider();

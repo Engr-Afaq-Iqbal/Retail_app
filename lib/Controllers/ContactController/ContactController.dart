@@ -101,7 +101,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.contactApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -121,7 +121,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.contactApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -156,7 +156,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.contactApi, error, stackTrace),
       );
       return null;
     });
@@ -244,7 +244,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.contactApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -298,7 +298,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.contactApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -368,7 +368,7 @@ class ContactController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.getSpecifiedContactApi, error, stackTrace),
       );
       update();
     });

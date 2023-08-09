@@ -10,6 +10,7 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 
 import '../../Models/ProductsModel/ListProductsModel.dart';
+import '../../Models/ProductsModel/Product.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ReceiptModel.dart';
 import '../../Models/UnitModels/UnitListModel.dart';
@@ -46,6 +47,7 @@ class AllProductsController extends GetxController {
   //String? totalAmount;
   List<String> totalAmount = [];
   double finalTotal = 0.00;
+  double paidAmount = 0.00;
   String total = '0.00';
   String? paytermStatusValue;
   String? statusValue;
@@ -79,7 +81,7 @@ class AllProductsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.allProducts, error, stackTrace),
       );
       update();
     });
@@ -105,7 +107,6 @@ class AllProductsController extends GetxController {
       }
     }
 
-    print('checkingggg responsee');
     for (int i = 0; i < productModelObjs.length; i++) {
       // checkUnits(product: productModelObjs[i]);
       unitListStatus.add(checkUnits(product: productModelObjs[i]));
@@ -184,7 +185,7 @@ class AllProductsController extends GetxController {
         }
       }
     }
-    print('Product Id: ${product?.id} Names:: $names');
+
     return names;
     // return unitListModel?.data
     //     ?.firstWhereOrNull((i) => i.id == product?.unitId)
@@ -319,7 +320,7 @@ class AllProductsController extends GetxController {
     for (int i = 0; i < totalAmount.length; i++) {
       finalTotal = double.parse('${totalAmount[i]}') + finalTotal;
     }
-    finalTotal = finalTotal + orderedTotalAmount;
+    // finalTotal = finalTotal + orderedTotalAmount;
     print('final Total = ${finalTotal}');
   }
 
@@ -550,7 +551,12 @@ class AllProductsController extends GetxController {
       //     '\nStatus Code => {response.statusCode}'
       //     '\nResponse => $response');
 
-      if (response == null) return;
+      if (response == null) {
+        stopProgress();
+        Get.offAll(TabsPage());
+        showToast('Error occurred');
+        return;
+      }
       // clearOnOrderPlaceSuccess();
       try {
         salesOrderModel = await saleOrderDataModelFromJson(
@@ -581,32 +587,15 @@ class AllProductsController extends GetxController {
       } catch (e) {
         debugPrint('Error -> created order response parsing: $e');
       }
-      // AppStorage.setPrintedInvoiceOrderIDs(
-      //     Get.find<AllPrinterController>().orderDataForPrinting?.id);
-      // await Get.find<AllPrinterController>().printInvoiceOfOrder();
-
-      // Get.dialog(Dialog(
-      //   shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
-      //   insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
-      //   child: InVoicePrintScreen(
-      //     order: salesOrderModel,
-      //   ),
-      // ));
 
       clearAllOtherFields();
-
-      // Get.close(3);
-      // Get.to(TabsPage());
-      //await Get.to(() => OrderPlaced());
-      // Get.offAll(HomePage());
     }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       logger.e('StackTrace => $stackTrace');
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.updateOrder, error, stackTrace),
+            'POST', ApiUrls.createOrder, error, stackTrace),
       );
       return null;
     });
@@ -624,6 +613,7 @@ class AllProductsController extends GetxController {
     paymentCtrlObj.paymentMethodCtrl.clear();
     paymentCtrlObj.accountIdCtrl.clear();
     nestedist.clear();
+    paidAmount = 0.00;
     unitListStatusIds.clear();
     unitListStatus.clear();
     selectedUnitsList.clear();
@@ -642,6 +632,7 @@ class AllProductsController extends GetxController {
     statusValue = null;
     productQuantityCtrl.clear();
     listProductsModel = null;
+    paidAmount = 0.00;
     paymentCtrlObj.amountCtrl.clear();
     paymentCtrlObj.transactionNoCtrl.clear();
     paymentCtrlObj.paymentMethodCtrl.clear();
@@ -780,55 +771,60 @@ class AllProductsController extends GetxController {
     //   String result = await response.stream.bytesToString();
     return await ApiServices.postMethod(feedUrl: _url, fields: _fields)
         .then((response) async {
-      // logger.i('EndPoint => ${_url}'
-      //     '\nStatus Code => {response.statusCode}'
-      //     '\nResponse => $response');
+      logger.i('EndPoint => ${_url}'
+          '\nResponse => $response');
 
-      if (response == null) return;
+      if (response == null) {
+        stopProgress();
+        Get.offAll(TabsPage());
+        showToast('Error occurred');
+        return;
+      }
 
-      receiptPayment = false;
+      receiptPayment = true;
       receiptData = await receiptModelFromJson(response);
 
       //   for (int i = 0; i < receiptData!.data!.length; i++) {
       stopProgress();
       try {
-        print('here before printing call function');
-        if (isPDFView == false)
+        if (isPDFView == false) {
+          print('printing calling function');
           Get.dialog(Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
             insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
             child: InVoicePrintScreen(),
           ));
+        }
       } catch (e) {
         print('Error -> $e');
       }
 
       // }
-      Get.offAll(TabsPage());
-      // try {
-      //   if (isPDFView == true) {
-      //     // Get.offAll(TabsPage());
-      //     Get.to(ReceiptPdfGenerate(
-      //       singleReceiptModel: receiptData?.data?.first,
-      //     ));
-      //     // for (int i = 0; i < receiptData!.data!.length; i++) {
-      //     //   Get.to(ReceiptPdfGenerate(
-      //     //     singleReceiptModel: receiptData?.data?[i],
-      //     //   ))?.then((value) {
-      //     //     print('Inside -> then ');
-      //     //     print(
-      //     //         'PDF generated for receipt ${receiptData?.data?[i].invoiceNo}');
-      //     //     // Get.to(
-      //     //     //     ReceiptPdfGenerate(singleReceiptModel: receiptData?.data?[i]));
-      //     //   });
-      //     // }
-      //
-      //     isPDFView = false;
-      //   }
-      // } catch (error) {
-      //   debugPrint('Error -> $error');
-      // }
+      try {
+        if (isPDFView == true) {
+          Get.offAll(TabsPage());
+          print('pdf calling function');
+          Get.to(ReceiptPdfGenerate(
+            singleReceiptModel: receiptData?.data?.first,
+          ));
+          // for (int i = 0; i < receiptData!.data!.length; i++) {
+          //   Get.to(ReceiptPdfGenerate(
+          //     singleReceiptModel: receiptData?.data?[i],
+          //   ))?.then((value) {
+          //     print('Inside -> then ');
+          //     print(
+          //         'PDF generated for receipt ${receiptData?.data?[i].invoiceNo}');
+          //     // Get.to(
+          //     //     ReceiptPdfGenerate(singleReceiptModel: receiptData?.data?[i]));
+          //   });
+          // }
+
+          isPDFView = false;
+        }
+      } catch (error) {
+        debugPrint('Error -> $error');
+      }
       update();
       clearAllOtherFields();
       clearAllAddPaymentControllerInformation();
@@ -960,26 +956,6 @@ class AllProductsController extends GetxController {
 
     _fields['transaction_date'] =
         '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
-
-    // order service type
-    // OrderServiceDataModel? _typesOfService = (orderCtrlObj.isOrderUpdating &&
-    //             !orderManageCtrlObj.isServiceTypeSelectionValueUpdated
-    //         ? orderCtrlObj.singleOrderData?.typesOfService
-    //         : orderManageCtrlObj.selectedOrderType) ??
-    //     orderCtrlObj.singleOrderData?.typesOfService;
-    // _fields['types_of_service_id'] = '${_typesOfService?.id}';
-
-    // table information (if dine-in)
-    // TableDataModel? _table = _typesOfService?.name == AppValues.dineIn
-    //     ? ((orderCtrlObj.isOrderUpdating &&
-    //                 !tableManageCtrlObj.isTableSelectionValueUpdated
-    //             ? orderCtrlObj.singleOrderData?.tableData
-    //             : (tableManageCtrlObj.selectedTables.isNotEmpty)
-    //                 ? tableManageCtrlObj.selectedTables.first
-    //                 : null) ??
-    //         orderCtrlObj.singleOrderData?.tableData)
-    //     : null;
-    // if (_table != null) _fields['table_id'] = '${_table.id}';
 
     // res waiter id and created by ???
     _fields['service_staff_id'] =
@@ -1128,39 +1104,49 @@ class AllProductsController extends GetxController {
       //     '\nStatus Code => {response.statusCode}'
       //     '\nResponse => $response');
 
-      if (response == null) return;
+      if (response == null) {
+        stopProgress();
+        Get.offAll(TabsPage());
+        showToast('Error occurred');
+        return;
+      }
 
-      /// -----
-      /// -----
-      /// Print invoice & kot on order edit
-      /// -----
-      /// -----
-      // Response Parsing for printing and auto print KOT and auto print Invoice
-      // try {
-      //   Get.find<AllPrinterController>().orderDataForPrinting =
-      //       saleOrderDataModelFromJson(jsonDecode(response)['transaction'][0]);
-      // } catch (e) {
-      //   debugPrint('Error -> created order response parsing: $e');
-      // }
+      try {
+        salesOrderModel = await saleOrderDataModelFromJson(
+            jsonDecode(response)['transaction'][0]); //
 
-      // print slips in relevant kitchens
-      // await Get.find<AllPrinterController>()
-      //     .setCreatedOrderKitchensNonAutoPrints();
-      //
-      // // if the order type is not dine-in, invoice should print automatically
-      // if (orderManageCtrlObj.selectedOrderType?.name != AppValues.dineIn &&
-      //     (isOnlyCheckout || isPay)) {
-      //   await Get.find<AllPrinterController>().printInvoiceOfOrder();
-      // }
-      stopProgress();
+        stopProgress();
+        showToast('Order Updated Successfully');
+        if (isPDFView == false) {
+          print('inside print invoice');
+
+          Get.dialog(Dialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
+            insetPadding: EdgeInsets.all(Dimensions.paddingSizeSmall),
+            child: InVoicePrintScreen(),
+          ));
+        }
+
+        if (isPDFView == true) {
+          Get.offAll(TabsPage());
+          Get.to(PrintData(
+            saleOrderDataModel: salesOrderModel,
+          ));
+          isPDFView = false;
+        }
+
+        // Get.find<AllPrinterController>().orderDataForPrinting = salesOrderModel;
+      } catch (e) {
+        debugPrint('Error -> created order response parsing: $e');
+      }
+
       // -----
       showToast('Order Updated Successfully');
       clearAllOtherFields();
       isUpdate = false;
       update();
       //setting home page side area to order type selection
-      Get.offAll(HomePageRetail());
-
       //to fetch the active orders
       // Get.find<OrderController>().fetchActiveOrders();
       clearAllAddPaymentControllerInformation();
@@ -1175,5 +1161,22 @@ class AllProductsController extends GetxController {
       );
       return null;
     });
+  }
+
+  addOrderedItemsQty({SaleOrderDataModel? salesOrderData}) {
+    var length = salesOrderData?.sellLines.length ?? 0;
+    for (int i = 0; i < length; i++) {
+      // print(productModelObjs.indexOf(salesOrderData!.sellLines[i].product!));
+      // productQuantityCtrl[
+      //         productModelObjs.indexOf(salesOrderData!.sellLines[i].product!)]
+      //     .text = salesOrderData.sellLines[i].product?.alertQuantity ?? '';
+      print('Checking id');
+      print(salesOrderData?.sellLines[i].product?.id);
+      print(checkTheIndex(id: salesOrderData?.sellLines[i].product?.id));
+    }
+  }
+
+  checkTheIndex({int? id}) {
+    return productModelObjs.firstWhereOrNull((i) => i.id == id)?.name;
   }
 }

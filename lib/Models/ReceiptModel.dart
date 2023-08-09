@@ -10,19 +10,19 @@ ReceiptModel receiptModelFromJson(String str) =>
 String receiptModelToJson(ReceiptModel data) => json.encode(data.toJson());
 
 class ReceiptModel {
-  List<SingleReceiptModel>? data;
+  List<SingleReceiptData>? data;
   String? msg;
 
   ReceiptModel({
-    this.data = const [],
+    this.data,
     this.msg,
   });
 
   factory ReceiptModel.fromJson(Map<String, dynamic> json) => ReceiptModel(
         data: json["data"] == null
             ? []
-            : List<SingleReceiptModel>.from(
-                json["data"]!.map((x) => SingleReceiptModel.fromJson(x))),
+            : List<SingleReceiptData>.from(
+                json["data"]!.map((x) => SingleReceiptData.fromJson(x))),
         msg: json["msg"],
       );
 
@@ -34,12 +34,12 @@ class ReceiptModel {
       };
 }
 
-class SingleReceiptModel {
+class SingleReceiptData {
   int? id;
   int? businessId;
   int? locationId;
   dynamic resTableId;
-  int? resWaiterId;
+  dynamic resWaiterId;
   dynamic resOrderStatus;
   String? type;
   dynamic subType;
@@ -140,7 +140,7 @@ class SingleReceiptModel {
   dynamic importTime;
   int? typesOfServiceId;
   String? packingCharge;
-  String? packingChargeType;
+  dynamic packingChargeType;
   dynamic serviceCustomField1;
   dynamic serviceCustomField2;
   dynamic serviceCustomField3;
@@ -167,15 +167,16 @@ class SingleReceiptModel {
   dynamic kitchenId;
   dynamic remarks;
   dynamic supplierRefNo;
+  int? shippingSend;
   List<SellLine>? sellLines;
   Contact? contact;
   List<PaymentLine>? paymentLines;
   dynamic tax;
   SalesPerson? salesPerson;
   dynamic table;
-  SalesPerson? serviceStaff;
+  dynamic serviceStaff;
 
-  SingleReceiptModel({
+  SingleReceiptData({
     this.id,
     this.businessId,
     this.locationId,
@@ -308,6 +309,7 @@ class SingleReceiptModel {
     this.kitchenId,
     this.remarks,
     this.supplierRefNo,
+    this.shippingSend,
     this.sellLines,
     this.contact,
     this.paymentLines,
@@ -317,8 +319,8 @@ class SingleReceiptModel {
     this.serviceStaff,
   });
 
-  factory SingleReceiptModel.fromJson(Map<String, dynamic> json) =>
-      SingleReceiptModel(
+  factory SingleReceiptData.fromJson(Map<String, dynamic> json) =>
+      SingleReceiptData(
         id: json["id"],
         businessId: json["business_id"],
         locationId: json["location_id"],
@@ -459,6 +461,7 @@ class SingleReceiptModel {
         kitchenId: json["kitchen_id"],
         remarks: json["remarks"],
         supplierRefNo: json["supplier_ref_no"],
+        shippingSend: json["shipping_send"],
         sellLines: json["sell_lines"] == null
             ? []
             : List<SellLine>.from(
@@ -474,9 +477,7 @@ class SingleReceiptModel {
             ? null
             : SalesPerson.fromJson(json["sales_person"]),
         table: json["table"],
-        serviceStaff: json["service_staff"] == null
-            ? null
-            : SalesPerson.fromJson(json["service_staff"]),
+        serviceStaff: json["service_staff"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -612,6 +613,7 @@ class SingleReceiptModel {
         "kitchen_id": kitchenId,
         "remarks": remarks,
         "supplier_ref_no": supplierRefNo,
+        "shipping_send": shippingSend,
         "sell_lines": sellLines == null
             ? []
             : List<dynamic>.from(sellLines!.map((x) => x.toJson())),
@@ -622,7 +624,7 @@ class SingleReceiptModel {
         "tax": tax,
         "sales_person": salesPerson?.toJson(),
         "table": table,
-        "service_staff": serviceStaff?.toJson(),
+        "service_staff": serviceStaff,
       };
 }
 
@@ -909,7 +911,7 @@ class PaymentLine {
   int? paidThroughLink;
   dynamic gateway;
   int? isAdvance;
-  dynamic paymentFor;
+  int? paymentFor;
   dynamic parentId;
   String? note;
   dynamic document;
@@ -1039,7 +1041,7 @@ class SalesPerson {
   dynamic pausedAt;
   dynamic essentialsDepartmentId;
   dynamic essentialsDesignationId;
-  String? essentialsSalary;
+  dynamic essentialsSalary;
   String? essentialsPayPeriod;
   dynamic essentialsPayCycle;
   dynamic maxSalesDiscountPercent;
@@ -1072,7 +1074,7 @@ class SalesPerson {
   String? idProofNumber;
   dynamic crmDepartment;
   dynamic crmDesignation;
-  int? locationId;
+  dynamic locationId;
   int? businessRegister;
   dynamic passportNo;
   dynamic idCard;
@@ -1085,7 +1087,7 @@ class SalesPerson {
   dynamic deletedAt;
   DateTime? createdAt;
   DateTime? updatedAt;
-  dynamic deviceToken;
+  String? deviceToken;
   dynamic bankName;
   dynamic bankNumber;
   dynamic ibanNumber;
@@ -1339,7 +1341,7 @@ class SellLine {
   dynamic soLineId;
   String? soQuantityInvoiced;
   dynamic resServiceStaffId;
-  String? resLineOrderStatus;
+  dynamic resLineOrderStatus;
   dynamic parentSellLineId;
   String? childrenType;
   dynamic subUnitId;
@@ -1348,6 +1350,7 @@ class SellLine {
   String? modifierInput;
   dynamic kitchenId;
   String? remarks;
+  ProductData? product;
   Variations? variations;
 
   SellLine({
@@ -1383,6 +1386,7 @@ class SellLine {
     this.modifierInput,
     this.kitchenId,
     this.remarks,
+    this.product,
     this.variations,
   });
 
@@ -1423,6 +1427,9 @@ class SellLine {
         modifierInput: json["modifier_input"],
         kitchenId: json["kitchen_id"],
         remarks: json["remarks"],
+        product: json["product"] == null
+            ? null
+            : ProductData.fromJson(json["product"]),
         variations: json["variations"] == null
             ? null
             : Variations.fromJson(json["variations"]),
@@ -1461,7 +1468,192 @@ class SellLine {
         "modifier_input": modifierInput,
         "kitchen_id": kitchenId,
         "remarks": remarks,
+        "product": product?.toJson(),
         "variations": variations?.toJson(),
+      };
+}
+
+class ProductData {
+  int? id;
+  String? name;
+  int? businessId;
+  String? type;
+  int? unitId;
+  dynamic secondaryUnitId;
+  dynamic subUnitIds;
+  dynamic brandId;
+  int? categoryId;
+  dynamic subCategoryId;
+  int? tax;
+  String? taxType;
+  int? enableStock;
+  String? alertQuantity;
+  String? sku;
+  String? barcodeType;
+  dynamic expiryPeriod;
+  dynamic expiryPeriodType;
+  int? enableSrNo;
+  String? weight;
+  String? productCustomField1;
+  String? productCustomField2;
+  String? productCustomField3;
+  String? productCustomField4;
+  String? image;
+  dynamic woocommerceMediaId;
+  dynamic productDescription;
+  int? createdBy;
+  dynamic preparationTimeInMinutes;
+  dynamic woocommerceProductId;
+  int? woocommerceDisableSync;
+  dynamic warrantyId;
+  int? isInactive;
+  dynamic repairModelId;
+  int? notForSelling;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  dynamic kitchenId;
+  dynamic typeOfProduct;
+  int? modifierStatus;
+  int? inputField;
+  String? imageUrl;
+
+  ProductData({
+    this.id,
+    this.name,
+    this.businessId,
+    this.type,
+    this.unitId,
+    this.secondaryUnitId,
+    this.subUnitIds,
+    this.brandId,
+    this.categoryId,
+    this.subCategoryId,
+    this.tax,
+    this.taxType,
+    this.enableStock,
+    this.alertQuantity,
+    this.sku,
+    this.barcodeType,
+    this.expiryPeriod,
+    this.expiryPeriodType,
+    this.enableSrNo,
+    this.weight,
+    this.productCustomField1,
+    this.productCustomField2,
+    this.productCustomField3,
+    this.productCustomField4,
+    this.image,
+    this.woocommerceMediaId,
+    this.productDescription,
+    this.createdBy,
+    this.preparationTimeInMinutes,
+    this.woocommerceProductId,
+    this.woocommerceDisableSync,
+    this.warrantyId,
+    this.isInactive,
+    this.repairModelId,
+    this.notForSelling,
+    this.createdAt,
+    this.updatedAt,
+    this.kitchenId,
+    this.typeOfProduct,
+    this.modifierStatus,
+    this.inputField,
+    this.imageUrl,
+  });
+
+  factory ProductData.fromJson(Map<String, dynamic> json) => ProductData(
+        id: json["id"],
+        name: json["name"],
+        businessId: json["business_id"],
+        type: json["type"],
+        unitId: json["unit_id"],
+        secondaryUnitId: json["secondary_unit_id"],
+        subUnitIds: json["sub_unit_ids"],
+        brandId: json["brand_id"],
+        categoryId: json["category_id"],
+        subCategoryId: json["sub_category_id"],
+        tax: json["tax"],
+        taxType: json["tax_type"],
+        enableStock: json["enable_stock"],
+        alertQuantity: json["alert_quantity"],
+        sku: json["sku"],
+        barcodeType: json["barcode_type"],
+        expiryPeriod: json["expiry_period"],
+        expiryPeriodType: json["expiry_period_type"],
+        enableSrNo: json["enable_sr_no"],
+        weight: json["weight"],
+        productCustomField1: json["product_custom_field1"],
+        productCustomField2: json["product_custom_field2"],
+        productCustomField3: json["product_custom_field3"],
+        productCustomField4: json["product_custom_field4"],
+        image: json["image"],
+        woocommerceMediaId: json["woocommerce_media_id"],
+        productDescription: json["product_description"],
+        createdBy: json["created_by"],
+        preparationTimeInMinutes: json["preparation_time_in_minutes"],
+        woocommerceProductId: json["woocommerce_product_id"],
+        woocommerceDisableSync: json["woocommerce_disable_sync"],
+        warrantyId: json["warranty_id"],
+        isInactive: json["is_inactive"],
+        repairModelId: json["repair_model_id"],
+        notForSelling: json["not_for_selling"],
+        createdAt: json["created_at"] == null
+            ? null
+            : DateTime.parse(json["created_at"]),
+        updatedAt: json["updated_at"] == null
+            ? null
+            : DateTime.parse(json["updated_at"]),
+        kitchenId: json["kitchen_id"],
+        typeOfProduct: json["type_of_product"],
+        modifierStatus: json["modifier_status"],
+        inputField: json["input_field"],
+        imageUrl: json["image_url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "business_id": businessId,
+        "type": type,
+        "unit_id": unitId,
+        "secondary_unit_id": secondaryUnitId,
+        "sub_unit_ids": subUnitIds,
+        "brand_id": brandId,
+        "category_id": categoryId,
+        "sub_category_id": subCategoryId,
+        "tax": tax,
+        "tax_type": taxType,
+        "enable_stock": enableStock,
+        "alert_quantity": alertQuantity,
+        "sku": sku,
+        "barcode_type": barcodeType,
+        "expiry_period": expiryPeriod,
+        "expiry_period_type": expiryPeriodType,
+        "enable_sr_no": enableSrNo,
+        "weight": weight,
+        "product_custom_field1": productCustomField1,
+        "product_custom_field2": productCustomField2,
+        "product_custom_field3": productCustomField3,
+        "product_custom_field4": productCustomField4,
+        "image": image,
+        "woocommerce_media_id": woocommerceMediaId,
+        "product_description": productDescription,
+        "created_by": createdBy,
+        "preparation_time_in_minutes": preparationTimeInMinutes,
+        "woocommerce_product_id": woocommerceProductId,
+        "woocommerce_disable_sync": woocommerceDisableSync,
+        "warranty_id": warrantyId,
+        "is_inactive": isInactive,
+        "repair_model_id": repairModelId,
+        "not_for_selling": notForSelling,
+        "created_at": createdAt?.toIso8601String(),
+        "updated_at": updatedAt?.toIso8601String(),
+        "kitchen_id": kitchenId,
+        "type_of_product": typeOfProduct,
+        "modifier_status": modifierStatus,
+        "input_field": inputField,
+        "image_url": imageUrl,
       };
 }
 

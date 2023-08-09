@@ -82,7 +82,7 @@ class RegisterController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.openRegisterAPI, error, stackTrace),
       );
       return false;
     });
@@ -128,7 +128,7 @@ class RegisterController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.closeRegisterAPI, error, stackTrace),
       );
       return false;
     });
@@ -154,7 +154,7 @@ class RegisterController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.registersDetailsAPI, error, stackTrace),
       );
       return false;
     });
@@ -188,7 +188,7 @@ class RegisterController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.openedRegisterRecordsAPI, error, stackTrace),
       );
       return false;
     });

@@ -25,7 +25,7 @@ class AllKitchenController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.allKitchenApi, error, stackTrace),
       );
       update();
     });

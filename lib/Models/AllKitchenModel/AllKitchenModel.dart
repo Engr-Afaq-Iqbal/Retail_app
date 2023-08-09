@@ -721,7 +721,7 @@ class SellLine {
   int? kitchenId;
   String? remarks;
   List<Modifiersfilter>? modifiersfilter;
-  Product? product;
+  ProductKitchen? product;
 
   SellLine({
     this.id,
@@ -802,8 +802,9 @@ class SellLine {
             ? []
             : List<Modifiersfilter>.from(json["modifiersfilter"]
                 .map((x) => Modifiersfilter.fromJson(x))),
-        product:
-            json["product"] == null ? null : Product.fromJson(json["product"]),
+        product: json["product"] == null
+            ? null
+            : ProductKitchen.fromJson(json["product"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -885,7 +886,7 @@ class Modifiersfilter {
   dynamic modifierInput;
   dynamic kitchenId;
   dynamic remarks;
-  Product? product;
+  ProductKitchen? product;
   Variations? variations;
 
   Modifiersfilter({
@@ -964,8 +965,9 @@ class Modifiersfilter {
         modifierInput: json["modifier_input"],
         kitchenId: json["kitchen_id"],
         remarks: json["remarks"],
-        product:
-            json["product"] == null ? null : Product.fromJson(json["product"]),
+        product: json["product"] == null
+            ? null
+            : ProductKitchen.fromJson(json["product"]),
         variations: json["variations"] == null
             ? null
             : Variations.fromJson(json["variations"]),
@@ -1010,7 +1012,7 @@ class Modifiersfilter {
       };
 }
 
-class Product {
+class ProductKitchen {
   int? id;
   String? name;
   int? businessId;
@@ -1054,7 +1056,7 @@ class Product {
   int? inputField;
   String? imageUrl;
 
-  Product({
+  ProductKitchen({
     this.id,
     this.name,
     this.businessId,
@@ -1099,7 +1101,7 @@ class Product {
     this.imageUrl,
   });
 
-  factory Product.fromJson(Map<String, dynamic> json) => Product(
+  factory ProductKitchen.fromJson(Map<String, dynamic> json) => ProductKitchen(
         id: json["id"],
         name: json["name"],
         businessId: json["business_id"],
@@ -1344,7 +1346,7 @@ class TypesOfService {
         updatedAt: json["updated_at"] == null
             ? null
             : DateTime.parse(json["updated_at"]),
-        color: colorValues.map[json["color"]]!,
+        color: colorValuesKitchen.map[json["color"]]!,
       );
 
   Map<String, dynamic> toJson() => {
@@ -1359,13 +1361,13 @@ class TypesOfService {
         "enable_custom_fields": enableCustomFields,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
-        "color": colorValues.reverse[color],
+        "color": colorValuesKitchen.reverse[color],
       };
 }
 
 enum Color { DF0_C0_C, THE_15_CB6_D }
 
-final colorValues =
+final colorValuesKitchen =
     EnumValues({"#df0c0c": Color.DF0_C0_C, "#15cb6d": Color.THE_15_CB6_D});
 
 enum Name { TAKE_AWAY, DINE_IN }

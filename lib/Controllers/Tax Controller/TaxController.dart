@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Config/DateTimeFormat.dart';
+import '../../Models/ProductsModel/Product.dart';
 import '../../Models/business_n_register/BusinessModel.dart';
 import '../../Services/storage_services.dart';
 import '../ProductController/all_products_controller.dart';
@@ -29,7 +29,7 @@ class TaxController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.listTaxAPI, error, stackTrace),
       );
       update();
     });

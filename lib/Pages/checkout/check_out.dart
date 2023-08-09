@@ -47,20 +47,22 @@ class _CheckOutPageState extends State<CheckOutPage> {
       // if payment widget list is empty then new payment fields widget add
       if (_paymentCtrlObj.paymentWidgetList.isEmpty) {
         _paymentCtrlObj.addPaymentWidget(
-          totalAmount: double.tryParse(
-            (Get.find<AllProductsController>().finalTotal != 0.00)
-                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
-                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
-          ),
+          totalAmount: double.parse(
+                (Get.find<AllProductsController>().finalTotal != 0.00)
+                    ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                    : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+              ) -
+              allProdCtrlObj.paidAmount,
         );
       } else if (_paymentCtrlObj.paymentWidgetList.isNotEmpty) {
         _paymentCtrlObj.paymentWidgetList.clear();
         _paymentCtrlObj.addPaymentWidget(
-          totalAmount: double.tryParse(
-            (Get.find<AllProductsController>().finalTotal != 0.00)
-                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
-                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
-          ),
+          totalAmount: double.parse(
+                (Get.find<AllProductsController>().finalTotal != 0.00)
+                    ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                    : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+              ) -
+              allProdCtrlObj.paidAmount,
         );
       }
     } catch (e) {

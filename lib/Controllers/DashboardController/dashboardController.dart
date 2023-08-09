@@ -85,7 +85,7 @@ class DashboardController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.dashboardDataApi, error, stackTrace),
       );
       update();
     });

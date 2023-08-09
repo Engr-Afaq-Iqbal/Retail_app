@@ -37,7 +37,7 @@ class FundsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.paymentAccountApi, error, stackTrace),
       );
       update();
     });

@@ -15,7 +15,7 @@ import '/Controllers/ProductController/product_cart_controller.dart';
 import 'package:http/http.dart' as http;
 
 class ReceiptPdfGenerate extends StatelessWidget {
-  final SingleReceiptModel? singleReceiptModel;
+  final SingleReceiptData? singleReceiptModel;
   ReceiptPdfGenerate({Key? key, this.singleReceiptModel}) : super(key: key);
 
   @override
@@ -57,7 +57,7 @@ class ReceiptPdfGenerate extends StatelessWidget {
     String? mobile,
     String? shippingAddress,
     List<ProductModel> itemList = const [],
-    SingleReceiptModel? singleReceiptModel,
+    SingleReceiptData? singleReceiptModel,
     required pw.MemoryImage image,
   }) {
     return pw.Page(

@@ -1,5 +1,6 @@
 import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
+import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Return/saleReturn.dart';
@@ -22,6 +23,7 @@ class _SalesViewState extends State<SalesView> {
   @override
   void initState() {
     // TODO: implement initState
+    Get.find<AllProductsController>().fetchAllProducts();
     if (widget.isSalesReturn) {
       allSalesCtrl.callFirstOrderPageForReceipt();
     } else {

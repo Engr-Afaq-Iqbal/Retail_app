@@ -174,7 +174,7 @@ class AllSalesController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.allOrders, error, stackTrace),
       );
       return null;
     });
@@ -209,7 +209,7 @@ class AllSalesController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.allOrders, error, stackTrace),
       );
       update();
     });
@@ -256,7 +256,7 @@ class AllSalesController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.allOrders, error, stackTrace),
       );
       return null;
     });

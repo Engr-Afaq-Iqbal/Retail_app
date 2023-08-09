@@ -94,7 +94,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.viewCustomerVisits, error, stackTrace),
       );
       update();
     });
@@ -132,7 +132,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.createCustomerVisits, error, stackTrace),
       );
       throw '$error';
     });
@@ -176,7 +176,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.updateCustomerVisitsStatusApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -211,7 +211,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.updateCustomerVisitApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -232,7 +232,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.deleteCustomerVisits, error, stackTrace),
       );
       update();
     });
@@ -266,7 +266,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.checkOutApi, error, stackTrace),
       );
       throw '$error';
     });
@@ -298,7 +298,7 @@ class CustomerVisitsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.checkInApi, error, stackTrace),
       );
       throw '$error';
     });

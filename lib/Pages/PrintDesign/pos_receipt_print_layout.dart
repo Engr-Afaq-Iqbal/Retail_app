@@ -11,7 +11,7 @@ import '../../Services/storage_services.dart';
 
 Future<List<int>> posReceiptLayout(
   Generator printer, {
-  SingleReceiptModel? singleReceiptModel,
+  SingleReceiptData? singleReceiptModel,
   // List<SellLine>? items,
   String? kitchenName,
 }) async {

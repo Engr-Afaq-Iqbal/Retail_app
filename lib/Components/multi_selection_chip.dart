@@ -93,14 +93,14 @@ class _MultiSelectChipState<T> extends State<MultiSelectChip<T>> {
 }*/
 
 class MultiSelectChip extends StatefulWidget {
-  final List<VariationModel> chipsDataList;
-  final Function(List<VariationModel>) onSelectionChanged;
-  final List<VariationModel> initChoices;
+  final List<VariationModels> chipsDataList;
+  final Function(List<VariationModels>) onSelectionChanged;
+  final List<VariationModels> initChoices;
   const MultiSelectChip({
     Key? key,
     required this.onSelectionChanged,
     required this.chipsDataList,
-    this.initChoices = const <VariationModel>[],
+    this.initChoices = const <VariationModels>[],
   }) : super(key: key);
   @override
   _MultiSelectChipState createState() => _MultiSelectChipState();

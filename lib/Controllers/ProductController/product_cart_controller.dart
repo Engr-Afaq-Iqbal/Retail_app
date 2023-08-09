@@ -111,7 +111,7 @@ class ProductCartController extends GetxController {
     try {
       if (_item.productVariations.isNotEmpty &&
           _item.productVariations.first.variations.isNotEmpty) {
-        VariationModel _productVariation =
+        VariationModels _productVariation =
             _item.productVariations.first.variations.first;
         _price = double.parse(
                 '${_item.taxType == TaxType.INCLUSIVE ? _productVariation.sellPriceIncTax : _productVariation.defaultSellPrice}') *
@@ -223,8 +223,8 @@ class ProductCartController extends GetxController {
   }
 
   bool isVariationsSame(
-      {required List<VariationModel> itemProdVariations,
-      required List<VariationModel> cartProdVariations}) {
+      {required List<VariationModels> itemProdVariations,
+      required List<VariationModels> cartProdVariations}) {
     bool _isVariationMatch = false;
 
     // extract modifier variations ids and store in new array

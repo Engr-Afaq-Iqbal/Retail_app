@@ -202,7 +202,7 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                       print(Get.find<AllProductsController>().receiptPayment);
                       if (Get.find<AllProductsController>().receiptPayment ==
                           true) {
-                        print('Inside Invoce print screen');
+                        print('Inside Receipt Invoice print screen');
                         bytes = await posReceiptLayout(
                           generator,
                           singleReceiptModel: Get.find<AllProductsController>()
@@ -211,11 +211,11 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                         );
                         allPrinterCtrlObj.printEscPos(bytes, generator);
                       } else {
+                        print('Inside Receipt Invoice print screen');
                         bytes = await posInvoiceAndKotPrintLayout(
                           generator,
                           selectedSaleOrderData:
-                              Get.find<AllProductsController>()
-                                  .salesOrderModel!,
+                              Get.find<AllProductsController>().salesOrderModel,
                         );
                         allPrinterCtrlObj.printEscPos(bytes, generator);
                       }

@@ -94,7 +94,7 @@ class ProductModel {
     dynamic brand,
     List<ModifierModel>? modifier,
     List<ProductModel>? modifierSets,
-    List<VariationModel>? variations,
+    List<VariationModels>? variations,
     Kitchen? typeOfProduct,
   }) =>
       ProductModel(
@@ -181,7 +181,7 @@ class ProductModel {
   final dynamic brand;
   final List<ModifierModel> modifier;
   final List<ProductModel> modifierSets;
-  final List<VariationModel> variations;
+  final List<VariationModels> variations;
   final Kitchen? typeOfProduct;
 
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
@@ -240,8 +240,8 @@ class ProductModel {
                 json["modifier_sets"].map((x) => ProductModel.fromJson(x))),
         variations: json["variations"] == null
             ? []
-            : List<VariationModel>.from(
-                json["variations"].map((x) => VariationModel.fromJson(x))),
+            : List<VariationModels>.from(
+                json["variations"].map((x) => VariationModels.fromJson(x))),
         typeOfProduct: json["type_of_product"] == null
             ? null
             : Kitchen.fromJson(json["type_of_product"]),

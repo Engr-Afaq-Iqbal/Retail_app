@@ -12,6 +12,7 @@ import '../../Components/textfield.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../Models/order_type_model/SaleOrderModel.dart';
 import '../../Services/storage_services.dart';
 import '../../Theme/colors.dart';
 import '../../const/dimensions.dart';
@@ -19,7 +20,10 @@ import '../SalesView/discount.dart';
 import '../Tabs/View/TabsPage.dart';
 
 class CreateOrderPage extends StatefulWidget {
-  const CreateOrderPage({Key? key}) : super(key: key);
+  final SaleOrderDataModel? salesOrderData;
+  final bool isUpdate;
+  CreateOrderPage({Key? key, this.salesOrderData, this.isUpdate = false})
+      : super(key: key);
 
   @override
   State<CreateOrderPage> createState() => _CreateOrderPageState();
@@ -32,15 +36,22 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
 
   @override
   void initState() {
-    allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.selectedProducts.clear();
-    allProdCtrlObj.selectedUnitsList.clear();
-    allProdCtrlObj.nestedist.clear();
-    allProdCtrlObj.unitListStatusIds.clear();
-    allProdCtrlObj.unitListStatus.clear();
-    allProdCtrlObj.selectedUnitsNames.clear();
-    allProdCtrlObj.fetchAllProducts();
     allProdCtrlObj.finalTotal = 0.00;
+    if (widget.isUpdate == false) {
+      allProdCtrlObj.nestedist.clear();
+      allProdCtrlObj.productQuantityCtrl.clear();
+      allProdCtrlObj.selectedProducts.clear();
+      allProdCtrlObj.selectedUnitsList.clear();
+      allProdCtrlObj.unitListStatusIds.clear();
+      allProdCtrlObj.unitListStatus.clear();
+      allProdCtrlObj.selectedUnitsNames.clear();
+      allProdCtrlObj.fetchAllProducts();
+    }
+
+    if (widget.isUpdate == true)
+      allProdCtrlObj.finalTotal =
+          double.parse('${widget.salesOrderData?.finalTotal ?? '0.00'}');
+    allProdCtrlObj.addOrderedItemsQty(salesOrderData: widget.salesOrderData);
 
     super.initState();
   }
@@ -212,7 +223,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           dropdownPadding:
                                               EdgeInsets.only(left: 5),
                                           buttonPadding: EdgeInsets.only(
-                                              left: 10, right: 2),
+                                              left: 10, right: 10),
                                           onChanged: (String? value) {
                                             setState(() {
                                               allProdCtrlObj
@@ -242,7 +253,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           buttonWidth: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.3,
+                                              0.27,
                                           // buttonDecoration: BoxDecoration(
                                           //     color: kWhiteColor,
                                           //     border: Border.all(
@@ -292,6 +303,11 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                           //
                                           // },
                                           onChanged: (value) {
+                                            print(AppStorage
+                                                    .getBusinessDetailsData()
+                                                ?.businessData
+                                                ?.posSettings
+                                                ?.allowOverselling);
                                             if (double.parse(allProdCtrlObj
                                                         .productModelObjs[index]
                                                         .productVariationsDetails
@@ -303,8 +319,10 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                       ?.businessData
                                                       ?.posSettings
                                                       ?.allowOverselling ==
-                                                  '1') {
+                                                  1) {
                                                 print('in allow if');
+                                                allProdCtrlObj.finalTotal =
+                                                    0.00;
                                                 allProdCtrlObj
                                                         .totalAmount[index] =
                                                     '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';
@@ -329,6 +347,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                     '0.00') >
                                                 0.00) {
                                               print(' in third if');
+                                              allProdCtrlObj.finalTotal = 0.00;
                                               allProdCtrlObj
                                                       .totalAmount[index] =
                                                   '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]) ?? '1.00')}';

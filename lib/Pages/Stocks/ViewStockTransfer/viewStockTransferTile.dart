@@ -3,14 +3,15 @@ import 'package:get/get.dart';
 
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
-import '../../../Theme/colors.dart';
+import '../../../Models/ViewStockTransferModel/viewStockTransferModel.dart';
+import 'changeStockTransferStatus.dart';
 
 class ViwStockTile extends StatefulWidget {
-  StockTransferController stockTransferCtrlObj;
-  int index;
-  ViwStockTile(
-      {Key? key, required this.stockTransferCtrlObj, required this.index})
-      : super(key: key);
+  final StockTransferData? stockTransferData;
+  ViwStockTile({
+    Key? key,
+    this.stockTransferData,
+  }) : super(key: key);
 
   @override
   State<ViwStockTile> createState() => _ViwStockTileState();
@@ -27,39 +28,49 @@ class _ViwStockTileState extends State<ViwStockTile> {
       ),
       child: Row(
         children: [
-          RotatedBox(
-            quarterTurns: -1,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              height: 35,
-              width: 140,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                borderRadius: BorderRadius.only(
-                  bottomRight: Radius.circular(10),
-                  bottomLeft: Radius.circular(10),
+          GestureDetector(
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                  content: ChangeStockTransferStatus(
+                      id: widget.stockTransferData?.id),
                 ),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // if (viewStocksModel?.transactionDate != null)
-                  Text(
-                    widget.stockTransferCtrlObj.viewStockTransferMoodel
-                            ?.data[widget.index].status.capitalizeFirst ??
-                        '',
-                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        fontSize: 11.7,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black
-                        // viewStocksModel?.transactionDate !=
-                        //         null
-                        //     ? Colors.white
-                        //     : Colors.black,
-                        ),
-                  )
-                ],
+              );
+            },
+            child: RotatedBox(
+              quarterTurns: -1,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                height: 35,
+                width: 140,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.only(
+                    bottomRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(10),
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      (widget.stockTransferData?.status == 'final')
+                          ? 'Completed'
+                          : Get.find<StockTransferController>().checkStatusName(
+                                  statusValue:
+                                      widget.stockTransferData?.status) ??
+                              '',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontSize: 11.7,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -75,12 +86,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                     children: [
                       orderInfoRow(
                         context,
-                        text1: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .refNo ??
-                            '',
+                        text1: widget.stockTransferData?.refNo ?? '',
                         text1Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -98,12 +104,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 11.7),
-                        text2: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .locationFrom ??
-                            '',
+                        text2: widget.stockTransferData?.locationFrom ?? '',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -126,12 +127,7 @@ class _ViwStockTileState extends State<ViwStockTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 11.7),
-                        text2: widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .locationTo ??
-                            '',
+                        text2: widget.stockTransferData?.locationTo ?? '',
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -154,15 +150,9 @@ class _ViwStockTileState extends State<ViwStockTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 12),
-                        text2: AppFormat.dateDDMMYY(widget.stockTransferCtrlObj
-                                    .viewStockTransferMoodel !=
-                                null
-                            ? widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel!
-                                .data[widget.index]
-                                .transactionDate
-                            : DateTime.now()),
+                        text2: AppFormat.dateDDMMYY(
+                            widget.stockTransferData?.transactionDate ??
+                                DateTime.now()),
                         text2Style: Theme.of(context)
                             .textTheme
                             .headlineMedium!
@@ -188,11 +178,8 @@ class _ViwStockTileState extends State<ViwStockTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 12),
-                        text2: AppFormat.doubleToStringUpTo2(widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .shippingCharges) ??
+                        text2: AppFormat.doubleToStringUpTo2(
+                                widget.stockTransferData?.shippingCharges) ??
                             '',
                         text2Style: Theme.of(context)
                             .textTheme
@@ -216,11 +203,8 @@ class _ViwStockTileState extends State<ViwStockTile> {
                             .textTheme
                             .headlineMedium!
                             .copyWith(fontSize: 12),
-                        text2: AppFormat.doubleToStringUpTo2(widget
-                                .stockTransferCtrlObj
-                                .viewStockTransferMoodel
-                                ?.data[widget.index]
-                                .finalTotal) ??
+                        text2: AppFormat.doubleToStringUpTo2(
+                                widget.stockTransferData?.finalTotal) ??
                             '',
                         text2Style: Theme.of(context)
                             .textTheme
@@ -234,16 +218,12 @@ class _ViwStockTileState extends State<ViwStockTile> {
                       ),
                     ],
                   ),
-                  if (widget.stockTransferCtrlObj.viewStockTransferMoodel
-                          ?.data[widget.index].additionalNotes !=
-                      null)
+                  if (widget.stockTransferData?.additionalNotes != null)
                     Divider(color: Theme.of(context).cardColor, thickness: 1.0),
-                  if (widget.stockTransferCtrlObj.viewStockTransferMoodel
-                          ?.data[widget.index].additionalNotes !=
-                      null)
+                  if (widget.stockTransferData?.additionalNotes != null)
                     Text(
                       'note'.tr +
-                          ': ${widget.stockTransferCtrlObj.viewStockTransferMoodel?.data[widget.index].additionalNotes ?? '- -'}',
+                          ': ${widget.stockTransferData?.additionalNotes ?? '- -'}',
                       style: Theme.of(context)
                           .textTheme
                           .headlineMedium!

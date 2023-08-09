@@ -32,7 +32,7 @@ class QuotationController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.listQuotationApi, error, stackTrace),
       );
       update();
     });
@@ -58,7 +58,7 @@ class QuotationController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.showDetailsQuotationApi, error, stackTrace),
       );
       update();
     });

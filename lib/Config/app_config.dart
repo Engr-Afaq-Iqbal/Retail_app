@@ -17,12 +17,12 @@ class AppConfig {
   // // to get the token
   // static String clientId = "8";
   // static String clientSecret = "vq0BFIMp8w2aQAZsrhtLm9Wnl7TXxde9Va3W9uWj";
-  //
-  // // api base url
+
+  // api base url
   // static String baseUrl = "https://manage.bizmodo.ae/";
   // // static String socketBaseUrl = "https://manage.bizmodo.ae:8006";
   // static String socketBaseUrl = "https://manage.bizmodo.ae:8008";
-
+  //
   static String grantType = "password";
   static String scope = "";
 
@@ -38,7 +38,7 @@ class AppConfig {
   // // Client Access Token & ID
   static String clientId = "11";
   static String clientSecret = "6nRy0lz57qx4NaGEdVypPO2JlM5NyDUeizQcz9Mc";
-  // API base url
+  // API base url.
   static String baseUrl = "https://manage.bizmodo.io/";
   static String socketBaseUrl = "https://manage.bizmodo.io:8006";
 

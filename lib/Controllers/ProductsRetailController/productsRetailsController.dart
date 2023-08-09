@@ -354,7 +354,7 @@ class ProductsRetailController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.showProductListApi, error, stackTrace),
       );
       update();
     });

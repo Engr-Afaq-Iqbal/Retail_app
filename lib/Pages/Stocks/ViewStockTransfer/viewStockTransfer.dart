@@ -20,6 +20,7 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
   @override
   void initState() {
     // TODO: implement initState
+    stockTranCtrlObj.fetchStatusList();
     stockTranCtrlObj.fetchStockTransfersList();
     super.initState();
   }
@@ -51,8 +52,8 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
                   itemBuilder: (context, index) {
                     return IntrinsicHeight(
                       child: ViwStockTile(
-                        index: index,
-                        stockTransferCtrlObj: stockTransferCtrlObj,
+                        stockTransferData: stockTransferCtrlObj
+                            .viewStockTransferMoodel?.data[index],
                       ),
                     );
                   }),

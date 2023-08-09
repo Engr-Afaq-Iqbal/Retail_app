@@ -50,7 +50,7 @@ class ListUserController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.listUsersAPI, error, stackTrace),
       );
       update();
     });
@@ -79,7 +79,7 @@ class ListUserController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.changePasswordAPI, error, stackTrace),
       );
       update();
     });

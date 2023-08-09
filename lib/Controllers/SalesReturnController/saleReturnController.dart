@@ -53,7 +53,7 @@ class SaleReturnController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.saleReturnListApi, error, stackTrace),
       );
       update();
     });
@@ -83,7 +83,7 @@ class SaleReturnController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.editSaleReturnApi, error, stackTrace),
       );
       update();
     });
@@ -237,7 +237,7 @@ class SaleReturnController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.createSaleReturnApi, error, stackTrace),
       );
       return null;
     });

@@ -90,7 +90,7 @@ class AuthController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.businessDetails, error, stackTrace),
       );
       return false;
     });
@@ -156,7 +156,7 @@ class AuthController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.userFirebaseTokenApi, error, stackTrace),
       );
       throw '$error';
     });

@@ -140,6 +140,9 @@ class ApiUrls {
   ///Create Stock Transfer
   static String createStockTransferApi = "connector/api/stock-transfer/store";
 
+  ///Update Stock Transfer
+  static String updateStockTransferApi = "connector/api/stock-transfer/update/";
+
   ///Create Stock Adjustment
   static String createStockAdjustmentApi =
       "connector/api/stock-adjustment/create";
@@ -180,4 +183,7 @@ class ApiUrls {
 
   static String openedRegisterRecordsAPI =
       "connector/api/cash-register/close-register";
+
+  static String updateStockTransferStatusApi =
+      "connector/api/stock-transfers/update-status/";
 }

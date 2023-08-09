@@ -25,7 +25,7 @@ class NotificationsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.listNotificationsAPI, error, stackTrace),
       );
     });
   }
@@ -49,7 +49,7 @@ class NotificationsController extends GetxController {
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.unitListApi, error, stackTrace),
+            'POST', ApiUrls.notificationMarkedApi, error, stackTrace),
       );
       throw '$error';
     });

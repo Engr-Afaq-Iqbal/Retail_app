@@ -19,7 +19,7 @@ import '/Theme/colors.dart';
 import '/Theme/style.dart';
 
 class SalesViewDetailsPage extends StatefulWidget {
-  SaleOrderDataModel? salesOrderData;
+  final SaleOrderDataModel? salesOrderData;
   SalesViewDetailsPage({Key? key, this.salesOrderData}) : super(key: key);
 
   @override
@@ -34,6 +34,7 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
   @override
   void initState() {
     // TODO: implement initState
+    ///Fetching product list before.
 
     super.initState();
   }
@@ -51,6 +52,9 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
               allProdCtrlObj.editOrderFunction(widget.salesOrderData);
               allProdCtrlObj.updateOrderId = '${widget.salesOrderData?.id}';
               allProdCtrlObj.isUpdate = true;
+              if (widget.salesOrderData?.totalPaid != null)
+                allProdCtrlObj.paidAmount =
+                    double.parse(widget.salesOrderData?.totalPaid ?? '0.00');
               allProdCtrlObj.update();
               contactCtrlObj.nameCtrl.text =
                   '${widget.salesOrderData?.contact?.name ?? ''}';
@@ -58,7 +62,11 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
               contactCtrlObj.contactId =
                   '${widget.salesOrderData?.contact?.contactId ?? ''}';
               contactCtrlObj.id = '${widget.salesOrderData?.contact?.id ?? ''}';
-              Get.to(CreateOrderPage());
+
+              Get.to(CreateOrderPage(
+                salesOrderData: widget.salesOrderData,
+                isUpdate: true,
+              ));
             },
             title: Text(
               'edit'.tr,
@@ -520,7 +528,9 @@ class _SalesViewDetailsPageState extends State<SalesViewDetailsPage> {
         isHeading
             ? Text('total'.tr, style: _headingTextStyle)
             : Text(
-                '${double.parse(widget.salesOrderData?.sellLines[index].unitPrice ?? '0') * double.parse(widget.salesOrderData?.sellLines[index].quantity.toString() ?? '0')}',
+                AppFormat.doubleToStringUpTo2(
+                        '${double.parse(widget.salesOrderData?.sellLines[index].unitPrice ?? '0') * double.parse(widget.salesOrderData?.sellLines[index].quantity.toString() ?? '0')}') ??
+                    '0.00',
                 // Get.find<ProductCartController>().totalItemPrice(
                 //     order.sellLines[index].unitPriceIncTax,
                 //     order.sellLines[index].quantity),

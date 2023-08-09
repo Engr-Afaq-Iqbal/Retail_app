@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class StockTransfersInfoTile extends StatelessWidget {
-  Datum? viewStocksModel;
+  StockTransferData? viewStocksModel;
   StockTransfersInfoTile(this.viewStocksModel, {Key? key}) : super(key: key);
 
   Widget build(BuildContext context) {

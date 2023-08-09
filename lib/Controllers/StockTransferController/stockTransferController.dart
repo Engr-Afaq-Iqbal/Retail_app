@@ -19,7 +19,6 @@ import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
 import 'package:http/http.dart' as http;
 
-import '../ProductController/all_products_controller.dart';
 import '../exception_controller.dart';
 
 enum OrderTabsPage {
@@ -29,8 +28,9 @@ enum OrderTabsPage {
 
 class StockTransferController extends GetxController {
   String? statusValue;
+  String? updateStatusValue;
   String? adjustmentTypeStatus;
-  String? locationFromStatusValue;
+  // String? locationFromStatusValue;
   String? locationToStatusValue;
   String? locationFromID;
   String? locationToID;
@@ -44,6 +44,7 @@ class StockTransferController extends GetxController {
   TextEditingController priceCtrl = TextEditingController();
   TextEditingController totalCtrl = TextEditingController();
   TextEditingController remarksCtrl = TextEditingController();
+  TextEditingController locationFromCtrl = TextEditingController();
   List<TextEditingController> productQuantityCtrl = [];
   List<String> totalAmount = [];
   double finalTotal = 0.00;
@@ -116,11 +117,8 @@ class StockTransferController extends GetxController {
                   .locations
                   .length;
           i++) {
-        options.add(AppStorage.getBusinessDetailsData()
-                ?.businessData
-                ?.locations[i]
-                .name ??
-            '');
+        options.add(
+            '${AppStorage.getBusinessDetailsData()?.businessData?.locations[i].name}');
       }
     } else {
       progressIndicator();
@@ -132,7 +130,9 @@ class StockTransferController extends GetxController {
 
   /// Fetching Stock transfer
   Future fetchStockTransfersList({String? pageUrl}) async {
-    await ApiServices.getMethod(feedUrl: pageUrl ?? ApiUrls.viewStockTransfer)
+    await ApiServices.getMethod(
+            feedUrl: pageUrl ??
+                '${ApiUrls.viewStockTransfer}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&per_page=20')
         .then((_res) {
       update();
       if (_res == null) return null;
@@ -283,6 +283,36 @@ class StockTransferController extends GetxController {
     print('final Total = ${finalTotal}');
   }
 
+  checkStatusName({
+    String? statusValue,
+  }) {
+    return statusListModel
+        ?.firstWhereOrNull((i) => i.key == statusValue)
+        ?.value;
+  }
+
+  checkStatusKeyName({
+    String? statusValue,
+  }) {
+    return statusListModel
+        ?.firstWhereOrNull((i) => i.value == statusValue)
+        ?.key;
+  }
+
+  // checkLocationFromName({
+  //   String? statusValue,
+  // }) {
+  //   return statusListModel
+  //       ?.firstWhereOrNull((i) =>
+  //           i.value ==
+  //           AppStorage.getBusinessDetailsData()
+  //               ?.businessData
+  //               ?.locations
+  //               .first
+  //               .id)
+  //       ?.key;
+  // }
+
   createStockTransfer() async {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
@@ -292,10 +322,12 @@ class StockTransferController extends GetxController {
     var request = http.MultipartRequest('POST',
         Uri.parse('${AppConfig.baseUrl}${ApiUrls.createStockTransferApi}'));
 
-    request.fields['location_id'] = '${locationFromID}';
+    request.fields['location_id'] =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}';
     request.fields['transaction_date'] = '${dateCtrl.text}';
     request.fields['ref_no'] = '';
-    request.fields['status'] = '${statusValue?.toLowerCase() ?? 'pending'}';
+    request.fields['status'] =
+        '${checkStatusKeyName(statusValue: statusValue ?? 'Pending')}';
     request.fields['transfer_location_id'] = '${locationToID}';
 
     request.fields['final_total'] = '${finalTotal}';
@@ -353,6 +385,76 @@ class StockTransferController extends GetxController {
       return null;
     });
   }
+
+  // updateStockTransfer({StockTransferData? stockTransferData}) async {
+  //   Map<String, String> headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
+  //   };
+  //   var request = http.MultipartRequest(
+  //       'POST',
+  //       Uri.parse(
+  //           '${AppConfig.baseUrl}${ApiUrls.updateStockTransferApi}${stockTransferData?.id}'));
+  //
+  //   request.fields['transaction_date'] =
+  //       '${stockTransferData?.transactionDate}';
+  //   request.fields['ref_no'] = '${stockTransferData?.refNo}';
+  //   request.fields['status'] = 'completed';
+  //   request.fields['shipping_charges'] =
+  //       '${stockTransferData?.shippingCharges}';
+  //   request.fields['additional_notes'] =
+  //       '${stockTransferData?.additionalNotes}';
+  //   request.fields['final_total'] = '${stockTransferData?.finalTotal}';
+  //
+  //   // for (int i = 0; i < selectedProducts.length; i++) {
+  //   //
+  //   //     request.fields['transaction_sell_lines_id[$i]'] = '';
+  //   //     request.fields['product_id[$i]'] = '';
+  //   //     request.fields['variation_id[$i]'] = '';
+  //   //     request.fields['enable_stock[$i]'] = '';
+  //   //     request.fields['quantity[$i]'] = '';
+  //   //     request.fields['base_unit_multiplier[$i]'] = '';
+  //   //     request.fields['product_unit_id[$i]'] = '';
+  //   //     request.fields['sub_unit_id[$i]'] = '';
+  //   //     request.fields['unit_price[$i]'] = '';
+  //   //     request.fields['price[$i]'] = '';
+  //   //     request.fields['remarks[$i]'] = '';
+  //   //
+  //   // }
+  //
+  //   logger.i(request.fields);
+  //
+  //   request.headers.addAll(headers);
+  //
+  //   return await request.send().then((http.StreamedResponse response) async {
+  //     String result = await response.stream.bytesToString();
+  //     logger.i('EndPoint => ${request.url}'
+  //         '\nStatus Code => ${response.statusCode}'
+  //         '\nResponse => $result');
+  //
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       print('successful');
+  //       stopProgress();
+  //       clearAllFields();
+  //     } else {
+  //       final jd = jsonDecode(result);
+  //
+  //       showToast(jd["message"]);
+  //
+  //       return null;
+  //     }
+  //   }).onError((error, stackTrace) async {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     await ExceptionController().exceptionAlert(
+  //       errorMsg: '$error',
+  //       exceptionFormat: ApiServices.methodExceptionFormat(
+  //           'POST', ApiUrls.createStockTransferApi, error, stackTrace),
+  //     );
+  //     return null;
+  //   });
+  // }
 
   List<SearchProductModel> searchProductModelFinal = [];
   List<SearchProductModel>? listForStockAdjustment;
@@ -471,15 +573,45 @@ class StockTransferController extends GetxController {
     });
   }
 
+  Future updateStockStatus({
+    String? id,
+  }) async {
+    Map<String, String> _field = {
+      "status":
+          '${checkStatusKeyName(statusValue: updateStatusValue ?? 'Pending')}',
+    };
+
+    return await ApiServices.postMethod(
+            feedUrl: '${ApiUrls.updateStockTransferStatusApi}$id',
+            fields: _field)
+        .then((_res) {
+      if (_res == null) return null;
+
+      stopProgress();
+      updateStatusValue = null;
+      Get.close(1);
+      return true;
+    }).onError((error, stackTrace) async {
+      debugPrint('Error => $error');
+      logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.updateStockTransferStatusApi, error, stackTrace),
+      );
+      throw '$error';
+    });
+  }
+
   clearAllFields() {
     selectedProducts.clear();
     selectedQuantityList.clear();
     productQuantityCtrl.clear();
     searchProductModel.clear();
+    locationFromCtrl.clear();
     statusValue = null;
     locationFromID = null;
     locationToID = null;
-    locationFromStatusValue = null;
     locationToStatusValue = null;
     additionalNotes.clear();
     finalTotal = 0.00;

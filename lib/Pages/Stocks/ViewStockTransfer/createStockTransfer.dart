@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../../Components/p4Headings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
-import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Services/storage_services.dart';
 import '../../../Theme/colors.dart';
@@ -65,7 +63,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
       },
     );
 
-    stockTranCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    stockTranCtrlObj.dateCtrl.text =
+        '${AppFormat.dateYYYYMMDDHHMM24(dateTime ?? DateTime.now())}';
     print(dateTime);
   }
 
@@ -84,7 +83,9 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
   @override
   void initState() {
     // TODO: implement initState
-    stockTranCtrlObj.fetchStatusList();
+    stockTranCtrlObj.locationFromCtrl.text =
+        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name}';
+    //stockTranCtrlObj.checkLocationFromName();
     stockTranCtrlObj.searchProductList(term: '');
     super.initState();
   }
@@ -206,6 +207,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                     ],
                   ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ///Location From
@@ -213,64 +215,12 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           headings(txt: 'location_from'.tr + ':*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'please_select'.tr,
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: stockTransferCtrlObj
-                                  .getBusinessLocationItems()
-                                  .map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value:
-                                  stockTransferCtrlObj.locationFromStatusValue,
-                              dropdownDirection:
-                                  DropdownDirection.textDirection,
-                              dropdownPadding:
-                                  EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockTransferCtrlObj.locationFromStatusValue =
-                                      value;
-                                  stockTranCtrlObj.locationFromID =
-                                      AppStorage.getBusinessDetailsData()
-                                          ?.businessData
-                                          ?.locations[stockTransferCtrlObj
-                                              .getBusinessLocationItems()
-                                              .indexOf(value!)]
-                                          .id
-                                          .toString();
-
-                                  print(stockTranCtrlObj.locationFromID);
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
+                          AppFormField(
+                            width: width * 0.43,
+                            readOnly: true,
+                            controller: stockTranCtrlObj.locationFromCtrl,
+                            // labelText: 'select_date'.tr,
+                            // prefixIcon: Icon(Icons.calendar_month),
                           ),
                         ],
                       ),
@@ -344,7 +294,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                     ],
                   ),
                   SizedBox(
-                    height: 15,
+                    height: 5,
                   ),
                   IntrinsicHeight(
                     child: Container(
@@ -368,12 +318,97 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                           //   },
                           // ),
 
-                          Product4Headings(
-                            txt1: 'product_name'.tr,
-                            txt2: 'qty'.tr,
-                            txt3: 'price'.tr,
-                            txt4: 'total'.tr,
+                          Container(
+                            height: 40,
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            color: Theme.of(context).colorScheme.primary,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Text(
+                                    'product_name'.tr,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: kWhiteColor),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      'stock'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kWhiteColor),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      'qty'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kWhiteColor),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      'price'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kWhiteColor),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Center(
+                                    child: Text(
+                                      'total'.tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kWhiteColor),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+
+                          // Product5Headings(
+                          //   txt1: 'product_name'.tr,
+                          //   txt2: 'stock'.tr,
+                          //   txt3: 'qty'.tr,
+                          //   txt4: 'price'.tr,
+                          //   txt5: 'total'.tr,
+                          // ),
                           Container(
                             height: MediaQuery.of(context).size.height * 0.4,
                             child: GetBuilder<StockTransferController>(builder:
@@ -384,7 +419,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               }
                               return ListView.builder(
                                   padding: EdgeInsetsDirectional.only(
-                                      top: 5, bottom: 5, start: 10, end: 10),
+                                      top: 5, bottom: 5, start: 0, end: 0),
                                   physics: ScrollPhysics(),
                                   shrinkWrap: true,
                                   scrollDirection: Axis.vertical,
@@ -396,7 +431,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                         bottom: 5,
                                       ),
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 5),
+                                          EdgeInsets.symmetric(horizontal: 1),
                                       color: index.isEven
                                           ? kWhiteColor
                                           : Colors.grey.withOpacity(0.1),
@@ -411,6 +446,21 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                 flex: 2,
                                                 child: Text(
                                                   '${stockTransferCtrl.searchProductModel[index].name}',
+                                                  style:
+                                                      TextStyle(fontSize: 11),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: true,
+                                                ),
+                                              ),
+
+                                              Expanded(
+                                                flex: 1,
+                                                child: Text(
+                                                  '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.searchProductModel[index].qtyAvailable ?? '0.00')}',
+                                                  style:
+                                                      TextStyle(fontSize: 11),
+                                                  textAlign: TextAlign.center,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                   softWrap: true,
@@ -455,6 +505,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                     '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.searchProductModel[index].sellingPrice)}',
                                                     overflow:
                                                         TextOverflow.ellipsis,
+                                                    style:
+                                                        TextStyle(fontSize: 11),
                                                   ),
                                                 ),
                                               ),
@@ -462,9 +514,11 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                 flex: 1,
                                                 child: Center(
                                                   child: Text(
-                                                    '${stockTransferCtrl.totalAmount[index]}',
+                                                    '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.totalAmount[index])}',
                                                     overflow:
                                                         TextOverflow.ellipsis,
+                                                    style:
+                                                        TextStyle(fontSize: 11),
                                                   ),
                                                 ),
                                               ),
