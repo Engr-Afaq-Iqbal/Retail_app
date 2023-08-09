@@ -81,6 +81,7 @@ class FundsController extends GetxController {
 
     String _url = '${ApiUrls.fundsTransferAPI}';
     Map<String, String> _fields = {};
+    Map<String, String> _fieldForFile = {};
 
     _fields['from_account'] =
         '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.id}';
@@ -89,10 +90,11 @@ class FundsController extends GetxController {
     _fields['amount'] = '${amountCtrl.text}';
     _fields['operation_date'] = '${dateCtrl.text}';
     _fields['note'] = '${noteCtrl.text}';
-    _fields['document'] = '${image?.path}';
+    _fieldForFile['document'] = '${image?.path}';
 
     logger.i(_fields);
-    return await ApiServices.postMultiPartQuery(feedUrl: _url, fields: _fields)
+    return await ApiServices.postMultiPartQuery(
+            feedUrl: _url, fields: _fields, files: _fieldForFile)
         .then((response) async {
       // logger.i('EndPoint => ${_url}'
       //     '\nStatus Code => {response.statusCode}'
@@ -100,7 +102,7 @@ class FundsController extends GetxController {
 
       clearAllFields();
       stopProgress();
-      showToast('Finalize Created Successfully');
+      showToast('Funds Transferred Successfully');
       Get.close(1);
     }).onError((error, stackTrace) {
       debugPrint('Error => $error');

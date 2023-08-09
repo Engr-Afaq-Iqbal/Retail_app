@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -183,8 +184,15 @@ class ContactController extends GetxController {
     // }
   }
 
+  File? image;
+  File? image2;
   // Create Customer
   Future<bool?> createContact() async {
+    Map<String, String> _fieldForFile = {};
+
+    _fieldForFile['trade_license'] = '${image?.path}';
+    _fieldForFile['tax_certificate'] = '${image2?.path}';
+
     Map<String, String> _field = {
       "type": "customer",
       "first_name": "${nameCtrl.text}",
@@ -252,6 +260,11 @@ class ContactController extends GetxController {
 
   // Create Customer
   Future<bool?> createContactForRetailApp() async {
+    Map<String, String> _fieldForFile = {};
+
+    _fieldForFile['trade_license'] = '${image?.path}';
+    _fieldForFile['tax_certificate'] = '${image2?.path}';
+
     Map<String, String> _field = {
       "type": "customer",
       "first_name": "${firstNameCtrl.text}",
@@ -284,8 +297,9 @@ class ContactController extends GetxController {
     // _field["life_stage_id"] = 19;
     //
     return await ApiServices.postMethod(
-            feedUrl: ApiUrls.contactApi, fields: _field)
-        .then((_res) {
+      feedUrl: ApiUrls.contactApi,
+      fields: _field,
+    ).then((_res) {
       if (_res == null) return null;
       stopProgress();
       clearAllContactCtrl();

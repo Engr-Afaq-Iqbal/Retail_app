@@ -23,8 +23,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
   final ContactController contactCtrlObj = Get.find<ContactController>();
   ListUserController listUserCtrl = Get.find<ListUserController>();
   final GlobalKey<FormState> createContactFormKey = GlobalKey<FormState>();
-  File? image;
-  File? image2;
+
   @override
   void initState() {
     listUserCtrl.fetchListUsers();
@@ -47,7 +46,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
       if (image != null && fileSizeInMB <= 1) {
         final imageTemporary = File(image.path);
         setState(() {
-          this.image = imageTemporary;
+          contactCtrlObj.image = imageTemporary;
         });
       } else if (fileSizeInMB > 1) {
         return showToast("File size is greater than 1MB");
@@ -72,7 +71,7 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
       if (image != null && fileSizeInMB <= 1) {
         final imageTemporary = File(image.path);
         setState(() {
-          this.image2 = imageTemporary;
+          contactCtrlObj.image2 = imageTemporary;
         });
       } else if (fileSizeInMB > 1) {
         return showToast("File size is greater than 1MB");
@@ -305,10 +304,10 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: kHintColor.withOpacity(0.3)),
-                    child: (image != null)
+                    child: (contactCtrlObj.image != null)
                         ? Center(
                             child: Image.file(
-                              image!,
+                              contactCtrlObj.image!,
                               fit: BoxFit.contain,
                             ),
                           )
@@ -341,10 +340,10 @@ class _CreateNewCustomerState extends State<CreateNewCustomer> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: kHintColor.withOpacity(0.3)),
-                    child: (image != null)
+                    child: (contactCtrlObj.image != null)
                         ? Center(
                             child: Image.file(
-                              image!,
+                              contactCtrlObj.image!,
                               fit: BoxFit.contain,
                             ),
                           )
