@@ -177,7 +177,7 @@ class ApiServices {
       final jd = json.decode(resBody);
       logger.d('Decoded Response => $jd');
       if (returnAnyResponse) return resBody;
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return resBody;
       } else {
         await ExceptionController().exceptionAlert(

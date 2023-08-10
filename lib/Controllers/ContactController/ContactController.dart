@@ -6,7 +6,6 @@ import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
 import '../ListUserController/ListUserController.dart';
 import '../exception_controller.dart';
 import '/Config/const.dart';
-import '/Models/order_type_model/create_contact_response_model.dart';
 import '/Models/order_type_model/customer_contact_model.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
@@ -187,79 +186,79 @@ class ContactController extends GetxController {
   File? image;
   File? image2;
   // Create Customer
-  Future<bool?> createContact() async {
-    Map<String, String> _fieldForFile = {};
-
-    _fieldForFile['trade_license'] = '${image?.path}';
-    _fieldForFile['tax_certificate'] = '${image2?.path}';
-
-    Map<String, String> _field = {
-      "type": "customer",
-      "first_name": "${nameCtrl.text}",
-      "mobile": "${mobileNumberCtrl.text}",
-    };
-    // _field["supplier_business_name"] = "est";
-    // _field["prefix"] = "odio";
-    // _field["middle_name"] = "ut";
-    // _field["last_name"] = "quo";
-    // _field["pay_term_number"] = '3';
-    // _field["pay_term_type"] = "months";
-    // _field["landline"] = "5487-8454-4145";
-    // _field["alternate_number"] = "841847541222";
-
-    /// TODO: Service type ke configuration abhi set krni han because id change able hy or name be.
-
-    if (orderTypeSelectionCtrlObj.selectedOrderType?.name == 'Take-Away') {
-      // if (orderTypeSelectionCtrlObj.orderTypes.indexWhere(
-      //         (orderType) => orderType == orderTypeSelectionCtrlObj.selectedOrderType.value) ==
-      //     1) {
-      _field["custom_field1"] = customLabelCtrl.text;
-    } else if (orderTypeSelectionCtrlObj.selectedOrderType?.name ==
-        'Delivery') {
-      // } else if (orderTypeSelectionCtrlObj.orderTypes.indexWhere(
-      //         (orderType) => orderType == orderTypeSelectionCtrlObj.selectedOrderType.value) ==
-      //     2) {
-      _field["city"] = cityCtrl.text;
-      _field["address_line_1"] =
-          "${streetCtrl.text}${streetCtrl.text.isNotEmpty ? ', ' : ''}${villaBuildingApartmentCtrl.text}";
-      // _field["address_line_2"] = "corrupti";
-      // _field["state"] = "blanditiis";
-      // _field["country"] = "atque";
-      // _field["zip_code"] = "occaecati";
-      _field["shipping_address"] = addressCtrl.text;
-    }
-    // _field["customer_group_id"] = "fuga";
-    // _field["contact_id"] = "reprehenderit";
-    // _field["dob"] = "2000-06-13";
-    // _field["custom_field2"] = "rerum";
-    // _field["custom_field3"] = "dolorum";
-    // _field["custom_field4"] = "sint";
-    // _field["email"] = "quibusdam";
-    // _field["position"] = "et";
-    // _field["opening_balance"] = 0;
-    // _field["source_id"] = 10;
-    // _field["life_stage_id"] = 19;
-    // _field["assigned_to"] = [];
-    return await ApiServices.postMethod(
-            feedUrl: ApiUrls.contactApi, fields: _field)
-        .then((_res) {
-      if (_res == null) return null;
-      contactId = createContactResponseModelFromJson(_res).data.contactId;
-      return true;
-    }).onError((error, stackTrace) async {
-      debugPrint('Error => $error');
-      debugPrint('StackTrace => $stackTrace');
-      await ExceptionController().exceptionAlert(
-        errorMsg: '$error',
-        exceptionFormat: ApiServices.methodExceptionFormat(
-            'POST', ApiUrls.contactApi, error, stackTrace),
-      );
-      throw '$error';
-    });
-  }
+  // Future<bool?> createContact() async {
+  //   Map<String, String> _fieldForFile = {};
+  //
+  //   _fieldForFile['trade_license'] = '${image?.path}';
+  //   _fieldForFile['tax_certificate'] = '${image2?.path}';
+  //
+  //   Map<String, String> _field = {
+  //     "type": "customer",
+  //     "first_name": "${nameCtrl.text}",
+  //     "mobile": "${mobileNumberCtrl.text}",
+  //   };
+  //   // _field["supplier_business_name"] = "est";
+  //   // _field["prefix"] = "odio";
+  //   // _field["middle_name"] = "ut";
+  //   // _field["last_name"] = "quo";
+  //   // _field["pay_term_number"] = '3';
+  //   // _field["pay_term_type"] = "months";
+  //   // _field["landline"] = "5487-8454-4145";
+  //   // _field["alternate_number"] = "841847541222";
+  //
+  //   /// TODO: Service type ke configuration abhi set krni han because id change able hy or name be.
+  //
+  //   if (orderTypeSelectionCtrlObj.selectedOrderType?.name == 'Take-Away') {
+  //     // if (orderTypeSelectionCtrlObj.orderTypes.indexWhere(
+  //     //         (orderType) => orderType == orderTypeSelectionCtrlObj.selectedOrderType.value) ==
+  //     //     1) {
+  //     _field["custom_field1"] = customLabelCtrl.text;
+  //   } else if (orderTypeSelectionCtrlObj.selectedOrderType?.name ==
+  //       'Delivery') {
+  //     // } else if (orderTypeSelectionCtrlObj.orderTypes.indexWhere(
+  //     //         (orderType) => orderType == orderTypeSelectionCtrlObj.selectedOrderType.value) ==
+  //     //     2) {
+  //     _field["city"] = cityCtrl.text;
+  //     _field["address_line_1"] =
+  //         "${streetCtrl.text}${streetCtrl.text.isNotEmpty ? ', ' : ''}${villaBuildingApartmentCtrl.text}";
+  //     // _field["address_line_2"] = "corrupti";
+  //     // _field["state"] = "blanditiis";
+  //     // _field["country"] = "atque";
+  //     // _field["zip_code"] = "occaecati";
+  //     _field["shipping_address"] = addressCtrl.text;
+  //   }
+  //   // _field["customer_group_id"] = "fuga";
+  //   // _field["contact_id"] = "reprehenderit";
+  //   // _field["dob"] = "2000-06-13";
+  //   // _field["custom_field2"] = "rerum";
+  //   // _field["custom_field3"] = "dolorum";
+  //   // _field["custom_field4"] = "sint";
+  //   // _field["email"] = "quibusdam";
+  //   // _field["position"] = "et";
+  //   // _field["opening_balance"] = 0;
+  //   // _field["source_id"] = 10;
+  //   // _field["life_stage_id"] = 19;
+  //   // _field["assigned_to"] = [];
+  //   return await ApiServices.postMethod(
+  //           feedUrl: ApiUrls.contactApi, fields: _field)
+  //       .then((_res) {
+  //     if (_res == null) return null;
+  //     contactId = createContactResponseModelFromJson(_res).data.contactId;
+  //     return true;
+  //   }).onError((error, stackTrace) async {
+  //     debugPrint('Error => $error');
+  //     debugPrint('StackTrace => $stackTrace');
+  //     await ExceptionController().exceptionAlert(
+  //       errorMsg: '$error',
+  //       exceptionFormat: ApiServices.methodExceptionFormat(
+  //           'POST', ApiUrls.contactApi, error, stackTrace),
+  //     );
+  //     throw '$error';
+  //   });
+  // }
 
   // Create Customer
-  Future<bool?> createContactForRetailApp() async {
+  createContactForRetailApp() async {
     Map<String, String> _fieldForFile = {};
 
     _fieldForFile['trade_license'] = '${image?.path}';
@@ -296,19 +295,26 @@ class ContactController extends GetxController {
     // _field["source_id"] = 10;
     // _field["life_stage_id"] = 19;
     //
-    return await ApiServices.postMethod(
-      feedUrl: ApiUrls.contactApi,
-      fields: _field,
-    ).then((_res) {
-      if (_res == null) return null;
+    logger.i(_field);
+    logger.i(_fieldForFile);
+    return await ApiServices.postMultiPartQuery(
+        feedUrl: ApiUrls.contactApi, fields: _field, files: _fieldForFile)
+        .then((res) {
+      logger.i(res);
+      if (res == null) {
+        print('Returning null');
+        return null;
+      }
+      showToast('Customer created successfully');
       stopProgress();
       clearAllContactCtrl();
       Get.back();
-      contactId = createContactResponseModelFromJson(_res).data.contactId;
+      // contactId = createContactResponseModelFromJson(_res).data.id.toString();
       return true;
     }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
       debugPrint('StackTrace => $stackTrace');
+      logger.e('StackTrace => $stackTrace');
       await ExceptionController().exceptionAlert(
         errorMsg: '$error',
         exceptionFormat: ApiServices.methodExceptionFormat(

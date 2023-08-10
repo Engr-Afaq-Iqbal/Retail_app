@@ -1,8 +1,8 @@
-import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Components/p5Headings.dart';
 import '../../Config/utils.dart';
+import '../../Controllers/StockTransferController/stockTransferController.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import 'ViewProductsPage.dart';
 
@@ -63,6 +63,7 @@ class _ItemsPageState extends State<ItemsPage> {
       //     }),
       appBar: AppBar(
         automaticallyImplyLeading: true,
+        elevation: 0,
         title: Container(
             // width: isPortrait ? 200 : 300,
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
@@ -99,6 +100,9 @@ class _ItemsPageState extends State<ItemsPage> {
                   txt5: 'Pieces'.tr,
                 ),
               ),
+              SizedBox(
+                height: 5,
+              ),
               Divider(
                 height: 0,
                 color: Theme.of(context).colorScheme.primary,
@@ -110,141 +114,147 @@ class _ItemsPageState extends State<ItemsPage> {
       body: Material(
         child: Stack(
           children: [
-            GetBuilder(
-              builder: (AllProductsController allProdCtrlObj) {
-                return RefreshIndicator(
-                  onRefresh: () async {
-                    await allProdCtrlObj.callFirstOrderPage();
-                  },
-                  child: (allProdCtrlObj.productShowListModel == null)
-                      ? progressIndicator()
-                      : Scrollbar(
-                          controller: _scrollController,
-                          interactive: true,
-                          child: ListView.builder(
+            // SizedBox(
+            //   height: 30,
+            // ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10.0),
+              child: GetBuilder(
+                builder: (AllProductsController allProdCtrlObj) {
+                  return RefreshIndicator(
+                    onRefresh: () async {
+                      await allProdCtrlObj.callFirstOrderPage();
+                    },
+                    child: (allProdCtrlObj.productShowListModel == null)
+                        ? progressIndicator()
+                        : Scrollbar(
                             controller: _scrollController,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.only(bottom: 100),
-                            itemCount: allProdCtrlObj
-                                .productShowListModel?.data?.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Get.to(ViewProductsPage(
-                                    isView: true,
-                                    productModelObjs: allProdCtrlObj
-                                        .productShowListModel?.data?[index],
-                                  ));
-                                },
-                                child: Container(
-                                  color:
-                                      Theme.of(context).colorScheme.background,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // const SizedBox(height: 10),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ///SKU
-                                          Expanded(
-                                            flex: 1,
-                                            child: Text(
-                                              ' ${allProdCtrlObj.productShowListModel?.data?[index].sku}',
-                                              textAlign: TextAlign.center,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleSmall!
-                                                  .copyWith(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                          ),
-
-                                          ///Product name
-                                          Expanded(
-                                            flex: 2,
-                                            child: Text(
-                                              allProdCtrlObj
-                                                      .productShowListModel
-                                                      ?.data?[index]
-                                                      .product ??
-                                                  '',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .copyWith(fontSize: 10),
-                                              overflow: TextOverflow.ellipsis,
-                                              softWrap: true,
-                                            ),
-                                          ),
-
-                                          ///Price
-                                          Expanded(
-                                            flex: 1,
-                                            child: Text(
-                                              double.parse(
-                                                    '${allProdCtrlObj.productShowListModel?.data?[index].maxPrice ?? ''}',
-                                                  ).toStringAsFixed(2) +
-                                                  ' /-',
-                                              textAlign: TextAlign.right,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .copyWith(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                            ),
-                                          ),
-
-                                          Expanded(
+                            interactive: true,
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              physics: AlwaysScrollableScrollPhysics(),
+                              padding: const EdgeInsets.only(bottom: 100),
+                              itemCount: allProdCtrlObj
+                                  .productShowListModel?.data?.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Get.to(ViewProductsPage(
+                                      isView: true,
+                                      productModelObjs: allProdCtrlObj
+                                          .productShowListModel?.data?[index],
+                                    ));
+                                  },
+                                  child: Container(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 2),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            ///SKU
+                                            Expanded(
                                               flex: 1,
-                                              child: Center(
-                                                child: Text(
-                                                  double.parse(
-                                                          '${allProdCtrlObj.productShowListModel?.data?[index].currentStock ?? '0.00'}')
-                                                      .toStringAsFixed(2),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
+                                              child: Text(
+                                                ' ${allProdCtrlObj.productShowListModel?.data?[index].sku}',
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleSmall!
+                                                    .copyWith(
                                                         fontSize: 10,
-                                                      ),
-                                                ),
-                                              )),
-                                          Expanded(
-                                              flex: 1,
-                                              child: Center(
-                                                child: Text(
-                                                  '${allProdCtrlObj.productShowListModel?.data?[index].unit ?? ''}',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        fontSize: 10,
-                                                      ),
-                                                ),
-                                              )),
-                                        ],
-                                      ),
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                              ),
+                                            ),
 
-                                      Divider(
-                                        thickness: 2,
-                                        height: 10,
-                                      ),
-                                    ],
+                                            ///Product name
+                                            Expanded(
+                                              flex: 2,
+                                              child: Text(
+                                                allProdCtrlObj
+                                                        .productShowListModel
+                                                        ?.data?[index]
+                                                        .product ??
+                                                    '',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(fontSize: 10),
+                                                overflow: TextOverflow.ellipsis,
+                                                softWrap: true,
+                                              ),
+                                            ),
+
+                                            ///Price
+                                            Expanded(
+                                              flex: 1,
+                                              child: Text(
+                                                double.parse(
+                                                      '${allProdCtrlObj.productShowListModel?.data?[index].maxPrice ?? ''}',
+                                                    ).toStringAsFixed(2) +
+                                                    ' /-',
+                                                textAlign: TextAlign.right,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                        fontSize: 10,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                              ),
+                                            ),
+
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                  child: Text(
+                                                    double.parse(
+                                                            '${allProdCtrlObj.productShowListModel?.data?[index].currentStock ?? '0.00'}')
+                                                        .toStringAsFixed(2),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          fontSize: 10,
+                                                        ),
+                                                  ),
+                                                )),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Center(
+                                                  child: Text(
+                                                    '${allProdCtrlObj.productShowListModel?.data?[index].unit ?? ''}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          fontSize: 10,
+                                                        ),
+                                                  ),
+                                                )),
+                                          ],
+                                        ),
+                                        Divider(
+                                          thickness: 2,
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             Positioned(
               bottom: 0,

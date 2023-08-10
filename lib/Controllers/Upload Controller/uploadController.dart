@@ -20,7 +20,7 @@ class UploadController extends GetxController {
     logger.i(_fields);
 
     return await ApiServices.postMultiPartQuery(feedUrl: _url, files: _fields)
-        .then((response) async {
+        .then((response) {
       if (response == null) return;
       stopProgress();
       Get.close(1);

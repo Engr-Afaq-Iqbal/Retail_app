@@ -431,7 +431,7 @@ class EditSaleReturnModelDart {
         sellLines: json["sell_lines"] == null
             ? []
             : List<SellLine>.from(
-                json["sell_lines"]!.map((x) => SellLine.fromJson(x))),
+                json["sell_lines"].map((x) => SellLine.fromJson(x))),
         location: json["location"] == null
             ? null
             : Location.fromJson(json["location"]),
@@ -1065,13 +1065,13 @@ class SellLine {
         secondaryUnitQuantity: json["secondary_unit_quantity"],
         mfgWastePercent: json["mfg_waste_percent"],
         mfgIngredientGroupId: json["mfg_ingredient_group_id"],
-        quantityReturned: json["quantity_returned"],
-        unitPriceBeforeDiscount: json["unit_price_before_discount"],
-        unitPrice: json["unit_price"],
+        quantityReturned: '${json["quantity_returned"]}',
+        unitPriceBeforeDiscount: '${json["unit_price_before_discount"]}',
+        unitPrice: '${json["unit_price"]}',
         lineDiscountType: json["line_discount_type"],
-        lineDiscountAmount: json["line_discount_amount"],
-        unitPriceIncTax: json["unit_price_inc_tax"],
-        itemTax: json["item_tax"],
+        lineDiscountAmount: '${json["line_discount_amount"]}',
+        unitPriceIncTax: '${json["unit_price_inc_tax"]}',
+        itemTax: '${json["item_tax"]}',
         taxId: json["tax_id"],
         discountId: json["discount_id"],
         lotNoLineId: json["lot_no_line_id"],

@@ -93,6 +93,7 @@ class FundsController extends GetxController {
     _fieldForFile['document'] = '${image?.path}';
 
     logger.i(_fields);
+    logger.i(_fieldForFile);
     return await ApiServices.postMultiPartQuery(
             feedUrl: _url, fields: _fields, files: _fieldForFile)
         .then((response) async {
