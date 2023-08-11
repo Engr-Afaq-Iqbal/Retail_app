@@ -9,11 +9,11 @@ import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Controllers/ProductsRetailController/productsRetailsController.dart';
 import '../../Controllers/Tax Controller/TaxController.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
-import '../../Models/ProductsModel/product.dart';
+import '../../Models/ProductsModel/Product.dart';
 
 class ViewProductsPage extends StatefulWidget {
   final bool isView;
-  final Product productModelObjs;
+  final Product? productModelObjs;
   ViewProductsPage({
     Key? key,
     this.isView = false,

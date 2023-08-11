@@ -3,7 +3,7 @@
 //     final listProductsModel = listProductsModelFromJson(jsonString);
 
 import 'dart:convert';
-import '../../Models/ProductsModel/product.dart';
+import '../../Models/ProductsModel/Product.dart';
 
 ListProductsModel listProductsModelFromJson(String str) =>
     ListProductsModel.fromJson(json.decode(str));
