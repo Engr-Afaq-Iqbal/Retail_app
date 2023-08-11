@@ -1,8 +1,8 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Pages/CreateOrder/selectionDialogue.dart';
-import 'package:bizmodo_emenu/Pages/checkout/check_out.dart';
-import 'package:bizmodo_emenu/Theme/style.dart';
+import '../../Components/custom_circular_button.dart';
+import '../../Config/utils.dart';
+import '../../Pages/CreateOrder/selectionDialogue.dart';
+import '../../Pages/checkout/check_out.dart';
+import '../../Theme/style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -279,7 +279,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                       child: Center(
                                         child: Text(
                                           AppFormat.doubleToStringUpTo2(
-                                                '${double.parse(allProdCtrlObj.productModelObjs[index].productVariationsDetails?.qtyAvailable ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                                '${double.parse(allProdCtrlObj.checkProductStockLocationBasedForOrderCreate(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
                                               ) ??
                                               '0.00',
                                           overflow: TextOverflow.ellipsis,

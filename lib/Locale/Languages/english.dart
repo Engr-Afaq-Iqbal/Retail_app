@@ -476,7 +476,6 @@ Map<String, String> english() {
     'business': 'Business',
     'individual': 'Individual',
     'assigned_to': 'Assigned To',
-    'trn_upload': 'TRN Upload',
     'license_upload': 'License Upload',
     'qty': 'Qty',
     'total': 'Total',
@@ -524,6 +523,7 @@ Map<String, String> english() {
     'enter_notes': 'Enter Notes',
     'person_name': 'Person Name',
     'sync_application': 'Sync Application',
-    'trn': 'Tax Certificate',
+    'trn_upload': 'Tax Certificate',
+    'trn': 'TRN',
   };
 }

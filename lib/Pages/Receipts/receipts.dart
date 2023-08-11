@@ -1,7 +1,3 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import 'package:bizmodo_emenu/Config/enums.dart';
-
 import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
 import 'package:bizmodo_emenu/Pages/Receipts/searchInReceipts.dart';
 
@@ -10,6 +6,9 @@ import 'package:get/get.dart';
 
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../../Components/custom_circular_button.dart';
+import '../../Config/DateTimeFormat.dart';
+import '../../Config/enums.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/AllSalesController/allSalesController.dart';
 import '../../Controllers/ContactController/ContactController.dart';
@@ -41,7 +40,7 @@ class _ReceiptsState extends State<Receipts> {
   @override
   void initState() {
     // TODO: implement initState
-    allSalesCtrl.callFirstOrderPageForReceipt();
+    allSalesCtrl.callFirstOrderPage();
     stockTranCtrlObj.fetchStockTransfersList();
     receiptsCtrl.totalAmount = '0';
     receiptsCtrl.listSaleOrderDataModel =
@@ -174,7 +173,8 @@ class _ReceiptsState extends State<Receipts> {
             builder: (AllSalesController allSalesCtrlObj) {
               return RefreshIndicator(
                 onRefresh: () async {
-                  await allSalesCtrlObj.callFirstOrderPageForReceipt();
+                  await allSalesCtrlObj.callFirstOrderPage();
+                  // await allSalesCtrlObj.callFirstOrderPageForReceipt();
                   setState(() {
                     receiptsCtrl.totalAmount = '0';
                   });

@@ -6,10 +6,10 @@ class Product {
   int? id;
   String? name;
   int? businessId;
-  Type? type;
+  String? type;
   int? unitId;
   dynamic secondaryUnitId;
-  String? subUnitIds;
+  List<dynamic>? subUnitIds;
   int? brandId;
   int? categoryId;
   int? subCategoryId;
@@ -115,7 +115,7 @@ class Product {
         id: json["id"],
         name: json["name"],
         businessId: json["business_id"],
-        type: typeValues.map[json["type"]],
+        type: json["type"],
         unitId: json["unit_id"],
         secondaryUnitId: json["secondary_unit_id"],
         subUnitIds: json["sub_unit_ids"],
@@ -198,7 +198,7 @@ class Product {
         "id": id,
         "name": name,
         "business_id": businessId,
-        "type": typeValues.reverse[type],
+        "type": type,
         "unit_id": unitId,
         "secondary_unit_id": secondaryUnitId,
         "sub_unit_ids": subUnitIds,
@@ -271,7 +271,7 @@ final barcodeTypeValues = EnumValues({
 class Brand {
   int? id;
   int? businessId;
-  DescriptionEnum? name;
+  String? name;
   dynamic description;
   int? createdBy;
   int? useForRepair;
@@ -294,7 +294,7 @@ class Brand {
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
         id: json["id"],
         businessId: json["business_id"],
-        name: descriptionEnumValues.map[json["name"]],
+        name: json["name"],
         description: json["description"],
         createdBy: json["created_by"],
         useForRepair: json["use_for_repair"],
@@ -310,7 +310,7 @@ class Brand {
   Map<String, dynamic> toJson() => {
         "id": id,
         "business_id": businessId,
-        "name": descriptionEnumValues.reverse[name],
+        "name": name,
         "description": description,
         "created_by": createdBy,
         "use_for_repair": useForRepair,
@@ -320,17 +320,12 @@ class Brand {
       };
 }
 
-enum DescriptionEnum { TEST, KITCHEN_1 }
-
-final descriptionEnumValues = EnumValues(
-    {"Kitchen 1": DescriptionEnum.KITCHEN_1, "test": DescriptionEnum.TEST});
-
 class Kitchen {
   int? id;
   int? businessId;
   int? locationId;
   PurpleName? name;
-  DescriptionEnum? description;
+  String? description;
   DateTime? createdAt;
   DateTime? updatedAt;
   KitchenPrinter? kitchenPrinter;
@@ -353,7 +348,7 @@ class Kitchen {
         businessId: json["business_id"],
         locationId: json["location_id"],
         name: purpleNameValues.map[json["name"]],
-        description: descriptionEnumValues.map[json["description"]],
+        description: json["description"],
         createdAt: json["created_at"] == null
             ? null
             : DateTime.parse(json["created_at"]),
@@ -371,7 +366,7 @@ class Kitchen {
         "business_id": businessId,
         "location_id": locationId,
         "name": purpleNameValues.reverse[name],
-        "description": descriptionEnumValues.reverse[description],
+        "description": description,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),
         "kitchen_printer": kitchenPrinter?.toJson(),
@@ -1054,16 +1049,6 @@ enum TaxType { INCLUSIVE, EXCLUSIVE }
 
 final taxTypeValues = EnumValues(
     {"exclusive": TaxType.EXCLUSIVE, "inclusive": TaxType.INCLUSIVE});
-
-enum Type { SINGLE, VARIABLE, COMBO, EMPTY, MODIFIER }
-
-final typeValues = EnumValues({
-  "combo": Type.COMBO,
-  "": Type.EMPTY,
-  "modifier": Type.MODIFIER,
-  "single": Type.SINGLE,
-  "variable": Type.VARIABLE
-});
 
 class EnumValues<T> {
   Map<String, T> map;

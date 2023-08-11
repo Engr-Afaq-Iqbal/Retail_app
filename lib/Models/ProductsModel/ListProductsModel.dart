@@ -3,7 +3,7 @@
 //     final listProductsModel = listProductsModelFromJson(jsonString);
 
 import 'dart:convert';
-import 'Product.dart';
+import '../../Models/ProductsModel/product.dart';
 
 ListProductsModel listProductsModelFromJson(String str) =>
     ListProductsModel.fromJson(json.decode(str));
@@ -47,7 +47,7 @@ class ListProductsModel {
         currentPage: json["current_page"],
         data: json["data"] == null
             ? []
-            : List<Datum>.from(json["data"]!.map((x) => Datum.fromJson(x))),
+            : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
         firstPageUrl: json["first_page_url"],
         from: json["from"],
         lastPage: json["last_page"],
@@ -147,7 +147,7 @@ class Datum {
         products: json["products"] == null
             ? []
             : List<Product>.from(
-                json["products"]!.map((x) => Product.fromJson(x))),
+                json["products"].map((x) => Product.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

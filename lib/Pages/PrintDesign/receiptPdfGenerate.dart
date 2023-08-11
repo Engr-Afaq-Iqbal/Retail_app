@@ -173,7 +173,7 @@ class ReceiptPdfGenerate extends StatelessWidget {
                         flex: 2,
                         child: pw.Padding(
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                          child: pw.Text('$index',
+                          child: pw.Text('${index + 1}',
                               style: pw.TextStyle(
                                 fontSize: 16,
                               )),

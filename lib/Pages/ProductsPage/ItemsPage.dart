@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../Components/p5Headings.dart';
+import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 import '../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../Services/storage_services.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import 'ViewProductsPage.dart';
 
@@ -18,34 +20,36 @@ class _ItemsPageState extends State<ItemsPage> {
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
-  ScrollController? _scrollController;
+  // ScrollController? _scrollController;
 
   @override
   void initState() {
     //allProdCtrlObj.searchProductList(term: '');
-    allProdCtrlObj.getProductShowList();
-    scrollControllerLis();
+    allProdCtrlObj.fetchAllProducts();
+    // scrollControllerLis();
+
     super.initState();
   }
 
   void dispose() {
     super.dispose();
-    _scrollController?.removeListener(scrollControllerLis);
+    allProdCtrlObj.listProductsModel = null;
+    // _scrollController?.removeListener(scrollControllerLis);
   }
 
-  scrollControllerLis() {
-    _scrollController = ScrollController();
-    if (_scrollController != null) {
-      _scrollController?.addListener(() {
-        if (_scrollController?.position.pixels ==
-            _scrollController?.position.maxScrollExtent) {
-          //contactCtrlObjj.isLoadMoreRunning.isTrue;
-          Get.find<AllProductsController>().loadMoreSaleOrders();
-          //Get.find<ContactController>().callFirstOrderPage();
-        }
-      });
-    }
-  }
+  // scrollControllerLis() {
+  //   _scrollController = ScrollController();
+  //   if (_scrollController != null) {
+  //     _scrollController?.addListener(() {
+  //       if (_scrollController?.position.pixels ==
+  //           _scrollController?.position.maxScrollExtent) {
+  //         //contactCtrlObjj.isLoadMoreRunning.isTrue;
+  //         Get.find<AllProductsController>().loadMoreSaleOrders();
+  //         //Get.find<ContactController>().callFirstOrderPage();
+  //       }
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -81,9 +85,20 @@ class _ItemsPageState extends State<ItemsPage> {
                 ),
               ),
               onChanged: (value) {
-                Get.find<StockTransferController>()
-                    .searchProductList(term: '${value}');
+                allProdCtrlObj.searchedProducts = allProdCtrlObj
+                    .productModelObjs
+                    .where((element) =>
+                        element.sku!.contains(value) ||
+                        element.name!
+                            .toLowerCase()
+                            .contains(value.toLowerCase()))
+                    .toList();
+                setState(() {});
               },
+              // onChanged: (value) {
+              //   Get.find<StockTransferController>()
+              //       .searchProductList(term: '${value}');
+              // },
             )),
         // actions: [buildItemsInCartButton()],
         bottom: PreferredSize(
@@ -123,134 +138,125 @@ class _ItemsPageState extends State<ItemsPage> {
                 builder: (AllProductsController allProdCtrlObj) {
                   return RefreshIndicator(
                     onRefresh: () async {
-                      await allProdCtrlObj.callFirstOrderPage();
+                      await allProdCtrlObj.fetchAllProducts();
                     },
-                    child: (allProdCtrlObj.productShowListModel == null)
+                    child: (allProdCtrlObj.listProductsModel == null)
                         ? progressIndicator()
-                        : Scrollbar(
-                            controller: _scrollController,
-                            interactive: true,
-                            child: ListView.builder(
-                              controller: _scrollController,
-                              physics: AlwaysScrollableScrollPhysics(),
-                              padding: const EdgeInsets.only(bottom: 100),
-                              itemCount: allProdCtrlObj
-                                  .productShowListModel?.data?.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.to(ViewProductsPage(
-                                      isView: true,
-                                      productModelObjs: allProdCtrlObj
-                                          .productShowListModel?.data?[index],
-                                    ));
-                                  },
-                                  child: Container(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 2),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            ///SKU
-                                            Expanded(
+                        : ListView.builder(
+                            physics: AlwaysScrollableScrollPhysics(),
+                            padding: const EdgeInsets.only(bottom: 100),
+                            itemCount: allProdCtrlObj.searchedProducts.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(ViewProductsPage(
+                                    isView: true,
+                                    productModelObjs:
+                                        allProdCtrlObj.searchedProducts[index],
+                                  ));
+                                },
+                                child: Container(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 2),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ///SKU
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              '${allProdCtrlObj.searchedProducts[index].sku}',
+                                              textAlign: TextAlign.center,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleSmall!
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ),
+
+                                          ///Product name
+                                          Expanded(
+                                            flex: 2,
+                                            child: Text(
+                                              '${allProdCtrlObj.searchedProducts[index].name}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(fontSize: 10),
+                                              overflow: TextOverflow.ellipsis,
+                                              softWrap: true,
+                                            ),
+                                          ),
+
+                                          ///Price
+                                          Expanded(
+                                            flex: 1,
+                                            child: Text(
+                                              double.parse(
+                                                    '${allProdCtrlObj.searchedProducts[index].productVariations?.first.variations?.first.sellPriceIncTax}',
+                                                  ).toStringAsFixed(2) +
+                                                  ' /-',
+                                              textAlign: TextAlign.right,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                            ),
+                                          ),
+
+                                          Expanded(
                                               flex: 1,
-                                              child: Text(
-                                                ' ${allProdCtrlObj.productShowListModel?.data?[index].sku}',
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleSmall!
-                                                    .copyWith(
+                                              child: Center(
+                                                child: Text(
+                                                  AppFormat.doubleToStringUpTo2(
+                                                        '${double.parse(allProdCtrlObj.checkProductStockLocationBased(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                                      ) ??
+                                                      '0.00',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
                                                         fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                              ),
-                                            ),
+                                                      ),
+                                                ),
+                                              )),
 
-                                            ///Product name
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                allProdCtrlObj
-                                                        .productShowListModel
-                                                        ?.data?[index]
-                                                        .product ??
-                                                    '',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(fontSize: 10),
-                                                overflow: TextOverflow.ellipsis,
-                                                softWrap: true,
-                                              ),
-                                            ),
-
-                                            ///Price
-                                            Expanded(
+                                          Expanded(
                                               flex: 1,
-                                              child: Text(
-                                                double.parse(
-                                                      '${allProdCtrlObj.productShowListModel?.data?[index].maxPrice ?? ''}',
-                                                    ).toStringAsFixed(2) +
-                                                    ' /-',
-                                                textAlign: TextAlign.right,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(
+                                              child: Center(
+                                                child: Text(
+                                                  '${allProdCtrlObj.checkUnitsShortName(unitId: allProdCtrlObj.searchedProducts[index].unitId) ?? ''}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .titleMedium!
+                                                      .copyWith(
                                                         fontSize: 10,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                              ),
-                                            ),
-
-                                            Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                  child: Text(
-                                                    double.parse(
-                                                            '${allProdCtrlObj.productShowListModel?.data?[index].currentStock ?? '0.00'}')
-                                                        .toStringAsFixed(2),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium!
-                                                        .copyWith(
-                                                          fontSize: 10,
-                                                        ),
-                                                  ),
-                                                )),
-                                            Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                  child: Text(
-                                                    '${allProdCtrlObj.productShowListModel?.data?[index].unit ?? ''}',
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .titleMedium!
-                                                        .copyWith(
-                                                          fontSize: 10,
-                                                        ),
-                                                  ),
-                                                )),
-                                          ],
-                                        ),
-                                        Divider(
-                                          thickness: 2,
-                                          height: 10,
-                                        ),
-                                      ],
-                                    ),
+                                                      ),
+                                                ),
+                                              )),
+                                        ],
+                                      ),
+                                      Divider(
+                                        thickness: 2,
+                                        height: 10,
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                   );
                 },

@@ -14,7 +14,6 @@ import '../../Models/ProductsModel/Product.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
 import '../../Models/ReceiptModel.dart';
 import '../../Models/UnitModels/UnitListModel.dart';
-import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Pages/Orders/Controller/OrderController.dart';
 import '../../Pages/PrintDesign/invoice_print_screen.dart';
 import '../../Pages/PrintDesign/pdfGenerate.dart';
@@ -88,6 +87,7 @@ class AllProductsController extends GetxController {
   }
 
   List<Product> productModelObjs = [];
+  List<Product> searchedProducts = [];
   List<Product> selectedProducts = [];
   List<String> selectedQuantityList = [];
   List<String> selectedUnitsList = [];
@@ -107,6 +107,8 @@ class AllProductsController extends GetxController {
       }
     }
 
+    searchedProducts = productModelObjs;
+
     for (int i = 0; i < productModelObjs.length; i++) {
       // checkUnits(product: productModelObjs[i]);
       unitListStatus.add(checkUnits(product: productModelObjs[i]));
@@ -118,6 +120,34 @@ class AllProductsController extends GetxController {
     }
 
     return null;
+  }
+
+  checkProductStockLocationBased({
+    int? locationId,
+    required int index,
+  }) {
+    return searchedProducts[index]
+        .productVariations
+        ?.first
+        .variations
+        ?.first
+        .variationLocationDetails
+        ?.firstWhereOrNull((i) => i.locationId == locationId)
+        ?.qtyAvailable;
+  }
+
+  checkProductStockLocationBasedForOrderCreate({
+    int? locationId,
+    required int index,
+  }) {
+    return productModelObjs[index]
+        .productVariations
+        ?.first
+        .variations
+        ?.first
+        .variationLocationDetails
+        ?.firstWhereOrNull((i) => i.locationId == locationId)
+        ?.qtyAvailable;
   }
 
   checkUnitsInList({int? id, List<Product>? product, required int index}) {
@@ -825,6 +855,7 @@ class AllProductsController extends GetxController {
       } catch (error) {
         debugPrint('Error -> $error');
       }
+      receiptPayment = false;
       update();
       clearAllOtherFields();
       clearAllAddPaymentControllerInformation();

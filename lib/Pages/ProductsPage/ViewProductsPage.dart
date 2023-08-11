@@ -1,18 +1,19 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
-import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
+import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
+import '../../Controllers/AllKitchenController/allKitchenController.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Controllers/ProductsRetailController/productsRetailsController.dart';
 import '../../Controllers/Tax Controller/TaxController.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
+import '../../Models/ProductsModel/product.dart';
 
 class ViewProductsPage extends StatefulWidget {
   final bool isView;
-  final ProductShow? productModelObjs;
+  final Product productModelObjs;
   ViewProductsPage({
     Key? key,
     this.isView = false,
@@ -83,7 +84,7 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                 ///1st Container
                 GetBuilder<AllProductsController>(
                     builder: (AllProductsController prodRtailCtrlObj) {
-                  if (prodRtailCtrlObj.productShowListModel == null)
+                  if (prodRtailCtrlObj.listProductsModel == null)
                     return progressIndicator();
                   return IntrinsicHeight(
                     child: Container(
@@ -102,7 +103,7 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                               titleWithText(
                                   headingTxt: 'product_name'.tr + ':*',
                                   bodyText:
-                                      widget.productModelObjs?.product ?? ''),
+                                      widget.productModelObjs?.name ?? ''),
                               titleWithText(
                                   headingTxt: 'sku'.tr + ':',
                                   bodyText: widget.productModelObjs?.sku ?? ''),
@@ -114,13 +115,14 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                               titleWithText(
                                   headingTxt: 'brand'.tr + ':*',
                                   bodyText:
-                                      widget.productModelObjs?.brand ?? '- -'),
+                                      widget.productModelObjs?.brand?.name ??
+                                          '- -'),
 
                               ///TODO unit id to text
                               titleWithText(
                                   headingTxt: 'unit'.tr + ':*',
                                   bodyText:
-                                      '${widget.productModelObjs?.unit ?? '- -'}'),
+                                      '${Get.find<AllProductsController>().checkUnitsShortName(unitId: widget.productModelObjs?.unitId) ?? '- -'}'),
                             ],
                           ),
 
@@ -133,7 +135,7 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                               titleWithText(
                                   headingTxt: 'category'.tr + ':',
                                   bodyText:
-                                      '${widget.productModelObjs?.category ?? '- -'}'),
+                                      '${widget.productModelObjs?.categoryId ?? '- -'}'),
                               // Expanded(
                               //   child: CheckboxListTile(
                               //       value: productRetailCtrlObj.manageValue,
@@ -188,7 +190,7 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                               titleWithText(
                                   headingTxt: 'product_description'.tr + ':',
                                   bodyText:
-                                      '${widget.productModelObjs?.type ?? '- -'}'
+                                      '${widget.productModelObjs?.productDescription ?? '- -'}'
                                               .capitalizeFirst ??
                                           ''),
                               // Column(
@@ -377,27 +379,27 @@ class _ViewProductsPageState extends State<ViewProductsPage> {
                                       '- -'),
                           ],
                         ),
-                        CheckboxListTile(
-                            value: productRetailCtrlObj.disableWooCommerce,
-                            onChanged: (bool? value) {
-                              setState(() {
-                                productRetailCtrlObj.disableWooCommerce =
-                                    value!;
-                                // if (value) {
-                                //   productRetailCtrlObj.disableWooCommerceID =
-                                //       '1';
-                                // } else {
-                                //   productRetailCtrlObj.disableWooCommerceID =
-                                //       '0';
-                                // }
-                                productRetailCtrlObj.update();
-                              });
-                            },
-                            controlAffinity: ListTileControlAffinity.leading,
-                            title: Text(
-                              'disable_wooCommerce'.tr,
-                              style: TextStyle(color: blackColor),
-                            )),
+                        // CheckboxListTile(
+                        //     value: productRetailCtrlObj.disableWooCommerce,
+                        //     onChanged: (bool? value) {
+                        //       setState(() {
+                        //         productRetailCtrlObj.disableWooCommerce =
+                        //             value!;
+                        //         // if (value) {
+                        //         //   productRetailCtrlObj.disableWooCommerceID =
+                        //         //       '1';
+                        //         // } else {
+                        //         //   productRetailCtrlObj.disableWooCommerceID =
+                        //         //       '0';
+                        //         // }
+                        //         productRetailCtrlObj.update();
+                        //       });
+                        //     },
+                        //     controlAffinity: ListTileControlAffinity.leading,
+                        //     title: Text(
+                        //       'disable_wooCommerce'.tr,
+                        //       style: TextStyle(color: blackColor),
+                        //     )),
                       ],
                     ),
                   ),

@@ -1,8 +1,8 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
-import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Config/utils.dart';
+import '../../../Controllers/AllSalesController/allSalesController.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../Return/saleReturn.dart';
 import '../../order_type/search_customer_page.dart';
 import 'SalesViewTile.dart';
@@ -24,11 +24,12 @@ class _SalesViewState extends State<SalesView> {
   void initState() {
     // TODO: implement initState
     Get.find<AllProductsController>().fetchAllProducts();
-    if (widget.isSalesReturn) {
-      allSalesCtrl.callFirstOrderPageForReceipt();
-    } else {
-      allSalesCtrl.callFirstOrderPage();
-    }
+    allSalesCtrl.callFirstOrderPage();
+    // if (widget.isSalesReturn) {
+    //   allSalesCtrl.callFirstOrderPageForReceipt();
+    // } else {
+    //
+    // }
 
     scrollControllerLis();
     super.initState();
