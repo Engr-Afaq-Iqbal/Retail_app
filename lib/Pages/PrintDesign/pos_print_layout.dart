@@ -222,9 +222,9 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     final i.Image? image = i.decodeImage(img);
     if (image != null) {
       // Resize the image here
-      final int targetWidth = 200; // Set your desired width
-      final int targetHeight =
-          (image.height * (targetWidth / image.width)).round();
+      final int targetHeight = 300; // Set your desired width
+      final int targetWidth =
+          (image.width * (targetHeight / image.height)).round();
 
       final resizedImage =
           i.copyResize(image, width: targetWidth, height: targetHeight);
