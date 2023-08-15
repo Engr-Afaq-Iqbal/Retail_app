@@ -238,8 +238,8 @@ class StockTransferController extends GetxController {
   /// Searching Product
   Future searchProductList({String? pageUrl, String? term}) async {
     await ApiServices.getMethod(
-            feedUrl: pageUrl ??
-                '${ApiUrls.searchProductListApi}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&term=${term}') //
+            feedUrl:
+                pageUrl ?? '${ApiUrls.searchProductListApi}?term=${term}') //
         .then((_res) {
       update();
       if (_res == null) return null;

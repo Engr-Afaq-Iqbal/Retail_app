@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
+import 'dart:typed_data';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +8,8 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as i;
 
-import '/Models/order_type_model/payment_line_model.dart';
 import '../../Config/DateTimeFormat.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Controllers/ProductController/product_cart_controller.dart';
 import '../../Services/storage_services.dart';
 import '/Models/order_type_model/SellLineModel.dart';
@@ -80,11 +80,11 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
           : printer.row(
               [
                 if (cTxt1 != null)
-                  PosColumn(width: cTxt2 == null ? 12 : 6, text: cTxt1 ?? ''),
+                  PosColumn(width: cTxt2 == null ? 12 : 6, text: cTxt1),
                 if (cTxt2 != null)
                   PosColumn(
                       width: cTxt1 == null ? 12 : 6,
-                      text: cTxt2 ?? '',
+                      text: cTxt2,
                       styles: PosStyles(align: PosAlign.right)),
               ],
             );
@@ -132,13 +132,13 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
                 if (cTxt4 != null)
                   PosColumn(
                     width: 2,
-                    text: cTxt4 ?? '',
+                    text: cTxt4,
                     styles: PosStyles(bold: isBold, align: PosAlign.right),
                   ),
                 if (cTxt5 != null)
                   PosColumn(
                     width: 2,
-                    text: cTxt5 ?? '',
+                    text: cTxt5,
                     styles: PosStyles(bold: isBold, align: PosAlign.right),
                   ),
               ],
@@ -147,6 +147,20 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
       debugPrint('pos invoice and kot print layout issue -> $e');
       return printer.text('Inside cl5 Issue -> $e');
     }
+  }
+
+  totalItemsTax() {
+    double totalTax = 0.00;
+    var length = selectedSaleOrderData!.sellLines.length ?? 0;
+    for (int i = 0; i < length; i++) {
+      totalTax = totalTax +
+          (double.parse('${selectedSaleOrderData.sellLines[i].itemTax}') *
+              double.parse('${selectedSaleOrderData.sellLines[i].quantity}')
+          // * double.parse(
+          //     '${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel?.sellLines[i].subUnitId)}')
+          );
+    }
+    return totalTax;
   }
 
   /// Layout
@@ -202,8 +216,25 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   await fetchNetworkImage(
           AppStorage.getBusinessDetailsData()?.businessData?.logo)
       .then((img) {
+    // final i.Image? image = i.decodeImage(img);
+    // if (image != null) {
+    //   bytes += printer.image(image);
     final i.Image? image = i.decodeImage(img);
-    if (image != null) bytes += printer.image(image);
+    if (image != null) {
+      // Resize the image here
+      final int targetWidth = 200; // Set your desired width
+      final int targetHeight =
+          (image.height * (targetWidth / image.width)).round();
+
+      final resizedImage =
+          i.copyResize(image, width: targetWidth, height: targetHeight);
+
+      // Convert the resized image to bytes
+      final List<int> resizedBytes = i.encodePng(resizedImage);
+
+      // Print the resized image
+      bytes += printer.image(i.decodeImage(Uint8List.fromList(resizedBytes))!);
+    }
   });
 
   // Print image:
@@ -222,6 +253,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
 
   // Business Location
   bytes += centeredTitle(
+    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}',
@@ -233,10 +265,10 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}',
   );
 
-  bytes += centeredBoldTitle(
-    AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name ??
-        '',
-  );
+  // bytes += centeredBoldTitle(
+  //   AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name ??
+  //       '',
+  // );
 
   ///
   ///
@@ -246,6 +278,10 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   // Tax Invoice Labelbytes += centeredBoldTitle(AppStorage.getPrintInvoiceTitle());
   bytes += centeredTitle(
     '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
+  );
+
+  bytes += centeredBoldTitle(
+    'Tax Invoice',
   );
 
   // Invoice Number / user
@@ -282,18 +318,8 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   bytes += printDivider();
   // Customer Information
   bytes += cl2(
-    cTxt1: (selectedSaleOrderData?.contact?.name != null)
-        ? 'Customer: ${selectedSaleOrderData?.contact?.name ?? ''}'
-        : null,
-  );
-  bytes += cl2(
-    cTxt1: (selectedSaleOrderData?.contact?.mobile != null)
-        ? 'Mobile: ${selectedSaleOrderData?.contact?.mobile ?? ''}'
-        : null,
-  );
-  bytes += cl2(
     // Invoice Number
-    cTxt1: 'Invoice: ${selectedSaleOrderData?.invoiceNo ?? ''}',
+    cTxt1: 'Invoice No: ${selectedSaleOrderData?.invoiceNo ?? ''}',
 
     // Staff Name
     cTxt2: 'User: ${AppStorage.getLoggedUserData()?.staffUser.firstName ?? ''}',
@@ -304,6 +330,23 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
         : null,
     cTxt2:
         'Time: ${AppFormat.timeOnly(selectedSaleOrderData?.transactionDate ?? DateTime.now())} ',
+  );
+  //Customer name
+  bytes += cl2(
+    cTxt1: (selectedSaleOrderData?.contact?.name != null)
+        ? 'Customer: ${selectedSaleOrderData?.contact?.name ?? ''}'
+        : null,
+  );
+  //customer contact no
+  bytes += cl2(
+    cTxt1: (selectedSaleOrderData?.contact?.mobile != null)
+        ? 'Contact No: ${selectedSaleOrderData?.contact?.mobile ?? ''}'
+        : null,
+  );
+  bytes += cl2(
+    cTxt1: (selectedSaleOrderData?.contact?.mobile != null)
+        ? 'Customer Tax No: ${selectedSaleOrderData?.contact?.taxNumber ?? ''}'
+        : null,
   );
 
   // Table Name & Service Staff
@@ -435,7 +478,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
     // Total Quantity
     cTxt2: (selectedSaleOrderData?.taxAmount != null &&
             selectedSaleOrderData?.taxAmount != '0.00')
-        ? 'VAT: ${AppFormat.doubleToStringUpTo2('${selectedSaleOrderData?.taxAmount}')}'
+        ? 'VAT: ${AppFormat.doubleToStringUpTo2('${totalItemsTax()}')}'
         : null,
   );
 
@@ -518,6 +561,7 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
 
   // Footer
   bytes += printDivider();
-  bytes += centeredBoldTitle('Thank You... Visit Again...');
+  bytes += centeredBoldTitle(
+      'Digitally generated invoice, valid without signature or stamp');
   return bytes;
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Models/ViewStockTransferModel/viewStockTransferModel.dart';
+import '../../../Theme/colors.dart';
 import 'changeStockTransferStatus.dart';
 
 class ViwStockTile extends StatefulWidget {
@@ -47,7 +48,11 @@ class _ViwStockTileState extends State<ViwStockTile> {
                 height: 35,
                 width: 140,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: (widget.stockTransferData?.status == 'final')
+                      ? Colors.green
+                      : (widget.stockTransferData?.status == 'pending')
+                          ? Colors.red
+                          : Colors.orange,
                   borderRadius: BorderRadius.only(
                     bottomRight: Radius.circular(10),
                     bottomLeft: Radius.circular(10),
@@ -65,9 +70,10 @@ class _ViwStockTileState extends State<ViwStockTile> {
                                       widget.stockTransferData?.status) ??
                               '',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontSize: 11.7,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
+                            fontSize: 11.7,
+                            fontWeight: FontWeight.bold,
+                            color: kWhiteColor,
+                          ),
                     )
                   ],
                 ),

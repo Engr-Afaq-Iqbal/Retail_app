@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,12 +10,13 @@ import 'package:printing/printing.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Models/ProductsModel/ProductModel.dart';
+import '../../Models/order_type_model/SaleOrderModel.dart';
 import '../../Services/storage_services.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import 'package:http/http.dart' as http;
 
 class PrintData extends StatelessWidget {
-  SaleOrderDataModel? saleOrderDataModel;
+  final SaleOrderDataModel? saleOrderDataModel;
   PrintData({Key? key, this.saleOrderDataModel}) : super(key: key);
 
   @override
@@ -76,6 +76,7 @@ class PrintData extends StatelessWidget {
                       fontSize: 16, fontWeight: pw.FontWeight.bold))),
           pw.Center(
             child: pw.Text(
+                '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? ''}, '
                 '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
                 '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
                 '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}'),
@@ -116,10 +117,10 @@ class PrintData extends StatelessWidget {
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
                 printBasicInfoWidget(
-                    title: 'Inv No. ',
+                    title: 'Invoice No: ',
                     titleVal: '${saleOrderDataModel?.invoiceNo}'),
                 printBasicInfoWidget(
-                    title: 'Invoice Date. ',
+                    title: 'Date: ',
                     titleVal:
                         '${AppFormat.dateYYYYMMDDHHMM24(saleOrderDataModel?.transactionDate)}'),
               ]),
@@ -140,20 +141,26 @@ class PrintData extends StatelessWidget {
           printBasicInfoWidget(
               title: 'Customer Name: ',
               titleVal: '${saleOrderDataModel.contact?.name}'),
+
           pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                printBasicInfoWidget(
-                    title: 'Contact No.: ',
-                    titleVal: '${saleOrderDataModel.contact?.mobile}'),
+                if (saleOrderDataModel.contact?.mobile != null)
+                  printBasicInfoWidget(
+                      title: 'Contact No: ',
+                      titleVal: '${saleOrderDataModel.contact?.mobile}'),
                 if (saleOrderDataModel.contact?.email != null)
                   printBasicInfoWidget(
                       title: 'Email: ',
                       titleVal: '${saleOrderDataModel.contact?.email ?? ''}'),
               ]),
+
+          printBasicInfoWidget(
+              title: 'Customer Tax No: ',
+              titleVal: '${saleOrderDataModel.contact?.taxNumber ?? ''}'),
           // pw.Divider(),
 
-          pw.SizedBox(height: 15),
+          pw.SizedBox(height: 5),
 
           // Order Items Table
           pw.Divider(),
@@ -191,7 +198,7 @@ class PrintData extends StatelessWidget {
                     ),
                   ),
                   pw.Expanded(
-                    flex: 5,
+                    flex: 4,
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('Unit Price',
@@ -238,7 +245,7 @@ class PrintData extends StatelessWidget {
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
                               AppFormat.removeArabic(
-                                  '${saleOrderDataModel?.sellLines[index].product?.name}'),
+                                  '${saleOrderDataModel.sellLines[index].product?.name}'),
                               style: pw.TextStyle(
                                 fontSize: 16,
                               )),
@@ -261,6 +268,7 @@ class PrintData extends StatelessWidget {
                           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                           child: pw.Text(
                               '${double.parse('${saleOrderDataModel?.sellLines[index].unitPriceIncTax}') * double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel?.sellLines[index].subUnitId)}')}',
+                              textAlign: pw.TextAlign.center,
                               style: pw.TextStyle(
                                 fontSize: 16,
                               )),
@@ -274,6 +282,7 @@ class PrintData extends StatelessWidget {
                               AppFormat.doubleToStringUpTo2(
                                       '${double.parse('${saleOrderDataModel?.sellLines[index].unitPriceIncTax ?? 0.0}') * double.parse('${saleOrderDataModel?.sellLines[index].quantity ?? 0.0}')}') ??
                                   '0.0',
+                              textAlign: pw.TextAlign.right,
                               style: pw.TextStyle(
                                 fontSize: 16,
                               )),
@@ -331,7 +340,9 @@ class PrintData extends StatelessWidget {
           pw.SizedBox(height: 15),
           pw.Divider(),
           pw.SizedBox(height: 10),
-          pw.Center(child: pw.Text('Thank You Visit Again!')),
+          pw.Center(
+              child: pw.Text(
+                  'Digitally generated invoice, valid without signature or stamp')),
         ],
       ),
     );

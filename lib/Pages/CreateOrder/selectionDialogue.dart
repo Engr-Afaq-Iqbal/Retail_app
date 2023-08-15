@@ -38,6 +38,7 @@ class _SelectionDialogueState extends State<SelectionDialogue> {
                 onTap: () {
                   showProgress();
                   allProdCtrlObj.update();
+                  print('Receipt Payment: ${allProdCtrlObj.receiptPayment}');
                   if (allProdCtrlObj.receiptPayment == true) {
                     print('inside add receipt method call');
                     allProdCtrlObj.isPDFView = true;

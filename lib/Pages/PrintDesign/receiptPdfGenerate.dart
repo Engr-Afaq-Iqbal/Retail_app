@@ -74,36 +74,65 @@ class ReceiptPdfGenerate extends StatelessWidget {
               width: 200,
               height: 100),
           pw.Center(
-              child: pw.Text('Retail',
+              child: pw.Text(
+                  AppStorage.getBusinessDetailsData()?.businessData?.name ?? '',
                   style: pw.TextStyle(
                       fontSize: 18, fontWeight: pw.FontWeight.bold))),
 
           pw.Center(
-              child: pw.Text(
-                  '${singleReceiptModel?.contact?.city ?? ''}, ${singleReceiptModel?.contact?.country ?? ''}')),
-          pw.Row(
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                printBasicInfoWidget(
-                    title: 'Contact No.: ',
-                    titleVal: '${singleReceiptModel?.contact?.mobile}'),
-                if (singleReceiptModel?.contact?.email != null)
-                  printBasicInfoWidget(
-                      title: 'Email: ',
-                      titleVal: '${singleReceiptModel?.contact?.email ?? ''}'),
-              ]),
+            child: pw.Text(
+              '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? ''}, '
+              '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
+              '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
+              '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}',
+            ),
+          ),
+          pw.Center(
+            child: pw.Text(
+              'Contact No: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.mobile ?? ''}, '
+              'Alternate No: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.alternateNumber ?? ''}',
+            ),
+          ),
+
+          pw.Center(
+            child: pw.Text(
+              'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}',
+            ),
+          ),
+
+          pw.Center(
+            child: pw.Text(
+              '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
+            ),
+          ),
+
+          pw.Divider(),
+          pw.Center(
+            child: pw.Text('Receipt Voucher',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+          ),
+          pw.Divider(),
+
+          // pw.Center(
+          //     child: pw.Text(
+          //         '${singleReceiptModel?.contact?.city ?? ''}, ${singleReceiptModel?.contact?.country ?? ''}')),
+          // pw.Row(
+          //     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       printBasicInfoWidget(
+          //           title: 'Contact No.: ',
+          //           titleVal: '${singleReceiptModel?.contact?.mobile}'),
+          //       if (singleReceiptModel?.contact?.email != null)
+          //         printBasicInfoWidget(
+          //             title: 'Email: ',
+          //             titleVal: '${singleReceiptModel?.contact?.email ?? ''}'),
+          //     ]),
           // pw.Divider(),
           // pw.Center(
           //     child: pw.Text('Tax Invoice',
           //         style: pw.TextStyle(
           //             fontSize: 18, fontWeight: pw.FontWeight.bold))),
 
-          pw.Divider(),
-          pw.Center(
-              child: pw.Text('Receipt',
-                  style: pw.TextStyle(
-                      fontSize: 18, fontWeight: pw.FontWeight.bold))),
-          pw.Divider(),
           pw.SizedBox(height: 10),
           printBasicInfoWidget(
               title: 'Customer Name: ',
@@ -119,6 +148,13 @@ class ReceiptPdfGenerate extends StatelessWidget {
                     titleVal:
                         '${AppFormat.dateYYYYMMDDHHMM24(singleReceiptModel?.transactionDate)}'),
               ]),
+          printBasicInfoWidget(
+              title: 'Invoice No: ',
+              titleVal: '${singleReceiptModel?.invoiceNo ?? ''}'),
+          if (singleReceiptModel?.contact?.taxNumber != null)
+            printBasicInfoWidget(
+                title: 'Customer Tax No: ',
+                titleVal: '${singleReceiptModel?.contact?.taxNumber ?? ''}'),
 
           pw.SizedBox(height: 10),
           pw.Divider(),
@@ -233,6 +269,9 @@ class ReceiptPdfGenerate extends StatelessWidget {
           ),
           pw.SizedBox(height: 15),
           pw.Divider(),
+          pw.Center(
+              child: pw.Text(
+                  'Digitally generated receipt, valid without signature or stamp')),
         ],
       ),
     );

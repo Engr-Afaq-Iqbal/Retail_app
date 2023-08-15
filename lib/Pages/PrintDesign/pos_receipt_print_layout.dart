@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:bizmodo_emenu/Models/ReceiptModel.dart';
+import 'dart:typed_data';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:image/image.dart' as i;
 
 import '../../Config/DateTimeFormat.dart';
+import '../../Models/ReceiptModel.dart';
 import '../../Services/storage_services.dart';
 
 Future<List<int>> posReceiptLayout(
@@ -161,8 +162,25 @@ Future<List<int>> posReceiptLayout(
   await fetchNetworkImage(
           AppStorage.getBusinessDetailsData()?.businessData?.logo)
       .then((img) {
+    // final i.Image? image = i.decodeImage(img);
+    // if (image != null) bytes += printer.image(image);
+
     final i.Image? image = i.decodeImage(img);
-    if (image != null) bytes += printer.image(image);
+    if (image != null) {
+      // Resize the image here
+      final int targetWidth = 200; // Set your desired width
+      final int targetHeight =
+          (image.height * (targetWidth / image.width)).round();
+
+      final resizedImage =
+          i.copyResize(image, width: targetWidth, height: targetHeight);
+
+      // Convert the resized image to bytes
+      final List<int> resizedBytes = i.encodePng(resizedImage);
+
+      // Print the resized image
+      bytes += printer.image(i.decodeImage(Uint8List.fromList(resizedBytes))!);
+    }
   });
 
   // Print image:
@@ -181,6 +199,7 @@ Future<List<int>> posReceiptLayout(
 
   // Business Location
   bytes += centeredTitle(
+    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
     '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}',
@@ -188,7 +207,11 @@ Future<List<int>> posReceiptLayout(
 
   // Business Contact Information
   bytes += centeredTitle(
-    'Mobile: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.mobile ?? ''}, '
+    'Contact No: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.mobile ?? ''}, '
+    'Alternate No: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.alternateNumber ?? ''}',
+  );
+
+  bytes += centeredTitle(
     'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}',
   );
 
@@ -197,9 +220,12 @@ Future<List<int>> posReceiptLayout(
   );
 
   bytes += printDivider();
-  bytes += centeredTitle(
-    'Receipt',
+  bytes += centeredBoldTitle(
+    'Receipt Voucher',
   );
+  // bytes += centeredTitle(
+  //   'Receipt Voucher',
+  // );
   bytes += printDivider();
   // Customer Information
   bytes += cl2(
@@ -207,13 +233,20 @@ Future<List<int>> posReceiptLayout(
         ? 'Customer: ${singleReceiptModel?.contact?.name ?? ''}'
         : null,
     cTxt2: (singleReceiptModel?.contact?.mobile != null)
-        ? 'Mobile: ${singleReceiptModel?.contact?.mobile ?? ''}'
+        ? 'Contact No: ${singleReceiptModel?.contact?.mobile ?? ''}'
         : null,
   );
   bytes += cl2(
     cTxt1: 'Salesman: ${singleReceiptModel?.salesPerson?.firstName ?? ''}',
     // Invoice Number
     cTxt2: 'Receipt Date: ${singleReceiptModel?.transactionDate ?? ''}',
+
+    // Staff Name
+  );
+
+  bytes += cl2(
+    cTxt1: 'Invoice No: ${singleReceiptModel?.invoiceNo ?? ''}',
+    // Invoice Number
 
     // Staff Name
   );
@@ -270,5 +303,8 @@ Future<List<int>> posReceiptLayout(
 
   // Divider
   bytes += printDivider();
+  bytes += centeredTitle(
+    'Digitally generated receipt, valid without signature or stamp',
+  );
   return bytes;
 }

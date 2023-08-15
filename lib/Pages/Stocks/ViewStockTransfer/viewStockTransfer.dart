@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../../Services/storage_services.dart';
 import 'createStockTransfer.dart';
 
 class ViewStockTransfer extends StatefulWidget {
@@ -50,12 +51,27 @@ class _ViewStockTransferState extends State<ViewStockTransfer> {
                           .viewStockTransferMoodel?.data.length ??
                       0,
                   itemBuilder: (context, index) {
-                    return IntrinsicHeight(
-                      child: ViwStockTile(
-                        stockTransferData: stockTransferCtrlObj
-                            .viewStockTransferMoodel?.data[index],
-                      ),
-                    );
+                    return (stockTransferCtrlObj.viewStockTransferMoodel
+                                    ?.data[index].locationTo ==
+                                AppStorage.getBusinessDetailsData()
+                                    ?.businessData
+                                    ?.locations
+                                    .first
+                                    .name ||
+                            stockTransferCtrlObj.viewStockTransferMoodel
+                                    ?.data[index].locationFrom ==
+                                AppStorage.getBusinessDetailsData()
+                                    ?.businessData
+                                    ?.locations
+                                    .first
+                                    .name)
+                        ? IntrinsicHeight(
+                            child: ViwStockTile(
+                              stockTransferData: stockTransferCtrlObj
+                                  .viewStockTransferMoodel?.data[index],
+                            ),
+                          )
+                        : SizedBox();
                   }),
             );
           } else

@@ -525,5 +525,7 @@ Map<String, String> english() {
     'sync_application': 'Sync Application',
     'trn_upload': 'Tax Certificate',
     'trn': 'TRN',
+    'forget_password_required': 'Forget password required',
+    'forget_password_heading': 'Forget Password',
   };
 }

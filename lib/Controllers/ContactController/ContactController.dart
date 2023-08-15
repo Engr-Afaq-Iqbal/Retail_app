@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
+import '../../Services/storage_services.dart';
 import '../ListUserController/ListUserController.dart';
 import '../exception_controller.dart';
 import '/Config/const.dart';
@@ -89,7 +90,7 @@ class ContactController extends GetxController {
   ) async {
     return await ApiServices.getMethod(
       feedUrl:
-          '${ApiUrls.contactApi}?type=customer&name=$searchFieldCtrlValue&mobile_num=$searchFieldCtrlValue&biz_name=$searchFieldCtrlValue',
+          '${ApiUrls.contactApi}?type=customer&name=$searchFieldCtrlValue&mobile_num=$searchFieldCtrlValue&biz_name=$searchFieldCtrlValue&created_by=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}',
     ).then((_res) {
       if (_res == null) return null;
       customerContacts = contactModelFromJson(_res);
@@ -298,7 +299,7 @@ class ContactController extends GetxController {
     logger.i(_field);
     logger.i(_fieldForFile);
     return await ApiServices.postMultiPartQuery(
-        feedUrl: ApiUrls.contactApi, fields: _field, files: _fieldForFile)
+            feedUrl: ApiUrls.contactApi, fields: _field, files: _fieldForFile)
         .then((res) {
       logger.i(res);
       if (res == null) {

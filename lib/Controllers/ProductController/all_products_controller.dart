@@ -593,6 +593,8 @@ class AllProductsController extends GetxController {
             jsonDecode(response)['transaction_data'][0]); //
 
         stopProgress();
+        receiptPayment = false;
+        update();
         showToast('Finalize Created Successfully');
         if (isPDFView == false) {
           print('inside print invoice');
@@ -634,6 +636,7 @@ class AllProductsController extends GetxController {
   SaleOrderDataModel? salesOrderModel;
 
   void clearAllAddPaymentControllerInformation() {
+    receiptPayment = false;
     paymentCtrlObj.amountCtrl.clear();
     paymentCtrlObj.transactionNoCtrl.clear();
     paymentCtrlObj.checkNoCtrl.clear();
@@ -659,6 +662,7 @@ class AllProductsController extends GetxController {
   }
 
   void clearAllOtherFields() {
+    receiptPayment = false;
     statusValue = null;
     productQuantityCtrl.clear();
     listProductsModel = null;
@@ -812,13 +816,14 @@ class AllProductsController extends GetxController {
       }
 
       receiptPayment = true;
+      update();
       receiptData = await receiptModelFromJson(response);
 
       //   for (int i = 0; i < receiptData!.data!.length; i++) {
       stopProgress();
       try {
         if (isPDFView == false) {
-          print('printing calling function');
+          debugPrint('printing calling function');
           Get.dialog(Dialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall)),
@@ -855,7 +860,7 @@ class AllProductsController extends GetxController {
       } catch (error) {
         debugPrint('Error -> $error');
       }
-      receiptPayment = false;
+      // receiptPayment = false;
       update();
       clearAllOtherFields();
       clearAllAddPaymentControllerInformation();
@@ -1147,6 +1152,8 @@ class AllProductsController extends GetxController {
             jsonDecode(response)['transaction'][0]); //
 
         stopProgress();
+        receiptPayment = false;
+        update();
         showToast('Order Updated Successfully');
         if (isPDFView == false) {
           print('inside print invoice');
