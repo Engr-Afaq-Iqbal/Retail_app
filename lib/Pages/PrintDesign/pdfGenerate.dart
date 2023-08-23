@@ -342,7 +342,7 @@ class PrintData extends StatelessWidget {
           pw.SizedBox(height: 10),
           pw.Center(
               child: pw.Text(
-                  'Digitally generated invoice, valid without signature or stamp')),
+                  'Digitally generated invoice,\nvalid without signature or stamp')),
         ],
       ),
     );

@@ -271,7 +271,7 @@ class ReceiptPdfGenerate extends StatelessWidget {
           pw.Divider(),
           pw.Center(
               child: pw.Text(
-                  'Digitally generated receipt, valid without signature or stamp')),
+                  'Digitally generated receipt,\nvalid without signature or stamp')),
         ],
       ),
     );

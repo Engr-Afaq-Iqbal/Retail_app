@@ -9,7 +9,7 @@ class Product {
   String? type;
   int? unitId;
   dynamic secondaryUnitId;
-  List<dynamic>? subUnitIds;
+  String? subUnitIds;
   int? brandId;
   int? categoryId;
   int? subCategoryId;

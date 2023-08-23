@@ -18,6 +18,7 @@ import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../../Services/storage_services.dart';
 import 'package:http/http.dart' as http;
+import '../ProductController/all_products_controller.dart';
 
 import '../exception_controller.dart';
 
@@ -56,6 +57,8 @@ class StockTransferController extends GetxController {
   bool isFirstLoadRunning = true;
   bool hasNextPage = true;
   RxBool isLoadMoreRunning = false.obs;
+
+  AllProductsController allProdCtrl = Get.find<AllProductsController>();
 
   static List<NavBarModel> stockTabsList() => [
         NavBarModel(
@@ -246,6 +249,11 @@ class StockTransferController extends GetxController {
       searchProductModel = searchProductModelFromJson(_res);
       for (int i = 0; i < searchProductModel.length; i++) {
         productQuantityCtrl.add(TextEditingController());
+        unitListStatusIds.add(searchProductModel[i].unitId.toString());
+        unitListStatus.add(checkUnits(product: searchProductModel[i]));
+        nestedist
+            .add(addingSpecifiedUnitsInList(product: searchProductModel[i]));
+
         totalAmount.add('0.00');
       }
       update();
@@ -263,6 +271,7 @@ class StockTransferController extends GetxController {
 
   List<SearchProductModel> selectedProducts = [];
   List<String> selectedQuantityList = [];
+  List<String> selectedUnitsList = [];
 
   addSelectedItemsInList() {
     for (int i = 0; i < searchProductModel.length; i++) {
@@ -270,6 +279,7 @@ class StockTransferController extends GetxController {
           productQuantityCtrl[i].text != '0') {
         selectedProducts.add(searchProductModel[i]);
         selectedQuantityList.add(productQuantityCtrl[i].text);
+        selectedUnitsList.add(unitListStatusIds[i]);
       }
     }
     print(selectedQuantityList);
@@ -345,6 +355,8 @@ class StockTransferController extends GetxController {
         //   request.fields['base_unit_multiplier[$i]'] = '0';
         // request.fields['product_unit_id[$i]'] = '${allProdCtrlObj.searchProductModel?[i].}';
         // request.fields['sub_unit_id[$i]'] = '51';
+        request.fields['product_unit_id[$i]'] = '${selectedUnitsList[i]}';
+        request.fields['sub_unit_id[$i]'] = '${selectedUnitsList[i]}';
         request.fields['unit_price[$i]'] =
             '${selectedProducts[i].sellingPrice}';
         //request.fields['price[$i]'] = '${searchProductModel?[i].sellingPrice}';
@@ -619,5 +631,65 @@ class StockTransferController extends GetxController {
     adjustmentTypeStatus = null;
     totalAmountRecCtrl.clear();
     reasonCtrl.clear();
+  }
+
+  /// Units Calculations
+
+  List<List<String>> nestedist = [];
+  List<String> unitListStatus = [];
+  List<String> unitListStatusIds = [];
+
+  checkSelectedUnitsIds({
+    String? unitName,
+  }) {
+    return Get.find<AllProductsController>()
+        .unitListModel
+        ?.data
+        ?.firstWhereOrNull((i) => i.shortName == unitName)
+        ?.id
+        .toString();
+  }
+
+  checkUnitsActualBaseMultiplier({
+    String? unitName,
+  }) {
+    return Get.find<AllProductsController>()
+            .unitListModel
+            ?.data
+            ?.firstWhereOrNull((i) => i.shortName == unitName)
+            ?.baseUnitMultiplier ??
+        '1.00';
+  }
+
+  checkUnits({
+    SearchProductModel? product,
+  }) {
+    return Get.find<AllProductsController>()
+        .unitListModel
+        ?.data
+        ?.firstWhereOrNull((i) => i.id == product?.unitId)
+        ?.shortName;
+  }
+
+  addingSpecifiedUnitsInList({
+    SearchProductModel? product,
+  }) {
+    List<String> names = [];
+    // names.add('Pieces');
+    // names.add('Plate');
+    names.add(checkUnits(product: product));
+    for (int i = 0; i < allProdCtrl.unitListModel!.data!.length; i++) {
+      // if (unitListModel?.data?[i].baseUnitId == product?.unitId)
+      if (allProdCtrl.unitListModel?.data?[i].baseUnitId != null) {
+        if (product?.unitId == allProdCtrl.unitListModel?.data?[i].baseUnitId) {
+          names.add(allProdCtrl.unitListModel?.data?[i].shortName ?? '');
+        }
+      }
+    }
+
+    return names;
+    // return unitListModel?.data
+    //     ?.firstWhereOrNull((i) => i.id == product?.unitId)
+    //     ?.actualName;
   }
 }

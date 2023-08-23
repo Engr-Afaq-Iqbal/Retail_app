@@ -161,7 +161,7 @@ class AllProductsController extends GetxController {
   }) {
     return unitListModel?.data
         ?.firstWhereOrNull((i) => i.id == product?.unitId)
-        ?.actualName;
+        ?.shortName;
   }
 
   checkUnitsShortName({
@@ -176,7 +176,7 @@ class AllProductsController extends GetxController {
     String? unitName,
   }) {
     return unitListModel?.data
-            ?.firstWhereOrNull((i) => i.actualName == unitName)
+            ?.firstWhereOrNull((i) => i.shortName == unitName)
             ?.baseUnitMultiplier ??
         '1.00';
   }
@@ -185,7 +185,7 @@ class AllProductsController extends GetxController {
     String? unitName,
   }) {
     return unitListModel?.data
-        ?.firstWhereOrNull((i) => i.actualName == unitName)
+        ?.firstWhereOrNull((i) => i.shortName == unitName)
         ?.id
         .toString();
   }
@@ -211,7 +211,7 @@ class AllProductsController extends GetxController {
       // if (unitListModel?.data?[i].baseUnitId == product?.unitId)
       if (unitListModel?.data?[i].baseUnitId != null) {
         if (product?.unitId == unitListModel?.data?[i].baseUnitId) {
-          names.add(unitListModel?.data?[i].actualName ?? '');
+          names.add(unitListModel?.data?[i].shortName ?? '');
         }
       }
     }

@@ -304,7 +304,7 @@ Future<List<int>> posReceiptLayout(
   // Divider
   bytes += printDivider();
   bytes += centeredTitle(
-    'Digitally generated receipt, valid without signature or stamp',
+    'Digitally generated receipt,\nvalid without signature or stamp',
   );
   return bytes;
 }

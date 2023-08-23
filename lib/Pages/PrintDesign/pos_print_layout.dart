@@ -562,6 +562,6 @@ Future<List<int>> posInvoiceAndKotPrintLayout(
   // Footer
   bytes += printDivider();
   bytes += centeredBoldTitle(
-      'Digitally generated invoice, valid without signature or stamp');
+      'Digitally generated invoice,\nvalid without signature or stamp');
   return bytes;
 }
