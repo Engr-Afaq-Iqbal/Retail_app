@@ -387,21 +387,21 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                       ),
                                     ),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Center(
-                                      child: Text(
-                                        'total'.tr,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                                fontSize: 12,
-                                                fontWeight: FontWeight.bold,
-                                                color: kWhiteColor),
-                                      ),
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   flex: 1,
+                                  //   child: Center(
+                                  //     child: Text(
+                                  //       'total'.tr,
+                                  //       style: Theme.of(context)
+                                  //           .textTheme
+                                  //           .titleMedium!
+                                  //           .copyWith(
+                                  //               fontSize: 12,
+                                  //               fontWeight: FontWeight.bold,
+                                  //               color: kWhiteColor),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               )),
 
@@ -667,18 +667,18 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                                                       }),
                                                 ),
 
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.totalAmount[index])}',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                      style: TextStyle(
-                                                          fontSize: 11),
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Expanded(
+                                                //   flex: 1,
+                                                //   child: Center(
+                                                //     child: Text(
+                                                //       '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.totalAmount[index])}',
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //       style: TextStyle(
+                                                //           fontSize: 11),
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             );
                                           }),
@@ -717,9 +717,9 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  headings(
-                                      txt: 'total_amount'.tr +
-                                          ': ${stockTranCtrlObj.finalTotal}'),
+                                  // headings(
+                                  //     txt: 'total_amount'.tr +
+                                  //         ': ${stockTranCtrlObj.finalTotal}'),
                                   CustomButton(
                                     title: Text(
                                       'save'.tr,

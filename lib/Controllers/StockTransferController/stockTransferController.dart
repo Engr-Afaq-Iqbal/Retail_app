@@ -135,7 +135,7 @@ class StockTransferController extends GetxController {
   Future fetchStockTransfersList({String? pageUrl}) async {
     await ApiServices.getMethod(
             feedUrl: pageUrl ??
-                '${ApiUrls.viewStockTransfer}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&per_page=20')
+                '${ApiUrls.viewStockTransfer}?per_page=20') //location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&
         .then((_res) {
       update();
       if (_res == null) return null;
@@ -241,8 +241,8 @@ class StockTransferController extends GetxController {
   /// Searching Product
   Future searchProductList({String? pageUrl, String? term}) async {
     await ApiServices.getMethod(
-            feedUrl:
-                pageUrl ?? '${ApiUrls.searchProductListApi}?term=${term}') //
+            feedUrl: pageUrl ??
+                '${ApiUrls.searchProductListApi}?location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}&term=${term}') //
         .then((_res) {
       update();
       if (_res == null) return null;
@@ -251,8 +251,8 @@ class StockTransferController extends GetxController {
         productQuantityCtrl.add(TextEditingController());
         unitListStatusIds.add(searchProductModel[i].unitId.toString());
         unitListStatus.add(checkUnits(product: searchProductModel[i]));
-        nestedist
-            .add(addingSpecifiedUnitsInList(product: searchProductModel[i]));
+        nestedist.add(
+            addingSpecifiedUnitsInList(product: searchProductModel[i]) ?? '');
 
         totalAmount.add('0.00');
       }

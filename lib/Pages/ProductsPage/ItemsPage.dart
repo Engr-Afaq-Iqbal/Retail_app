@@ -202,7 +202,7 @@ class _ItemsPageState extends State<ItemsPage> {
                                             flex: 1,
                                             child: Text(
                                               double.parse(
-                                                    '${allProdCtrlObj.searchedProducts[index].productVariations?.first.variations?.first.sellPriceIncTax}',
+                                                    '${allProdCtrlObj.searchedProducts[index].productVariations?.first.variations?.first.sellPriceIncTax ?? '0.00'}',
                                                   ).toStringAsFixed(2) +
                                                   ' /-',
                                               textAlign: TextAlign.right,
