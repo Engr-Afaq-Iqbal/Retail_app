@@ -51,7 +51,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
             children: [
               CurvedContainer(),
               Container(
-                height: MediaQuery.of(context).size.height * 0.29,
+                height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width * 0.85,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
@@ -146,7 +146,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                   return progressIndicator();
                 } else
                   return Container(
-                    height: height * 0.4,
+                    height: height * 0.55,
                     width: width * 0.85,
                     child: GridView.builder(
                       padding: EdgeInsets.zero,
@@ -159,33 +159,55 @@ class _HomePageRetailState extends State<HomePageRetail> {
                       ),
                       itemCount: dashBoardCtrl.names.length,
                       itemBuilder: (context, index) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text(dashBoardCtrl.names[index].tr,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium!
-                                        .copyWith(
-                                            color: kWhiteColor, fontSize: 12),
-                                    textAlign: TextAlign.center),
-                              ),
-                              Text(
-                                AppFormat.doubleToStringUpTo2(
-                                    dashboardCtrlObj.namesData[index])!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium!
-                                    .copyWith(color: kCardBackgroundColor),
-                              )
-                            ],
+                        return GestureDetector(
+                          onTap: () {
+                            if (index == 8) {
+                             print("8");
+                              // Get.to("");
+                            } else if (index == 9) {
+                              print("9");
+                              //Get.to("");
+                            }
+                          },
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.02,
+                            width: MediaQuery.of(context).size.width * 0.6,
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary,
+                                borderRadius: BorderRadius.circular(15)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AppFormat.doubleToStringUpTo2(dashboardCtrlObj
+                                            .namesData[index]) ==
+                                        null
+                                    ? SizedBox(
+                                        height: 20,
+                                      )
+                                    : SizedBox(),
+                                Center(
+                                  child: Text(dashBoardCtrl.names[index].tr,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium!
+                                          .copyWith(
+                                              color: kWhiteColor, fontSize: 12),
+                                      textAlign: TextAlign.center),
+                                ),
+                                Text(
+                                  AppFormat.doubleToStringUpTo2(dashboardCtrlObj
+                                              .namesData[index]) !=
+                                          null
+                                      ? AppFormat.doubleToStringUpTo2(
+                                          dashboardCtrlObj.namesData[index])!
+                                      : " ",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!
+                                      .copyWith(color: kCardBackgroundColor),
+                                )
+                              ],
+                            ),
                           ),
                         );
                       },

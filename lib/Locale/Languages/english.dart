@@ -188,6 +188,7 @@ Map<String, String> english() {
     'address': 'Address',
     'terms': 'Terms & Condition',
     'logout': 'Logout',
+    'more': 'More',
     'loading': 'Loading',
     'finish': 'Finish',
     'items_are_not_available': 'Items are not available!',

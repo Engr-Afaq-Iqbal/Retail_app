@@ -21,6 +21,8 @@ class DashboardController extends GetxController {
     'purchase_due',
     'total_purchase_return',
     'expense',
+    "My Accounts",
+    "Limited Stocks",
   ];
 
   List<String> iconsNames = [
@@ -70,6 +72,9 @@ class DashboardController extends GetxController {
         '${homeTabModel?.purchaseDue ?? '0.00'}',
         '${homeTabModel?.totalPurchaseReturn ?? '0.00'}',
         '${homeTabModel?.totalExpense ?? '0.00'}',
+        ' ',
+        ' ',
+
       ];
       print(namesData);
       print(' record${_res}');

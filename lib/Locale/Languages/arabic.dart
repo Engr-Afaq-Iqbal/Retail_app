@@ -186,6 +186,7 @@ Map<String, String> arabic() {
     'villa': 'الفيلا / البناء / الشقة',
     'address': 'عنوان',
     'terms': 'الأحكام والشروط',
+    'more': 'أكثر',
     'logout': 'تسجيل خروج',
     'loading': 'تحميل',
     'finish': 'ينهي',
