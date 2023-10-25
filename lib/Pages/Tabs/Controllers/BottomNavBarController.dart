@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../More/more.dart';
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Booking/tab_bar_booking.dart';
@@ -29,24 +30,25 @@ class BottomNavBarController extends GetxController {
       //page: OrderTypeSelection(),
       page: HomePageRetail(),
     ),
-    // NavBarModel(
-    //   icon: Icons.shopping_bag_outlined,
-    //   label: 'orders',
-    //   onTap: () {
-    //     print('Order Page');
-    //     // Get.to(() => OrdersMain());
-    //   },
-    //   page: OrdersTabPage(),
-    // ),
-    // NavBarModel(
-    //   icon: Icons.table_restaurant_outlined,
-    //   label: 'table_drop',
-    //   onTap: () {
-    //     print('Table page');
-    //     // Get.to(() => TablePage());
-    //   },
-    //   page: TablesPage(isForBookedTables: true),
-    // ),
+
+    NavBarModel(
+      icon: Icons.point_of_sale_outlined,
+      label: 'Pos',
+      onTap: () {
+        print('Table page');
+        // Get.to(() => TablePage());
+      },
+      page: TablesPage(isForBookedTables: true),
+    ),
+    NavBarModel(
+      icon: Icons.menu_open_outlined,
+      label: 'More',
+      onTap: () {
+        print('Order Page');
+        // Get.to(() => OrdersMain());
+      },
+      page: MoreDialog(),
+    ),
     // NavBarModel(
     //   icon: Icons.event_note_outlined,
     //   label: 'booking_tab',

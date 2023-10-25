@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../Models/Dashboard/limited_stocks.dart';
+import '../../Models/Dashboard/my_accounts.dart';
 import '../../Services/storage_services.dart';
 import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
@@ -163,10 +165,10 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           onTap: () {
                             if (index == 8) {
                              print("8");
-                              // Get.to("");
+                               Get.to(MyAccounts());
                             } else if (index == 9) {
                               print("9");
-                              //Get.to("");
+                              Get.to(limitedStocks());
                             }
                           },
                           child: Container(
