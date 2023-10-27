@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../More/more.dart';
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Booking/tab_bar_booking.dart';
@@ -18,6 +16,27 @@ class BottomNavBarController extends GetxController {
     _selectedNavBarIndex = _ind;
     update();
   }
+   _showMoreBottomSheet(BuildContext context) async{
+    await Get.bottomSheet(
+      Container(
+        color: Colors.red,
+        // height: Get.height * 0.5,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'This is a Get Bottom Sheet',
+            style: TextStyle(fontSize: 18.0),
+          ),
+        ),
+      ),
+      barrierColor: Colors.black.withOpacity(0.5), // Optional
+      isDismissible: true, // Optional
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ), // Optional
+    );
+  }
+
 
   List<NavBarModel> bottomNavBarData = [
     NavBarModel(
@@ -40,15 +59,15 @@ class BottomNavBarController extends GetxController {
       },
       page: TablesPage(isForBookedTables: true),
     ),
-    NavBarModel(
-      icon: Icons.menu_open_outlined,
-      label: 'More',
-      onTap: () {
-        print('Order Page');
-        // Get.to(() => OrdersMain());
-      },
-      page: MoreDialog(),
-    ),
+    // NavBarModel(
+    //   icon: Icons.menu_open_outlined,
+    //   label: 'More',
+    //   onTap: () {
+    //     print('Order Page');
+    //     // Get.to(() => OrdersMain());
+    //   },
+    //   page: BottomNavBarController()._showMoreBottomSheet(Get.context!),
+    // ),
     // NavBarModel(
     //   icon: Icons.event_note_outlined,
     //   label: 'booking_tab',

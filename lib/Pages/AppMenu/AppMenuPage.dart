@@ -20,6 +20,20 @@ class AppMenuPage extends StatelessWidget {
   final String supportNumber = "+971504059006";
   final WhatsApp whatsApp = WhatsApp();
   final AuthController authCtrlObj = Get.find<AuthController>();
+  List menuList = [
+    MenuItem(icon: Icons.add_card_outlined, text: "Account List", onTap: () {}),
+    MenuItem(icon: Icons.badge_outlined, text: "Add Account", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Expense List", onTap: () {}),
+    MenuItem(icon: Icons.note_add_outlined, text: "Add New Expense", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Income  List", onTap: () {}),
+    MenuItem(icon: Icons.note_add_outlined, text: "Add New Income", onTap: () {}),
+    MenuItem(icon: Icons.new_label_outlined, text: "New Transfer", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Transaction List", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Product Categories", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Product Brands", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Product Units", onTap: () {}),
+    MenuItem(icon: Icons.list_outlined, text: "Product Setup", onTap: () {}),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -153,10 +167,10 @@ class AppMenuPage extends StatelessWidget {
                       context: context),
                   listTile(
                       onTap: () async {
-                        logout();
+                        _showMoreBottomSheet(context);
                       },
                       title: 'more'.tr,
-                      iconData: Icons.more_outlined,
+                      iconData: Icons.menu_open_outlined,
                       context: context),
                 ],
               ),
@@ -199,8 +213,67 @@ class AppMenuPage extends StatelessWidget {
     }
   }
 
+  _showMoreBottomSheet(BuildContext context) async {
+    await Get.bottomSheet(
+      Container(
+          color: Colors.white,
+          height: Get.height * 0.5,
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(color: Colors.blueGrey,width: 100,child: Text(""),height: 4,),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    mainAxisExtent: 100,
+                    ),
+                itemCount: menuList.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: menuList[index].onTap,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(menuList[index].icon,        color: Theme.of(context).colorScheme.primary,
+                        ),
+                        Text(
+                            menuList[index].text,
+                        textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+            ],
+          )),
+      barrierColor: Colors.black.withOpacity(0.5), // Optional
+      isDismissible: true, // Optional
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ), // Optional
+    );
+  }
+
   void logout() async {
     await AppStorage.box.erase();
     Get.offAll(() => Settings());
   }
+}
+
+class MenuItem {
+  final IconData icon;
+  final String text;
+  final Function onTap;
+
+  MenuItem({required this.icon, required this.text, required this.onTap});
 }
