@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../Controllers/DashboardController/dashboardController.dart';
+import '../Pages/AppMenu/AppMenuPage.dart';
 import '../Pages/Notifications/notifications.dart';
 import '../Services/storage_services.dart';
 
@@ -20,64 +21,64 @@ class _CurvedContainerState extends State<CurvedContainer> {
   TextEditingController controller = TextEditingController();
 
   ///Date time range picker
-  Future<void> _showDateRangePicker() async {
-    List<DateTime>? dateTimeList = await showOmniDateTimeRangePicker(
-      context: context,
-      startInitialDate: DateTime.now(),
-      startFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      startLastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      endInitialDate: DateTime.now(),
-      endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
-      endLastDate: DateTime.now().add(
-        const Duration(days: 3652),
-      ),
-      is24HourMode: false,
-      isShowSeconds: false,
-      minutesInterval: 1,
-      secondsInterval: 1,
-      type: OmniDateTimePickerType.dateAndTime,
-      borderRadius: const BorderRadius.all(Radius.circular(16)),
-      constraints: const BoxConstraints(
-        maxWidth: 350,
-        maxHeight: 650,
-      ),
-      transitionBuilder: (context, anim1, anim2, child) {
-        return FadeTransition(
-          opacity: anim1.drive(
-            Tween(
-              begin: 0,
-              end: 1,
-            ),
-          ),
-          child: child,
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 200),
-      barrierDismissible: true,
-      selectableDayPredicate: (dateTime) {
-        // Disable 25th Feb 2023
-        if (dateTime == DateTime(2023, 2, 25)) {
-          return false;
-        } else {
-          return true;
-        }
-      },
-    );
-
-    dashBoardCtrl.startDateCtrl.text = dateTimeList![0].toString();
-    dashBoardCtrl.endDateCtrl.text = dateTimeList[1].toString();
-    dashBoardCtrl.fetchDashboardData();
-    setState(() {});
-  }
+  // Future<void> _showDateRangePicker() async {
+  //   List<DateTime>? dateTimeList = await showOmniDateTimeRangePicker(
+  //     context: context,
+  //     startInitialDate: DateTime.now(),
+  //     startFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+  //     startLastDate: DateTime.now().add(
+  //       const Duration(days: 3652),
+  //     ),
+  //     endInitialDate: DateTime.now(),
+  //     endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+  //     endLastDate: DateTime.now().add(
+  //       const Duration(days: 3652),
+  //     ),
+  //     is24HourMode: false,
+  //     isShowSeconds: false,
+  //     minutesInterval: 1,
+  //     secondsInterval: 1,
+  //     type: OmniDateTimePickerType.dateAndTime,
+  //     borderRadius: const BorderRadius.all(Radius.circular(16)),
+  //     constraints: const BoxConstraints(
+  //       maxWidth: 350,
+  //       maxHeight: 650,
+  //     ),
+  //     transitionBuilder: (context, anim1, anim2, child) {
+  //       return FadeTransition(
+  //         opacity: anim1.drive(
+  //           Tween(
+  //             begin: 0,
+  //             end: 1,
+  //           ),
+  //         ),
+  //         child: child,
+  //       );
+  //     },
+  //     transitionDuration: const Duration(milliseconds: 200),
+  //     barrierDismissible: true,
+  //     selectableDayPredicate: (dateTime) {
+  //       // Disable 25th Feb 2023
+  //       if (dateTime == DateTime(2023, 2, 25)) {
+  //         return false;
+  //       } else {
+  //         return true;
+  //       }
+  //     },
+  //   );
+  //
+  //   dashBoardCtrl.startDateCtrl.text = dateTimeList![0].toString();
+  //   dashBoardCtrl.endDateCtrl.text = dateTimeList[1].toString();
+  //   dashBoardCtrl.fetchDashboardData();
+  //   setState(() {});
+  // }
 
   @override
   Widget build(BuildContext context) {
     return ClipPath(
       clipper: _MyClipper(),
       child: Container(
-        height: 250,
+        height: 210,
         width: MediaQuery.of(context).size.width,
         color: Theme.of(context).colorScheme.primary,
         child: Padding(
@@ -99,6 +100,7 @@ class _CurvedContainerState extends State<CurvedContainer> {
                         decoration: InputDecoration(
                           prefixIcon: Icon(Icons.search),
                           hintText: 'searchItem'.tr,
+                          hintStyle: TextStyle(fontSize: 10),
                           contentPadding: EdgeInsets.symmetric(vertical: 0),
                           filled: true,
                           fillColor: Theme.of(context).colorScheme.background,
@@ -109,18 +111,7 @@ class _CurvedContainerState extends State<CurvedContainer> {
                         ),
                         onChanged: (value) {},
                       )),
-                  GestureDetector(
-                    onTap: () {
-                      _showDateRangePicker();
-                    },
-                    child: Icon(
-                      Icons.calendar_month_outlined,
-                      color: kWhiteColor,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
+
                   GestureDetector(
                     onTap: () {
                       Get.to(() => Notifications());
@@ -132,7 +123,16 @@ class _CurvedContainerState extends State<CurvedContainer> {
                   ),
                   SizedBox(
                     width: 5,
-                  )
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(AppMenuPage(),);
+                    },
+                    child: Icon(
+                      Icons.menu_outlined,
+                      color: kWhiteColor,
+                    ),
+                  ),
                   // Icon(
                   //   Icons.add,
                   //   color: kWhiteColor,

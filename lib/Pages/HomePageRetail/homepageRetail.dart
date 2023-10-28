@@ -2,6 +2,7 @@ import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
@@ -29,6 +30,57 @@ class HomePageRetail extends StatefulWidget {
 
 class _HomePageRetailState extends State<HomePageRetail> {
   DashboardController dashBoardCtrl = Get.find<DashboardController>();
+  Future<void> _showDateRangePicker() async {
+    List<DateTime>? dateTimeList = await showOmniDateTimeRangePicker(
+      context: context,
+      startInitialDate: DateTime.now(),
+      startFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+      startLastDate: DateTime.now().add(
+        const Duration(days: 3652),
+      ),
+      endInitialDate: DateTime.now(),
+      endFirstDate: DateTime(1600).subtract(const Duration(days: 3652)),
+      endLastDate: DateTime.now().add(
+        const Duration(days: 3652),
+      ),
+      is24HourMode: false,
+      isShowSeconds: false,
+      minutesInterval: 1,
+      secondsInterval: 1,
+      type: OmniDateTimePickerType.dateAndTime,
+      borderRadius: const BorderRadius.all(Radius.circular(16)),
+      constraints: const BoxConstraints(
+        maxWidth: 350,
+        maxHeight: 650,
+      ),
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1.drive(
+            Tween(
+              begin: 0,
+              end: 1,
+            ),
+          ),
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 200),
+      barrierDismissible: true,
+      selectableDayPredicate: (dateTime) {
+        // Disable 25th Feb 2023
+        if (dateTime == DateTime(2023, 2, 25)) {
+          return false;
+        } else {
+          return true;
+        }
+      },
+    );
+
+    dashBoardCtrl.startDateCtrl.text = dateTimeList![0].toString();
+    dashBoardCtrl.endDateCtrl.text = dateTimeList[1].toString();
+    dashBoardCtrl.fetchDashboardData();
+    setState(() {});
+  }
 
   @override
   void initState() {
@@ -135,7 +187,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                           Expanded(
                             child: Text(
                               dashBoardCtrl.iconsNames[index].tr,
-                              style: TextStyle(color: blackColor, fontSize: 11),
+                              style: TextStyle(color: blackColor, fontSize: 9),
                               softWrap: true,
                               textAlign: TextAlign.center,
                             ),
@@ -147,7 +199,27 @@ class _HomePageRetailState extends State<HomePageRetail> {
                 ),
               ),
               SizedBox(
-                height: 20,
+                height: 5,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _showDateRangePicker();
+                      },
+                      child: Icon(
+                        Icons.calendar_month_outlined,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 5,
               ),
               GetBuilder<DashboardController>(
                   builder: (DashboardController dashboardCtrlObj) {
@@ -200,7 +272,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                           .textTheme
                                           .titleMedium!
                                           .copyWith(
-                                              color: kWhiteColor, fontSize: 12),
+                                              color: kWhiteColor, fontSize: 9),
                                       textAlign: TextAlign.center),
                                 ),
                                 Text(
@@ -213,7 +285,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleMedium!
-                                      .copyWith(color: kCardBackgroundColor),
+                                      .copyWith(color: kCardBackgroundColor,fontSize: 9),
                                 )
                               ],
                             ),
