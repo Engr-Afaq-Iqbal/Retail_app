@@ -39,7 +39,6 @@ class AppMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         centerTitle: true,
         elevation: 0,
         title: FadedScaleAnimation(
@@ -248,6 +247,7 @@ class AppMenuPage extends StatelessWidget {
                         Text(
                             menuList[index].text,
                         textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 8),
                         ),
                       ],
                     ),
