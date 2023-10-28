@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Models/ContactsModel/getSpecifiedContactModel.dart';
 import '../ListUserController/ListUserController.dart';
+import '../exception_controller.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/create_contact_response_model.dart';
 import '/Models/order_type_model/customer_contact_model.dart';
@@ -47,6 +49,11 @@ class ContactController extends GetxController {
   TextEditingController permanentAddressCtrl = TextEditingController();
   TextEditingController currentAddressCtrl = TextEditingController();
   String? id;
+  bool isForEdit = true;
+
+
+  File? image;
+  File? image2;
 
   ///end
 
@@ -275,6 +282,74 @@ class ContactController extends GetxController {
     });
   }
 
+  updateContactCustomer({required String contactApi}) async {
+    // Map<String, String> _fieldForFile = {};
+    //
+    // _fieldForFile['trade_license'] = '${image?.path}';
+    // _fieldForFile['tax_certificate'] = '${image2?.path}';
+
+    Map<String, String> _field = {
+      "type": "customer",
+      "first_name": "${firstNameCtrl.text}",
+      "mobile": "${mobileNumberCtrl.text}",
+    };
+    _field["supplier_business_name"] = "${businessNameCtrl.text}";
+    // _field["prefix"] = "${prefixCtrl.text}";
+    // _field["middle_name"] = "${middleNameCtrl.text}";
+    _field["last_name"] = "${lastNameCtrl.text}";
+    // _field["pay_term_number"] = '7';
+    // _field["pay_term_type"] = "months";
+    _field["landline"] = "${landLineCtrl.text}";
+    _field["alternate_number"] = "${alternateMblNbrNumberCtrl.text}";
+    _field["tax_number"] = "${trnCtrl.text}";
+    _field["custom_field1"] = "${licenseCtrl.text}";
+    _field["email"] = "${emailCtrl.text}";
+
+    // _field["assigned_to"] = "${statusValue}";
+
+    // _field["customer_group_id"] = "fuga";
+    // _field["contact_id"] = "reprehenderit";
+    // _field["dob"] = "2000-06-13";
+    // _field["custom_field2"] = "rerum";
+    // _field["custom_field3"] = "dolorum";
+    // _field["custom_field4"] = "sint";
+    //
+    // _field["position"] = "et";
+    // _field["opening_balance"] = 0;
+    // _field["source_id"] = 10;
+    // _field["life_stage_id"] = 19;
+    //
+    logger.i(_field);
+    // logger.i(_fieldForFile);
+    return await ApiServices.postMultiPartQuery(
+      feedUrl: '${ApiUrls.updateContactApi}${contactApi}',
+      fields: _field,
+    ) //files: _fieldForFile
+        .then((res) {
+      logger.i(res);
+      if (res == null) {
+        print('Returning null');
+        return null;
+      }
+      showToast('Customer updated successfully');
+      stopProgress();
+      clearAllContactCtrl();
+      Get.back();
+      // contactId = createContactResponseModelFromJson(_res).data.id.toString();
+      return true;
+    }).onError((error, stackTrace) async {
+      debugPrint('Error => $error');
+      debugPrint('StackTrace => $stackTrace');
+      logger.e('StackTrace => $stackTrace');
+      await ExceptionController().exceptionAlert(
+        errorMsg: '$error',
+        exceptionFormat: ApiServices.methodExceptionFormat(
+            'POST', ApiUrls.updateContactApi, error, stackTrace),
+      );
+      throw '$error';
+    });
+  }
+
   clearAllContactCtrl() {
     customerNameCtrl.clear();
     nameCtrl.clear();
@@ -339,16 +414,18 @@ class ContactController extends GetxController {
   }
 
   functionStoreValue(GetSpecificContactModel? getSpecificContactModel) {
-    prefixCtrl.text = getSpecificContactModel?.data?[0].prefix ?? '';
-    firstNameCtrl.text = getSpecificContactModel?.data?[0].firstName ?? '';
-    middleNameCtrl.text = getSpecificContactModel?.data?[0].middleName ?? '';
-    lastNameCtrl.text = getSpecificContactModel?.data?[0].lastName ?? '';
+    prefixCtrl.text = getSpecificContactModel?.data?.first.prefix ?? '';
+    firstNameCtrl.text = getSpecificContactModel?.data?.first.firstName ?? '';
+    middleNameCtrl.text = getSpecificContactModel?.data?.first.middleName ?? '';
+    lastNameCtrl.text = getSpecificContactModel?.data?.first.lastName ?? '';
     businessNameCtrl.text =
-        getSpecificContactModel?.data?[0].supplierBusinessName ?? '';
-    mobileNumberCtrl.text = getSpecificContactModel?.data?[0].mobile ?? '';
+        getSpecificContactModel?.data?.first.supplierBusinessName ?? '';
+    mobileNumberCtrl.text = getSpecificContactModel?.data?.first.mobile ?? '';
     alternateMblNbrNumberCtrl.text =
-        getSpecificContactModel?.data?[0].alternateNumber ?? '';
-    landLineCtrl.text = getSpecificContactModel?.data?[0].landline ?? '';
-    emailCtrl.text = getSpecificContactModel?.data?[0].email ?? '';
+        getSpecificContactModel?.data?.first.alternateNumber ?? '';
+    landLineCtrl.text = getSpecificContactModel?.data?.first.landline ?? '';
+    emailCtrl.text = getSpecificContactModel?.data?.first.email ?? '';
+    licenseCtrl.text = getSpecificContactModel?.data?.first.customField1 ?? '';
+    trnCtrl.text = getSpecificContactModel?.data?.first.taxNumber ?? '';
   }
 }

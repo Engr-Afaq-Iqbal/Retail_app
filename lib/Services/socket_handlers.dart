@@ -3,7 +3,6 @@ import 'package:socket_io_client/socket_io_client.dart' as socket_io_cli;
 
 import '/Config/app_config.dart';
 import '/Config/utils.dart';
-import '/Controllers/TableSelectionController/table_management_controller.dart';
 import 'storage_services.dart';
 
 SocketService? socketService;
@@ -52,7 +51,7 @@ class SocketService {
     /// Table update Socket Event
     _socket.on('table-channel:App\\Events\\TableCreateEvent', (_table) {
       logger.d('Table Socket Event => $_table');
-      Get.find<TableSelectionController>().updateTableInfo(tableData: _table);
+      // Get.find<TableSelectionController>().updateTableInfo(tableData: _table);
     });
 
     _socket.onConnectError((_) {

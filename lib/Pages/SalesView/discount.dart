@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../Components/custom_circular_button.dart';
 import '../../Components/discountTypeDropDown.dart';
 import '../../Components/textfield.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Controllers/ProductController/product_cart_controller.dart';
 
 class Discount extends StatefulWidget {
@@ -15,7 +16,7 @@ class Discount extends StatefulWidget {
 
 class _DiscountState extends State<Discount> {
   final ProductCartController productCtrlCtrlObj =
-      Get.find<ProductCartController>();
+  Get.find<ProductCartController>();
 
   @override
   Widget build(BuildContext context) {
@@ -91,17 +92,9 @@ class _DiscountState extends State<Discount> {
                   padding: EdgeInsets.only(top: 20),
                   child: CustomButton(
                       onTap: () {
-                        if ('Percentage' ==
-                            productCtrlCtrlObj.discountType.text) {
-                          productCtrlCtrlObj.totalDiscountPercentage();
-                          print('percentage');
-                          productCtrlCtrlObj.update();
-                        } else if (productCtrlCtrlObj.discountType.text ==
-                            'Fixed') {
-                          print('Fixed');
-                          productCtrlCtrlObj.update();
-                        }
-
+                        Get.find<AllProductsController>()
+                            .calculatingTotalDiscount();
+                        productCtrlCtrlObj.update();
                         Get.back();
                       },
                       btnTxt: 'update'.tr,

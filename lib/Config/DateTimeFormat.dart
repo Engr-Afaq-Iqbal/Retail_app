@@ -17,6 +17,16 @@ class AppFormat {
     return formattedDate;
   }
 
+  static String dateOnly(DateTime date) {
+    String formattedDate = DateFormat('dd-MM-yy').format(date);
+    return formattedDate;
+  }
+
+  static String timeOnly(DateTime date) {
+    String formattedDate = DateFormat('hh:mm a').format(date);
+    return formattedDate;
+  }
+
   static String dateMonthOnly(DateTime date) {
     String formattedDate = DateFormat('dd MMMM').format(date);
     return formattedDate;
@@ -35,5 +45,16 @@ class AppFormat {
   static String? doubleToStringUpTo2(String? number) {
     if (number == null) return null;
     return double.tryParse(number)?.toStringAsFixed(2);
+  }
+
+  // static String? doubleToStringUpTo1(String? number) {
+  //   if (number == null) return null;
+  //   return double.tryParse(number)?.toStringAsFixed(1);
+  // }
+
+  static String removeArabic(String text) {
+    final arabicPattern = RegExp(
+        r'[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFBC1\uFE70-\uFEFF]+');
+    return text.replaceAll(arabicPattern, '');
   }
 }

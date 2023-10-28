@@ -1,14 +1,14 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/utils.dart';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../../Components/productHeadings.dart';
+import '../../../Components/custom_circular_button.dart';
+import '../../../Components/p4Headings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
+import '../../../Config/utils.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
@@ -22,9 +22,9 @@ class CreateStockAdjustment extends StatefulWidget {
 }
 
 class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
-  StockTransferController stockAdjustmentCtrlObj =
-      Get.find<StockTransferController>();
-  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+  StockTransferController stockTransferCtrlObj =
+  Get.find<StockTransferController>();
+  // AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
 
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
@@ -66,23 +66,23 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
       },
     );
 
-    stockAdjustmentCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    stockTransferCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
     print(dateTime);
   }
 
   void dispose() {
-    stockAdjustmentCtrlObj.searchCtrl.clear();
-    allProdCtrlObj.finalTotal = 0.00;
-    allProdCtrlObj.totalAmount.clear();
-    allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel = null;
+    stockTransferCtrlObj.searchCtrl.clear();
+    stockTransferCtrlObj.finalTotal = 0.00;
+    stockTransferCtrlObj.totalAmount.clear();
+    stockTransferCtrlObj.productQuantityCtrl.clear();
+    stockTransferCtrlObj.searchProductModel.clear();
 
     super.dispose();
   }
 
   @override
   void initState() {
-    allProdCtrlObj.searchProductList(term: '');
+    stockTransferCtrlObj.searchProductList(term: '');
     // TODO: implement initState
     super.initState();
   }
@@ -95,7 +95,7 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Create Stock Adjustment'),
+        title: Text('create_stock_adjustment'.tr),
       ),
       body: GestureDetector(
         onTap: () {
@@ -114,12 +114,12 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Date:*'),
+                        headings(txt: 'date'.tr + ':*'),
                         AppFormField(
                           width: width * 0.43,
                           readOnly: true,
-                          controller: stockAdjustmentCtrlObj.dateCtrl,
-                          labelText: 'Select Date',
+                          controller: stockTransferCtrlObj.dateCtrl,
+                          labelText: 'select_date'.tr,
                           prefixIcon: Icon(Icons.calendar_month),
                           onTap: () {
                             setState(() {
@@ -133,61 +133,61 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     ),
                     GetBuilder<StockTransferController>(
                         builder: (StockTransferController stockAdjustmentCtrl) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headings(txt: 'Adjustment Type:*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'Please Select',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: stockAdjustmentCtrl
-                                  .getAdjustmentTypeList()
-                                  .map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value: stockAdjustmentCtrl.adjustmentTypeStatus,
-                              dropdownDirection:
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'adjustment_type'.tr + ':*'),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2(
+                                  isExpanded: true,
+                                  hint: Align(
+                                      alignment: AlignmentDirectional.centerStart,
+                                      child: Text(
+                                        'please_select'.tr,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          color: txtFieldHintColor,
+                                        ),
+                                      )),
+                                  items: stockAdjustmentCtrl
+                                      .getAdjustmentTypeList()
+                                      .map((e) {
+                                    return DropdownMenuItem(
+                                        value: e, child: Text(e));
+                                  }).toList(),
+                                  value: stockAdjustmentCtrl.adjustmentTypeStatus,
+                                  dropdownDirection:
                                   DropdownDirection.textDirection,
-                              dropdownPadding:
+                                  dropdownPadding:
                                   EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
+                                  buttonPadding:
                                   EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockAdjustmentCtrl.adjustmentTypeStatus =
-                                      value;
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      stockAdjustmentCtrl.adjustmentTypeStatus =
+                                          value;
+                                    });
+                                  },
+                                  buttonHeight: height * 0.06,
+                                  buttonWidth: width * 0.43,
+                                  buttonDecoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 1,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: kWhiteColor),
+                                  itemHeight: 40,
+                                  itemPadding: EdgeInsets.zero,
+                                  itemHighlightColor:
                                   Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
+                                ),
+                              ),
+                            ],
+                          );
+                        }),
                   ],
                 ),
                 SizedBox(
@@ -204,17 +204,19 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProductHeadings(
-                          txt1: 'Product Name',
-                          txt2: 'QTY',
-                          txt3: 'Price',
-                          txt4: 'Total',
+                        Product4Headings(
+                          txt1: 'product_name'.tr,
+                          txt2: 'qty'.tr,
+                          txt3: 'price'.tr,
+                          txt4: 'total'.tr,
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height * 0.4,
-                          child: GetBuilder<AllProductsController>(
-                              builder: (AllProductsController allProdCtrlObj) {
-                            if (allProdCtrlObj.searchProductModel == null) {
+                          child: GetBuilder<StockTransferController>(builder:
+                              (StockTransferController stockTransferCtrl) {
+                            if (stockTransferCtrlObj.searchProductModel ==
+                                null &&
+                                stockTransferCtrlObj.searchProductModel == []) {
                               return progressIndicator();
                             }
                             return ListView.builder(
@@ -223,15 +225,15 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                 physics: ScrollPhysics(),
                                 shrinkWrap: true,
                                 scrollDirection: Axis.vertical,
-                                itemCount:
-                                    allProdCtrlObj.searchProductModel?.length,
+                                itemCount: stockTransferCtrlObj
+                                    .searchProductModel.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     margin: EdgeInsets.only(
                                       bottom: 5,
                                     ),
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 5),
+                                    EdgeInsets.symmetric(horizontal: 5),
                                     color: index.isEven
                                         ? kWhiteColor
                                         : Colors.grey.withOpacity(0.1),
@@ -239,13 +241,13 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             //name
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                '${allProdCtrlObj.searchProductModel?[index].name}',
+                                                '${stockTransferCtrlObj.searchProductModel[index].name}',
                                                 overflow: TextOverflow.ellipsis,
                                                 softWrap: true,
                                               ),
@@ -255,26 +257,27 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                             Expanded(
                                               flex: 1,
                                               child: AppFormField(
-                                                  controller: allProdCtrlObj
-                                                          .productQuantityCtrl[
-                                                      index],
+                                                  controller: stockTransferCtrl
+                                                      .productQuantityCtrl[
+                                                  index],
                                                   padding:
-                                                      EdgeInsets.only(right: 5),
+                                                  EdgeInsets.only(right: 5),
                                                   isOutlineBorder: false,
                                                   isColor: index.isEven
                                                       ? kWhiteColor
                                                       : Colors.transparent,
                                                   onChanged: (value) {
-                                                    allProdCtrlObj.totalAmount[
-                                                            index] =
-                                                        '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
-                                                    allProdCtrlObj
+                                                    stockTransferCtrl
+                                                        .totalAmount[
+                                                    index] =
+                                                    '${double.parse('${stockTransferCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : stockTransferCtrlObj.productQuantityCtrl[index].text}') * double.parse('${stockTransferCtrlObj.searchProductModel[index].sellingPrice.toString()}')}';
+                                                    stockTransferCtrl
                                                         .calculateFinalAmount();
                                                     debugPrint(
                                                         'Product Amount');
-                                                    debugPrint(allProdCtrlObj
+                                                    debugPrint(stockTransferCtrl
                                                         .totalAmount[index]);
-                                                    allProdCtrlObj.update();
+                                                    stockTransferCtrl.update();
                                                   }),
                                             ),
                                             //unit
@@ -282,9 +285,9 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                               flex: 1,
                                               child: Center(
                                                 child: Text(
-                                                  '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
+                                                  '${AppFormat.doubleToStringUpTo2(stockTransferCtrlObj.searchProductModel[index].sellingPrice)}',
                                                   overflow:
-                                                      TextOverflow.ellipsis,
+                                                  TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ),
@@ -292,9 +295,9 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                                               flex: 1,
                                               child: Center(
                                                 child: Text(
-                                                  '${allProdCtrlObj.totalAmount[index]}',
+                                                  '${stockTransferCtrl.totalAmount[index]}',
                                                   overflow:
-                                                      TextOverflow.ellipsis,
+                                                  TextOverflow.ellipsis,
                                                 ),
                                               ),
                                             ),
@@ -324,14 +327,14 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        headings(txt: 'Total amount recovered:'),
+                        headings(txt: 'total_amount_recovered'.tr + ':'),
                         AppFormField(
-                          controller: stockAdjustmentCtrlObj.totalAmountRecCtrl,
+                          controller: stockTransferCtrlObj.totalAmountRecCtrl,
                         ),
-                        headings(txt: 'Reason:'),
+                        headings(txt: 'reason'.tr + ':'),
                         AppFormField(
-                          controller: stockAdjustmentCtrlObj.reasonCtrl,
-                          labelText: 'Reason',
+                          controller: stockTransferCtrlObj.reasonCtrl,
+                          labelText: 'reason'.tr,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -341,16 +344,18 @@ class _CreateStockAdjustmentState extends State<CreateStockAdjustment> {
                               children: [
                                 CustomButton(
                                   title: Text(
-                                    'Save',
+                                    'save'.tr,
                                     style: TextStyle(color: kWhiteColor),
                                   ),
                                   onTap: () {
                                     showProgress();
-                                    stockAdjustmentCtrlObj
+                                    stockTransferCtrlObj
+                                        .addSelectedItemsInList();
+                                    stockTransferCtrlObj
                                         .createStockAdjustment();
                                   },
                                   bgColor:
-                                      Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.primary,
                                 )
                               ],
                             )

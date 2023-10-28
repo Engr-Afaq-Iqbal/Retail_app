@@ -203,16 +203,18 @@
 //   }
 // }
 
-import 'package:bizmodo_emenu/Pages/CreateNewCustomer/showCustomerDetails.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../CreateNewCustomer/createNewCustomer.dart';
+import '../CreateNewCustomer/showCustomerDetails.dart';
 import '../CreateOrder/createOrderPage.dart';
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
 import '/Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
@@ -267,7 +269,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
           //controller: searchCtrl,
           decoration: InputDecoration(
             border: InputBorder.none,
-            hintText: 'Enter some text',
+            hintText: 'enter_some_text'.tr,
             hintStyle: TextStyle(color: Colors.grey),
           ),
           onChanged: (value) {
@@ -296,20 +298,20 @@ class _CustomerSearchState extends State<CustomerSearch> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: (widget.dashBoardId == 1)
           ? FloatingActionButton.small(
-              child: Icon(Icons.add),
-              backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.5),
-              onPressed: () {
-                Get.to(CreateNewCustomer());
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => AlertDialog(
-                //     contentPadding:
-                //         const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
-                //     content: CreateNewCustomer(),
-                //   ),
-                // );
-              })
+          child: Icon(Icons.add),
+          backgroundColor:
+          Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          onPressed: () {
+            Get.to(CreateNewCustomer());
+            // showDialog(
+            //   context: context,
+            //   builder: (context) => AlertDialog(
+            //     contentPadding:
+            //         const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+            //     content: CreateNewCustomer(),
+            //   ),
+            // );
+          })
           : null,
       body: Material(
         child: Stack(
@@ -323,86 +325,89 @@ class _CustomerSearchState extends State<CustomerSearch> {
                   child: (contactCtrlObj.customerContacts == null)
                       ? progressIndicator()
                       : Scrollbar(
-                          controller: _scrollController,
-                          interactive: true,
-                          child: ListView.builder(
-                            controller: _scrollController,
-                            physics: AlwaysScrollableScrollPhysics(),
-                            padding: const EdgeInsets.only(bottom: 100),
-                            itemCount: contactCtrlObj
-                                    .customerContacts?.contactDataList.length ??
-                                0,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      //  Get.close(0);
+                    controller: _scrollController,
+                    interactive: true,
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.only(bottom: 100),
+                      itemCount: contactCtrlObj
+                          .customerContacts?.contactDataList.length ??
+                          0,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                //  Get.close(0);
 
-                                      contactCtrlObj.id = contactCtrlObj
+                                contactCtrlObj.id = contactCtrlObj
+                                    .customerContacts!
+                                    .contactDataList[index]
+                                    .id
+                                    .toString();
+                                contactCtrlObj.contactId = contactCtrlObj
+                                    .customerContacts!
+                                    .contactDataList[index]
+                                    .contactId;
+                                contactCtrlObj.searchCustomerCtrl.text =
+                                '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
+                                contactCtrlObj.mobileNumberCtrl.text =
+                                    contactCtrlObj
+                                        .customerContacts!
+                                        .contactDataList[index]
+                                        .mobile ??
+                                        '';
+                                contactCtrlObj.nameCtrl.text =
+                                    contactCtrlObj
+                                        .customerContacts!
+                                        .contactDataList[index]
+                                        .name ??
+                                        '';
+                                if (widget.dashBoardId == 1) {
+                                  Get.to(ShowCustomerDetails(
+                                      contactApi: contactCtrlObj
                                           .customerContacts!
                                           .contactDataList[index]
                                           .id
-                                          .toString();
-                                      contactCtrlObj.contactId = contactCtrlObj
-                                          .customerContacts!
-                                          .contactDataList[index]
-                                          .contactId;
-                                      contactCtrlObj.searchCustomerCtrl.text =
-                                          '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})';
-                                      contactCtrlObj.mobileNumberCtrl.text =
-                                          contactCtrlObj
-                                                  .customerContacts!
-                                                  .contactDataList[index]
-                                                  .mobile ??
-                                              '';
-                                      contactCtrlObj.nameCtrl.text =
-                                          contactCtrlObj
-                                                  .customerContacts!
-                                                  .contactDataList[index]
-                                                  .name ??
-                                              '';
-                                      if (widget.dashBoardId == 1) {
-                                        Get.to(ShowCustomerDetails(
-                                            contactApi: contactCtrlObj
-                                                .customerContacts!
-                                                .contactDataList[index]
-                                                .id
-                                                .toString()));
-                                      } else if (widget.dashBoardId == 2) {
-                                        Get.to(CreateOrderPage());
-                                      } else if (widget.dashBoardId == 3) {
-                                        Get.to(Return());
-                                      } else if (widget.dashBoardId == 4) {
-                                        Get.to(Receipts());
-                                        contactCtrlObj.update();
-                                        // Get.close(2);
-                                      } else if (widget.dashBoardId == 5) {
-                                        Get.to(AddSalesAndQuotation());
-                                      }
-                                    },
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: 45,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 15, vertical: 10),
-                                        child: Text(
-                                          '${contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
-                                        ),
-                                      ),
-                                    ),
+                                          .toString()));
+                                } else if (widget.dashBoardId == 2) {
+                                  Get.to(CreateOrderPage());
+                                } else if (widget.dashBoardId == 3) {
+                                  Get.to(SalesView(
+                                    isSalesReturn: true,
+                                  ));
+                                  // Get.to(Return());
+                                } else if (widget.dashBoardId == 4) {
+                                  Get.to(Receipts());
+                                  contactCtrlObj.update();
+                                  // Get.close(2);
+                                } else if (widget.dashBoardId == 5) {
+                                  Get.to(AddSalesAndQuotation());
+                                }
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                height: 45,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 15, vertical: 10),
+                                  child: Text(
+                                    '${contactCtrlObj.customerContacts!.contactDataList[index].supplierBusinessName != null ? contactCtrlObj.customerContacts!.contactDataList[index].supplierBusinessName : contactCtrlObj.customerContacts!.contactDataList[index].name} (${contactCtrlObj.customerContacts!.contactDataList[index].contactId})',
                                   ),
-                                  Divider(
-                                    height: 0,
-                                    color: kLightTextColor.withOpacity(0.2),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
+                                ),
+                              ),
+                            ),
+                            Divider(
+                              height: 0,
+                              color: kLightTextColor.withOpacity(0.2),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 );
               },
             ),

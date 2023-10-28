@@ -33,7 +33,7 @@ class PaymentController extends GetxController {
   /// payment widget list handlers
   RxList<PaymentFields> paymentWidgetList = <PaymentFields>[].obs;
 
-  addPaymentWidget({PaymentFields? paymentWidget}) {
+  addPaymentWidget({PaymentFields? paymentWidget,double? totalAmount}) {
     paymentWidgetList.add(
       paymentWidget ??
           PaymentFields(

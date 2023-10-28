@@ -1,13 +1,16 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../Config/utils.dart';
+import '../../../Controllers/AllSalesController/allSalesController.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
+import '../../Return/saleReturn.dart';
 import '../../order_type/search_customer_page.dart';
 import 'SalesViewTile.dart';
 import 'ViewSalesPage.dart';
 
 class SalesView extends StatefulWidget {
-  const SalesView({Key? key}) : super(key: key);
+  final bool isSalesReturn;
+  SalesView({Key? key, this.isSalesReturn = false}) : super(key: key);
 
   @override
   State<SalesView> createState() => _SalesViewState();
@@ -20,7 +23,14 @@ class _SalesViewState extends State<SalesView> {
   @override
   void initState() {
     // TODO: implement initState
+    Get.find<AllProductsController>().fetchAllProducts();
     allSalesCtrl.callFirstOrderPage();
+    // if (widget.isSalesReturn) {
+    //   allSalesCtrl.callFirstOrderPageForReceipt();
+    // } else {
+    //
+    // }
+
     scrollControllerLis();
     super.initState();
   }
@@ -53,13 +63,15 @@ class _SalesViewState extends State<SalesView> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('All Sells'),
+        title: Text('sale'.tr),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton.small(
+      floatingActionButton: (widget.isSalesReturn)
+          ? null
+          : FloatingActionButton.small(
           child: Icon(Icons.add),
           backgroundColor:
-              Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
             Get.to(CustomerSearch(
               dashBoardId: 5,
@@ -81,40 +93,45 @@ class _SalesViewState extends State<SalesView> {
                 child: (allSalesCtrlObj.allSaleOrders == null)
                     ? progressIndicator()
                     : Scrollbar(
-                        controller: _pastOrdersScrollCtrl,
-                        child: ListView.builder(
-                          controller: _pastOrdersScrollCtrl,
-                          physics: AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.only(bottom: 100),
-                          itemCount: allSalesCtrlObj
-                                  .allSaleOrders?.saleOrdersData.length ??
-                              0,
-                          itemBuilder: (context, index) {
-                            return IntrinsicHeight(
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Get.to(SalesViewDetailsPage(
-                                      allSalesCtrlObj: allSalesCtrlObj,
-                                      index: index,
-                                    ));
-                                  },
-                                  child: SalesViewTile(
-                                    allSalesCtrlObj: allSalesCtrlObj,
-                                    index: index,
-                                    pastOrder: allSalesCtrlObj
-                                        .allSaleOrders!.saleOrdersData[index],
-                                  )),
-                            );
-                            //   !allSalesCtrlObj.allSaleOrders!
-                            //     .saleOrdersData[index].isSuspend
-                            //     ? PastOrderInfoTile(
-                            //   allSalesCtrlObj
-                            //       .allSaleOrders!.saleOrdersData[index],
-                            // )
-                            //     : SizedBox();
-                          },
-                        ),
-                      ),
+                  controller: _pastOrdersScrollCtrl,
+                  child: ListView.builder(
+                    controller: _pastOrdersScrollCtrl,
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(bottom: 100),
+                    itemCount: allSalesCtrlObj
+                        .allSaleOrders?.saleOrdersData.length ??
+                        0,
+                    itemBuilder: (context, index) {
+                      return IntrinsicHeight(
+                        child: GestureDetector(
+                            onTap: () {
+                              if (widget.isSalesReturn) {
+                                Get.to(SalesReturn(
+                                  id: '${allSalesCtrlObj.allSaleOrders!.saleOrdersData[index].id}',
+                                ));
+                              } else {
+                                Get.to(SalesViewDetailsPage(
+                                  salesOrderData: allSalesCtrlObj
+                                      .allSaleOrders!
+                                      .saleOrdersData[index],
+                                ));
+                              }
+                            },
+                            child: SalesViewTile(
+                              pastOrder: allSalesCtrlObj
+                                  .allSaleOrders!.saleOrdersData[index],
+                            )),
+                      );
+                      //   !allSalesCtrlObj.allSaleOrders!
+                      //     .saleOrdersData[index].isSuspend
+                      //     ? PastOrderInfoTile(
+                      //   allSalesCtrlObj
+                      //       .allSaleOrders!.saleOrdersData[index],
+                      // )
+                      //     : SizedBox();
+                    },
+                  ),
+                ),
               );
             },
           ),

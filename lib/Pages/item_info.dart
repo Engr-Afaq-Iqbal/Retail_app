@@ -114,7 +114,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
                                       ),
                                       if (_modifier.variations.isNotEmpty)
                                         MultiSelectChip(
-                                          initChoices: <VariationModel>[],
+                                          initChoices: <VariationModels>[],
                                           chipsDataList: _modifier.variations,
                                           onSelectionChanged: (value) {
                                             try {

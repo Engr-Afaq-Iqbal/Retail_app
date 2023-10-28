@@ -1,14 +1,12 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
-import '../../../Components/productHeadings.dart';
+import '../../../Components/custom_circular_button.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
-import '../../../Controllers/ProductController/all_products_controller.dart';
+import '../../../Config/utils.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Services/storage_services.dart';
 import '../../../Theme/colors.dart';
@@ -23,8 +21,8 @@ class CreateStockTransfer extends StatefulWidget {
 
 class _CreateStockTransferState extends State<CreateStockTransfer> {
   StockTransferController stockTranCtrlObj =
-      Get.find<StockTransferController>();
-  AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
+  Get.find<StockTransferController>();
+  // AllProductsController allProdCtrlObj = Get.find<AllProductsController>();
   Future<void> _showDatePicker() async {
     DateTime? dateTime = await showOmniDateTimePicker(
       context: context,
@@ -65,7 +63,8 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
       },
     );
 
-    stockTranCtrlObj.dateCtrl.text = '${AppFormat.dateDDMMYY(dateTime!)}';
+    stockTranCtrlObj.dateCtrl.text =
+    '${AppFormat.dateYYYYMMDDHHMM24(dateTime ?? DateTime.now())}';
     print(dateTime);
   }
 
@@ -84,16 +83,23 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
   @override
   void initState() {
     // TODO: implement initState
-    stockTranCtrlObj.fetchStatusList();
-    allProdCtrlObj.searchProductList(term: '');
+    stockTranCtrlObj.statusValue = 'Pending';
+    stockTranCtrlObj.dateCtrl.text =
+    '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
+    stockTranCtrlObj.locationFromCtrl.text =
+    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name}';
+    //stockTranCtrlObj.checkLocationFromName();
+    stockTranCtrlObj.searchProductList(term: '');
     super.initState();
   }
 
   void dispose() {
-    allProdCtrlObj.finalTotal = 0.00;
-    allProdCtrlObj.totalAmount.clear();
-    allProdCtrlObj.productQuantityCtrl.clear();
-    allProdCtrlObj.searchProductModel = null;
+    stockTranCtrlObj.finalTotal = 0.00;
+    stockTranCtrlObj.totalAmount.clear();
+    stockTranCtrlObj.productQuantityCtrl.clear();
+    stockTranCtrlObj.searchProductModel.clear();
+    stockTranCtrlObj.selectedProducts.clear();
+    stockTranCtrlObj.selectedQuantityList.clear();
 
     super.dispose();
   }
@@ -106,7 +112,7 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
-        title: Text('Create Stock Transfer'),
+        title: Text('create_stock_transfer'.tr),
       ),
       body: GestureDetector(
         onTap: () {
@@ -117,408 +123,637 @@ class _CreateStockTransferState extends State<CreateStockTransfer> {
           child: SingleChildScrollView(
             child: GetBuilder<StockTransferController>(
                 builder: (StockTransferController stockTransferCtrlObj) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                  return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          headings(txt: 'Date:*'),
-                          AppFormField(
-                            width: width * 0.43,
-                            readOnly: true,
-                            controller: stockTranCtrlObj.dateCtrl,
-                            labelText: 'Select Date',
-                            prefixIcon: Icon(Icons.calendar_month),
-                            onTap: () {
-                              setState(() {
-                                _showDatePicker();
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'date'.tr + ':*'),
+                              AppFormField(
+                                width: width * 0.44,
+                                readOnly: true,
+                                controller: stockTranCtrlObj.dateCtrl,
+                                labelText: 'select_date'.tr,
+                                prefixIcon: Icon(Icons.calendar_month),
+                                onTap: () {
+                                  setState(() {
+                                    _showDatePicker();
 
-                                //_show(context);
-                              });
-                            },
+                                    //_show(context);
+                                  });
+                                },
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headings(txt: 'Status:*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'Please Select',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: getStatusList().map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value: stockTransferCtrlObj.statusValue,
-                              dropdownDirection:
-                                  DropdownDirection.textDirection,
-                              dropdownPadding:
-                                  EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockTransferCtrlObj.statusValue = value;
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ///Location From
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headings(txt: 'Location (From):*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'Please Select',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: stockTransferCtrlObj
-                                  .getBusinessLocationItems()
-                                  .map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value:
-                                  stockTransferCtrlObj.locationFromStatusValue,
-                              dropdownDirection:
-                                  DropdownDirection.textDirection,
-                              dropdownPadding:
-                                  EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockTransferCtrlObj.locationFromStatusValue =
-                                      value;
-                                  stockTranCtrlObj.locationFromID =
-                                      AppStorage.getBusinessDetailsData()
-                                          ?.businessData
-                                          ?.locations[stockTransferCtrlObj
-                                              .getBusinessLocationItems()
-                                              .indexOf(value!)]
-                                          .id
-                                          .toString();
-
-                                  print(stockTranCtrlObj.locationFromID);
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      ///Location to
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          headings(txt: 'Location (To):*'),
-                          DropdownButtonHideUnderline(
-                            child: DropdownButton2(
-                              isExpanded: true,
-                              hint: Align(
-                                  alignment: AlignmentDirectional.centerStart,
-                                  child: Text(
-                                    'Please Select',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      color: txtFieldHintColor,
-                                    ),
-                                  )),
-                              items: stockTransferCtrlObj
-                                  .getBusinessLocationItems()
-                                  .map((e) {
-                                return DropdownMenuItem(
-                                    value: e, child: Text(e));
-                              }).toList(),
-                              value: stockTransferCtrlObj.locationToStatusValue,
-                              dropdownDirection:
-                                  DropdownDirection.textDirection,
-                              dropdownPadding:
-                                  EdgeInsets.only(left: 5, right: 5),
-                              buttonPadding:
-                                  EdgeInsets.only(left: 15, right: 15),
-                              onChanged: (String? value) {
-                                setState(() {
-                                  stockTransferCtrlObj.locationToStatusValue =
-                                      value;
-
-                                  stockTranCtrlObj.locationToID =
-                                      AppStorage.getBusinessDetailsData()
-                                          ?.businessData
-                                          ?.locations[stockTransferCtrlObj
-                                              .getBusinessLocationItems()
-                                              .indexOf(value!)]
-                                          .id
-                                          .toString();
-
-                                  print(stockTranCtrlObj.locationFromID);
-                                });
-                              },
-                              buttonHeight: height * 0.06,
-                              buttonWidth: width * 0.43,
-                              buttonDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      width: 1,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .primary),
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: kWhiteColor),
-                              itemHeight: 40,
-                              itemPadding: EdgeInsets.zero,
-                              itemHighlightColor:
-                                  Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  IntrinsicHeight(
-                    child: Container(
-                      width: width,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: kWhiteColor,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // headings(txt: 'Search Products'),
-                          // AppFormField(
-                          //   controller: stockTranCtrlObj.searchCtrl,
-                          //   labelText: 'Search products for stock',
-                          //   onEditingComp: () {
-                          //     stockTranCtrlObj.searchProductList(
-                          //         term: stockTranCtrlObj.searchCtrl.text);
-                          //     print(stockTranCtrlObj.searchCtrl.text);
-                          //   },
-                          // ),
-
-                          ProductHeadings(
-                            txt1: 'Product Name',
-                            txt2: 'QTY',
-                            txt3: 'Price',
-                            txt4: 'Total',
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.4,
-                            child: GetBuilder<AllProductsController>(builder:
-                                (AllProductsController allProdCtrlObj) {
-                              if (allProdCtrlObj.searchProductModel == null) {
-                                return progressIndicator();
-                              }
-                              return ListView.builder(
-                                  padding: EdgeInsetsDirectional.only(
-                                      top: 5, bottom: 5, start: 10, end: 10),
-                                  physics: ScrollPhysics(),
-                                  shrinkWrap: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      allProdCtrlObj.searchProductModel?.length,
-                                  itemBuilder: (context, index) {
-                                    return Container(
-                                      margin: EdgeInsets.only(
-                                        bottom: 5,
-                                      ),
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 5),
-                                      color: index.isEven
-                                          ? kWhiteColor
-                                          : Colors.grey.withOpacity(0.1),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              //name
-                                              Expanded(
-                                                flex: 2,
-                                                child: Text(
-                                                  '${allProdCtrlObj.searchProductModel?[index].name}',
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: true,
-                                                ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'status'.tr + ':*'),
+                              GetBuilder<StockTransferController>(
+                                  builder: (StockTransferController stockCtrl) {
+                                    if (stockCtrl.statusListModel == null) {
+                                      return progressIndicator();
+                                    }
+                                    return DropdownButtonHideUnderline(
+                                      child: DropdownButton2(
+                                        isExpanded: true,
+                                        hint: Align(
+                                            alignment: AlignmentDirectional.centerStart,
+                                            child: Text(
+                                              'please_select'.tr,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                color: txtFieldHintColor,
                                               ),
-
-                                              //Quantity
-                                              Expanded(
-                                                flex: 1,
-                                                child: AppFormField(
-                                                    controller: allProdCtrlObj
-                                                            .productQuantityCtrl[
-                                                        index],
-                                                    padding: EdgeInsets.only(
-                                                        right: 5),
-                                                    isOutlineBorder: false,
-                                                    isColor: index.isEven
-                                                        ? kWhiteColor
-                                                        : Colors.transparent,
-                                                    onChanged: (value) {
-                                                      allProdCtrlObj
-                                                                  .totalAmount[
-                                                              index] =
-                                                          '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.searchProductModel?[index].sellingPrice.toString()}')}';
-                                                      allProdCtrlObj
-                                                          .calculateFinalAmount();
-                                                      debugPrint(
-                                                          'Product Amount');
-                                                      debugPrint(allProdCtrlObj
-                                                          .totalAmount[index]);
-                                                      allProdCtrlObj.update();
-                                                    }),
-                                              ),
-                                              //unit
-                                              Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                  child: Text(
-                                                    '${AppFormat.doubleToStringUpTo2(allProdCtrlObj.searchProductModel?[index].sellingPrice)}',
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                  child: Text(
-                                                    '${allProdCtrlObj.totalAmount[index]}',
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                            )),
+                                        items: getStatusList().map((e) {
+                                          return DropdownMenuItem(
+                                              value: e, child: Text(e));
+                                        }).toList(),
+                                        value: stockTransferCtrlObj.statusValue,
+                                        dropdownDirection:
+                                        DropdownDirection.textDirection,
+                                        dropdownPadding:
+                                        EdgeInsets.only(left: 5, right: 5),
+                                        buttonPadding:
+                                        EdgeInsets.only(left: 15, right: 15),
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            stockTransferCtrlObj.statusValue = value;
+                                          });
+                                        },
+                                        buttonHeight: height * 0.06,
+                                        buttonWidth: width * 0.44,
+                                        buttonDecoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1,
+                                                color: Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                            borderRadius: BorderRadius.circular(15),
+                                            color: kWhiteColor),
+                                        itemHeight: 40,
+                                        itemPadding: EdgeInsets.zero,
+                                        itemHighlightColor:
+                                        Theme.of(context).colorScheme.primary,
                                       ),
                                     );
-                                  });
-                            }),
+                                  }),
+                            ],
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  IntrinsicHeight(
-                    child: Container(
-                      width: width,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: kWhiteColor,
-                      ),
-                      child: Column(
+                      Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          headings(txt: 'Additional Notes'),
-                          AppFormField(
-                            controller: stockTranCtrlObj.additionalNotes,
-                            labelText: 'Additional Notes',
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                          ///Location From
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
+                              headings(txt: 'location_from'.tr + ':*'),
+                              AppFormField(
+                                width: width * 0.44,
+                                readOnly: true,
+                                controller: stockTranCtrlObj.locationFromCtrl,
+                                // labelText: 'select_date'.tr,
+                                // prefixIcon: Icon(Icons.calendar_month),
+                              ),
+                            ],
+                          ),
+
+                          ///Location to
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'location_to'.tr + ':*'),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2(
+                                  isExpanded: true,
+                                  hint: Align(
+                                      alignment: AlignmentDirectional.centerStart,
+                                      child: Text(
+                                        'please_select'.tr,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          color: txtFieldHintColor,
+                                        ),
+                                      )),
+                                  items: stockTransferCtrlObj
+                                      .getBusinessLocationItems()
+                                      .map((e) {
+                                    return DropdownMenuItem(
+                                        value: e, child: Text(e));
+                                  }).toList(),
+                                  value: stockTransferCtrlObj.locationToStatusValue,
+                                  dropdownDirection:
+                                  DropdownDirection.textDirection,
+                                  dropdownPadding:
+                                  EdgeInsets.only(left: 5, right: 5),
+                                  buttonPadding:
+                                  EdgeInsets.only(left: 15, right: 15),
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      stockTransferCtrlObj.locationToStatusValue =
+                                          value;
+
+                                      stockTranCtrlObj.locationToID =
+                                          AppStorage.getBusinessDetailsData()
+                                              ?.businessData
+                                              ?.locations[stockTransferCtrlObj
+                                              .getBusinessLocationItems()
+                                              .indexOf(value!)]
+                                              .id
+                                              .toString();
+
+                                      print(stockTranCtrlObj.locationFromID);
+                                    });
+                                  },
+                                  buttonHeight: height * 0.06,
+                                  buttonWidth: width * 0.44,
+                                  buttonDecoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 1,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                      borderRadius: BorderRadius.circular(15),
+                                      color: kWhiteColor),
+                                  itemHeight: 40,
+                                  itemPadding: EdgeInsets.zero,
+                                  itemHighlightColor:
+                                  Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      IntrinsicHeight(
+                        child: Container(
+                          width: width,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: kWhiteColor,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // headings(txt: 'Search Products'),
+                              // AppFormField(
+                              //   controller: stockTranCtrlObj.searchCtrl,
+                              //   labelText: 'Search products for stock',
+                              //   onEditingComp: () {
+                              //     stockTranCtrlObj.searchProductList(
+                              //         term: stockTranCtrlObj.searchCtrl.text);
+                              //     print(stockTranCtrlObj.searchCtrl.text);
+                              //   },
+                              // ),
+
+                              Container(
+                                  height: 40,
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  color: Theme.of(context).colorScheme.primary,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text(
+                                          'product_name'.tr,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: kWhiteColor),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            'unit'.tr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: kWhiteColor),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            'stock'.tr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: kWhiteColor),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            'qty'.tr,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium!
+                                                .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                                color: kWhiteColor),
+                                          ),
+                                        ),
+                                      ),
+                                      if (AppStorage.getLoggedUserData()!
+                                          .staffUser
+                                          .isAdmin!)
+                                        Expanded(
+                                          flex: 1,
+                                          child: Center(
+                                            child: Text(
+                                              'total'.tr,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium!
+                                                  .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: kWhiteColor),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  )),
+
+                              // Product5Headings(
+                              //   txt1: 'product_name'.tr,
+                              //   txt2: 'stock'.tr,
+                              //   txt3: 'qty'.tr,
+                              //   txt4: 'price'.tr,
+                              //   txt5: 'total'.tr,
+                              // ),
+                              Container(
+                                height: MediaQuery.of(context).size.height * 0.4,
+                                child: GetBuilder<StockTransferController>(builder:
+                                    (StockTransferController stockTransferCtrl) {
+                                  if (stockTransferCtrl.searchProductModel ==
+                                      null) {
+                                    return progressIndicator();
+                                  }
+                                  return ListView.builder(
+                                      padding: EdgeInsetsDirectional.only(
+                                          top: 5, bottom: 5, start: 0, end: 0),
+                                      physics: ScrollPhysics(),
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.vertical,
+                                      itemCount: stockTransferCtrl
+                                          .searchProductModel.length,
+                                      itemBuilder: (context, index) {
+                                        return Container(
+                                          margin: EdgeInsets.only(
+                                            bottom: 5,
+                                          ),
+                                          padding:
+                                          EdgeInsets.symmetric(horizontal: 1),
+                                          color: index.isEven
+                                              ? kWhiteColor
+                                              : Colors.grey.withOpacity(0.1),
+                                          child: Column(
+                                            children: [
+                                              GetBuilder<StockTransferController>(
+                                                  builder: (StockTransferController
+                                                  stocktransfersCtrlObj) {
+                                                    return Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        //name
+                                                        Expanded(
+                                                          flex: 2,
+                                                          child: Text(
+                                                            '${stockTransferCtrl.searchProductModel[index].name}',
+                                                            style:
+                                                            TextStyle(fontSize: 11),
+                                                            overflow:
+                                                            TextOverflow.ellipsis,
+                                                            softWrap: true,
+                                                          ),
+                                                        ),
+
+                                                        // Expanded(
+                                                        //   flex: 1,
+                                                        //   child: Text(
+                                                        //     '${stockTransferCtrl.searchProductModel[index].unit}',
+                                                        //     style:
+                                                        //         TextStyle(fontSize: 11),
+                                                        //     overflow:
+                                                        //         TextOverflow.ellipsis,
+                                                        //     softWrap: true,
+                                                        //     textAlign: TextAlign.center,
+                                                        //   ),
+                                                        // ),
+
+                                                        Container(
+                                                          // height:
+                                                          //     MediaQuery.of(context).size.height *
+                                                          //         0.06,
+                                                          //width: MediaQuery.of(context).size.width,
+                                                          child:
+                                                          DropdownButtonHideUnderline(
+                                                            child: DropdownButton2(
+                                                              isExpanded: true,
+                                                              hint: Align(
+                                                                  alignment:
+                                                                  AlignmentDirectional
+                                                                      .centerStart,
+                                                                  child: Text(
+                                                                    'Select',
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize: 10,
+                                                                        fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                                  )),
+                                                              items: stocktransfersCtrlObj
+                                                                  .nestedist[
+                                                              index] //unitStatusList()
+                                                                  .map((String items) {
+                                                                return DropdownMenuItem(
+                                                                  value: items,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                        horizontal:
+                                                                        10.0),
+                                                                    child: Text(
+                                                                      items,
+                                                                      style: TextStyle(
+                                                                          fontSize: 10),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              }).toList(),
+                                                              value: stocktransfersCtrlObj
+                                                                  .unitListStatus[
+                                                              index],
+                                                              dropdownWidth:
+                                                              MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                                  0.2,
+                                                              dropdownDecoration:
+                                                              BoxDecoration(
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      5)),
+                                                              dropdownMaxHeight:
+                                                              MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                                  0.7,
+                                                              dropdownPadding:
+                                                              EdgeInsets.only(
+                                                                  left: 5),
+                                                              buttonPadding:
+                                                              EdgeInsets.only(
+                                                                  left: 0,
+                                                                  right: 0),
+                                                              onChanged:
+                                                                  (String? value) {
+                                                                setState(() {
+                                                                  stocktransfersCtrlObj
+                                                                      .unitListStatus[
+                                                                  index] = value!;
+
+                                                                  stocktransfersCtrlObj
+                                                                      .unitListStatusIds[
+                                                                  index] =
+                                                                      stocktransfersCtrlObj
+                                                                          .checkSelectedUnitsIds(
+                                                                          unitName:
+                                                                          value);
+
+                                                                  stocktransfersCtrlObj
+                                                                      .totalAmount[
+                                                                  index] =
+                                                                  '${double.parse('${stocktransfersCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : stocktransfersCtrlObj.productQuantityCtrl[index].text}') * double.parse('${stockTransferCtrl.searchProductModel[index].sellingPrice}') * double.parse(stocktransfersCtrlObj.checkUnitsActualBaseMultiplier(unitName: value) ?? '1.00')}';
+                                                                  debugPrint(
+                                                                      stocktransfersCtrlObj
+                                                                          .totalAmount[
+                                                                      index]);
+                                                                  debugPrint(
+                                                                      stocktransfersCtrlObj
+                                                                          .unitListStatus[
+                                                                      index]);
+
+                                                                  stocktransfersCtrlObj
+                                                                      .calculateFinalAmount();
+                                                                  stocktransfersCtrlObj
+                                                                      .update();
+                                                                });
+                                                              },
+                                                              // buttonHeight: 40,
+                                                              buttonWidth:
+                                                              MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                                  0.19,
+                                                              // buttonDecoration: BoxDecoration(
+                                                              //     color: kWhiteColor,
+                                                              //     border: Border.all(
+                                                              //         width: 1,
+                                                              //         color: Theme.of(context)
+                                                              //             .colorScheme
+                                                              //             .primary),
+                                                              //     borderRadius:
+                                                              //         BorderRadius.circular(15)),
+                                                              // itemHeight: 40,
+                                                              //icon: SizedBox(),
+                                                              itemPadding:
+                                                              EdgeInsets.zero,
+                                                              itemHighlightColor:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .primary,
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        // Expanded(
+                                                        //   flex: 1,
+                                                        //   child: Center(
+                                                        //     child: Text(
+                                                        //       AppFormat
+                                                        //               .doubleToStringUpTo2(
+                                                        //             '${double.parse(allProdCtrlObj.checkProductStockLocationBasedForOrderCreate(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                                        //           ) ??
+                                                        //           '0.00',
+                                                        //       overflow:
+                                                        //           TextOverflow.ellipsis,
+                                                        //       style: TextStyle(
+                                                        //           fontSize: 10),
+                                                        //     ),
+                                                        //   ),
+                                                        // )
+
+                                                        //Stock
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Center(
+                                                            child: Text(
+                                                              '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.searchProductModel[index].qtyAvailable) ?? '0.00'}',
+                                                              overflow:
+                                                              TextOverflow.ellipsis,
+                                                              style: TextStyle(
+                                                                  fontSize: 11),
+                                                              textAlign: TextAlign.left,
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        //Quantity
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: AppFormField(
+                                                              controller: stockTransferCtrl
+                                                                  .productQuantityCtrl[
+                                                              index],
+                                                              padding: EdgeInsets.only(
+                                                                  right: 5),
+                                                              isOutlineBorder: false,
+                                                              isColor: index.isEven
+                                                                  ? kWhiteColor
+                                                                  : Colors.transparent,
+                                                              onChanged: (value) {
+                                                                stockTransferCtrl
+                                                                    .totalAmount[
+                                                                index] =
+                                                                '${double.parse('${stockTransferCtrl.productQuantityCtrl[index].text.isEmpty ? '0.00' : stockTransferCtrl.productQuantityCtrl[index].text}') * double.parse('${stockTransferCtrl.searchProductModel[index].sellingPrice.toString()}')}';
+                                                                stockTransferCtrl
+                                                                    .calculateFinalAmount();
+                                                                debugPrint(
+                                                                    'Product Amount');
+                                                                debugPrint(
+                                                                    stockTranCtrlObj
+                                                                        .totalAmount[
+                                                                    index]);
+                                                                stockTransferCtrl
+                                                                    .update();
+                                                              }),
+                                                        ),
+
+                                                        if (AppStorage
+                                                            .getLoggedUserData()!
+                                                            .staffUser
+                                                            .isAdmin!)
+                                                          Expanded(
+                                                            flex: 1,
+                                                            child: Center(
+                                                              child: Text(
+                                                                '${AppFormat.doubleToStringUpTo2(stockTransferCtrl.totalAmount[index])}',
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                                style: TextStyle(
+                                                                    fontSize: 11),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                      ],
+                                                    );
+                                                  }),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      IntrinsicHeight(
+                        child: Container(
+                          width: width,
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: kWhiteColor,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              headings(txt: 'additional_notes'.tr),
+                              AppFormField(
+                                controller: stockTranCtrlObj.additionalNotes,
+                                labelText: 'additional_notes'.tr,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
-                                  headings(
-                                      txt:
-                                          'Total Amount: ${allProdCtrlObj.finalTotal}'),
-                                  CustomButton(
-                                    title: Text(
-                                      'Save',
-                                      style: TextStyle(color: kWhiteColor),
-                                    ),
-                                    onTap: () {
-                                      showProgress();
-                                      stockTranCtrlObj.createStockTransfer();
-                                    },
-                                    bgColor:
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      if (AppStorage.getLoggedUserData()!
+                                          .staffUser
+                                          .isAdmin!)
+                                        headings(
+                                            txt: 'total_amount'.tr +
+                                                ': ${stockTranCtrlObj.finalTotal}'),
+                                      CustomButton(
+                                        title: Text(
+                                          'save'.tr,
+                                          style: TextStyle(color: kWhiteColor),
+                                        ),
+                                        onTap: () {
+                                          showProgress();
+                                          stockTranCtrlObj.addSelectedItemsInList();
+                                          stockTranCtrlObj.createStockTransfer();
+                                        },
+                                        bgColor:
                                         Theme.of(context).colorScheme.primary,
+                                      )
+                                    ],
                                   )
                                 ],
                               )
                             ],
-                          )
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-            }),
+                          ),
+                        ),
+                      )
+                    ],
+                  );
+                }),
           ),
         ),
       ),

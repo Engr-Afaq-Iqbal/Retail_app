@@ -54,7 +54,7 @@ class ProductVariation {
   final int? isDummy;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final List<VariationModel> variations;
+  final List<VariationModels> variations;
 
   // ProductVariation copyWith({
   //   int id,
@@ -88,8 +88,8 @@ class ProductVariation {
         updatedAt: DateTime.tryParse('${json["updated_at"]}'),
         variations: json["variations"] == null
             ? []
-            : List<VariationModel>.from(
-                json["variations"].map((x) => VariationModel.fromJson(x))),
+            : List<VariationModels>.from(
+                json["variations"].map((x) => VariationModels.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -104,7 +104,7 @@ class ProductVariation {
       };
 }
 
-class VariationModel {
+class VariationModels {
   final int id;
   final String name;
   int productVariationQuantity;
@@ -123,7 +123,7 @@ class VariationModel {
   final List<dynamic> comboVariations;
   final List<VariationLocationDetail> variationLocationDetails;
 
-  VariationModel({
+  VariationModels({
     required this.id,
     required this.name,
     this.productVariationQuantity = 0,
@@ -143,7 +143,7 @@ class VariationModel {
     this.variationLocationDetails = const [],
   });
 
-  VariationModel copyWith({
+  VariationModels copyWith({
     int? productId,
     int? id,
     String? name,
@@ -156,7 +156,7 @@ class VariationModel {
     String? defaultSellPrice,
     String? sellPriceIncTax,
   }) =>
-      VariationModel(
+      VariationModels(
         productId: productId ?? this.productId,
         id: id ?? this.id,
         name: name ?? this.name,
@@ -171,7 +171,7 @@ class VariationModel {
         sellPriceIncTax: sellPriceIncTax ?? this.sellPriceIncTax,
       );
 
-  factory VariationModel.fromJson(Map<String, dynamic> json) => VariationModel(
+  factory VariationModels.fromJson(Map<String, dynamic> json) => VariationModels(
         productId: json["product_id"],
         id: json["id"],
         name: json["name"] ?? 'Variation Name Missing!',

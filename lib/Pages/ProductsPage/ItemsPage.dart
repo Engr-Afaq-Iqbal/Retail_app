@@ -5,14 +5,14 @@ import '/Controllers/ProductController/all_products_controller.dart';
 import '/Theme/style.dart';
 import 'ViewProductsPage.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage();
+class ItemsPage extends StatefulWidget {
+  const ItemsPage();
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ItemsPageState createState() => _ItemsPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ItemsPageState extends State<ItemsPage> {
   // final PageController _pageController = PageController();
   TextEditingController searchController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -78,9 +78,9 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: BorderRadius.circular(40),
                 ),
               ),
-              onChanged: (value) {
-                allProdCtrlObj.searchProductList(term: '${value}');
-              },
+              // onChanged: (value) {
+              //   allProdCtrlObj.searchProductList(term: '${value}');
+              // },
             )),
         // actions: [buildItemsInCartButton()],
         bottom: PreferredSize(

@@ -1,26 +1,13 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Config/enums.dart';
 import '../../../Models/order_type_model/SaleOrderModel.dart';
-import '../../../Theme/colors.dart';
-import '/Config/const.dart';
 import '/Pages/Orders/Components/AmountInfo.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
-import '/Theme/style.dart';
 
 class SalesViewTile extends StatelessWidget {
-  AllSalesController allSalesCtrlObj;
   final SaleOrderDataModel pastOrder;
-  int index;
-  SalesViewTile(
-      {Key? key,
-      required this.allSalesCtrlObj,
-      required this.index,
-      required this.pastOrder})
-      : super(key: key);
+  SalesViewTile({Key? key, required this.pastOrder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +23,7 @@ class SalesViewTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                '${allSalesCtrlObj.allSaleOrders?.saleOrdersData[index].invoiceNo}',
+                '${pastOrder.invoiceNo}',
                 style: Theme.of(context)
                     .textTheme
                     .bodySmall!
@@ -46,8 +33,52 @@ class SalesViewTile extends StatelessWidget {
                 children: [
                   AmountInfo(
                     amount: '${pastOrder.finalTotal ?? '0.00'}',
-                    status: 'Amount',
+                    status: 'amount'.tr,
                   ),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       print('Past Order Data');
+                  //       Get.find<AllProductsController>().salesOrderModel =
+                  //           pastOrder;
+                  //       Get.dialog(Dialog(
+                  //         shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(
+                  //                 Dimensions.radiusSmall)),
+                  //         insetPadding:
+                  //             EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  //         child: InVoicePrintScreen(),
+                  //       ));
+                  //     },
+                  //     child: Icon(
+                  //       Icons.print_outlined,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     )),
+                  // SizedBox(
+                  //   width: 5,
+                  // ),
+                  // GestureDetector(
+                  //     onTap: () {
+                  //       print('Past Order Data');
+                  //       // Get.dialog(Dialog(
+                  //       //   shape: RoundedRectangleBorder(
+                  //       //       borderRadius: BorderRadius.circular(
+                  //       //           Dimensions.radiusSmall)),
+                  //       //   insetPadding:
+                  //       //   EdgeInsets.all(Dimensions.paddingSizeSmall),
+                  //       //   child: InVoicePrintScreen(),
+                  //       // ));
+                  //
+                  //       Get.to(PrintData(
+                  //         saleOrderDataModel: pastOrder,
+                  //       ));
+                  //     },
+                  //     child: Icon(
+                  //       Icons.picture_as_pdf_outlined,
+                  //       color: Theme.of(context).colorScheme.primary,
+                  //     )),
                 ],
               )
             ],
@@ -61,7 +92,7 @@ class SalesViewTile extends StatelessWidget {
               //if (pastOrder.totalAmountRecovered != null)
               AmountInfo(
                 amount: '${pastOrder.totalPaid ?? '0.00'}',
-                status: 'Paid',
+                status: 'paid'.tr,
               ),
             ],
           ),
@@ -101,7 +132,7 @@ class SalesViewTile extends StatelessWidget {
               // if (pastOrder.finalTotal != null)
               AmountInfo(
                 amount: (double.parse(
-                        '${double.parse('${pastOrder.finalTotal ?? '0.00'}') - double.parse('${pastOrder.totalPaid ?? '0.00'}')}'))
+                    '${double.parse('${pastOrder.finalTotal ?? '0.00'}') - double.parse('${pastOrder.totalPaid ?? '0.00'}')}'))
                     .toString(),
                 status: 'due'.tr,
               ),

@@ -1,6 +1,5 @@
 import 'package:bizmodo_emenu/Pages/Tabs/View/packingCharges.dart';
 import 'package:bizmodo_emenu/Pages/SalesView/shippingCharge.dart';
-import 'package:bizmodo_emenu/Pages/cart/cart_page.dart';
 import 'package:bizmodo_emenu/Pages/order_type/search_customer_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +12,7 @@ import '/Config/const.dart';
 import '/Config/utils.dart';
 import '/Controllers/ContactController/ContactController.dart';
 import '/Models/order_type_model/order_service_model.dart';
-import '../../ProductsPage/home_page.dart';
+import '../../ProductsPage/ItemsPage.dart';
 import '/Theme/style.dart';
 import '../../../Controllers/OrderController/order_type_controller.dart';
 import '../../../Controllers/ProductController/product_cart_controller.dart';
@@ -527,7 +526,7 @@ class _OrderTypeSelectionState extends State<OrderTypeSelection> {
                                       //_orderCtrlObj.showButtonTable = false;
                                       //_orderCtrlObj.update();
                                       print('going to cart page');
-                                      Get.to(CartPage());
+                                      // Get.to(CartPage());
                                       return;
                                     } else if (_orderCtrlObj
                                                 .selectedOrderType?.name ==
@@ -548,7 +547,7 @@ class _OrderTypeSelectionState extends State<OrderTypeSelection> {
                                       productCtrlObj.update();
                                       Get.back();
                                     } else {
-                                      Get.to(() => HomePage());
+                                      Get.to(() => ItemsPage());
                                     }
                                     // if (contactCtrlObj
                                     //     .searchCustomerCtrl.text.isNotEmpty) {

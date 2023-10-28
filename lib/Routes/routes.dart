@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../Pages/ProductsPage/home_page.dart';
+import '../Pages/ProductsPage/ItemsPage.dart';
 import '/Pages/login.dart';
-import '../Pages/Table/TablesPage.dart';
+// import '../Pages/Table/TablesPage.dart';
 
 class PageRoutes {
   static const String homePage = 'home_page';
@@ -14,8 +14,8 @@ class PageRoutes {
 
   Map<String, WidgetBuilder> routes() {
     return {
-      homePage: (context) => HomePage(),
-      tableSelectionPage: (context) => TablesPage(),
+      homePage: (context) => ItemsPage(),
+      // tableSelectionPage: (context) => TablesPage(),
       loginPage: (context) => LoginPage(),
     };
   }

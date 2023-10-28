@@ -1,8 +1,9 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Components/custom_circular_button.dart';
+import '../../Config/utils.dart';
+import '../../Controllers/ContactController/ContactController.dart';
 import '/Components/textfield.dart';
 import '/Theme/colors.dart';
 import '/Theme/style.dart';
@@ -38,8 +39,31 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          'Customer Details',
+          'customer_details'.tr,
         ),
+        actions: [
+          GetBuilder<ContactController>(
+              builder: (ContactController contactCtrl) {
+                return CustomButton(
+                  onTap: () {
+                    if (contactCtrl.isForEdit == true) {
+                      contactCtrl.isForEdit = false;
+                      contactCtrl.update();
+                    } else if (contactCtrl.isForEdit == false) {
+                      contactCtrl.isForEdit = true;
+                      contactCtrl.update();
+                    }
+                  },
+                  title: Text(
+                    contactCtrl.isForEdit == true ? 'edit'.tr : 'view'.tr,
+                    style: TextStyle(color: kWhiteColor),
+                  ),
+                );
+              }),
+          SizedBox(
+            width: 10,
+          )
+        ],
       ),
       body: Container(
         width: MediaQuery.of(context).size.width,
@@ -51,107 +75,119 @@ class _ShowCustomerDetailsState extends State<ShowCustomerDetails> {
         ),
         child: GetBuilder<ContactController>(
             builder: (ContactController contactCtrl) {
-          if (contactCtrl.getSpecificContactModel == null)
-            return progressIndicator();
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              if (contactCtrl.getSpecificContactModel == null)
+                return progressIndicator();
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      Icons.person,
-                      color: Theme.of(context).colorScheme.primary,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        Text(
+                          'customer_information'.tr,
+                          style: appBarHeaderStyle,
+                        )
+                      ],
                     ),
-                    Text(
-                      'Customer Information',
-                      style: appBarHeaderStyle,
-                    )
+                    SizedBox(
+                      height: h * 0.02,
+                    ),
+                    AppFormField(
+                      labelText: 'prefix'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.prefixCtrl,
+                    ),
+                    AppFormField(
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      validator: (String? v) {
+                        if (v!.isEmpty) return 'field_required'.tr;
+                        return null;
+                      },
+                      labelText: 'first_name'.tr,
+                      controller: contactCtrl.firstNameCtrl,
+                    ),
+                    AppFormField(
+                      labelText: 'middle_name'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.middleNameCtrl,
+                    ),
+                    AppFormField(
+                      labelText: 'last_name'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.lastNameCtrl,
+                    ),
+                    AppFormField(
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      // validator: (String? v) {
+                      //   if (v!.isEmpty) return 'field_required'.tr;
+                      //   return null;
+                      // },
+                      labelText: 'business_name'.tr,
+                      controller: contactCtrl.businessNameCtrl,
+                    ),
+                    // mobile phone
+                    AppFormField(
+                      // validator: (String? v) {
+                      //   if (v!.isEmpty) return 'field_required'.tr;
+                      //   return null;
+                      // },
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      labelText: 'mobile_number'.tr,
+                      controller: contactCtrl.mobileNumberCtrl,
+                      keyboardType: TextInputType.number,
+                    ),
+                    AppFormField(
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      labelText: 'alternate_contact_number'.tr,
+                      controller: contactCtrl.alternateMblNbrNumberCtrl,
+                    ),
+                    // street
+                    AppFormField(
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      labelText: 'landline'.tr,
+                      controller: contactCtrl.landLineCtrl,
+                    ),
+                    // villa, building, apartment
+                    AppFormField(
+                      labelText: 'email'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.emailCtrl,
+                    ),
+                    AppFormField(
+                      labelText: 'trn'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.trnCtrl,
+                    ),
+                    AppFormField(
+                      labelText: 'license_small'.tr,
+                      readOnly: contactCtrl.isForEdit == true ? true : false,
+                      controller: contactCtrl.licenseCtrl,
+                    ),
+                    SizedBox(
+                      height: h * 0.02,
+                    ),
+                    // Divider(),
+                    if (contactCtrl.isForEdit == false)
+                      CustomButton(
+                        onTap: () {
+                          showProgress();
+                          contactCtrl.updateContactCustomer(
+                              contactApi: widget.contactApi);
+                        },
+                        title: Text(
+                          'update'.tr,
+                          style: TextStyle(color: kWhiteColor),
+                        ),
+                      )
                   ],
                 ),
-                SizedBox(
-                  height: h * 0.02,
-                ),
-                AppFormField(
-                  labelText: 'Prefix',
-                  readOnly: true,
-                  controller: contactCtrl.prefixCtrl,
-                ),
-                AppFormField(
-                  readOnly: true,
-                  validator: (String? v) {
-                    if (v!.isEmpty) return 'field_required'.tr;
-                    return null;
-                  },
-                  labelText: 'First Name',
-                  controller: contactCtrl.firstNameCtrl,
-                ),
-                AppFormField(
-                  labelText: 'Middle Name',
-                  readOnly: true,
-                  controller: contactCtrl.middleNameCtrl,
-                ),
-                AppFormField(
-                  labelText: 'Last Name',
-                  readOnly: true,
-                  controller: contactCtrl.lastNameCtrl,
-                ),
-                AppFormField(
-                  readOnly: true,
-                  // validator: (String? v) {
-                  //   if (v!.isEmpty) return 'field_required'.tr;
-                  //   return null;
-                  // },
-                  labelText: 'Business Name',
-                  controller: contactCtrl.businessNameCtrl,
-                ),
-                // mobile phone
-                AppFormField(
-                  // validator: (String? v) {
-                  //   if (v!.isEmpty) return 'field_required'.tr;
-                  //   return null;
-                  // },
-                  readOnly: true,
-                  labelText: 'mobile_number'.tr,
-                  controller: contactCtrl.mobileNumberCtrl,
-                  keyboardType: TextInputType.number,
-                ),
-                AppFormField(
-                  readOnly: true,
-                  labelText: 'Alternate Contact Number',
-                  controller: contactCtrl.alternateMblNbrNumberCtrl,
-                ),
-                // street
-                AppFormField(
-                  readOnly: true,
-                  labelText: 'Landline',
-                  controller: contactCtrl.landLineCtrl,
-                ),
-                // villa, building, apartment
-                AppFormField(
-                  labelText: 'Email',
-                  readOnly: true,
-                  controller: contactCtrl.emailCtrl,
-                ),
-                AppFormField(
-                  labelText: 'TRN',
-                  readOnly: true,
-                  controller: contactCtrl.trnCtrl,
-                ),
-                AppFormField(
-                  labelText: 'License',
-                  readOnly: true,
-                  controller: contactCtrl.licenseCtrl,
-                ),
-                SizedBox(
-                  height: h * 0.02,
-                ),
-                Divider(),
-              ],
-            ),
-          );
-        }),
+              );
+            }),
       ),
     );
   }

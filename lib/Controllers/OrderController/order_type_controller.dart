@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import '/Config/const.dart';
 import '/Controllers/ContactController/ContactController.dart';
 import '/Models/order_type_model/order_service_model.dart';
-import '/Pages/Table/TablesPage.dart';
-import '../../Pages/ProductsPage/home_page.dart';
+// import '/Pages/Table/TablesPage.dart';
+import '../../Pages/ProductsPage/ItemsPage.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
 
@@ -62,7 +62,7 @@ class OrderTypeSelectionController extends GetxController {
       isButtonDisabled = false;
       showButtonTable = true;
       update();
-      Get.to(() => TablesPage());
+      // Get.to(() => TablesPage());
     } else if (!isInputFieldsAllowed) {
       if (isUpdate) {
         // Get.back();
@@ -71,7 +71,7 @@ class OrderTypeSelectionController extends GetxController {
       isButtonDisabled = true;
       showButtonTable = false;
       update();
-      Get.to(() => HomePage());
+      Get.to(() => ItemsPage());
     }
   }
 }

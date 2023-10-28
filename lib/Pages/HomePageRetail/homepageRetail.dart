@@ -18,7 +18,7 @@ import '../Orders/View/OrdersTabPage.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
-import '../ProductsPage/home_page.dart';
+import '../ProductsPage/ItemsPage.dart';
 import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {
@@ -139,7 +139,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               // handle icon tap
                               if (index == 0) {
                                 //Get.to(AddItem());
-                                Get.to(HomePage());
+                                Get.to(ItemsPage());
                               }
                               if (index == 1) {
                                 Get.to(CustomerSearch(

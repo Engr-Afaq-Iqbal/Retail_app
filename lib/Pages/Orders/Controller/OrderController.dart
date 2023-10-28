@@ -10,7 +10,6 @@ import '../../Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '/Config/app_config.dart';
 import '/Config/enums.dart';
 import '/Config/utils.dart';
-import '/Controllers/TableSelectionController/table_management_controller.dart';
 import '/Models/NavBarModel.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
@@ -236,66 +235,66 @@ class OrderController extends GetxController {
   bool get isOrderUpdating => _isOrderUpdating;
   void set isOrderUpdating(bool val) => this._isOrderUpdating = val;
 
-  void updateOrderStatus(
-      {bool isCooked = false,
-      bool isServed = false,
-      bool isComplete = false}) async {
-    // if (!isCooked && !isServed && !isComplete) return;
-
-    print('before return');
-    if (singleOrderData == null) return;
-
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
-    };
-    var request = http.MultipartRequest(
-        'POST', Uri.parse('${AppConfig.baseUrl}${ApiUrls.markOrdersEndpoint}'));
-
-    int i = 0;
-    for (var _itr in singleOrderData!.sellLines) {
-      if (_itr.isSelected) {
-        /// key to mark sell line/s as cooked
-        // request.fields['sell_kitchen_name[$i]'] = '${_itr.id}';
-
-        /// key to mark sell line/s as served
-        request.fields['sell_kitchen_cooked[$i]'] = '${_itr.id}';
-        i++;
-      }
-    }
-
-    logger.i(request.fields);
-
-    request.headers.addAll(headers);
-
-    return await request.send().then((http.StreamedResponse _res) async {
-      String? result = await _res.stream.bytesToString();
-      logger.i(
-          'EndPoint => ${ApiUrls.markOrdersEndpoint}\nStatus Code => ${_res.statusCode}\nResponse => $result');
-
-      if (_res.statusCode == 200 || _res.statusCode == 201) {
-        final _jd = jsonDecode(result);
-        showToast(_jd['msg'] ?? 'Order Successfully Marked.');
-        for (int _i = 0; _i < singleOrderData!.sellLines.length; _i++) {
-          if (singleOrderData!.sellLines[_i].isSelected) {
-            /// update local record to mark sell line/s as cooked
-            // singleOrderData!.sellLines[_i] =
-            //     singleOrderData!.sellLines[_i].copyWith(resLineOrderStatus: LineOrderStatus.COOKED);
-
-            /// update local record to mark sell line/s as served
-            singleOrderData!.sellLines[_i] = singleOrderData!.sellLines[_i]
-                .copyWith(resLineOrderStatus: LineOrderStatus.SERVED);
-          }
-        }
-        update();
-      }
-    }).onError((error, stackTrace) {
-      debugPrint('Error => $error');
-      logger.e('StackTrace => $stackTrace');
-      return null;
-    });
-  }
+  // void updateOrderStatus(
+  //     {bool isCooked = false,
+  //     bool isServed = false,
+  //     bool isComplete = false}) async {
+  //   // if (!isCooked && !isServed && !isComplete) return;
+  //
+  //   print('before return');
+  //   if (singleOrderData == null) return;
+  //
+  //   Map<String, String> headers = {
+  //     'Content-Type': 'application/json',
+  //     'Accept': 'application/json',
+  //     'Authorization': 'Bearer ${AppStorage.getUserToken()?.accessToken}'
+  //   };
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse('${AppConfig.baseUrl}${ApiUrls.markOrdersEndpoint}'));
+  //
+  //   int i = 0;
+  //   for (var _itr in singleOrderData!.sellLines) {
+  //     if (_itr.isSelected) {
+  //       /// key to mark sell line/s as cooked
+  //       // request.fields['sell_kitchen_name[$i]'] = '${_itr.id}';
+  //
+  //       /// key to mark sell line/s as served
+  //       request.fields['sell_kitchen_cooked[$i]'] = '${_itr.id}';
+  //       i++;
+  //     }
+  //   }
+  //
+  //   logger.i(request.fields);
+  //
+  //   request.headers.addAll(headers);
+  //
+  //   return await request.send().then((http.StreamedResponse _res) async {
+  //     String? result = await _res.stream.bytesToString();
+  //     logger.i(
+  //         'EndPoint => ${ApiUrls.markOrdersEndpoint}\nStatus Code => ${_res.statusCode}\nResponse => $result');
+  //
+  //     if (_res.statusCode == 200 || _res.statusCode == 201) {
+  //       final _jd = jsonDecode(result);
+  //       showToast(_jd['msg'] ?? 'Order Successfully Marked.');
+  //       for (int _i = 0; _i < singleOrderData!.sellLines.length; _i++) {
+  //         if (singleOrderData!.sellLines[_i].isSelected) {
+  //           /// update local record to mark sell line/s as cooked
+  //           // singleOrderData!.sellLines[_i] =
+  //           //     singleOrderData!.sellLines[_i].copyWith(resLineOrderStatus: LineOrderStatus.COOKED);
+  //
+  //           /// update local record to mark sell line/s as served
+  //           singleOrderData!.sellLines[_i] = singleOrderData!.sellLines[_i]
+  //               .copyWith(resLineOrderStatus: LineOrderStatus.SERVED);
+  //         }
+  //       }
+  //       update();
+  //     }
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     return null;
+  //   });
+  // }
 
   notifyReadyToCheckout() {
     // Invoice Print
@@ -303,7 +302,6 @@ class OrderController extends GetxController {
 
   void resetUpdateValues() {
     _isOrderUpdating = false;
-    Get.find<TableSelectionController>().isTableSelectionValueUpdated = false;
     Get.find<OrderTypeSelectionController>()
       ..isServiceTypeSelectionValueUpdated = false;
   }

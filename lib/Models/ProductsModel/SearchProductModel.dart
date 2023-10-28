@@ -14,14 +14,15 @@ String searchProductModelToJson(List<SearchProductModel> data) =>
 class SearchProductModel {
   int? productId;
   String? name;
-  String? type;
+  Type? type;
   int? enableStock;
   int? variationId;
   Variation? variation;
   String? qtyAvailable;
   String? sellingPrice;
   String? subSku;
-  String? unit;
+  Unit? unit;
+  int? unitId;
   String? imageUrl;
 
   SearchProductModel({
@@ -35,6 +36,7 @@ class SearchProductModel {
     this.sellingPrice,
     this.subSku,
     this.unit,
+    this.unitId,
     this.imageUrl,
   });
 
@@ -42,39 +44,59 @@ class SearchProductModel {
       SearchProductModel(
         productId: json["product_id"],
         name: json["name"],
-        type: json["type"],
+        type: typeValues.map[json["type"]],
         enableStock: json["enable_stock"],
         variationId: json["variation_id"],
         variation: variationValues.map[json["variation"]],
         qtyAvailable: json["qty_available"],
         sellingPrice: json["selling_price"],
         subSku: json["sub_sku"],
-        unit: json["unit"],
+        unit: unitValues.map[json["unit"]],
+        unitId: json["unit_id"],
         imageUrl: json["image_url"],
       );
 
   Map<String, dynamic> toJson() => {
-        "product_id": productId,
-        "name": name,
-        "type": type,
-        "enable_stock": enableStock,
-        "variation_id": variationId,
-        "variation": variationValues.reverse[variation],
-        "qty_available": qtyAvailable,
-        "selling_price": sellingPrice,
-        "sub_sku": subSku,
-        "unit": unit,
-        "image_url": imageUrl,
-      };
+    "product_id": productId,
+    "name": name,
+    "type": typeValues.reverse[type],
+    "enable_stock": enableStock,
+    "variation_id": variationId,
+    "variation": variationValues.reverse[variation],
+    "qty_available": qtyAvailable,
+    "selling_price": sellingPrice,
+    "sub_sku": subSku,
+    "unit": unitValues.reverse[unit],
+    "unit_id": unitId,
+    "image_url": imageUrl,
+  };
 }
 
-// enum Unit { PC_S, KG }
-//
-// final unitValues = EnumValues({"KG": Unit.KG, "Pc(s)": Unit.PC_S});
+enum Type { COMBO, SINGLE, VARIABLE }
 
-enum Variation { DUMMY }
+final typeValues = EnumValues(
+    {"combo": Type.COMBO, "single": Type.SINGLE, "variable": Type.VARIABLE});
 
-final variationValues = EnumValues({"DUMMY": Variation.DUMMY});
+enum Unit { GM, KG, PC_S }
+
+final unitValues =
+EnumValues({"gm": Unit.GM, "KG": Unit.KG, "Pc(s)": Unit.PC_S});
+
+enum Variation { BLUE, DUMMY, GREEN, L, M, RED, S, WHITE, XL, XXL, YELLOW }
+
+final variationValues = EnumValues({
+  "Blue": Variation.BLUE,
+  "DUMMY": Variation.DUMMY,
+  "Green": Variation.GREEN,
+  "L": Variation.L,
+  "M": Variation.M,
+  "Red": Variation.RED,
+  "S": Variation.S,
+  "White": Variation.WHITE,
+  "XL": Variation.XL,
+  "XXL": Variation.XXL,
+  "Yellow": Variation.YELLOW
+});
 
 class EnumValues<T> {
   Map<String, T> map;

@@ -1,5 +1,7 @@
 import 'package:get_storage/get_storage.dart';
 
+import '../Config/utils.dart';
+import '../Models/AllPrinterModel/AllPrinterModels.dart';
 import '/Models/AuthModels/loggged_in_user_detail.dart';
 import '/Models/AuthModels/o_auth_model.dart';
 import '/Models/ProductsModel/all_products_model.dart';
@@ -16,8 +18,11 @@ class AppStorage {
   static String _retailBusinessDetailDataStorageKey = "businessDetailData";
   static String _retailTableDataStorageKey = "tableCount";
   static String _retailPrinterDataStorageKey = "printers";
-  static String _retailProductsStorageKey = "products";
+  static String _productsStorageKey = "products";
   static String _retailOrderTypesStorageKey = "orderTypes";
+  static String printerDataStorageKey = "printers";
+  static String printInvoiceTitleStorageKey = "printInvoiceTitle";
+  static String printedInvoiceOrderIDsStorageKey = "printedInvoiceOrderIDs";
 
   static Future<void> _write(String key, dynamic value) async {
     await box.write(key, value);
@@ -43,6 +48,32 @@ class AppStorage {
       return oauthModelFromJson(box.read(_retailLangStorageKey));
     } catch (e) {
       return null;
+    }
+  }
+
+  /// Printer Storage
+  static setPrinterData(String _res) async =>
+      await AppStorage._write(AppStorage.printerDataStorageKey, _res);
+
+  static List<AllPrintersModel>? getPrinterData({String? res}) {
+    try {
+      return allPrintersModelFromJson(res ?? box.read(printerDataStorageKey));
+    } catch (_e) {
+      logger.e('Error => $_e');
+      return null;
+    }
+  }
+
+  /// Print Invoice Title
+  static setPrintInvoiceTitle(String invoiceTitle) async {
+    await box.write(printInvoiceTitleStorageKey, invoiceTitle);
+  }
+
+  static String getPrintInvoiceTitle() {
+    try {
+      return box.read(printInvoiceTitleStorageKey);
+    } catch (_e) {
+      return 'TAX Invoice';
     }
   }
 
@@ -89,7 +120,7 @@ class AppStorage {
   static BusinessModel? getBusinessDetailsData() {
     try {
       String? storedBusinessDetails =
-          box.read(_retailBusinessDetailDataStorageKey);
+      box.read(_retailBusinessDetailDataStorageKey);
       if (storedBusinessDetails == null) return null;
 
       return businessModelFromJson(storedBusinessDetails);
@@ -144,17 +175,32 @@ class AppStorage {
 
   /// Products Storage
   static isStorageHasProductsData() =>
-      _storageHasData(AppStorage._retailProductsStorageKey);
+      _storageHasData(AppStorage._productsStorageKey);
 
   static setProductsData(String _res) async =>
-      await AppStorage._write(AppStorage._retailProductsStorageKey, _res);
+      await AppStorage._write(AppStorage._productsStorageKey, _res);
 
   static CategoriesProductsModel? getProductsData({String? res}) {
     try {
       return categoriesProductsModelFromJson(
-          res ?? box.read(_retailProductsStorageKey));
+          res ?? box.read(_productsStorageKey));
     } catch (_e) {
       return null;
+    }
+  }
+
+  /// Checkout Order IDs
+  static setPrintedInvoiceOrderIDs(int? orderId) async {
+    if (orderId == null) return;
+    await box.write(
+        printedInvoiceOrderIDsStorageKey, [getPrintedInvoiceOrderIDs, orderId]);
+  }
+
+  static List<int> get getPrintedInvoiceOrderIDs {
+    try {
+      return box.read(printInvoiceTitleStorageKey);
+    } catch (_e) {
+      return [];
     }
   }
 }

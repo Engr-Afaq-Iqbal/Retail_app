@@ -11,6 +11,9 @@ class ApiUrls {
   // find customer
   static String contactApi = "connector/api/contactapi";
 
+  // update customer
+  static String updateContactApi = "connector/api/contactapi/update/";
+
   //Get Specified Contact Api
   static String getSpecifiedContactApi = "connector/api/contactapi/";
 
@@ -20,6 +23,14 @@ class ApiUrls {
   static String updateTableStatus = "connector/api/table/status/update";
   // Products
   static String allProducts = "connector/api/product";
+
+  ///Product list Api
+  static String productListApi = "connector/api/product/list?";
+
+  static String unitListApi = "connector/api/unit";
+
+  //Funds Transfer API
+  static String fundsTransferAPI = "connector/api/account/fund-transfer";
 
   // fetch the order types
   static String getOrderTypes = "connector/api/types-of-service";
@@ -132,15 +143,15 @@ class ApiUrls {
   ///Create Stock Transfer
   static String createStockTransferApi = "connector/api/stock-transfer/store";
 
+  ///Update Stock Transfer
+  static String updateStockTransferApi = "connector/api/stock-transfer/update/";
+
   ///Create Stock Adjustment
   static String createStockAdjustmentApi =
       "connector/api/stock-adjustment/create";
 
   ///Searh product list Api
   static String searchProductListApi = "connector/api/product/search";
-
-  ///Product list Api
-  static String productListApi = "connector/api/product/list?";
 
   ///Product list Api
   static String uploadApi = "connector/api/user/google/file";
@@ -161,25 +172,21 @@ class ApiUrls {
   static String storeSettingsAPI = "connector/api/app/setting/store";
 
   /// order payment
-  static String orderPaymentAPI =
-      "${AppConfig.baseUrl}connector/api/order/payment/";
-
-  ///Register Apis
-  static String openRegisterAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register";
-
-  static String closeRegisterAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register/close";
-
-  static String registersDetailsAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register";
-
-  static String openedRegisterRecordsAPI =
-      "${AppConfig.baseUrl}connector/api/cash-register/close-register";
+  static String orderPaymentAPI = "connector/api/order/payment/";
 
   /// Payment Account Api
   static String paymentAccountApi = "connector/api/payment-accounts";
 
-  //Funds Transfer API
-  static String fundsTransferAPI = "connector/api/account/fund-transfer";
+  ///Register Apis
+  static String openRegisterAPI = "connector/api/cash-register";
+
+  static String closeRegisterAPI = "connector/api/cash-register/close";
+
+  static String registersDetailsAPI = "connector/api/cash-register";
+
+  static String openedRegisterRecordsAPI =
+      "connector/api/cash-register/close-register";
+
+  static String updateStockTransferStatusApi =
+      "connector/api/stock-transfers/update-status/";
 }

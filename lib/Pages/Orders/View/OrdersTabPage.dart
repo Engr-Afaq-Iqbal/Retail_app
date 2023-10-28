@@ -1,8 +1,8 @@
-import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
+import '../../../Theme/colors.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
 
 class OrdersTabPage extends StatefulWidget {
@@ -33,7 +33,7 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
-        title: Text('Stock Transfer'),
+        title: Text('stock_transfer'.tr),
       ),
       body: DefaultTabController(
         length: StockTransferController.stockTabsList().length,
@@ -47,7 +47,17 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
                 color: kWhiteColor,
                 child: TabBar(
                   labelColor: Theme.of(context).colorScheme.primary,
-                  indicatorColor: Theme.of(context).colorScheme.primary,
+                  unselectedLabelColor:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  indicator: UnderlineTabIndicator(
+                    borderSide: BorderSide(
+                      width: 2, // Adjust the thickness of the underline
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary, // Color of the underline
+                    ),
+                  ),
+                  automaticIndicatorColorAdjustment: true,
                   tabs:
                       StockTransferController.stockTabsList().map((_orderTab) {
                     return Tab(text: _orderTab.label);

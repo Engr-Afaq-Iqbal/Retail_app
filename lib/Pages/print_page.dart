@@ -3,337 +3,167 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../Config/DateTimeFormat.dart';
+import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../Models/ProductsModel/ProductModel.dart';
+import '../../Models/order_type_model/SaleOrderModel.dart';
+import '../../Services/storage_services.dart';
+import '../Controllers/Tax Controller/TaxController.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
-import '/Models/ProductsModel/ProductModel.dart';
-
-class AppSettings {
-  AppSettings._();
-
-  static const String _lastSubnetKey = 'AppSettings-LAST_SUBNET';
-  static const String _firstSubnetKey = 'AppSettings-FIRST_SUBNET';
-  static const String _socketTimeoutKey = 'AppSettings-SOCKET_TIMEOUT';
-  static const String _pingCountKey = 'AppSettings-PING_COUNT';
-  int _firstSubnet = 1;
-  int _lastSubnet = 254;
-  int _socketTimeout = 500;
-  int _pingCount = 5;
-
-  static final AppSettings _instance = AppSettings._();
-
-  static AppSettings get instance => _instance;
-  int get firstSubnet => _firstSubnet;
-  int get lastSubnet => _lastSubnet;
-  int get socketTimeout => _socketTimeout;
-  int get pingCount => _pingCount;
-
-  Future<bool> setFirstSubnet(int firstSubnet) async {
-    _firstSubnet = firstSubnet;
-    return (await SharedPreferences.getInstance()).setInt(_firstSubnetKey, _firstSubnet);
-  }
-
-  Future<bool> setLastSubnet(int lastSubnet) async {
-    _lastSubnet = lastSubnet;
-    return (await SharedPreferences.getInstance()).setInt(_lastSubnetKey, _lastSubnet);
-  }
-
-  Future<bool> setSocketTimeout(int socketTimeout) async {
-    _socketTimeout = socketTimeout;
-    return (await SharedPreferences.getInstance()).setInt(_socketTimeoutKey, _socketTimeout);
-  }
-
-  Future<bool> setPingCount(int pingCount) async {
-    _pingCount = pingCount;
-    return (await SharedPreferences.getInstance()).setInt(_pingCountKey, _pingCount);
-  }
-
-  Future<void> load() async {
-    _firstSubnet = (await SharedPreferences.getInstance()).getInt(_firstSubnetKey) ?? _firstSubnet;
-
-    _lastSubnet = (await SharedPreferences.getInstance()).getInt(_lastSubnetKey) ?? _lastSubnet;
-
-    _socketTimeout =
-        (await SharedPreferences.getInstance()).getInt(_socketTimeoutKey) ?? _socketTimeout;
-
-    _pingCount = (await SharedPreferences.getInstance()).getInt(_pingCountKey) ?? _pingCount;
-  }
-}
+import 'package:http/http.dart' as http;
 
 class PrintData extends StatelessWidget {
-  const PrintData({Key? key}) : super(key: key);
+  final SaleOrderDataModel? saleOrderDataModel;
+  PrintData({Key? key, this.saleOrderDataModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: PdfPreview(
-        build: (format) => _generatePdf(format),
-      ),
+      body: PdfPreview(build: (format) => _generatePdf(format)),
     );
   }
 
   Future<Uint8List> _generatePdf(PdfPageFormat format) async {
     final pdf = pw.Document();
+    final url = AppStorage.getBusinessDetailsData()?.businessData?.logo;
+    final response = await http.get(Uri.parse(url ?? ''));
+    final Uint8List imageBytes = response.bodyBytes;
+    final pdfImage = pw.MemoryImage(imageBytes);
 
-    pdf.addPage(kotPrintPage(
+    pdf.addPage(invoicePrintPage(
       format,
       itemList: Get.find<ProductCartController>().itemCartList,
+      saleOrderDataModel: saleOrderDataModel,
+      image: pdfImage,
     ));
 
     return pdf.save();
   }
 
-  kotPrintPage(
-    PdfPageFormat format, {
-    String? invoiceNum,
-    DateTime? dateTimeStamp,
-    String? table,
-    String? customerType,
-    String? mobile,
-    String? shippingAddress,
-    List<ProductModel> itemList = const [],
-  }) {
-    return pw.Page(
-      pageFormat: format,
-      build: (context) => pw.Column(
-        children: [
-          // Slip Title
-          pw.Center(
-              child: pw.Text('RESTAURANT, RESTAURANT',
-                  style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold))),
-          pw.SizedBox(height: 5),
-          pw.Center(
-              child: pw.Text(
-            'Packing Slip',
-          )),
-          //printBasicInfoWidget(null, 'Packing Slip'),
-
-          pw.Divider(),
-          // Invoice Number Info
-          printBasicInfoWidget('Invoice No.: ', 'INV87647'),
-          //printBasicInfoWidget('Date: ', dateTimeStamp != null ? dateTimeStamp.toString() : null),
-          printBasicInfoWidget('Date: ', DateFormat.jm().format(DateTime.now())),
-
-          // printBasicInfoWidget('Table: ', table),
-          printBasicInfoWidget('Table: ', '02'),
-          // printBasicInfoWidget('Customer: ', customerType),
-          printBasicInfoWidget('Customer: ', 'Willan'),
-          printBasicInfoWidget('Mobile', mobile ?? 'Not Available'),
-          printBasicInfoWidget('Shipping Address', shippingAddress ?? 'Not Available'),
-          pw.Row(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              children: [
-                pw.Column(
-                  mainAxisAlignment: pw.MainAxisAlignment.start,
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [],
-                ),
-
-                // printBasicInfoWidget('Invoice No.', invoiceNum),
-                // printBasicInfoWidget('Delivery:', invoiceNum),
-              ]),
-          //  printBasicInfoWidget('Invoice No.', invoiceNum),
-
-          // Time Stamp
-
-          // Table Info
-
-          pw.SizedBox(height: 10),
-
-          // Customer & Shipping Info
-          // pw.Row(
-          //   children: [
-          //     // Customer Info
-          //     pw.Column(
-          //       children: [
-          //         // Customer Type
-          //
-          //
-          //         // Contact Number
-          //         // pw.Row(
-          //         //   children: [
-          //         //     pw.Text('Mobile'),
-          //         //     pw.Text(mobile ?? 'Not Available'),
-          //         //   ],
-          //         // ),
-          //       ],
-          //     ),
-          //
-          //     // Shipping Address
-          //     pw.Row(
-          //       children: [
-          //         pw.Text('Shipping Address'),
-          //         pw.Text(shippingAddress ?? 'Not Available'),
-          //       ],
-          //     ),
-          //   ],
-          // ),
-
-          // Order Items Table
-          pw.Table(
-            //border: pw.TableBorder.all(width: 0.8),
-            children: [
-              pw.TableRow(
-                children: [
-                  pw.Expanded(
-                    flex: 2,
-                    child: pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('#',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
-                    ),
-                  ),
-                  pw.Expanded(
-                    flex: 10,
-                    child: pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('Product',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
-                    ),
-                  ),
-                  pw.Expanded(
-                    flex: 3,
-                    child: pw.Padding(
-                      padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                      child: pw.Text('QTY',
-                          style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
-                    ),
-                  ),
-                ],
-              ),
-              ...List.generate(
-                itemList.length,
-                (index) => pw.TableRow(
-                  children: [
-                    pw.Expanded(
-                      flex: 2,
-                      child: pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                        child: pw.Text('${index + 1}'),
-                      ),
-                    ),
-                    pw.Expanded(
-                      flex: 10,
-                      child: pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                        child: pw.Text(
-                          '${itemList[index].name}',
-                        ),
-                      ),
-                    ),
-                    pw.Expanded(
-                      flex: 3,
-                      child: pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                        child: pw.Text('${itemList[index].quantity}'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          pw.Divider(),
-        ],
-      ),
-    );
-  }
-
   invoicePrintPage(
-    PdfPageFormat format, {
-    String? invoiceNum,
-    DateTime? dateTimeStamp,
-    String? table,
-    String? customerType,
-    String? mobile,
-    String? shippingAddress,
-    List<ProductModel> itemList = const [],
-  }) {
+      PdfPageFormat format, {
+        String? invoiceNum,
+        DateTime? dateTimeStamp,
+        String? table,
+        String? customerType,
+        String? mobile,
+        String? shippingAddress,
+        List<ProductModel> itemList = const [],
+        SaleOrderDataModel? saleOrderDataModel,
+        pw.MemoryImage? image,
+      }) {
     return pw.Page(
       pageFormat: format,
       build: (context) => pw.Column(
-        //mainAxisAlignment: pw.MainAxisAlignment.center,
         crossAxisAlignment: pw.CrossAxisAlignment.center,
         children: [
           // Slip Title
-          pw.Center(
-              child: pw.Text('RESTAURANT, RESTAURANT',
-                  style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold))),
-          pw.Center(
-              child: pw.Text(
-            'Al Falah, Abu Dhabi, United Arab Emirates',
-          )),
-          pw.Center(
-              child: pw.Text(
-            'Mobile: 024445331, https://bizmodo.io',
-          )),
+          pw.Image(
+              pw.MemoryImage(
+                  image!.bytes), // Convert MemoryImage to ImageProvider
+              fit: pw.BoxFit.contain,
+              width: 200,
+              height: 100),
           pw.Center(
               child: pw.Text(
-            'VAT: 1020120012003',
-          )),
+                  AppStorage.getBusinessDetailsData()?.businessData?.name ?? '',
+                  style: pw.TextStyle(
+                      fontSize: 16, fontWeight: pw.FontWeight.bold))),
           pw.Center(
-              child: pw.Text(
-            'INVOICE',
-          )),
-          //printBasicInfoWidget(null, 'RESTAURANT, RESTAURANT'),
-          //printBasicInfoWidget(null, 'Al Falah, Abu Dhabi, United Arab Emirates'),
-          //printBasicInfoWidget(null, 'Mobile: 024445331, https://bizmodo.io'),
-          //printBasicInfoWidget('VAT:', '1020120012003'),
-          //printBasicInfoWidget(null, 'Invoice'),
+            child: pw.Text(
+                '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.name ?? ''}, '
+                    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.landmark ?? ''}, '
+                    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.city ?? ''}, '
+                    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.country ?? ''}'),
+          ),
+          pw.Center(
+            child: pw.Text(
+                'Mobile: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.mobile ?? ''}, ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.alternateNumber ?? ''}, '
+                    'Email: ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.email ?? ''}'),
+          ),
+          pw.Center(
+            child: pw.Text(
+              AppStorage.getBusinessDetailsData()
+                  ?.businessData
+                  ?.locations
+                  .first
+                  .name ??
+                  '',
+              // style:
+              //     pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold),
+            ),
+          ),
+          pw.Center(
+              child: pw.Text('Tax Invoice',
+                  style: pw.TextStyle(
+                      fontSize: 18, fontWeight: pw.FontWeight.bold))),
+          pw.Center(
+            child: pw.Text(
+              '${AppStorage.getBusinessDetailsData()?.businessData?.taxLabel1 ?? ''}:${AppStorage.getBusinessDetailsData()?.businessData?.taxNumber1 ?? ''}',
+            ),
+          ),
+          // pw.Center(
+          //     child: pw.Text('Retail Invoice',
+          //         style: pw.TextStyle(
+          //             fontSize: 16, fontWeight: pw.FontWeight.bold))),
           pw.Divider(),
 
-          // Invoice Number Info
-          //printBasicInfoWidget('Invoice No.', invoiceNum),
-          printBasicInfoWidget('Invoice No.', 'INV87646'),
-          // Time Stamp
-          //printBasicInfoWidget('Date', dateTimeStamp != null ? dateTimeStamp.toString() : null),
-          printBasicInfoWidget('Date', DateFormat.jm().format(DateTime.now())),
-          printBasicInfoWidget('Waiter', 'Fadal'),
-
-          // Table Info
-          //printBasicInfoWidget('Table', table),
-          printBasicInfoWidget('Table', '02'),
-          printBasicInfoWidget('Customer', 'Walkin'),
-          printBasicInfoWidget('Mobile', '213123'),
-
-          pw.SizedBox(height: 20),
-
-          // Customer & Shipping Info
           pw.Row(
-            children: [
-              // Customer Info
-              pw.Column(
-                children: [
-                  // Customer Type
-                  // printBasicInfoWidget('Customer', customerType),
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                printBasicInfoWidget(
+                    title: 'Invoice No: ',
+                    titleVal: '${saleOrderDataModel?.invoiceNo}'),
+                printBasicInfoWidget(
+                    title: 'Date: ',
+                    titleVal:
+                    '${AppFormat.dateYYYYMMDDHHMM24(saleOrderDataModel?.transactionDate)}'),
+              ]),
 
-                  // Contact Number
-                  // pw.Row(
-                  //   children: [
-                  //     pw.Text('Mobile'),
-                  //     pw.Text(mobile ?? 'Not Available'),
-                  //   ],
-                  // ),
-                ],
-              ),
+          pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                printBasicInfoWidget(
+                    title: 'Date: ',
+                    titleVal:
+                    '${AppFormat.dateOnly(saleOrderDataModel!.transactionDate!)}'),
+                printBasicInfoWidget(
+                    title: 'Time: ',
+                    titleVal:
+                    '${AppFormat.timeOnly(saleOrderDataModel.transactionDate!)}'),
+              ]),
 
-              // Shipping Address
-              // pw.Row(
-              //   children: [
-              //     pw.Text('Shipping Address'),
-              //     pw.Text(shippingAddress ?? 'Not Available'),
-              //   ],
-              // ),
-            ],
-          ),
+          printBasicInfoWidget(
+              title: 'Customer Name: ',
+              titleVal: '${saleOrderDataModel.contact?.name}'),
+
+          pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                if (saleOrderDataModel.contact?.mobile != null)
+                  printBasicInfoWidget(
+                      title: 'Contact No: ',
+                      titleVal: '${saleOrderDataModel.contact?.mobile}'),
+                if (saleOrderDataModel.contact?.email != null)
+                  printBasicInfoWidget(
+                      title: 'Email: ',
+                      titleVal: '${saleOrderDataModel.contact?.email ?? ''}'),
+              ]),
+
+          printBasicInfoWidget(
+              title: 'Customer Tax No: ',
+              titleVal: '${saleOrderDataModel.contact?.taxNumber ?? ''}'),
+          // pw.Divider(),
+
+          pw.SizedBox(height: 5),
 
           // Order Items Table
+          pw.Divider(),
           pw.Table(
             //border: pw.TableBorder.all(width: 0.8),
 
@@ -345,7 +175,8 @@ class PrintData extends StatelessWidget {
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('#',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                          style: pw.TextStyle(
+                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
                   ),
                   pw.Expanded(
@@ -353,7 +184,8 @@ class PrintData extends StatelessWidget {
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('Product',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                          style: pw.TextStyle(
+                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
                   ),
                   pw.Expanded(
@@ -361,15 +193,17 @@ class PrintData extends StatelessWidget {
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('QTY',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                          style: pw.TextStyle(
+                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
                   ),
                   pw.Expanded(
-                    flex: 5,
+                    flex: 4,
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('Unit Price',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                          style: pw.TextStyle(
+                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
                   ),
                   pw.Expanded(
@@ -377,47 +211,90 @@ class PrintData extends StatelessWidget {
                     child: pw.Padding(
                       padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
                       child: pw.Text('Subtotal',
-                          style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                          style: pw.TextStyle(
+                              fontSize: 16, fontWeight: pw.FontWeight.bold)),
                     ),
                   ),
                 ],
               ),
-
-              // ...List.generate(
-              //   itemList.length,
-              //   (index) => pw.TableRow(
-              //     children: [
-              //       pw.Expanded(
-              //         flex: 2,
-              //         child: pw.Padding(
-              //           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-              //           child: pw.Text('${index + 1}'),
-              //         ),
-              //       ),
-              //       pw.Expanded(
-              //         flex: 10,
-              //         child: pw.Padding(
-              //           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-              //           child: pw.Text(
-              //             '${itemList[index].name}',
-              //           ),
-              //         ),
-              //       ),
-              //       pw.Expanded(
-              //         flex: 3,
-              //         child: pw.Padding(
-              //           padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-              //           child: pw.Text('${itemList[index].quantity}'),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
           pw.Divider(),
-          pw.SizedBox(height: 50),
-          pw.Divider(),
+          pw.Column(children: [
+            ...List.generate(saleOrderDataModel?.sellLines.length ?? 0,
+                    (index) {
+                  return pw.Table(
+                    //border: pw.TableBorder.all(width: 0.8),
+
+                    children: [
+                      pw.TableRow(
+                        children: [
+                          pw.Expanded(
+                            flex: 2,
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+                              child: pw.Text('${index + 1}',
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ),
+                          pw.Expanded(
+                            flex: 6,
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+                              child: pw.Text(
+                                  AppFormat.removeArabic(
+                                      '${saleOrderDataModel.sellLines[index].product?.name}'),
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ),
+                          //Qty
+                          pw.Expanded(
+                            flex: 4,
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+                              child: pw.Text(
+                                  ' ${calculatingQty(index: index)} / ${Get.find<AllProductsController>().checkUnitsShortName(unitId: saleOrderDataModel.sellLines[index].subUnitId)}',
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ),
+                          //Unit Price
+                          pw.Expanded(
+                            flex: 5,
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+                              child: pw.Text(calculatingUnitPrice(index: index),
+                                  textAlign: pw.TextAlign.center,
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ),
+                          // Product Subtotal Amount
+                          pw.Expanded(
+                            flex: 3,
+                            child: pw.Padding(
+                              padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+                              child: pw.Text(
+                                  '${double.parse(calculatingUnitPrice(index: index) ?? '0.00') * double.parse(calculatingQty(index: index) ?? '0.00')}',
+                                  //  '${double.parse(saleOrderDataModel.sellLines[index].unitPriceIncTax ?? '0.00') * double.parse('${saleOrderDataModel.sellLines[index].quantity}')}',
+                                  textAlign: pw.TextAlign.right,
+                                  style: pw.TextStyle(
+                                    fontSize: 16,
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                })
+          ]),
 
           pw.Column(
             // mainAxisAlignment: pw.MainAxisAlignment.end,
@@ -425,171 +302,125 @@ class PrintData extends StatelessWidget {
 
             children: [
               pw.SizedBox(height: 15),
-              pw.Row(
-
-                  // mainAxisAlignment: pw.MainAxisAlignment.end,
-                  //crossAxisAlignment: pw.CrossAxisAlignment.end,
-                  children: [
-                    pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                    //pw.SizedBox(width: 50),
-                    pw.Expanded(
-                      flex: 3,
-                      child: pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                        child: pw.Text('Subtotal:',
-                            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                      ),
-                    ),
-                    pw.Expanded(
-                      flex: 0,
-                      child: pw.Padding(
-                        padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                        child: pw.Text('78',
-                            style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                      ),
-                    ),
-                  ]),
+              finalDetails(
+                  txt1: 'Subtotal:',
+                  txt2:
+                  '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.totalBeforeTax)}'),
               pw.SizedBox(height: 5),
-              pw.Row(children: [
-                pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                //pw.SizedBox(width: 50),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('Discount (50.00%):',
-                        style: pw.TextStyle(
-                          fontSize: 16,
-                        )),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 0,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('(-) 39.00',
-                        style: pw.TextStyle(
-                          fontSize: 16,
-                        )),
-                  ),
-                ),
-              ]),
+              finalDetails(
+                  txt1: 'Discount:',
+                  txt2: '${saleOrderDataModel.discountAmount ?? '0.00'}'),
               pw.SizedBox(height: 5),
-              pw.Row(children: [
-                pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                //pw.SizedBox(width: 50),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('Tax (VAT):',
-                        style: pw.TextStyle(
-                          fontSize: 16,
-                        )),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 0,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('(+) 1.95',
-                        style: pw.TextStyle(
-                          fontSize: 16,
-                        )),
-                  ),
-                ),
-              ]),
+              // finalDetails(
+              //     txt1: 'Tax (VAT):',
+              //     txt2: //'${saleOrderDataModel.totalItemTax}'
+              //         '${AppFormat.doubleToStringUpTo2('${saleOrderDataModel?.taxAmount}')}'),
+              // pw.SizedBox(height: 5),
+              finalDetails(
+                  txt1: 'Tax (VAT):',
+                  txt2: //'${saleOrderDataModel.totalItemTax}'
+                  '${AppFormat.doubleToStringUpTo2('${totalItemsTax()}')}'),
               pw.SizedBox(height: 5),
-              pw.Row(children: [
-                pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                //pw.SizedBox(width: 50),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('Total',
-                        style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 0,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('40.95',
-                        style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                  ),
-                ),
-              ]),
+              finalDetails(
+                  txt1: 'Total:',
+                  txt2:
+                  '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.finalTotal)}'),
               pw.SizedBox(height: 5),
-              pw.Row(children: [
-                pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                //pw.SizedBox(width: 50),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('Cash(01/09/203)',
-                        style: pw.TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 0,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('40.95',
-                        style: pw.TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
-                ),
-              ]),
+              finalDetails(
+                  txt1: 'Total paid:',
+                  txt2:
+                  '${AppFormat.doubleToStringUpTo2(saleOrderDataModel.totalPaid ?? '0.00')}'),
               pw.SizedBox(height: 5),
-              pw.Row(children: [
-                pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
-                //pw.SizedBox(width: 50),
-                pw.Expanded(
-                  flex: 3,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('Total paid',
-                        style: pw.TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
-                ),
-                pw.Expanded(
-                  flex: 0,
-                  child: pw.Padding(
-                    padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
-                    child: pw.Text('40.95',
-                        style: pw.TextStyle(
-                          fontSize: 18,
-                        )),
-                  ),
-                ),
-              ]),
+              finalDetails(
+                  txt1: 'Due Amount:',
+                  txt2:
+                  '${double.parse('${saleOrderDataModel?.finalTotal ?? 0.00}') - double.parse('${saleOrderDataModel?.totalPaid ?? 0.00}')}'),
+              pw.SizedBox(height: 5),
             ],
           ),
           pw.SizedBox(height: 15),
           pw.Divider(),
           pw.SizedBox(height: 10),
-          pw.Center(child: pw.Text('Thank You Visit Again!')),
-          pw.Center(child: pw.Text('Barkas Restaurant'))
+          pw.Center(
+              child: pw.Text(
+                  'Digitally generated invoice,\nvalid without signature or stamp')),
         ],
       ),
     );
   }
 
-  printBasicInfoWidget(String? title, String? titleVal) {
+  pw.Row finalDetails({String? txt1, String? txt2}) {
+    return pw.Row(children: [
+      pw.Padding(padding: pw.EdgeInsets.only(left: 170)),
+      //pw.SizedBox(width: 50),
+      pw.Expanded(
+        flex: 3,
+        child: pw.Padding(
+          padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+          child: pw.Text('${txt1}',
+              style: pw.TextStyle(
+                fontSize: 16,
+              )),
+        ),
+      ),
+      pw.Expanded(
+        flex: 0,
+        child: pw.Padding(
+          padding: pw.EdgeInsets.symmetric(horizontal: 2.5),
+          child: pw.Text('${txt2}',
+              style: pw.TextStyle(
+                fontSize: 16,
+              )),
+        ),
+      ),
+    ]);
+  }
+
+  totalItemsTax() {
+    double totalTax = 0.00;
+    var length = saleOrderDataModel?.sellLines.length ?? 0;
+    for (int i = 0; i < length; i++) {
+      print('Item Tax Id in PDF --->${saleOrderDataModel?.sellLines[i].taxId}');
+      // Get.find<TaxController>().inlineTaxAmountForPDF(amount: )
+      print(
+          'Item quantity in PDF ---> ${saleOrderDataModel?.sellLines[i].quantity}');
+
+      print(
+          'Item Tax After Calculation --->>> ${Get.find<TaxController>().inlineTaxAmountForPDF(saleOrderDataModel?.sellLines[i].taxId, '${double.parse(calculatingUnitPrice(index: i) ?? '0.00') * double.parse(calculatingQty(index: i) ?? '0.00')}')}');
+
+      totalTax = totalTax +
+          double.parse(
+              '${Get.find<TaxController>().inlineTaxAmountForPDF(saleOrderDataModel?.sellLines[i].taxId, '${double.parse(calculatingUnitPrice(index: i) ?? '0.00') * double.parse(calculatingQty(index: i) ?? '0.00')}')}')
+      // (double.parse('${saleOrderDataModel?.sellLines[i].itemTax}') *
+      //     double.parse('${saleOrderDataModel?.sellLines[i].quantity}')
+      // double.parse('${calculatingQty(index: i)}')
+      // * double.parse(
+      //     '${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel?.sellLines[i].subUnitId)}')
+          ;
+      print(
+          'Item Tax --> ${saleOrderDataModel?.sellLines[i].itemTax} * Item quantity --> ${saleOrderDataModel?.sellLines[i].quantity} === ${double.parse('${saleOrderDataModel?.sellLines[i].itemTax}') * double.parse('${saleOrderDataModel?.sellLines[i].quantity}')}');
+    }
+    print('Item Total Tax ---> ${totalTax}');
+    return totalTax;
+  }
+
+  calculatingUnitPrice({required int index}) {
+    return '${AppFormat.doubleToStringUpTo2('${double.parse('${saleOrderDataModel?.sellLines[index].unitPriceIncTax}') * double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel?.sellLines[index].subUnitId)}')}')}';
+  }
+
+  calculatingQty({required int index}) {
+    return '${AppFormat.doubleToStringUpTo2('${double.parse('${saleOrderDataModel?.sellLines[index].quantity}') / double.parse('${Get.find<AllProductsController>().checkUnitValueWithGivenId(idNumber: saleOrderDataModel?.sellLines[index].subUnitId)}')}')}';
+  }
+
+  printBasicInfoWidget({String? title, String? titleVal}) {
     return pw.Padding(
       padding: pw.EdgeInsets.symmetric(vertical: 2.5),
       child: pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: ,
         children: [
-          pw.Text(title ?? ''),
-          pw.Text(titleVal ?? ''),
+          if (title != null) pw.Text(title ?? ''),
+          if (titleVal != null) pw.Text(titleVal ?? ''),
+          pw.SizedBox(),
         ],
       ),
     );

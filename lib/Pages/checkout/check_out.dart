@@ -1,4 +1,3 @@
-import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +9,10 @@ import '../../Components/custom_circular_button.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/ProductController/PaymentController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
+import '../../Controllers/ReceiptsController/receiptsController.dart';
+import '../../const/dimensions.dart';
+import '../CreateOrder/selectionDialogue.dart';
+import '../Tabs/View/TabsPage.dart';
 import '/Components/textfield.dart';
 
 import '/Config/utils.dart';
@@ -20,7 +23,9 @@ import '/Theme/style.dart';
 
 class CheckOutPage extends StatefulWidget {
   final orderData;
-  CheckOutPage({this.orderData, Key? key}) : super(key: key);
+  bool isReceipt;
+  CheckOutPage({this.orderData, this.isReceipt = true, Key? key})
+      : super(key: key);
 
   @override
   State<CheckOutPage> createState() => _CheckOutPageState();
@@ -29,15 +34,39 @@ class CheckOutPage extends StatefulWidget {
 class _CheckOutPageState extends State<CheckOutPage> {
   // final AppScreenController _appScreenCtrlObj = Get.find<AppScreenController>();
   final PaymentController _paymentCtrlObj = Get.find<PaymentController>();
+  final AllProductsController allProdCtrlObj =
+  Get.find<AllProductsController>();
 
   // int paymentWidgetIndex = 0;
 
   @override
   void initState() {
+    _paymentCtrlObj.sellNoteCtrl.clear();
+    _paymentCtrlObj.staffNoteCtrl.clear();
     try {
       // if payment widget list is empty then new payment fields widget add
-      if (_paymentCtrlObj.paymentWidgetList.isEmpty)
-        _paymentCtrlObj.addPaymentWidget();
+      if (_paymentCtrlObj.paymentWidgetList.isEmpty) {
+        _paymentCtrlObj.addPaymentWidget(
+          totalAmount: double.parse(
+            (Get.find<AllProductsController>().finalTotal != 0.00)
+                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+          ) -
+              allProdCtrlObj.paidAmount -
+              allProdCtrlObj.calculatingTotalDiscount(),
+        );
+      } else if (_paymentCtrlObj.paymentWidgetList.isNotEmpty) {
+        _paymentCtrlObj.paymentWidgetList.clear();
+        _paymentCtrlObj.addPaymentWidget(
+          totalAmount: double.parse(
+            (Get.find<AllProductsController>().finalTotal != 0.00)
+                ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+          ) -
+              allProdCtrlObj.paidAmount -
+              allProdCtrlObj.calculatingTotalDiscount(),
+        );
+      }
     } catch (e) {
       logger.e('Error -> check_out -> initState -> addPaymentWidget => $e');
     }
@@ -77,8 +106,8 @@ class _CheckOutPageState extends State<CheckOutPage> {
                     AmountTile(
                       title: 'order_tax'.tr,
                       trailValue: AppFormat.doubleToStringUpTo2(
-                            '${prodCartCtrlObj.totalTaxAmount()}',
-                          ) ??
+                        '${prodCartCtrlObj.totalTaxAmount()}',
+                      ) ??
                           '0',
                     ),
 
@@ -104,14 +133,14 @@ class _CheckOutPageState extends State<CheckOutPage> {
                       Expanded(
                         child: CustomButton(
                           onTap: () {
-                            if (Get.find<AllProductsController>()
-                                    .receiptPayment ==
-                                true) {
-                              print('inside add receipt method call');
-                              Get.find<AllProductsController>().addReceipt();
-                            } else {
-                              Get.find<AllProductsController>().orderCreate();
-                            }
+                            Get.dialog(Dialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.radiusSmall)),
+                              insetPadding:
+                              EdgeInsets.all(Dimensions.paddingSizeSmall),
+                              child: SelectionDialogue(),
+                            ));
 
                             // if (widget.orderData != null) {
                             //   _paymentCtrlObj
@@ -160,7 +189,9 @@ class _CheckOutPageState extends State<CheckOutPage> {
         title: Text('payment_small'.tr),
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
-        leading: AppStyles.backButton(onTap: closeCheckoutPage),
+        leading: AppStyles.backButton(onTap: () {
+          Get.back();
+        }),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(7.5),
@@ -169,7 +200,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Advance Balance: ',
+              'advacne_balance'.tr + ': ',
               style: orderMapAppBarTextStyle,
             ),
 
@@ -191,10 +222,17 @@ class _CheckOutPageState extends State<CheckOutPage> {
 
             CustomButton(
               btnTxt: 'add_payment_row'.tr,
-              bgColor: primaryColor,
+              bgColor: Theme.of(context).colorScheme.primary,
               borderRadius: 10,
               onTap: () {
-                _paymentCtrlObj.addPaymentWidget();
+                _paymentCtrlObj.addPaymentWidget(
+                  totalAmount: double.parse(
+                    (Get.find<AllProductsController>().finalTotal != 0.00)
+                        ? '${Get.find<AllProductsController>().finalTotal ?? ''}'
+                        : '${Get.find<ReceiptsController>().totalAmount ?? ''}',
+                  ) -
+                      allProdCtrlObj.calculatingTotalDiscount(),
+                );
               },
             ),
 
