@@ -11,6 +11,12 @@ class AppFormat {
     return formattedDate;
   }
 
+  static String dateYYYYMMDDHHMM24(DateTime? date) {
+    if (date == null) return '';
+    String formattedDate = DateFormat('yyyy-MM-dd HH:mm').format(date);
+    return formattedDate;
+  }
+
   static String dateMonthOnly(DateTime date) {
     String formattedDate = DateFormat('dd MMMM').format(date);
     return formattedDate;

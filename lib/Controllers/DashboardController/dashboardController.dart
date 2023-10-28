@@ -35,6 +35,7 @@ class DashboardController extends GetxController {
     'stock',
     'customer_visits',
     'upload',
+    'funds_transfer'
   ];
 
   List<IconData> iconList = [
@@ -46,7 +47,8 @@ class DashboardController extends GetxController {
     FontAwesomeIcons.arrowUpRightDots,
     FontAwesomeIcons.boxesStacked,
     FontAwesomeIcons.personWalking,
-    FontAwesomeIcons.upload
+    FontAwesomeIcons.upload,
+    FontAwesomeIcons.moneyBill
   ];
 
   HomeTabModel? homeTabModel;

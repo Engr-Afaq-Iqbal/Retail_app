@@ -176,4 +176,10 @@ class ApiUrls {
 
   static String openedRegisterRecordsAPI =
       "${AppConfig.baseUrl}connector/api/cash-register/close-register";
+
+  /// Payment Account Api
+  static String paymentAccountApi = "connector/api/payment-accounts";
+
+  //Funds Transfer API
+  static String fundsTransferAPI = "connector/api/account/fund-transfer";
 }

@@ -4,6 +4,7 @@ import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenControl
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
+import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
 import 'package:bizmodo_emenu/Controllers/ProductController/PaymentController.dart';
 import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
@@ -120,6 +121,7 @@ void initializeControllers() {
   Get.put(PaymentController());
   Get.put(ProductCartController());
   Get.put(AllProductsController());
+  Get.put(FundsController());
 
   Get.put(BottomNavBarController());
   Get.put(BookingController());

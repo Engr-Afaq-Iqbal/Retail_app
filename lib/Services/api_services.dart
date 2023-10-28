@@ -110,6 +110,10 @@ class ApiServices {
   //     return null;
   //   });
   // }
+
+  static String methodExceptionFormat(method, url, error, stackTrace) =>
+      '$method, EndPoint: $url\nError: $error\nStackTrace: $stackTrace';
+
   static Future<String?> postMultiPartQuery({
     required String feedUrl,
     Map<String, String>? fields,

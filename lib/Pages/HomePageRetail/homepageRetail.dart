@@ -5,12 +5,14 @@ import 'package:get/get.dart';
 
 import '../../Config/DateTimeFormat.dart';
 import '../../Controllers/DashboardController/dashboardController.dart';
+import '../../Controllers/FundsController/fundsController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Models/Dashboard/limited_stocks.dart';
 import '../../Models/Dashboard/my_accounts.dart';
 import '../../Services/storage_services.dart';
 import '../../const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
+import '../FundsTransfer/fundsTransfer.dart';
 import '../Orders/View/OrdersTabPage.dart';
 import '../Return/return.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
@@ -36,6 +38,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
       Get.find<AllProductsController>().getAllProductsFromStorage();
     }
     dashBoardCtrl.fetchDashboardData();
+    // Get.find<AllProductsController>().fetchUnitList();
+    Get.find<FundsController>().fetchPaymentAccountList();
     super.initState();
   }
 
@@ -122,6 +126,9 @@ class _HomePageRetailState extends State<HomePageRetail> {
                               }
                               if (index == 8) {
                                 Get.to(Upload());
+                              }
+                              if (index == 9) {
+                                Get.to(FundsTransfer());
                               }
                             },
                           ),

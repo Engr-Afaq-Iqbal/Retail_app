@@ -204,6 +204,16 @@ class AppStyles {
     color: Colors.black,
   );
 
+  static TextStyle overlayTitleStyle = GoogleFonts.openSans().copyWith(
+    fontSize: 16.0,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle overlayMsgStyle = GoogleFonts.openSans().copyWith(
+    fontSize: 12.0,
+    fontWeight: FontWeight.w500,
+  );
+
   /// Screen Bottom Spacings
   static Widget scrollBottomSpacing() => SizedBox(height: 150);
   static Widget scrollBottomSpacingExtra() =>
