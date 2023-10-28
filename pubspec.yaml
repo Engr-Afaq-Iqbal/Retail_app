@@ -110,6 +110,7 @@ flutter:
     - assets/
     - assets/food items/
     - assets/bizmodo_icons/
+    - assets/Icons/
 
   fonts:
     - family: ProductSans

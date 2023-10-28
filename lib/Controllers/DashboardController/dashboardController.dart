@@ -38,20 +38,21 @@ class DashboardController extends GetxController {
     'funds_transfer'
   ];
 
-  List<IconData> iconList = [
-    FontAwesomeIcons.store,
-    FontAwesomeIcons.user,
-    FontAwesomeIcons.database,
-    FontAwesomeIcons.divide,
-    FontAwesomeIcons.print,
-    FontAwesomeIcons.arrowUpRightDots,
-    FontAwesomeIcons.boxesStacked,
-    FontAwesomeIcons.personWalking,
-    FontAwesomeIcons.upload,
-    FontAwesomeIcons.moneyBill
+  List iconList = [
+    Image.asset("assets/Icons/shopping-bag.png",width: 20,),
+    Image.asset("assets/Icons/customer-service.png",width: 20,),
+    Image.asset("assets/Icons/checklist.png",width: 20,),
+    Image.asset("assets/Icons/exchange.png",width: 20,),
+    Image.asset("assets/Icons/check.png",width: 20,),
+    Image.asset("assets/Icons/sales.png",width: 20,),
+    Image.asset("assets/Icons/in-stock.png",width: 20,),
+    Image.asset("assets/Icons/walk.png",width: 20,),
+    Image.asset("assets/Icons/file.png",width: 20,),
+    Image.asset("assets/Icons/fund.png",width: 20,),
   ];
 
   HomeTabModel? homeTabModel;
+
   Future fetchDashboardData({
     String? pageUrl,
   }) async {
@@ -76,7 +77,6 @@ class DashboardController extends GetxController {
         '${homeTabModel?.totalExpense ?? '0.00'}',
         ' ',
         ' ',
-
       ];
       print(namesData);
       print(' record${_res}');

@@ -109,18 +109,18 @@ class _HomePageRetailState extends State<HomePageRetail> {
             children: [
               CurvedContainer(),
               Container(
-                height: MediaQuery.of(context).size.height * 0.3,
+                height: MediaQuery.of(context).size.height * 0.25,
                 width: MediaQuery.of(context).size.width * 0.85,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: kWhiteColor,
                 ),
                 child: GridView.builder(
-                  padding: EdgeInsets.zero,
+                  padding: EdgeInsets.all(5),
                   physics: NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4, // number of columns
-                    mainAxisSpacing: 2.0, // space between rows
+                    mainAxisSpacing: 1.0, // space between rows
                     crossAxisSpacing: 0.0, // space between columns
                     childAspectRatio: 1.0, // width/height ratio of items
                   ),
@@ -129,13 +129,8 @@ class _HomePageRetailState extends State<HomePageRetail> {
                     return GridTile(
                       child: Column(
                         children: [
-                          IconButton(
-                            icon: Icon(
-                              dashBoardCtrl.iconList[index],
-                              color: Theme.of(context).colorScheme.primary,
-                              size: 20,
-                            ),
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               // handle icon tap
                               if (index == 0) {
                                 //Get.to(AddItem());
@@ -183,6 +178,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 Get.to(FundsTransfer());
                               }
                             },
+                            child: dashBoardCtrl.iconList[index],
                           ),
                           Expanded(
                             child: Text(
