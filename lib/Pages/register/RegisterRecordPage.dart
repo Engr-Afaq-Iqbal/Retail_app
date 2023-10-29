@@ -4,9 +4,6 @@ import 'package:get/get.dart';
 
 import '../../Config/const.dart';
 import '/Theme/colors.dart';
-import '../booking/booking_row.dart';
-import '../booking/tablePastbooking.dart';
-import '../booking/tableUpcomingbooking.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -69,8 +66,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       body: TabBarView(
                         children: [
-                          TableUpcomingbooking(),
-                          TablePastbooking(),
+                          // TableUpcomingbooking(),
+                          // TablePastbooking(),
                           // _buildWidgetA(),
                           // _buildWidgetB(),
                         ],
@@ -85,15 +82,15 @@ class _RegisterPageState extends State<RegisterPage> {
               color: Colors.grey.withOpacity(0.5),
               width: 1,
             ),
-            Container(
-                constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width * 0.29,
-                  maxWidth: MediaQuery.of(context).size.width * 0.29,
-                ),
-                //height: MediaQuery.of(context).size.height,
-                // width: MediaQuery.of(context).size.width * 0.29,
-                // color: strikeThroughColor,
-                child: BottomWidget())
+            // Container(
+            //     constraints: BoxConstraints(
+            //       minWidth: MediaQuery.of(context).size.width * 0.29,
+            //       maxWidth: MediaQuery.of(context).size.width * 0.29,
+            //     ),
+            //     //height: MediaQuery.of(context).size.height,
+            //     // width: MediaQuery.of(context).size.width * 0.29,
+            //     // color: strikeThroughColor,
+            //     child: BottomWidget())
           ],
         ),
       ),

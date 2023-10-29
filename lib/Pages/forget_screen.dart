@@ -18,6 +18,8 @@ class ForgetPasswordScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         centerTitle: true,
+        title: Text('forget_password_heading'.tr),
+        elevation: 0,
         leading: IconButton(
           onPressed: () {
             Get.back();
@@ -49,12 +51,12 @@ class ForgetPasswordScreen extends StatelessWidget {
             SizedBox(
               width: 300,
               child: AppFormField(
-                labelText: 'user'.tr,
+                labelText: 'forget_password'.tr,
                 validator: (String? v) {
-                  if (v!.isEmpty) return 'user_name_required'.tr;
+                  if (v!.isEmpty) return 'forget_password_required'.tr;
                   return null;
                 },
-                title: 'user_name'.tr,
+                title: 'forget_password'.tr,
                 controller: textEditingController,
               ),
             ),
