@@ -210,7 +210,8 @@ class AllProductsController extends GetxController {
     // names.add('Pieces');
     // names.add('Plate');
     names.add(checkUnits(product: product));
-    for (int i = 0; i < unitListModel!.data!.length; i++) {
+    var length = unitListModel?.data?.length ?? 0;
+    for (int i = 0; i < length; i++) {
       // if (unitListModel?.data?[i].baseUnitId == product?.unitId)
       if (unitListModel?.data?[i].baseUnitId != null) {
         if (product?.unitId == unitListModel?.data?[i].baseUnitId) {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
+import 'package:bizmodo_emenu/Controllers/AllPrinterController/allPrinterController.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
@@ -120,7 +121,7 @@ void initializeControllers() {
   Get.put(ProductCartController());
   Get.put(AllProductsController());
   Get.put(FundsController());
-
+  Get.put(AllPrinterController());
   Get.put(BottomNavBarController());
   Get.put(BookingController());
   Get.put(ServiceStaffController());

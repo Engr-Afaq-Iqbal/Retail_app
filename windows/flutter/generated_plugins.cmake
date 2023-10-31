@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  flutter_pos_printer_platform
   geolocator_windows
   network_info_plus_windows
   printing
+  smart_bluetooth_pos_printer
   url_launcher_windows
 )
 

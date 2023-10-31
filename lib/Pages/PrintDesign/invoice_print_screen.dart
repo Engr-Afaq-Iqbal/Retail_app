@@ -7,9 +7,11 @@ import 'package:bizmodo_emenu/Pages/PrintDesign/pos_print_layout.dart';
 import 'package:bizmodo_emenu/Pages/PrintDesign/pos_receipt_print_layout.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
+// import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 
 import 'package:get/get.dart';
+import 'package:smart_bluetooth_pos_printer/printer.dart';
+import 'package:smart_bluetooth_pos_printer/smart_bluetooth_pos_printer.dart';
 
 
 import '../../Components/custom_circular_button.dart';
@@ -46,7 +48,7 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
 
   @override
   void initState() {
-    if (Platform.isWindows) allPrinterCtrl.defaultPrinterType = PrinterType.usb;
+    // if (Platform.isWindows) allPrinterCtrl.defaultPrinterType = PrinterType.usb;
     super.initState();
     _portController.text = port;
     allPrinterCtrl.scan();
@@ -60,7 +62,9 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
       if (status == BTStatus.connected && allPrinterCtrl.pendingTask != null) {
         Future.delayed(const Duration(milliseconds: 1000), () {
           PrinterManager.instance.send(
-              type: PrinterType.bluetooth, bytes: allPrinterCtrl.pendingTask!);
+            ///in previous package
+              //type: PrinterType.bluetooth,
+              bytes: allPrinterCtrl.pendingTask!);
           allPrinterCtrl.pendingTask = null;
         });
       }
@@ -85,7 +89,7 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
       deviceName: value,
       address: ipAddress,
       port: port,
-      typePrinter: PrinterType.network,
+      // typePrinter: PrinterType.network,
       state: false,
     );
     _selectDevice(device);
@@ -97,7 +101,7 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
       deviceName: value,
       address: ipAddress,
       port: port,
-      typePrinter: PrinterType.network,
+      // typePrinter: PrinterType.network,
       state: false,
     );
     _selectDevice(device);
@@ -105,11 +109,15 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
 
   void _selectDevice(BluetoothPrinter device) async {
     if (allPrinterCtrl.selectedPrinters != null) {
-      if ((device.address != allPrinterCtrl.selectedPrinters!.address) ||
-          (device.typePrinter == PrinterType.usb &&
-              allPrinterCtrl.selectedPrinters!.vendorId != device.vendorId)) {
-        await PrinterManager.instance
-            .disconnect(type: allPrinterCtrl.selectedPrinters!.typePrinter);
+      if ((device.address != allPrinterCtrl.selectedPrinters!.address)
+          // ||
+          // (device.typePrinter ==  //PrinterType.usb &&
+          //     (allPrinterCtrl.selectedPrinters!.vendorId != device.vendorId))
+      ) {
+        ///in previuos package
+        // await PrinterManager.instance
+        //     .disconnect(type: allPrinterCtrl.selectedPrinters!.typePrinter);
+        await PrinterManager.instance.disconnect();
       }
     }
     allPrinterCtrl.selectedPrinters = device;
@@ -234,9 +242,11 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                           children: [
                             Text(
                                 '${allPrinterCtrlObj.bluetoothDevices[index].deviceName}'),
-                            Platform.isAndroid &&
-                                    allPrinterCtrlObj.defaultPrinterType ==
-                                        PrinterType.usb
+                            Platform.isAndroid
+                            ///in previous package
+                                // &&
+                                //     allPrinterCtrlObj.defaultPrinterType ==
+                                //         PrinterType.usb
                                 ? const SizedBox()
                                 : Visibility(
                                     visible: !Platform.isWindows,
@@ -250,10 +260,12 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                                     color: Theme.of(context).disabledColor)
                                 : const SizedBox(),
                           ]),
-                      (allPrinterCtrl.selectedPrinters != null &&
-                              ((allPrinterCtrlObj.bluetoothDevices[index]
-                                                  .typePrinter ==
-                                              PrinterType.usb &&
+                      (allPrinterCtrl.selectedPrinters != null
+                          &&
+                              ((
+                                  // allPrinterCtrlObj.bluetoothDevices[index]
+                                  //                 .typePrinter ==
+                                             // PrinterType.usb &&
                                           Platform.isWindows
                                       ? allPrinterCtrlObj
                                               .bluetoothDevices[index]
@@ -288,64 +300,65 @@ class _InVoicePrintScreenState extends State<InVoicePrintScreen> {
                 );
               },
             ),
-            Visibility(
-              visible:
-                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
-                      Platform.isWindows,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: TextFormField(
-                  controller: _ipController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(signed: true),
-                  decoration: InputDecoration(
-                    label: Text('ip_address'.tr),
-                    prefixIcon: const Icon(Icons.wifi, size: 24),
-                  ),
-                  onChanged: _setIpAddress,
-                ),
-              ),
-            ),
-            Visibility(
-              visible:
-                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
-                      Platform.isWindows,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: TextFormField(
-                  controller: _portController,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(signed: true),
-                  decoration: InputDecoration(
-                    label: Text('port'.tr),
-                    prefixIcon: const Icon(Icons.numbers_outlined, size: 24),
-                  ),
-                  onChanged: _setPort,
-                ),
-              ),
-            ),
-            Visibility(
-              visible:
-                  allPrinterCtrlObj.defaultPrinterType == PrinterType.network &&
-                      Platform.isWindows,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: OutlinedButton(
-                  onPressed: () async {
-                    if (_ipController.text.isNotEmpty)
-                      _setIpAddress(_ipController.text);
-                    setState(() {
-                      _searchingMode = false;
-                    });
-                  },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 4, horizontal: 50),
-                    child: Text("print_ticket".tr, textAlign: TextAlign.center),
-                  ),
-                ),
-              ),
-            )
+            /// for windows platform
+            // Visibility(
+            //   // visible:
+            //   //     allPrinterCtrlObj.defaultPrinterType ==  //PrinterType.network &&
+            //   //         Platform.isWindows,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0),
+            //     child: TextFormField(
+            //       controller: _ipController,
+            //       keyboardType:
+            //           const TextInputType.numberWithOptions(signed: true),
+            //       decoration: InputDecoration(
+            //         label: Text('ip_address'.tr),
+            //         prefixIcon: const Icon(Icons.wifi, size: 24),
+            //       ),
+            //       onChanged: _setIpAddress,
+            //     ),
+            //   ),
+            // ),
+            // Visibility(
+            //   // visible:
+            //   //     allPrinterCtrlObj.defaultPrinterType ==// PrinterType.network &&
+            //   //         Platform.isWindows,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0),
+            //     child: TextFormField(
+            //       controller: _portController,
+            //       keyboardType:
+            //           const TextInputType.numberWithOptions(signed: true),
+            //       decoration: InputDecoration(
+            //         label: Text('port'.tr),
+            //         prefixIcon: const Icon(Icons.numbers_outlined, size: 24),
+            //       ),
+            //       onChanged: _setPort,
+            //     ),
+            //   ),
+            // ),
+            // Visibility(
+            //   // visible:
+            //   //     allPrinterCtrlObj.defaultPrinterType == // PrinterType.network &&
+            //   //         Platform.isWindows,
+            //   child: Padding(
+            //     padding: const EdgeInsets.only(top: 10.0),
+            //     child: OutlinedButton(
+            //       onPressed: () async {
+            //         if (_ipController.text.isNotEmpty)
+            //           _setIpAddress(_ipController.text);
+            //         setState(() {
+            //           _searchingMode = false;
+            //         });
+            //       },
+            //       child: Padding(
+            //         padding:
+            //             const EdgeInsets.symmetric(vertical: 4, horizontal: 50),
+            //         child: Text("print_ticket".tr, textAlign: TextAlign.center),
+            //       ),
+            //     ),
+            //   ),
+            // )
           ],
         );
       }),
