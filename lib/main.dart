@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:bizmodo_emenu/Controllers/AllKitchenController/allKitchenController.dart';
 import 'package:bizmodo_emenu/Controllers/AllPrinterController/allPrinterController.dart';
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
+import 'package:bizmodo_emenu/Controllers/CRMControllers/CRMController/crmController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
 import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
@@ -26,6 +27,7 @@ import '/Controllers/ProductController/all_products_controller.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import 'Controllers/AllSalesController/allSalesController.dart';
 import 'Controllers/Booking Controller/BookingController.dart';
+import 'Controllers/CRMControllers/LeadsController/leadsController.dart';
 import 'Controllers/ListUserController/ListUserController.dart';
 import 'Controllers/Notifications/NotificationsController.dart';
 import 'Controllers/OrderController/order_type_controller.dart';
@@ -135,6 +137,8 @@ void initializeControllers() {
   Get.put(ReceiptsController());
   Get.put(QuotationController());
   Get.put(UploadController());
+  Get.put(CRMController());
+  Get.put(LeadsController());
 }
 
 class BizModoEMenu extends StatefulWidget {

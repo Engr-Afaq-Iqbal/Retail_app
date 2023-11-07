@@ -6,6 +6,11 @@ class AppFormat {
     return formattedDate;
   }
 
+  static String dateDDMMYYWithOutComma(DateTime date) {
+    String formattedDate = DateFormat('dd-MM-yy hh:mm').format(date);
+    return formattedDate;
+  }
+
   static String dateYYMMDD(DateTime date) {
     String formattedDate = DateFormat('yy-MM-dd').format(date);
     return formattedDate;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../CRM/crm.dart';
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Orders/View/OrdersTabPage.dart';
@@ -76,6 +77,15 @@ class BottomNavBarController extends GetxController {
     //   page: BookingTabs(),
     // ),
     NavBarModel(
+      icon: Icons.ramen_dining_outlined,
+      label: 'CRM',
+      onTap: () {
+        print('CRM Page');
+        // Get.to(() => TablePage());
+      },
+      page: CRM(),
+    ),
+    NavBarModel(
       icon: Icons.menu,
       label: 'menu_drop',
       onTap: () {
@@ -85,4 +95,5 @@ class BottomNavBarController extends GetxController {
       page: AppMenuPage(),
     ),
   ];
+  Widget? page;
 }

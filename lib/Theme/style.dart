@@ -262,3 +262,7 @@ final TextStyle orderMapAppBarTextStyle = GoogleFonts.openSans().copyWith(
   fontWeight: FontWeight.bold,
   color: blackColor,
 );
+
+title({String? txt}){
+  return Text('$txt', style: TextStyle(fontWeight: FontWeight.bold),);
+}

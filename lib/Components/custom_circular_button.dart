@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final Widget? title;
   final String? btnTxt;
   final Icon? leading;
+  final Icon? action;
   final Function()? onTap;
   final EdgeInsets? padding;
   final Color? bgColor;
@@ -32,6 +33,7 @@ class CustomButton extends StatelessWidget {
       this.width,
       this.btnTxtAxisSize = MainAxisSize.max,
       this.btnChild,
+        this.action,
       this.isBtnRounded = false});
   @override
   Widget build(BuildContext context) {
@@ -60,6 +62,7 @@ class CustomButton extends StatelessWidget {
                 title ??
                     Text(btnTxt ?? 'submit'.tr,
                         style: TextStyle(color: Colors.white)),
+                action == null ? SizedBox.shrink() : action!
               ],
             ),
       ),

@@ -31,6 +31,7 @@ class AppFormField extends StatefulWidget {
   final double? width;
   final bool fontWeight;
   final Color? isColor;
+  final bool isDense;
 
   const AppFormField(
       {Key? key,
@@ -60,6 +61,7 @@ class AppFormField extends StatefulWidget {
       this.maxLength,
       this.width,
       this.isColor,
+        this.isDense = false,
       this.fontWeight = true})
       : super(key: key);
   @override
@@ -76,10 +78,13 @@ class _AppFormFieldState extends State<AppFormField> {
       margin: widget.margin,
       padding: widget.padding,
       child: TextFormField(
+
         maxLength: widget.maxLength,
+
         focusNode: widget.focusNode,
         validator: widget.validator,
         decoration: InputDecoration(
+          isDense: widget.isDense,
           filled: true,
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 15, vertical: 10),

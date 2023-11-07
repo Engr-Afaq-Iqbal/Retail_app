@@ -527,6 +527,7 @@ Map<String, String> english() {
     'trn': 'TRN',
     'forget_password_required': 'Forget password required',
     'forget_password_heading': 'Forget Password',
-    'view': 'View'
+    'view': 'View',
+    'leads': 'Leads'
   };
 }
