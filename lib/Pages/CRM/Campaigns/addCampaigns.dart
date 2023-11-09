@@ -1,9 +1,7 @@
-import 'package:bizmodo_emenu/Controllers/CRMControllers/CampaignsController/campaignsController.dart';
+import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
+import 'package:bizmodo_emenu/Pages/CRM/Campaigns/AddCampaignWidgets/AddCampaignSubClass.dart';
+import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../../../Components/textfield.dart';
-import '../../../Theme/style.dart';
 
 class AddCampaigns extends StatefulWidget {
   const AddCampaigns({super.key});
@@ -13,11 +11,8 @@ class AddCampaigns extends StatefulWidget {
 }
 
 class _AddCampaignsState extends State<AddCampaigns> {
-  CampaignsController campaignsCtrl = Get.find<CampaignsController>();
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
         title: Text('Create Campaigns'),
@@ -25,47 +20,25 @@ class _AddCampaignsState extends State<AddCampaigns> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            AddCampaignSubClass(),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                //Prefix
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    title(txt: 'Campaign Name:*'),
-                    SizedBox(
-                      width: width * 0.42,
-                      height: height * 0.07,
-                      child: AppFormField(
-                        isLabel: true,
-                        labelText: 'Campaign Name',
-                        isDense: true,
-                         controller: campaignsCtrl.campaignNameCtrl,
-                      ),
-                    ),
-                  ],
+                CustomButton(
+                  leading: Icon(Icons.email_outlined, color: kWhiteColor,),
+                  title: Text('Send Notification', style: TextStyle(color: kWhiteColor)),
+                  bgColor: dueColor,
+                  onTap: (){},
                 ),
-
-                //First Name
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    title(txt: 'Campaign Type:*'),
-                    SizedBox(
-                      width: width * 0.42,
-                      height: height * 0.07,
-                      child: AppFormField(
-                        isLabel: true,
-                        labelText: 'First Name',
-                        isDense: true,
-                        controller: campaignsCtrl.campaignNameCtrl,
-                      ),
-                    ),
-                  ],
+                SizedBox(width: 10,),
+                CustomButton(
+                  leading: Icon(Icons.drafts_outlined, color: kWhiteColor,),
+                  title: Text('Draft', style: TextStyle(color: kWhiteColor)),
+                  onTap: (){},
                 ),
+                SizedBox(width: 15,),
               ],
-            ),
+            )
           ],
         ),
       ),

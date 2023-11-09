@@ -2,6 +2,7 @@ import 'package:bizmodo_emenu/Pages/CRM/Leads/allLeads.dart';
 import 'package:get/get.dart';
 
 import '../../../Pages/CRM/Campaigns/allCampaigns.dart';
+import '../../../Pages/CRM/ContactsLogin/contactsLogin.dart';
 
 class CRMController extends GetxController{
 
@@ -22,7 +23,7 @@ class CRMController extends GetxController{
       },
       {
         'title' : 'Contacts Login',
-        'page' : AllLeads(),
+        'page' : AllContactsLogin(),
       },
       {
         'title' : 'Commission',

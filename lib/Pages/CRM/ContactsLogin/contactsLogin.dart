@@ -2,24 +2,24 @@ import 'package:bizmodo_emenu/Controllers/CRMControllers/CampaignsController/cam
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'AddCampaignWidgets/viewCampaign.dart';
-import 'addCampaigns.dart';
-import 'allCampaignsTiles.dart';
+import 'addContactsLogin.dart';
+import 'contactsLoginTile.dart';
 
-class AllCampaigns extends StatefulWidget {
-  const AllCampaigns({super.key});
+
+class AllContactsLogin extends StatefulWidget {
+  const AllContactsLogin({super.key});
 
   @override
-  State<AllCampaigns> createState() => _AllCampaignsState();
+  State<AllContactsLogin> createState() => _AllContactsLoginState();
 }
 
-class _AllCampaignsState extends State<AllCampaigns> {
-  ScrollController? compaignsScroll;
+class _AllContactsLoginState extends State<AllContactsLogin> {
+  ScrollController? contactsLoginScroll;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Campaigns'),
+        title: Text('All Contacts Login'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
@@ -27,7 +27,7 @@ class _AllCampaignsState extends State<AllCampaigns> {
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddCampaigns());
+            Get.to(AddContactsLogin());
           }),
       body: Stack(
         children: [
@@ -38,20 +38,15 @@ class _AllCampaignsState extends State<AllCampaigns> {
                   //await crmCtrl.callFirstOrderPage();
                 },
                 child: Scrollbar(
-                  controller: compaignsScroll,
+                  controller: contactsLoginScroll,
                   child: ListView.builder(
-                    controller: compaignsScroll,
+                    controller: contactsLoginScroll,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return IntrinsicHeight(
-                        child: GestureDetector(
-                            onTap: () {
-                              Get.to(ViewCampaign());
-                            },
-                            child: AllCampaignsTiles(
-                            )),
+                        child: ContactsLoginTile(),
                       );
                     },
                   ),

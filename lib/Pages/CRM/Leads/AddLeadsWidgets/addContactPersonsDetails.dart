@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 
 import '../../../../Components/textfield.dart';
 import '../../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
+import '../../../../Theme/style.dart';
 
 class AddContactPersonsDetails extends StatefulWidget {
-  bool isContactPerson1;
-  bool isContactPerson2;
-  bool isContactPerson3;
-  int index;
+  final bool isContactPerson1;
+  final bool isContactPerson2;
+  final bool isContactPerson3;
+  final int index;
   AddContactPersonsDetails({super.key, this.isContactPerson1 = true, required this.isContactPerson2, required this.isContactPerson3, required this.index});
 
   @override
@@ -327,7 +328,5 @@ class _AddContactPersonsDetailsState extends State<AddContactPersonsDetails> {
       ],
     );
   }
-  title({String? txt}){
-    return Text('$txt', overflow: TextOverflow.ellipsis,style: TextStyle(fontWeight: FontWeight.bold),);
-  }
+
 }
