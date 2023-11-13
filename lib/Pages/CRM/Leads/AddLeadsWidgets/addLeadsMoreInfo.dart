@@ -25,7 +25,12 @@ class _AddLeadsMoreInfoState extends State<AddLeadsMoreInfo> {
       margin: EdgeInsets.all(15),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-          color: kWhiteColor
+          color: kWhiteColor,
+          boxShadow: [BoxShadow(
+              blurRadius: 5,
+              spreadRadius: 3,
+              color: kHintColor.withOpacity(0.2)
+          )]
       ),
       child: IntrinsicHeight(
         child: Column(

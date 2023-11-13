@@ -1,25 +1,26 @@
-import 'package:bizmodo_emenu/Controllers/CRMControllers/ContactsLogin/contactsLoginController.dart';
+import 'package:bizmodo_emenu/Pages/CRM/Proposals/viewProposal.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'addContactsLogin.dart';
-import 'contactsLoginTile.dart';
+import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
+import '../Proposal Template/createProposalTemplate.dart';
+import 'allProposalsTile.dart';
 
 
-class AllContactsLogin extends StatefulWidget {
-  const AllContactsLogin({super.key});
+class AllProposals extends StatefulWidget {
+  const AllProposals({super.key});
 
   @override
-  State<AllContactsLogin> createState() => _AllContactsLoginState();
+  State<AllProposals> createState() => _AllProposalsState();
 }
 
-class _AllContactsLoginState extends State<AllContactsLogin> {
-  ScrollController? contactsLoginScroll;
+class _AllProposalsState extends State<AllProposals> {
+  ScrollController? crmScrollCtrl;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Contacts Login'),
+        title: Text('Proposals'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
@@ -27,26 +28,30 @@ class _AllContactsLoginState extends State<AllContactsLogin> {
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddContactsLogin());
+            Get.to(CreateProposalTemplate(title: 'Proposal Send',));
           }),
       body: Stack(
         children: [
           GetBuilder(
-            builder: (ContactsLoginController contactsLoginCtrl) {
+            builder: (LeadsController leadsCtrl) {
               return RefreshIndicator(
                 onRefresh: () async {
                   //await crmCtrl.callFirstOrderPage();
                 },
                 child: Scrollbar(
-                  controller: contactsLoginScroll,
+                  controller: crmScrollCtrl,
                   child: ListView.builder(
-                    controller: contactsLoginScroll,
+                    controller: crmScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
                     itemCount: 3,
                     itemBuilder: (context, index) {
                       return IntrinsicHeight(
-                        child: ContactsLoginTile(),
+                        child: GestureDetector(
+                            onTap: () {
+                              Get.to(ViewProposal());
+                            },
+                            child: AllProposalsTile()),
                       );
                     },
                   ),

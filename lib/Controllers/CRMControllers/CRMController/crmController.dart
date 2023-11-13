@@ -2,7 +2,12 @@ import 'package:bizmodo_emenu/Pages/CRM/Leads/allLeads.dart';
 import 'package:get/get.dart';
 
 import '../../../Pages/CRM/Campaigns/allCampaigns.dart';
+import '../../../Pages/CRM/ContactsLogin/commissions.dart';
 import '../../../Pages/CRM/ContactsLogin/contactsLogin.dart';
+import '../../../Pages/CRM/Proposal Template/proposalTemplate.dart';
+import '../../../Pages/CRM/Proposals/AllProposals.dart';
+import '../../../Pages/CRM/Reports/ReportsTabs/reportsTabsPage.dart';
+import '../../../Pages/CRM/Source/allSource.dart';
 
 class CRMController extends GetxController{
 
@@ -27,23 +32,23 @@ class CRMController extends GetxController{
       },
       {
         'title' : 'Commission',
-        'page' : AllLeads(),
+        'page' : Commissions(),
       },
       {
         'title' : 'Reports',
-        'page' : AllLeads(),
+        'page' : ReportsTabsPage(),
       },
       {
         'title' : 'Proposal template',
-        'page' : AllLeads(),
+        'page' : ProposalTemplate(),
       },
       {
         'title' : 'Proposals',
-        'page' : AllLeads(),
+        'page' : AllProposals(),
       },
       {
         'title' : 'Sources',
-        'page' : AllLeads(),
+        'page' : AllSource(),
       },
       {
         'title' : 'Life Stage',
