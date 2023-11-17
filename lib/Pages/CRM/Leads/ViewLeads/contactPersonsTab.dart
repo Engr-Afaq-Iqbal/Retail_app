@@ -1,33 +1,23 @@
-import 'package:bizmodo_emenu/Pages/CRM/Leads/addLeads.dart';
-import 'package:bizmodo_emenu/Pages/CRM/Leads/ViewLeads/viewLead.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
-import 'allLeadsTile.dart';
+import '../../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
+import '../../ContactsLogin/addContactsLogin.dart';
+import 'contactPersonsTabTile.dart';
 
-class AllLeads extends StatefulWidget {
-  const AllLeads({super.key});
+class ContactPersonsTab extends StatelessWidget {
+  const ContactPersonsTab({super.key});
 
-  @override
-  State<AllLeads> createState() => _AllLeadsState();
-}
-
-class _AllLeadsState extends State<AllLeads> {
-  ScrollController? crmScrollCtrl;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('leads'.tr),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
           child: Icon(Icons.add),
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddLeads());
+            Get.to(AddContactsLogin());
           }),
       body: Stack(
         children: [
@@ -38,9 +28,9 @@ class _AllLeadsState extends State<AllLeads> {
                   //await crmCtrl.callFirstOrderPage();
                 },
                 child: Scrollbar(
-                  controller: crmScrollCtrl,
+                  controller: leadsCtrl.followUpTabScrollCtrl,
                   child: ListView.builder(
-                    controller: crmScrollCtrl,
+                    controller: leadsCtrl.followUpTabScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
                     itemCount: 3,
@@ -48,12 +38,10 @@ class _AllLeadsState extends State<AllLeads> {
                       return IntrinsicHeight(
                         child: GestureDetector(
                             onTap: () {
-                              Get.to(ViewLead());
+                              // Get.to(ViewLead());
                             },
-                            child: AllLeadsTile(
-                              // pastOrder: leadsCtrl
-                              //     .allSaleOrders!.saleOrdersData[index],
-                            )),
+                            child: ContactPersonsTabTile()
+                        ),
                       );
                     },
                   ),

@@ -1,25 +1,25 @@
-import 'package:bizmodo_emenu/Pages/CRM/Leads/addLeads.dart';
-import 'package:bizmodo_emenu/Pages/CRM/Leads/ViewLeads/viewLead.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
-import 'allLeadsTile.dart';
+import 'addFollowUpCategory.dart';
+import 'followUpCategoryTile.dart';
 
-class AllLeads extends StatefulWidget {
-  const AllLeads({super.key});
+
+class AllFollowUpCategory extends StatefulWidget {
+  const AllFollowUpCategory({super.key});
 
   @override
-  State<AllLeads> createState() => _AllLeadsState();
+  State<AllFollowUpCategory> createState() => _AllFollowUpCategoryState();
 }
 
-class _AllLeadsState extends State<AllLeads> {
+class _AllFollowUpCategoryState extends State<AllFollowUpCategory> {
   ScrollController? crmScrollCtrl;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('leads'.tr),
+        title: Text('Followup Category'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
@@ -27,7 +27,7 @@ class _AllLeadsState extends State<AllLeads> {
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddLeads());
+            Get.to(AddFollowUpCategory(isUpdate: false,));
           }),
       body: Stack(
         children: [
@@ -43,17 +43,10 @@ class _AllLeadsState extends State<AllLeads> {
                     controller: crmScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
-                    itemCount: 3,
+                    itemCount: 2,
                     itemBuilder: (context, index) {
                       return IntrinsicHeight(
-                        child: GestureDetector(
-                            onTap: () {
-                              Get.to(ViewLead());
-                            },
-                            child: AllLeadsTile(
-                              // pastOrder: leadsCtrl
-                              //     .allSaleOrders!.saleOrdersData[index],
-                            )),
+                        child: FollowUpCategoryTile(),
                       );
                     },
                   ),

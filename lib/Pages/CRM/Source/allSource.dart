@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
-import '../Proposal Template/createProposalTemplate.dart';
 import 'addSource.dart';
 import 'allSourceTile.dart';
 
@@ -27,7 +26,7 @@ class _AllSourceState extends State<AllSource> {
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddSource());
+            Get.to(AddSource(isUpdate: false,));
           }),
       body: Stack(
         children: [

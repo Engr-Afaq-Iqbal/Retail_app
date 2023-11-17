@@ -1,33 +1,24 @@
-import 'package:bizmodo_emenu/Pages/CRM/Leads/addLeads.dart';
-import 'package:bizmodo_emenu/Pages/CRM/Leads/ViewLeads/viewLead.dart';
+import 'package:bizmodo_emenu/Pages/CRM/Leads/ViewLeads/viewDocuments.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
-import 'allLeadsTile.dart';
+import '../../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
+import 'addDocuments.dart';
+import 'documentsTabTile.dart';
 
-class AllLeads extends StatefulWidget {
-  const AllLeads({super.key});
+class DocumentsTab extends StatelessWidget {
+  const DocumentsTab({super.key});
 
-  @override
-  State<AllLeads> createState() => _AllLeadsState();
-}
-
-class _AllLeadsState extends State<AllLeads> {
-  ScrollController? crmScrollCtrl;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('leads'.tr),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
           child: Icon(Icons.add),
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddLeads());
+            Get.to(AddDocuments());
           }),
       body: Stack(
         children: [
@@ -38,9 +29,9 @@ class _AllLeadsState extends State<AllLeads> {
                   //await crmCtrl.callFirstOrderPage();
                 },
                 child: Scrollbar(
-                  controller: crmScrollCtrl,
+                  controller: leadsCtrl.followUpTabScrollCtrl,
                   child: ListView.builder(
-                    controller: crmScrollCtrl,
+                    controller: leadsCtrl.followUpTabScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
                     itemCount: 3,
@@ -48,12 +39,18 @@ class _AllLeadsState extends State<AllLeads> {
                       return IntrinsicHeight(
                         child: GestureDetector(
                             onTap: () {
-                              Get.to(ViewLead());
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  //title: title != null ? Text(title) : null,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 15, horizontal: 0),
+                                  content: ViewDocument(),
+                                ),
+                              );
                             },
-                            child: AllLeadsTile(
-                              // pastOrder: leadsCtrl
-                              //     .allSaleOrders!.saleOrdersData[index],
-                            )),
+                            child: DocumentsTabTile()
+                        ),
                       );
                     },
                   ),

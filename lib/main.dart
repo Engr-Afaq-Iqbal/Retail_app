@@ -5,8 +5,11 @@ import 'package:bizmodo_emenu/Controllers/AllPrinterController/allPrinterControl
 import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:bizmodo_emenu/Controllers/CRMControllers/CRMController/crmController.dart';
 import 'package:bizmodo_emenu/Controllers/CRMControllers/CampaignsController/campaignsController.dart';
+import 'package:bizmodo_emenu/Controllers/CRMControllers/FollowUpController/followUpController.dart';
 import 'package:bizmodo_emenu/Controllers/CRMControllers/ProposalTemplateController/proposalTemplateController.dart';
 import 'package:bizmodo_emenu/Controllers/CRMControllers/ReportsController/reportsController.dart';
+import 'package:bizmodo_emenu/Controllers/CRMControllers/SettingsController/settingsController.dart';
+import 'package:bizmodo_emenu/Controllers/CRMControllers/SourceController/sourceController.dart';
 import 'package:bizmodo_emenu/Controllers/CustomerVisits/CustomerVisitsController.dart';
 import 'package:bizmodo_emenu/Controllers/DashboardController/dashboardController.dart';
 import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
@@ -147,6 +150,9 @@ void initializeControllers() {
   Get.put(ContactsLoginController());
   Get.put(ReportsController());
   Get.put(ProposalTemplateController());
+  Get.put(SourceController());
+  Get.put(SettingsController());
+  Get.put(FollowUpController());
 }
 
 class BizModoEMenu extends StatefulWidget {

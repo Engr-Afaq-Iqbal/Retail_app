@@ -3,8 +3,48 @@ import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
 import '../../../Config/DateTimeFormat.dart';
+import '../../../Models/NavBarModel.dart';
+import '../../../Pages/CRM/Leads/ViewLeads/contactPersonsTab.dart';
+import '../../../Pages/CRM/Leads/ViewLeads/documentsTab.dart';
+import '../../../Pages/CRM/Leads/ViewLeads/followUpTab.dart';
+
+enum ViewLeadsTabsPage {
+  FollowUp,
+  DocumentAndNotes,
+  ContactPersons
+}
 
 class LeadsController extends GetxController{
+
+  TextEditingController docHeadingCtrl = TextEditingController();
+  TextEditingController docDescCtrl = TextEditingController();
+  TextEditingController docDocumentsCtrl = TextEditingController();
+  bool isPrivateCheckedDocs = false;
+
+
+  ScrollController? followUpTabScrollCtrl;
+
+  static List<NavBarModel> viewLeadsTabsList() => [
+    NavBarModel(
+      identifier: ViewLeadsTabsPage.FollowUp,
+      icon: 'Icons.order',
+      label: 'Follow Up',
+      page: FollowUpTab(), //StockTransfer(),
+    ),
+    NavBarModel(
+      identifier: ViewLeadsTabsPage.DocumentAndNotes,
+      icon: 'Icons.order',
+      label: 'Document And Note',
+      page: DocumentsTab(),
+    ),
+    NavBarModel(
+      identifier: ViewLeadsTabsPage.ContactPersons,
+      icon: 'Icons.order',
+      label: 'Contact Persons',
+      page: ContactPersonsTab(),
+    ),
+  ];
+
   TextEditingController titleCtrl = TextEditingController();
 
   //Add Leads variables
@@ -253,7 +293,6 @@ class LeadsController extends GetxController{
         }
       },
     );
-
     dobCtrl.text = '${AppFormat.dateDDMMYYWithOutComma(dateTime ?? DateTime.now())}';
     debugPrint('DOB Date time -> ${dobCtrl.text}');
   }

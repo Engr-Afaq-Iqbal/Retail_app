@@ -1,25 +1,25 @@
-import 'package:bizmodo_emenu/Pages/CRM/Leads/addLeads.dart';
-import 'package:bizmodo_emenu/Pages/CRM/Leads/ViewLeads/viewLead.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
-import 'allLeadsTile.dart';
+import 'addLifeStage.dart';
+import 'allLifeStageTile.dart';
 
-class AllLeads extends StatefulWidget {
-  const AllLeads({super.key});
+
+class AllLifeStage extends StatefulWidget {
+  const AllLifeStage({super.key});
 
   @override
-  State<AllLeads> createState() => _AllLeadsState();
+  State<AllLifeStage> createState() => _AllLifeStageState();
 }
 
-class _AllLeadsState extends State<AllLeads> {
+class _AllLifeStageState extends State<AllLifeStage> {
   ScrollController? crmScrollCtrl;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('leads'.tr),
+        title: Text('Life Stage'),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton.small(
@@ -27,7 +27,7 @@ class _AllLeadsState extends State<AllLeads> {
           backgroundColor:
           Theme.of(context).colorScheme.primary.withOpacity(0.5),
           onPressed: () {
-            Get.to(AddLeads());
+            Get.to(AddLifeStage(isUpdate: false,));
           }),
       body: Stack(
         children: [
@@ -43,17 +43,10 @@ class _AllLeadsState extends State<AllLeads> {
                     controller: crmScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
-                    itemCount: 3,
+                    itemCount: 2,
                     itemBuilder: (context, index) {
                       return IntrinsicHeight(
-                        child: GestureDetector(
-                            onTap: () {
-                              Get.to(ViewLead());
-                            },
-                            child: AllLeadsTile(
-                              // pastOrder: leadsCtrl
-                              //     .allSaleOrders!.saleOrdersData[index],
-                            )),
+                        child: AllLifeStageTile(),
                       );
                     },
                   ),

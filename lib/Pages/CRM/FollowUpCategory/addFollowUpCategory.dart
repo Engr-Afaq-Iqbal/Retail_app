@@ -10,15 +10,15 @@ import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../../../const/dimensions.dart';
 
-class AddSource extends StatefulWidget {
+class AddFollowUpCategory extends StatefulWidget {
   final bool isUpdate;
-  const AddSource({super.key, this.isUpdate = false});
+  const AddFollowUpCategory({super.key, this.isUpdate = false});
 
   @override
-  State<AddSource> createState() => _AddSourceState();
+  State<AddFollowUpCategory> createState() => _AddFollowUpCategoryState();
 }
 
-class _AddSourceState extends State<AddSource> {
+class _AddFollowUpCategoryState extends State<AddFollowUpCategory> {
 
   SourceController sourceCtrl = Get.find<SourceController>();
   // create some values
@@ -35,7 +35,7 @@ class _AddSourceState extends State<AddSource> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: Text('Add Source'),),
+      appBar: AppBar(title: Text('Add Followup Category'),),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Column(
@@ -56,12 +56,12 @@ class _AddSourceState extends State<AddSource> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  title(txt: 'Source:*'),
+                  title(txt: 'Life Stage:*'),
                   SizedBox(
                     width: width * 0.85,
                     height: height * 0.07,
                     child: AppFormField(
-                      labelText: 'Source',
+                      labelText: 'Life Stage',
                       isDense: true,
                       controller: sourceCtrl.sourceCtrl,
                     ),
@@ -80,62 +80,62 @@ class _AddSourceState extends State<AddSource> {
                   ),
 
                   if(widget.isUpdate)
-                  title(txt: 'Color:*'),
+                    title(txt: 'Color:*'),
                   if(widget.isUpdate)
-                  GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Pick a color!'),
-                            content: SingleChildScrollView(
-                              child: ColorPicker(
-                                pickerColor: pickerColor,
-                                onColorChanged: changeColor,
-                                showLabel: true, // optional
-                                pickerAreaHeightPercent: 0.8, // optional
+                    GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Pick a color!'),
+                              content: SingleChildScrollView(
+                                child: ColorPicker(
+                                  pickerColor: pickerColor,
+                                  onColorChanged: changeColor,
+                                  showLabel: true, // optional
+                                  pickerAreaHeightPercent: 0.8, // optional
+                                ),
                               ),
-                            ),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: const Text('Save'),
-                                onPressed: () {
-                                  setState(() => currentColor = pickerColor);
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      width: width * 0.85,
-                      height: 25,
-                      color: currentColor,
-                    ),
-                  ),
-                  if(widget.isUpdate)
-                  SizedBox(height: 20,),
-                  if(widget.isUpdate)
-                  title(txt: 'Image:*'),
-                  if(widget.isUpdate)
-                  Row(
-                    children: [
-                      CustomButton(
-                        title: Text('Choose File',style: TextStyle(color: kWhiteColor),),
-                        padding: EdgeInsets.symmetric(horizontal: 30),
-                        onTap: (){
-                        },
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: const Text('Save'),
+                                  onPressed: () {
+                                    setState(() => currentColor = pickerColor);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        width: width * 0.85,
+                        height: 25,
+                        color: currentColor,
                       ),
-                      SizedBox(width: 10,),
-                      Text(
-                        'No file chosen'
-                      )
-                    ],
-                  ),
+                    ),
+                  if(widget.isUpdate)
+                    SizedBox(height: 20,),
+                  if(widget.isUpdate)
+                    title(txt: 'Image:*'),
+                  if(widget.isUpdate)
+                    Row(
+                      children: [
+                        CustomButton(
+                          title: Text('Choose File',style: TextStyle(color: kWhiteColor),),
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          onTap: (){
+                          },
+                        ),
+                        SizedBox(width: 10,),
+                        Text(
+                            'No file chosen'
+                        )
+                      ],
+                    ),
                   SizedBox(height: 20,),
                   AppConst.dividerLine(color: kHintColor.withOpacity(0.2)),
                   SizedBox(height: 20,),
@@ -143,7 +143,7 @@ class _AddSourceState extends State<AddSource> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CustomButton(
-                        title: Text(widget.isUpdate == true ?'Update' :'Save',style: TextStyle(color: kWhiteColor),),
+                        title: Text(widget.isUpdate == true ? 'Update' :'Save',style: TextStyle(color: kWhiteColor),),
                         padding: EdgeInsets.symmetric(horizontal: 30),
                         onTap: (){
                         },

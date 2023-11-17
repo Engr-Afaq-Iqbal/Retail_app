@@ -156,7 +156,7 @@ class Datum {
             json["visiting_address"] != null ? json["visiting_address"] : '',
         userId: json["user_id"],
         visitOn: json["visit_on"] != null ? json["visit_on"] : '',
-        purposeOfVisiting: json["purpose_of_visiting"],
+        purposeOfVisiting: json["purpose_of_visiting"] !=null ? json["purpose_of_visiting"] : '',
         status: json["status"] != null ? json["status"] : '',
         businessId: json["business_id"],
         reasonToNotMeetContact: json["reason_to_not_meet_contact"] != null

@@ -10,15 +10,15 @@ import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
 import '../../../const/dimensions.dart';
 
-class AddSource extends StatefulWidget {
+class AddLifeStage extends StatefulWidget {
   final bool isUpdate;
-  const AddSource({super.key, this.isUpdate = false});
+  const AddLifeStage({super.key, this.isUpdate = false});
 
   @override
-  State<AddSource> createState() => _AddSourceState();
+  State<AddLifeStage> createState() => _AddLifeStageState();
 }
 
-class _AddSourceState extends State<AddSource> {
+class _AddLifeStageState extends State<AddLifeStage> {
 
   SourceController sourceCtrl = Get.find<SourceController>();
   // create some values
@@ -35,7 +35,7 @@ class _AddSourceState extends State<AddSource> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      appBar: AppBar(title: Text('Add Source'),),
+      appBar: AppBar(title: Text('Add Life Stage'),),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
         child: Column(
@@ -56,12 +56,12 @@ class _AddSourceState extends State<AddSource> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  title(txt: 'Source:*'),
+                  title(txt: 'Life Stage:*'),
                   SizedBox(
                     width: width * 0.85,
                     height: height * 0.07,
                     child: AppFormField(
-                      labelText: 'Source',
+                      labelText: 'Life Stage',
                       isDense: true,
                       controller: sourceCtrl.sourceCtrl,
                     ),
@@ -143,7 +143,7 @@ class _AddSourceState extends State<AddSource> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       CustomButton(
-                        title: Text(widget.isUpdate == true ?'Update' :'Save',style: TextStyle(color: kWhiteColor),),
+                        title: Text(widget.isUpdate == true ? 'Update' :'Save',style: TextStyle(color: kWhiteColor),),
                         padding: EdgeInsets.symmetric(horizontal: 30),
                         onTap: (){
                         },

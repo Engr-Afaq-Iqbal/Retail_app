@@ -1,11 +1,12 @@
-import 'package:bizmodo_emenu/Pages/CRM/Source/addSource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Components/bodyHeadingTile.dart';
+import 'addFollowUpCategory.dart';
 
-class AllSourceTile extends StatelessWidget {
-  AllSourceTile({Key? key,}) : super(key: key);
+
+class FollowUpCategoryTile extends StatelessWidget {
+  FollowUpCategoryTile({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class AllSourceTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BodyHeadingTile(
-                heading: 'Source:',
+                heading: 'Followup Category:',
                 body: 'testing',
               ),
               BodyHeadingTile(
@@ -39,7 +40,7 @@ class AllSourceTile extends StatelessWidget {
             children: [
               GestureDetector(
                   onTap: (){
-                    Get.to(AddSource(isUpdate: true,));
+                    Get.to(AddFollowUpCategory(isUpdate: true,));
                   },
                   child: Icon(Icons.edit_outlined,color: Theme.of(context).primaryColor,size: 20,)),
               SizedBox(width: 10,),

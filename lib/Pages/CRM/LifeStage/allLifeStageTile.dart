@@ -1,11 +1,11 @@
-import 'package:bizmodo_emenu/Pages/CRM/Source/addSource.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Components/bodyHeadingTile.dart';
+import 'addLifeStage.dart';
 
-class AllSourceTile extends StatelessWidget {
-  AllSourceTile({Key? key,}) : super(key: key);
+class AllLifeStageTile extends StatelessWidget {
+  AllLifeStageTile({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class AllSourceTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BodyHeadingTile(
-                heading: 'Source:',
+                heading: 'Life Stage:',
                 body: 'testing',
               ),
               BodyHeadingTile(
@@ -39,7 +39,7 @@ class AllSourceTile extends StatelessWidget {
             children: [
               GestureDetector(
                   onTap: (){
-                    Get.to(AddSource(isUpdate: true,));
+                    Get.to(AddLifeStage(isUpdate: true,));
                   },
                   child: Icon(Icons.edit_outlined,color: Theme.of(context).primaryColor,size: 20,)),
               SizedBox(width: 10,),

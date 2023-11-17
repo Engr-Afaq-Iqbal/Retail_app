@@ -4,10 +4,16 @@ import 'package:get/get.dart';
 import '../../../Pages/CRM/Campaigns/allCampaigns.dart';
 import '../../../Pages/CRM/ContactsLogin/commissions.dart';
 import '../../../Pages/CRM/ContactsLogin/contactsLogin.dart';
+import '../../../Pages/CRM/FieldForce/fieldForce.dart';
+import '../../../Pages/CRM/FollowUp/followUpTabsPage.dart';
+import '../../../Pages/CRM/FollowUpCategory/allFollowUpCategory.dart';
+import '../../../Pages/CRM/LifeStage/allLifeStage.dart';
 import '../../../Pages/CRM/Proposal Template/proposalTemplate.dart';
 import '../../../Pages/CRM/Proposals/AllProposals.dart';
 import '../../../Pages/CRM/Reports/ReportsTabs/reportsTabsPage.dart';
+import '../../../Pages/CRM/Settings/settingsCRM.dart';
 import '../../../Pages/CRM/Source/allSource.dart';
+import '../../../Pages/CustomesVisit/customersVisit.dart';
 
 class CRMController extends GetxController{
 
@@ -20,7 +26,7 @@ class CRMController extends GetxController{
       },
       {
         'title' : 'Follow ups',
-        'page' : AllLeads(),
+        'page' : FollowUpTabs(),
       },
       {
         'title' : 'Campaigns',
@@ -52,23 +58,23 @@ class CRMController extends GetxController{
       },
       {
         'title' : 'Life Stage',
-        'page' : AllLeads(),
+        'page' : AllLifeStage(),
       },
       {
         'title' : 'Followup Category',
-        'page' : AllLeads(),
+        'page' : AllFollowUpCategory(),
       },
       {
         'title' : 'Settings',
-        'page' : AllLeads(),
+        'page' : SettingsCRM(),
       },
       {
         'title' : 'Field Force',
-        'page' : AllLeads(),
+        'page' : FieldForce(),
       },
       {
         'title' : 'Visit',
-        'page' : AllLeads(),
+        'page' : CustomerVisits(),
       },
 
     ];

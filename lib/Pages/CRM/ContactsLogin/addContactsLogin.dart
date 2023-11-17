@@ -10,7 +10,7 @@ import '../../../const/dimensions.dart';
 import 'ContactsLoginWidgets/contactsDropDown.dart';
 
 class AddContactsLogin extends StatefulWidget {
-  const AddContactsLogin({super.key});
+  const AddContactsLogin({super.key,});
 
   @override
   State<AddContactsLogin> createState() => _AddContactsLoginState();
@@ -24,7 +24,7 @@ class _AddContactsLoginState extends State<AddContactsLogin> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text('All Contacts Login'),
+        title: Text('Add Login'),
       ),
       body: SingleChildScrollView(
         physics: ScrollPhysics(),
