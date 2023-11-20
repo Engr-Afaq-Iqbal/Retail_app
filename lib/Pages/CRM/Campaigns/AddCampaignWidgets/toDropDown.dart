@@ -28,8 +28,7 @@ class _ToDropDownState extends State<ToDropDown> {
                     'please_select'.tr,
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        fontSize: 16,),
                   )),
               items: campaignCtrl.toList.map((String items) {
                 return DropdownMenuItem(

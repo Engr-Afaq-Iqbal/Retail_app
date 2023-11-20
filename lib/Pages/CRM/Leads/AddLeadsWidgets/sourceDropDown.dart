@@ -29,7 +29,7 @@ class _SourceDropDownState extends State<SourceDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: leadsController.sourceList.map((String items) {
                 return DropdownMenuItem(

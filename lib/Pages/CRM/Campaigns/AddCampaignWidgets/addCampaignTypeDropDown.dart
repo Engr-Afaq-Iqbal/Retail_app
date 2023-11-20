@@ -29,7 +29,7 @@ class _AddCampaignTypeDropDownState extends State<AddCampaignTypeDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: campaignCtrl.addCampaignTypeList.map((String items) {
                 return DropdownMenuItem(

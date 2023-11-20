@@ -29,7 +29,7 @@ class _AssignedToDropDownState extends State<AssignedToDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: leadsController.assignedToList.map((String items) {
                 return DropdownMenuItem(

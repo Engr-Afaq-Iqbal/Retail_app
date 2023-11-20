@@ -29,7 +29,7 @@ class _StatusDropDownState extends State<StatusDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: leadsController.statusAddFollowUpList.map((String items) {
                 return DropdownMenuItem(

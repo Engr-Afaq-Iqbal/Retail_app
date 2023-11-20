@@ -29,7 +29,7 @@ class _LifeStageDropDownState extends State<LifeStageDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: leadsController.lifeStageList.map((String items) {
                 return DropdownMenuItem(

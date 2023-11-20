@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../Models/NavBarModel.dart';
 import '../../../Pages/CRM/Reports/FollowUpsByUser.dart';
 import '../../../Pages/CRM/Reports/followUpsByContacts.dart';
+import '../../../Pages/CRM/Reports/leadsToCustomers.dart';
 enum OrderTabsPage {
   FollowUpsByUser,
   FollowUpsByContact,
@@ -30,7 +31,7 @@ class ReportsController extends GetxController{
       identifier: OrderTabsPage.LeadsToCustomerConversion,
       icon: 'Icons.order',
       label: 'Leads to customer conversion',
-      page: FollowUpsByUser(),
+      page: LeadsToCustomers(),
     ),
   ];
 }

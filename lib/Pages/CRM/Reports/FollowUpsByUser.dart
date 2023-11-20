@@ -2,7 +2,6 @@ import '../../../Controllers/CRMControllers/ReportsController/reportsController.
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import 'followUpsByUserTile.dart';
 
 class FollowUpsByUser extends StatefulWidget {

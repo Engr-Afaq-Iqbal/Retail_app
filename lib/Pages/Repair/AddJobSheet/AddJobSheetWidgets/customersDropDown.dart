@@ -1,24 +1,24 @@
+import 'package:bizmodo_emenu/Controllers/RepairController/JobSheetsControllers/JobSheetController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../Controllers/CRMControllers/LeadsController/leadsController.dart';
 import '../../../../Theme/colors.dart';
 
-class ContactTypeDropDown extends StatefulWidget {
-  const ContactTypeDropDown({super.key});
+class CustomersDropDown extends StatefulWidget {
+  const CustomersDropDown({super.key});
 
   @override
-  State<ContactTypeDropDown> createState() => _ContactTypeDropDownState();
+  State<CustomersDropDown> createState() => _CustomersDropDownState();
 }
 
-class _ContactTypeDropDownState extends State<ContactTypeDropDown> {
+class _CustomersDropDownState extends State<CustomersDropDown> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return GetBuilder<LeadsController>(
-        builder: (LeadsController leadsController) {
+    return GetBuilder<JobSheetController>(
+        builder: (JobSheetController jobSheetCtrl) {
           return DropdownButtonHideUnderline(
             child: DropdownButton2(
               isExpanded: true,
@@ -31,7 +31,7 @@ class _ContactTypeDropDownState extends State<ContactTypeDropDown> {
                         fontSize: 16,
                         ),
                   )),
-              items: leadsController.contactTypeLsit.map((String items) {
+              items: jobSheetCtrl.customersList.map((String items) {
                 return DropdownMenuItem(
                   value: items,
                   child: Padding(
@@ -40,7 +40,7 @@ class _ContactTypeDropDownState extends State<ContactTypeDropDown> {
                   ),
                 );
               }).toList(),
-              value: leadsController.statusContactType,
+              value: jobSheetCtrl.statusJobSheet,
               dropdownWidth: width * 0.5,
               dropdownDecoration:
               BoxDecoration(borderRadius: BorderRadius.circular(5)),
@@ -49,7 +49,7 @@ class _ContactTypeDropDownState extends State<ContactTypeDropDown> {
               buttonPadding: EdgeInsets.only(left: 10, right: 10),
               onChanged: (String? value) {
                 setState(() {
-                  leadsController.statusContactType = value;
+                  jobSheetCtrl.statusJobSheet = value;
                 });
               },
               buttonHeight: height * 0.07,

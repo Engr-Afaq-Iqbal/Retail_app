@@ -29,7 +29,7 @@ class _FollowUpCategoryDropDownState extends State<FollowUpCategoryDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                        ),
                   )),
               items: leadsController.followUpCategorylist.map((String items) {
                 return DropdownMenuItem(

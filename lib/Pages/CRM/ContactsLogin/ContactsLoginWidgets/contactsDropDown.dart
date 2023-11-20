@@ -30,7 +30,7 @@ class _ContactsDropDownState extends State<ContactsDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                       ),
                   )),
               items: contactsLoginCtrl.contactsList.map((String items) {
                 return DropdownMenuItem(

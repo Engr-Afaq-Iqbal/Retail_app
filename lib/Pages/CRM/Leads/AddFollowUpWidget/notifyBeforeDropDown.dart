@@ -29,7 +29,7 @@ class _NotifyBeforeDropDownState extends State<NotifyBeforeDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                    ),
                   )),
               items: leadsController.notifyBeforeList.map((String items) {
                 return DropdownMenuItem(

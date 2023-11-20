@@ -29,7 +29,7 @@ class _CustomerLeadDropDownState extends State<CustomerLeadDropDown> {
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
-                        fontWeight: FontWeight.w600),
+                    ),
                   )),
               items: leadsController.customerLeadLists.map((String items) {
                 return DropdownMenuItem(

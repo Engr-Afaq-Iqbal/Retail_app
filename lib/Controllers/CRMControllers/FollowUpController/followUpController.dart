@@ -11,7 +11,6 @@ import '../../../Pages/CRM/FollowUp/recurringFollowUps.dart';
 enum FollowUpsTabPage {
   FollowUps,
   RecurringFollowUp,
-  ContactPersons
 }
 
 

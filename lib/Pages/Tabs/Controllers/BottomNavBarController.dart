@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../CRM/crm.dart';
+import '../../Repair/repair.dart';
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
-import '/Pages/Orders/View/OrdersTabPage.dart';
 import '../../HomePageRetail/homepageRetail.dart';
 
 class BottomNavBarController extends GetxController {
@@ -15,27 +15,6 @@ class BottomNavBarController extends GetxController {
     _selectedNavBarIndex = _ind;
     update();
   }
-   _showMoreBottomSheet(BuildContext context) async{
-    await Get.bottomSheet(
-      Container(
-        color: Colors.red,
-        // height: Get.height * 0.5,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'This is a Get Bottom Sheet',
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      ),
-      barrierColor: Colors.black.withOpacity(0.5), // Optional
-      isDismissible: true, // Optional
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ), // Optional
-    );
-  }
-
 
   List<NavBarModel> bottomNavBarData = [
     NavBarModel(
@@ -84,6 +63,15 @@ class BottomNavBarController extends GetxController {
         // Get.to(() => TablePage());
       },
       page: CRM(),
+    ),
+    NavBarModel(
+      icon: Icons.handyman_outlined,
+      label: 'Repair',
+      onTap: () {
+        print('Repair Page');
+        // Get.to(() => TablePage());
+      },
+      page: Repair(),
     ),
     NavBarModel(
       icon: Icons.menu,
