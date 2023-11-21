@@ -68,7 +68,11 @@ class _OrdersTabPageState extends State<OrdersTabPage> {
                 // child: OrdersListPage(),
                 child: TabBarView(
                   children: StockTransferController.stockTabsList()
-                      .map((_orderTab) => _orderTab.page)
+                      .map(
+                        (_orderTab) => _orderTab.page != null
+                            ? _orderTab.page!
+                            : SizedBox(),
+                      )
                       .toList(),
                 ),
               )

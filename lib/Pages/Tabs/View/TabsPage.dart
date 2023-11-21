@@ -75,12 +75,16 @@ class _TabsPageState extends State<TabsPage> {
                 return GButton(
                   icon: _navData.icon,
                   text: _navData.label.tr,
-                  onPressed: () {
+                  onPressed: () async {
                     _bottomNavBarCtrlObj.selectedNavBarIndex =
                         _bottomNavBarCtrlObj.bottomNavBarData.indexOf(_navData);
                     if (_navData.onTap != null) {
-                      _navData.onTap!();
+                      await _navData.onTap!();
                     }
+
+                    if (_navData.label == 'more_drop') {
+                      _bottomNavBarCtrlObj.selectedNavBarIndex = 0;
+                    } else if (_navData.label == 'dashboard_drop') {}
                   },
                 );
               },

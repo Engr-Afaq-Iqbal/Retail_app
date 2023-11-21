@@ -6,12 +6,11 @@ class NavBarModel {
   String label;
   Function()? onTap;
   Widget page;
-
   NavBarModel({
     this.identifier,
     required this.icon,
     required this.label,
     this.onTap,
     required this.page,
-  });
+  }) ;
 }

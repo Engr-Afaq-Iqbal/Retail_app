@@ -254,6 +254,7 @@ Map<String, String> english() {
     'person15': '15 Person',
     'dashboard_drop': 'Dashboard',
     'menu_drop': 'Menu',
+    'more_drop': 'More',
     'completed': 'Completed',
     'cash': 'Cash',
     'paid': 'Paid',

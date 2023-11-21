@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
+
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Orders/View/OrdersTabPage.dart';
@@ -14,19 +16,66 @@ class BottomNavBarController extends GetxController {
     _selectedNavBarIndex = _ind;
     update();
   }
-   _showMoreBottomSheet(BuildContext context) async{
+  static List menuList = [
+    MenuItem(icon:  Icons.group  , text: "User Management", onTap: () {}),
+    MenuItem(icon:  Icons.contact_page_outlined , text: "Contacts", onTap: () {}),
+    MenuItem(icon:  Icons.settings_input_antenna_outlined , text: "CRM", onTap: () {}),
+    MenuItem(icon:  Icons.note_add_outlined  , text: "Project Management", onTap: () {}),
+    MenuItem(icon:  Icons.group  , text: "HRM", onTap: () {}),
+    MenuItem(icon:  Icons.woo_commerce_outlined  , text: "WooCommerce", onTap: () {}),
+    MenuItem(icon:  Icons.view_list_outlined , text: "Products", onTap: () {}),
+    MenuItem(icon:  Icons.arrow_circle_down_outlined , text: "Purchase", onTap: () {}),
+    MenuItem(icon:  Icons.do_not_disturb_on_outlined, text: "Expense", onTap: () {}),
+    MenuItem(icon:  Icons.payment, text: "Payment Accounts", onTap: () {}),
+    MenuItem(icon:  Icons.assessment_outlined, text: "Reports", onTap: () {}),
+    MenuItem(icon:  Icons.list_alt_outlined, text: "Asset Management", onTap: () {}),
+    MenuItem(icon:  Icons.settings, text: "Settings", onTap: () {}),
+  ];
+  static _showMoreSheet(BuildContext context) async {
     await Get.bottomSheet(
       Container(
-        color: Colors.red,
-        // height: Get.height * 0.5,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'This is a Get Bottom Sheet',
-            style: TextStyle(fontSize: 18.0),
-          ),
-        ),
-      ),
+          color: Colors.white,
+          height: Get.height * 0.6,
+          padding: EdgeInsets.only(left: 8.0,right: 8.0),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () => Get.back(),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(color: Colors.blueGrey,width: 100,child: Text(""),height: 4,),
+                ),
+              ),
+              const SizedBox(height: 10),
+              GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisExtent: 100,
+                ),
+                itemCount: menuList.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: menuList[index].onTap,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(menuList[index].icon,        color: Theme.of(context).colorScheme.primary,
+                        ),
+                        Text(
+                          menuList[index].text,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 8),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+            ],
+          )),
       barrierColor: Colors.black.withOpacity(0.5), // Optional
       isDismissible: true, // Optional
       shape: RoundedRectangleBorder(
@@ -34,6 +83,27 @@ class BottomNavBarController extends GetxController {
       ), // Optional
     );
   }
+
+  // _showMoreBottomSheet(BuildContext context) async{
+  //   await Get.bottomSheet(
+  //     Container(
+  //       color: Colors.red,
+  //       // height: Get.height * 0.5,
+  //       child: Padding(
+  //         padding: EdgeInsets.all(16.0),
+  //         child: Text(
+  //           'This is a Get Bottom Sheet',
+  //           style: TextStyle(fontSize: 18.0),
+  //         ),
+  //       ),
+  //     ),
+  //     barrierColor: Colors.black.withOpacity(0.5), // Optional
+  //     isDismissible: true, // Optional
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(10.0),
+  //     ), // Optional
+  //   );
+  // }
 
 
   List<NavBarModel> bottomNavBarData = [
@@ -76,13 +146,14 @@ class BottomNavBarController extends GetxController {
     //   page: BookingTabs(),
     // ),
     NavBarModel(
-      icon: Icons.menu,
-      label: 'menu_drop',
-      onTap: () {
-        print('Menu Page');
+      icon: Icons.menu_open_outlined,
+      label: 'more_drop',
+      onTap: () async {
+        await _showMoreSheet(Get.context!);
         // Get.to(() => AppMenuSettings());
       },
-      page: AppMenuPage(),
+      page: HomePageRetail(),
     ),
   ];
+
 }

@@ -125,7 +125,7 @@ class _SalesTabPageState extends State<SalesTabPage> {
                 // child: OrdersListPage(),
                 child: TabBarView(
                   children: AllSalesController.stockTabsList()
-                      .map((_orderTab) => _orderTab.page)
+                      .map((_orderTab) => _orderTab.page != null ? _orderTab.page! : SizedBox(),)
                       .toList(),
                 ),
               )
