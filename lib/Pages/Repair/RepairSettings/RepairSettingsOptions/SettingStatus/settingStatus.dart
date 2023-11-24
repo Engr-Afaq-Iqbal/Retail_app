@@ -1,36 +1,42 @@
-import 'package:bizmodo_emenu/Controllers/RepairController/JobSheetsControllers/JobSheetController.dart';
-import 'package:bizmodo_emenu/Pages/Repair/JobSheet/pendingJobSheetTile.dart';
+import 'package:bizmodo_emenu/Controllers/RepairController/ListInvoicesController/listInvoicesController.dart';
+import 'package:bizmodo_emenu/Pages/Repair/RepairSettings/RepairSettingsOptions/SettingStatus/settingStatusTile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'addSettingStatus.dart';
 
-class PendingJobSheet extends StatelessWidget {
+
+class SettingStatus extends StatelessWidget {
   final String? status;
-  const PendingJobSheet({super.key, this.status});
+  const SettingStatus({super.key, this.status});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      // floatingActionButton: FloatingActionButton.small(
-      //     child: Icon(Icons.add),
-      //     backgroundColor:
-      //     Theme.of(context).colorScheme.primary.withOpacity(0.5),
-      //     onPressed: () {
-      //       // Get.to(AddJobSheet());
-      //     }),
+      appBar: AppBar(
+        title: Text('Status'),
+        elevation: 0,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton.small(
+          child: Icon(Icons.add),
+          backgroundColor:
+          Theme.of(context).colorScheme.primary.withOpacity(0.5),
+          onPressed: () {
+           Get.to(AddSettingStatus());
+          }),
       body: Stack(
         children: [
           GetBuilder(
-            builder: (JobSheetController jobSheetCtrl) {
+            builder: (ListInvoicesController listInvCtrl) {
               return RefreshIndicator(
                 onRefresh: () async {
                   //await crmCtrl.callFirstOrderPage();
                 },
                 child: Scrollbar(
-                  controller: jobSheetCtrl.jobSheetScrollCtrl,
+                  controller: listInvCtrl.listInvoicesTabScrollCtrl,
                   child: ListView.builder(
-                    controller: jobSheetCtrl.jobSheetScrollCtrl,
+                    controller: listInvCtrl.listInvoicesTabScrollCtrl,
                     physics: AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(bottom: 100),
                     itemCount: 3,
@@ -48,7 +54,7 @@ class PendingJobSheet extends StatelessWidget {
                               //   ),
                               // );
                             },
-                            child: PendingJobSheetTile(status: status,)
+                            child: SettingStatusTile()
                         ),
                       );
                     },

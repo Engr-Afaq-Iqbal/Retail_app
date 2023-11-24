@@ -16,6 +16,7 @@ import 'package:bizmodo_emenu/Controllers/FundsController/fundsController.dart';
 import 'package:bizmodo_emenu/Controllers/ProductController/PaymentController.dart';
 import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:bizmodo_emenu/Controllers/RepairController/JobSheetsControllers/JobSheetController.dart';
+import 'package:bizmodo_emenu/Controllers/RepairController/ListInvoicesController/listInvoicesController.dart';
 import 'package:bizmodo_emenu/Controllers/RepairController/RepairController/repairController.dart';
 import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:bizmodo_emenu/Controllers/StockTransferController/stockTransferController.dart';
@@ -41,6 +42,7 @@ import 'Controllers/ListUserController/ListUserController.dart';
 import 'Controllers/Notifications/NotificationsController.dart';
 import 'Controllers/OrderController/order_type_controller.dart';
 import 'Controllers/ProductsRetailController/productsRetailsController.dart';
+import 'Controllers/RepairController/RepairSettingsController/repairSettingsController.dart';
 import 'Controllers/ServiceStaffController/ServiceStaffController.dart';
 import 'Controllers/Tax Controller/TaxController.dart';
 import 'Controllers/ThemeController/themeController.dart';
@@ -157,6 +159,8 @@ void initializeControllers() {
   Get.put(FollowUpController());
   Get.put(RepairController());
   Get.put(JobSheetController());
+  Get.put(ListInvoicesController());
+  Get.put(RepairSettingsController());
 }
 
 class BizModoEMenu extends StatefulWidget {

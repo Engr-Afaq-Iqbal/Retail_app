@@ -2,7 +2,10 @@ import 'package:get/get.dart';
 
 import '../../../Pages/CRM/Leads/allLeads.dart';
 import '../../../Pages/Repair/AddJobSheet/addJobSheet.dart';
+import '../../../Pages/Repair/Brands/brands.dart';
 import '../../../Pages/Repair/JobSheet/jobSheetTabs.dart';
+import '../../../Pages/Repair/ListInvoices/listInvoicesTabs.dart';
+import '../../../Pages/Repair/RepairSettings/repairSettings.dart';
 
 class RepairController extends GetxController{
 
@@ -19,19 +22,19 @@ class RepairController extends GetxController{
       },
       {
         'title' : 'List Invoices',
-        'page' : AllLeads(),
+        'page' : ListInvoicesTabs(),
       },
       {
         'title' : 'Add Invoice',
-        'page' : AllLeads(),
+        'page' : Brands(),
       },
       {
         'title' : 'Brands',
-        'page' : AllLeads(),
+        'page' : Brands(),
       },
       {
         'title' : 'Settings',
-        'page' : AllLeads(),
+        'page' : RepairSettings(),
       },
     ];
     return options;
