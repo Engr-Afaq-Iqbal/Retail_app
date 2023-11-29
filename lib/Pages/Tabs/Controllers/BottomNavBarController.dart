@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
 
+import '../../Payment_Accounts/Payment_Account_view.dart';
 import '/Models/NavBarModel.dart';
 import '/Pages/AppMenu/AppMenuPage.dart';
 import '/Pages/Orders/View/OrdersTabPage.dart';
@@ -26,7 +27,7 @@ class BottomNavBarController extends GetxController {
     MenuItem(icon:  Icons.view_list_outlined , text: "Products", onTap: () {}),
     MenuItem(icon:  Icons.arrow_circle_down_outlined , text: "Purchase", onTap: () {}),
     MenuItem(icon:  Icons.do_not_disturb_on_outlined, text: "Expense", onTap: () {}),
-    MenuItem(icon:  Icons.payment, text: "Payment Accounts", onTap: () {}),
+    MenuItem(icon:  Icons.payment, text: "Payment Accounts", onTap: () {Get.to(PaymentAccounts());}),
     MenuItem(icon:  Icons.assessment_outlined, text: "Reports", onTap: () {}),
     MenuItem(icon:  Icons.list_alt_outlined, text: "Asset Management", onTap: () {}),
     MenuItem(icon:  Icons.settings, text: "Settings", onTap: () {}),

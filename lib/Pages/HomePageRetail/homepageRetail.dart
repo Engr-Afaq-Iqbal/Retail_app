@@ -178,7 +178,7 @@ class _HomePageRetailState extends State<HomePageRetail> {
                                 Get.to(FundsTransfer());
                               }
                             },
-                            child: dashBoardCtrl.iconList[index],
+                            child: Icon(dashBoardCtrl.iconList[index], color: Theme.of(context).colorScheme.primary,),
                           ),
                           Expanded(
                             child: Text(

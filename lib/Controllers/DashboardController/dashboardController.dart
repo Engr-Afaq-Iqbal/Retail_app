@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import '../../Config/utils.dart';
 import '../../Models/Dashboard/home_tab.dart';
@@ -36,17 +37,16 @@ class DashboardController extends GetxController {
     'funds_transfer'
   ];
 
-  List iconList = [
-    Image.asset("assets/Icons/shopping-bag.png",width: 20,),
-    Image.asset("assets/Icons/customer-service.png",width: 20,),
-    Image.asset("assets/Icons/checklist.png",width: 20,),
-    Image.asset("assets/Icons/exchange.png",width: 20,),
-    Image.asset("assets/Icons/check.png",width: 20,),
-    Image.asset("assets/Icons/sales.png",width: 20,),
-    Image.asset("assets/Icons/in-stock.png",width: 20,),
-    Image.asset("assets/Icons/walk.png",width: 20,),
-    Image.asset("assets/Icons/file.png",width: 20,),
-    Image.asset("assets/Icons/fund.png",width: 20,),
+  List<IconData> iconList = [
+    FontAwesomeIcons.store,
+    FontAwesomeIcons.user,
+    FontAwesomeIcons.database,
+    FontAwesomeIcons.divide,
+    FontAwesomeIcons.print,
+    FontAwesomeIcons.arrowUpRightDots,
+    FontAwesomeIcons.boxesStacked,
+    FontAwesomeIcons.personWalking,
+    FontAwesomeIcons.upload
   ];
 
   HomeTabModel? homeTabModel;
