@@ -1,10 +1,9 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Config/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '/Components/custom_circular_button.dart';
+import '/Config/utils.dart';
 import '../../Controllers/ThemeController/themeController.dart';
 import '../../Theme/colors.dart';
 

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '/Controllers/ProductController/all_products_controller.dart';
 import '../../Components/p5Headings.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
-import '../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../Services/storage_services.dart';
-import '/Controllers/ProductController/all_products_controller.dart';
 import 'ViewProductsPage.dart';
 
 class ItemsPage extends StatefulWidget {
@@ -217,21 +217,26 @@ class _ItemsPageState extends State<ItemsPage> {
                                           ),
 
                                           Expanded(
-                                              flex: 1,
-                                              child: Center(
-                                                child: Text(
-                                                  AppFormat.doubleToStringUpTo2(
-                                                        '${double.parse(allProdCtrlObj.checkProductStockLocationBased(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
-                                                      ) ??
-                                                      '0.00',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium!
-                                                      .copyWith(
-                                                        fontSize: 10,
-                                                      ),
-                                                ),
-                                              )),
+                                            flex: 1,
+                                            child: (allProdCtrlObj
+                                                    .unitListStatus.isNotEmpty)
+                                                ? Center(
+                                                    child: Text(
+                                                      AppFormat
+                                                              .doubleToStringUpTo2(
+                                                            '${double.parse(allProdCtrlObj.checkProductStockLocationBased(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                                          ) ??
+                                                          '0.00',
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .titleMedium!
+                                                          .copyWith(
+                                                            fontSize: 10,
+                                                          ),
+                                                    ),
+                                                  )
+                                                : SizedBox(),
+                                          ),
 
                                           Expanded(
                                               flex: 1,

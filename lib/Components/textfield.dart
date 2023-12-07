@@ -82,7 +82,7 @@ class _AppFormFieldState extends State<AppFormField> {
         decoration: InputDecoration(
           filled: true,
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           labelText: widget.isLabel ? widget.labelText : null,
           hintText: !widget.isLabel ? widget.labelText : null,
           hintStyle: const TextStyle(

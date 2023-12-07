@@ -203,25 +203,25 @@
 //   }
 // }
 
-import 'package:bizmodo_emenu/Pages/CreateNewCustomer/showCustomerDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../CreateNewCustomer/createNewCustomer.dart';
-import '../CreateOrder/createOrderPage.dart';
-import '../Receipts/receipts.dart';
-import '../Return/return.dart';
-import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
-import '../SalesView/SalesViewDetails/SalesView.dart';
 import '/Config/utils.dart';
+import '/Pages/CreateNewCustomer/showCustomerDetails.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Models/order_type_model/customer_contact_model.dart';
 import '../../Theme/colors.dart';
+import '../CreateNewCustomer/createNewCustomer.dart';
+import '../CreateOrder/createOrderPage.dart';
+import '../Receipts/receipts.dart';
+import '../SalesView/SalesViewDetails/AddSalesAndQuotation.dart';
+import '../SalesView/SalesViewDetails/SalesView.dart';
 
 class CustomerSearch extends StatefulWidget {
-  int? dashBoardId;
+  final int? dashBoardId;
   CustomerSearch({Key? key, this.dashBoardId}) : super(key: key);
+
   @override
   State<CustomerSearch> createState() => _CustomerSearchState();
 }
@@ -229,10 +229,10 @@ class CustomerSearch extends StatefulWidget {
 class _CustomerSearchState extends State<CustomerSearch> {
   ScrollController? _scrollController;
   String? query;
-  ContactController contactCtrlObjj = Get.find<ContactController>();
+  ContactController contactCtrlObj = Get.find<ContactController>();
 
   void initState() {
-    contactCtrlObjj.callFirstOrderPage();
+    contactCtrlObj.callFirstOrderPage();
     scrollControllerLis();
     super.initState();
   }
@@ -240,7 +240,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
   @override
   void dispose() {
     _scrollController?.removeListener(scrollControllerLis);
-    contactCtrlObjj.clearAllContactCtrl();
+    contactCtrlObj.clearAllContactCtrl();
     super.dispose();
   }
 
@@ -250,7 +250,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
       _scrollController?.addListener(() {
         if (_scrollController?.position.pixels ==
             _scrollController?.position.maxScrollExtent) {
-          //contactCtrlObjj.isLoadMoreRunning.isTrue;
+          //contactCtrlObj.isLoadMoreRunning.isTrue;
           Get.find<ContactController>().loadMoreSaleOrders();
           //Get.find<ContactController>().callFirstOrderPage();
         }
@@ -273,7 +273,7 @@ class _CustomerSearchState extends State<CustomerSearch> {
           ),
           onChanged: (value) {
             query = value;
-            contactCtrlObjj.fetchCustomerInfo(query);
+            contactCtrlObj.fetchCustomerInfo(query);
           },
         ),
         bottom: PreferredSize(
@@ -458,9 +458,9 @@ class _CustomerSearchState extends State<CustomerSearch> {
           type: 'Customer',
           name: 'Create New Customer',
         );
-        contactCtrlObjj.nameCtrl.clear();
-        contactCtrlObjj.mobileNumberCtrl.clear();
-        contactCtrlObjj.searchCustomerCtrl.text = 'create_new_customer'.tr;
+        contactCtrlObj.nameCtrl.clear();
+        contactCtrlObj.mobileNumberCtrl.clear();
+        contactCtrlObj.searchCustomerCtrl.text = 'create_new_customer'.tr;
         Get.close(1);
         // close(
         //   context,

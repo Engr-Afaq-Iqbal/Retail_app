@@ -1,13 +1,14 @@
 import 'dart:io';
-import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
-import 'package:bizmodo_emenu/Controllers/ListUserController/ListUserController.dart';
-import 'package:bizmodo_emenu/Models/ContactsModel/CustomerCheckInModel.dart';
-import 'package:bizmodo_emenu/Models/ContactsModel/CustomerCheckOutModel.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+import '/Controllers/ContactController/ContactController.dart';
+import '/Controllers/ListUserController/ListUserController.dart';
+import '/Models/ContactsModel/CustomerCheckInModel.dart';
+import '/Models/ContactsModel/CustomerCheckOutModel.dart';
 import '../../Config/utils.dart';
 import '../../Models/CustomerVisits/customerVisitListModel.dart';
 import '../../Services/api_services.dart';

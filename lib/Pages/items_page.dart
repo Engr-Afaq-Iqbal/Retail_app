@@ -1,11 +1,11 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/ProductsModel/ProductModel.dart';
 import '/Models/ProductsModel/all_products_model.dart';
+import '/Theme/colors.dart';
 import 'item_info.dart';
 
 class ItemsPage extends StatefulWidget {

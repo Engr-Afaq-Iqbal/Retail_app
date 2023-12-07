@@ -38,7 +38,7 @@ class SocketService {
     });
 
     _socket.onConnectTimeout((data) {
-      logger.wtf('socket connection timeout => $data');
+      // logger.wtf('socket connection timeout => $data');
       // isEstConnCalled = false;
     });
 
@@ -57,21 +57,21 @@ class SocketService {
       isConnEst = false;
       isEstConnCalled = false;
       isUserEmitted = false;
-      logger.w('connection error');
+      // logger.w('connection error');
     });
 
     _socket.onError((_) {
       isConnEst = false;
       isEstConnCalled = false;
       isUserEmitted = false;
-      logger.e('on error');
+      // logger.e('on error');
     });
 
     _socket.onDisconnect((_) {
       isConnEst = false;
       isEstConnCalled = false;
       isUserEmitted = false;
-      logger.w('on disconnect');
+      // logger.w('on disconnect');
     });
   }
 

@@ -1,7 +1,7 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Components/custom_circular_button.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
 import '../../Config/const.dart';

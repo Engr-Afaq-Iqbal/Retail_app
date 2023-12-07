@@ -1,15 +1,12 @@
-import 'package:bizmodo_emenu/Controllers/ReceiptsController/receiptsController.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../Config/DateTimeFormat.dart';
-import '../../Theme/style.dart';
 import '/Components/textfield.dart';
-
 import '/Controllers/ProductController/PaymentController.dart';
 import '/Models/PaymentMethodModel/paymentMethodModel.dart';
 import '/Theme/colors.dart';
+import '../../Theme/style.dart';
 
 class PaymentFields extends StatelessWidget {
   final bool isFirst;

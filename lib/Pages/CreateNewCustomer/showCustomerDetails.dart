@@ -1,9 +1,9 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Controllers/ContactController/ContactController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '/Components/textfield.dart';
+import '/Config/utils.dart';
+import '/Controllers/ContactController/ContactController.dart';
 import '/Theme/colors.dart';
 import '/Theme/style.dart';
 

@@ -1,17 +1,17 @@
-import 'package:bizmodo_emenu/Controllers/OrderController/order_type_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/exception_controller.dart';
-import '../../Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
-import '../../Stocks/ViewStockTransfer/viewStockTransfer.dart';
 import '/Config/enums.dart';
 import '/Config/utils.dart';
+import '/Controllers/OrderController/order_type_controller.dart';
 import '/Models/NavBarModel.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
 import '/Services/api_services.dart';
 import '/Services/api_urls.dart';
+import '../../../Controllers/exception_controller.dart';
+import '../../Stocks/ViewStockAdjustment/viewStockAdjustment.dart';
+import '../../Stocks/ViewStockTransfer/viewStockTransfer.dart';
 
 enum OrderTabsPage {
   ActiveOrders,

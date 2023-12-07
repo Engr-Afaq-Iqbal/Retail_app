@@ -1,5 +1,4 @@
 import 'package:animation_wrappers/animation_wrappers.dart';
-import 'package:bizmodo_emenu/Models/ProductsModel/ProductVariationAndModifierModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,6 +8,7 @@ import '/Components/multi_selection_chip.dart';
 import '/Controllers/ProductController/all_products_controller.dart';
 import '/Controllers/ProductController/product_cart_controller.dart';
 import '/Models/ProductsModel/ProductModel.dart';
+import '/Models/ProductsModel/ProductVariationAndModifierModel.dart';
 import '../Config/utils.dart';
 import '../Theme/colors.dart';
 

@@ -1,9 +1,8 @@
-import 'package:bizmodo_emenu/Pages/Receipts/receiptsTile.dart';
-import 'package:bizmodo_emenu/Pages/Receipts/searchInReceipts.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Pages/Receipts/receiptsTile.dart';
+import '/Pages/Receipts/searchInReceipts.dart';
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
 import '../../Components/custom_circular_button.dart';

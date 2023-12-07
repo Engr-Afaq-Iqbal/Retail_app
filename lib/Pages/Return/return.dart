@@ -1,12 +1,10 @@
-import 'package:bizmodo_emenu/Pages/Return/returnTile.dart';
-import 'package:bizmodo_emenu/Pages/Return/saleReturn.dart';
-import 'package:bizmodo_emenu/Pages/Return/searchSalesReturn.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Pages/Return/returnTile.dart';
+import '/Pages/Return/saleReturn.dart';
+import '/Pages/Return/searchSalesReturn.dart';
 import '../../../Config/utils.dart';
-
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
 

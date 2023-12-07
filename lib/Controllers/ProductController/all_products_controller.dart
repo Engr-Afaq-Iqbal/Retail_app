@@ -1,14 +1,18 @@
 import 'dart:convert';
 
-import 'package:bizmodo_emenu/Controllers/ProductController/product_cart_controller.dart';
-import 'package:bizmodo_emenu/Models/order_type_model/SaleOrderModel.dart';
-import 'package:bizmodo_emenu/Pages/Tabs/View/TabsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
+import '/Controllers/ProductController/product_cart_controller.dart';
+import '/Models/ProductsModel/all_products_model.dart';
+import '/Models/order_type_model/SaleOrderModel.dart';
+import '/Pages/Tabs/View/TabsPage.dart';
+import '/Services/api_services.dart';
+import '/Services/api_urls.dart';
+import '/Services/storage_services.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
-
 import '../../Models/ProductsModel/ListProductsModel.dart';
 import '../../Models/ProductsModel/Product.dart';
 import '../../Models/ProductsModel/ProductShowListModel.dart';
@@ -23,12 +27,6 @@ import '../AllSalesController/allSalesController.dart';
 import '../ContactController/ContactController.dart';
 import '../Tax Controller/TaxController.dart';
 import '../exception_controller.dart';
-import '/Models/ProductsModel/all_products_model.dart';
-import '/Services/api_services.dart';
-import '/Services/api_urls.dart';
-import '/Services/storage_services.dart';
-import 'package:http/http.dart' as http;
-
 import 'PaymentController.dart';
 
 class AllProductsController extends GetxController {
@@ -72,7 +70,7 @@ class AllProductsController extends GetxController {
       if (_res == null) return null;
       listProductsModel = listProductsModelFromJson(_res);
       print(listProductsModel?.data);
-      showingallItems();
+      showingAllItems();
       update();
     }).onError((error, stackTrace) async {
       debugPrint('Error => $error');
@@ -94,7 +92,7 @@ class AllProductsController extends GetxController {
   List<String> selectedUnitsNames = [];
   // List<String> selected
   List<String> unitListStatusIds = [];
-  showingallItems() {
+  showingAllItems() {
     productModelObjs.clear();
     var categoriesLength = listProductsModel?.data?.length ?? 0;
     for (int i = 0; i < categoriesLength; i++) {
@@ -156,12 +154,14 @@ class AllProductsController extends GetxController {
   }
 
   ///function to show the unit id actual names...
-  checkUnits({
-    Product? product,
-  }) {
-    return unitListModel?.data
-        ?.firstWhereOrNull((i) => i.id == product?.unitId)
-        ?.shortName;
+  checkUnits({Product? product}) {
+    try {
+      return unitListModel?.data
+          ?.firstWhereOrNull((i) => i.id == product?.unitId)
+          ?.shortName;
+    } catch (e) {
+      debugPrint('checkUnits function -> Error => $e');
+    }
   }
 
   checkUnitsShortName({

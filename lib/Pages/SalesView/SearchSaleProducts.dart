@@ -1,7 +1,7 @@
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Controllers/AllSalesController/allSalesController.dart';
 import '../../Components/textfield.dart';
 import '../../Theme/colors.dart';
 import '../../Theme/style.dart';

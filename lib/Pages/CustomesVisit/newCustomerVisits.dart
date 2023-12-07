@@ -1,14 +1,14 @@
-import 'package:bizmodo_emenu/Pages/CreateNewCustomer/showCustomerDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Config/utils.dart';
+import '/Pages/CreateNewCustomer/showCustomerDetails.dart';
 import '../../Components/custom_circular_button.dart';
+import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/CustomerVisits/CustomerVisitsController.dart';
+import '../../Theme/colors.dart';
 import '../CreateOrder/createOrderPage.dart';
 import '../Return/return.dart';
-import '/Config/utils.dart';
-import '../../Controllers/ContactController/ContactController.dart';
-import '../../Theme/colors.dart';
 
 class NewCustomerVisit extends StatefulWidget {
   final int? dashBoardId;

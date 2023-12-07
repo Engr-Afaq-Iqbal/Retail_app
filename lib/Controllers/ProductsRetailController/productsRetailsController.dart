@@ -1,8 +1,9 @@
 import 'dart:io';
-import 'package:bizmodo_emenu/Controllers/Tax%20Controller/TaxController.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '/Controllers/Tax%20Controller/TaxController.dart';
 import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 import '../../Models/ProductsModel/ProductModel.dart';

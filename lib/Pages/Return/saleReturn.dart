@@ -251,7 +251,7 @@ class _SalesReturnState extends State<SalesReturn> {
                                     child: AppFormField(
                                       controller:
                                           saleReturnCtrl.returnQtyCtrl[index],
-                                      padding: EdgeInsets.only(right: 5),
+                                      padding: EdgeInsets.all(0),
                                       isOutlineBorder: false,
                                       isColor: index.isEven
                                           ? kWhiteColor
@@ -264,19 +264,18 @@ class _SalesReturnState extends State<SalesReturn> {
                                           showToast(
                                               'quantity_not_available'.tr);
                                           print('value is greater');
-                                        } else {
-                                          saleReturnCtrl.subtotal[index] =
-                                              '${double.parse(value) * double.parse(saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPrice ?? '0')}';
-                                          saleReturnCtrl
-                                              .totalTaxAmountWithDiscount(
-                                                  ordersItemsTotalTax:
-                                                      saleReturnCtrl
-                                                          .totalOrderedTaxAmount(),
-                                                  saleReturnCtrl:
-                                                      saleReturnCtrl);
-                                          saleReturnCtrl.returnTotalAmount();
-                                          saleReturnCtrl.update();
+                                          return;
                                         }
+                                        saleReturnCtrl.subtotal[index] =
+                                            '${double.parse(value) * double.parse('${saleReturnCtrl.editSaleReturnModelDart?.sellLines?[index].unitPriceIncTax ?? 0}')}';
+                                        saleReturnCtrl
+                                            .totalTaxAmountWithDiscount(
+                                          ordersItemsTotalTax: saleReturnCtrl
+                                              .totalOrderedTaxAmount(),
+                                          saleReturnCtrl: saleReturnCtrl,
+                                        );
+                                        saleReturnCtrl.returnTotalAmount();
+                                        saleReturnCtrl.update();
                                       },
                                       // onEditingComp: () {
                                       //

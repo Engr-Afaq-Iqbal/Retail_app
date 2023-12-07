@@ -1,13 +1,11 @@
-import 'package:bizmodo_emenu/Pages/HomePageRetail/homepageRetail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Components/textfield.dart';
+import '/Controllers/register/RegisterController.dart';
+import '/Pages/HomePageRetail/homepageRetail.dart';
 import '../../Components/custom_circular_button.dart';
 import '../../Controllers/AuthController/auth_controller.dart';
-import '/Components/textfield.dart';
-
-import '/Controllers/register/RegisterController.dart';
-
 import 'BusinessLocationSelection.dart';
 
 class OpenRegisterPage extends StatelessWidget {

@@ -1,19 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_pos_printer_platform/flutter_pos_printer_platform.dart';
 import 'package:get/get.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
+import 'package:image/image.dart' as i;
 
+import '/Controllers/ProductController/all_products_controller.dart';
 import '../../Config/utils.dart';
 import '../../Models/AllPrinterModel/AllPrinterModels.dart';
 import '../../Models/order_type_model/SaleOrderModel.dart';
 import '../../Pages/PrintDesign/pos_print_layout.dart';
 import '../../Pages/Tabs/View/TabsPage.dart';
 import '../../Services/storage_services.dart';
-import 'package:image/image.dart' as i;
 
 class AllPrinterController extends GetxController {
   final PrinterManager printerManager = PrinterManager.instance;

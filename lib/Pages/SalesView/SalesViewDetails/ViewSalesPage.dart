@@ -1,22 +1,22 @@
-import 'package:bizmodo_emenu/Components/custom_circular_button.dart';
-import 'package:bizmodo_emenu/Pages/CreateOrder/createOrderPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Controllers/AllSalesController/allSalesController.dart';
-import '../../../Controllers/ContactController/ContactController.dart';
-import '../../../Controllers/ProductController/all_products_controller.dart';
-import '../../../const/dimensions.dart';
-import '../../Orders/Components/AmountInfo.dart';
-import '../../PrintDesign/invoice_print_screen.dart';
-import '../../PrintDesign/pdfGenerate.dart';
+
+import '/Components/custom_circular_button.dart';
 import '/Config/DateTimeFormat.dart';
 import '/Config/const.dart';
 import '/Models/order_type_model/SaleOrderModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
+import '/Pages/CreateOrder/createOrderPage.dart';
 import '/Pages/Orders/Components/CustomerInfo.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
 import '/Theme/colors.dart';
 import '/Theme/style.dart';
+import '../../../Controllers/AllSalesController/allSalesController.dart';
+import '../../../Controllers/ContactController/ContactController.dart';
+import '../../../Controllers/ProductController/all_products_controller.dart';
+import '../../../const/dimensions.dart';
+import '../../PrintDesign/invoice_print_screen.dart';
+import '../../PrintDesign/pdfGenerate.dart';
 
 class SalesViewDetailsPage extends StatefulWidget {
   final SaleOrderDataModel? salesOrderData;

@@ -1,24 +1,18 @@
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
-import 'package:bizmodo_emenu/Pages/PrintDesign/pdfGenerate.dart';
-import 'package:bizmodo_emenu/Pages/PrintDesign/pos_print_layout.dart';
-import 'package:bizmodo_emenu/Pages/SalesView/paymentDetails.dart';
-import 'package:bizmodo_emenu/Pages/SalesView/shippingCharge.dart';
-import 'package:bizmodo_emenu/Pages/print_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import '/Controllers/AllSalesController/allSalesController.dart';
+import '/Pages/SalesView/shippingCharge.dart';
 import '../../../Components/custom_circular_button.dart';
 import '../../../Components/p4Headings.dart';
 import '../../../Components/textfield.dart';
 import '../../../Config/DateTimeFormat.dart';
 import '../../../Config/utils.dart';
-import '../../../Controllers/ProductController/PaymentController.dart';
 import '../../../Controllers/ProductController/all_products_controller.dart';
 import '../../../Theme/colors.dart';
 import '../../../Theme/style.dart';
-
 import '../../../const/dimensions.dart';
 import '../../CreateOrder/selectionDialogue.dart';
 import '../../checkout/check_out.dart';

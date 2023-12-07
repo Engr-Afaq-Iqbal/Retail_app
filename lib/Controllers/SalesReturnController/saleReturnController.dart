@@ -1,7 +1,3 @@
-import 'dart:convert';
-
-import 'package:bizmodo_emenu/Controllers/ProductController/all_products_controller.dart';
-import 'package:bizmodo_emenu/Pages/Return/return.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -9,7 +5,6 @@ import '../../Config/DateTimeFormat.dart';
 import '../../Config/utils.dart';
 import '../../Models/SaleReturn/editSaleReturnModel.dart';
 import '../../Models/SaleReturn/saleReturn.dart';
-import '../../Pages/HomePageRetail/homepageRetail.dart';
 import '../../Services/api_services.dart';
 import '../../Services/api_urls.dart';
 import '../ProductController/product_cart_controller.dart';
@@ -70,10 +65,16 @@ class SaleReturnController extends GetxController {
       update();
       if (_res == null) return null;
       editSaleReturnModelDart = editSaleReturnModelDartFromJson(_res);
-      var length = editSaleReturnModelDart?.sellLines?.length ?? 0;
-      for (int i = 0; i < length; i++) {
-        returnQtyCtrl.add(TextEditingController());
-        subtotal.add('0.00');
+      if (editSaleReturnModelDart?.sellLines != null &&
+          editSaleReturnModelDart!.sellLines!.isNotEmpty) {
+        for (var sellLine in editSaleReturnModelDart!.sellLines!) {
+          returnQtyCtrl.add(
+            TextEditingController(text: sellLine.quantityReturned),
+          );
+          subtotal.add(
+            '${double.parse('${sellLine.quantityReturned ?? 0}') * double.parse('${sellLine.unitPriceIncTax ?? 0}')}',
+          );
+        }
       }
       stopProgress();
       update();

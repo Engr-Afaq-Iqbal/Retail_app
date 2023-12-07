@@ -1,11 +1,9 @@
-import 'package:bizmodo_emenu/Theme/style.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '/Components/entry_field.dart';
 import '/Theme/colors.dart';
+import '/Theme/style.dart';
 
 class ChatPage extends StatelessWidget {
   @override
@@ -101,11 +99,13 @@ class _ChatWidgetState extends State<ChatWidget> {
       body: DecoratedBox(
         position: DecorationPosition.background,
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage('images/chat_bg.png'), fit: BoxFit.fill),
+          image: DecorationImage(
+              image: AssetImage('images/chat_bg.png'), fit: BoxFit.fill),
         ),
         child: SingleChildScrollView(
           child: Container(
-            height: MediaQuery.of(context).size.height - Size.fromHeight(130).height,
+            height: MediaQuery.of(context).size.height -
+                Size.fromHeight(130).height,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -173,7 +173,8 @@ class MessageBubble extends StatelessWidget {
   final String? time;
   final bool? isDelivered;
 
-  MessageBubble({this.sender, this.text, this.time, this.isMe, this.isDelivered});
+  MessageBubble(
+      {this.sender, this.text, this.time, this.isMe, this.isDelivered});
 
   @override
   Widget build(BuildContext context) {
@@ -181,23 +182,29 @@ class MessageBubble extends StatelessWidget {
       padding: EdgeInsets.all(10.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: isMe! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isMe! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: <Widget>[
           Material(
             elevation: 4.0,
-            color: isMe! ? kMainColor : Theme.of(context).scaffoldBackgroundColor,
+            color:
+                isMe! ? kMainColor : Theme.of(context).scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(6.0),
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
               child: Column(
-                crossAxisAlignment: isMe! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    isMe! ? CrossAxisAlignment.end : CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
                     text!,
                     textAlign: isMe! ? TextAlign.right : TextAlign.left,
                     style: isMe!
                         ? AppStyles.bottomBarTextStyle
-                        : Theme.of(context).textTheme.caption!.copyWith(fontSize: 15.0),
+                        : Theme.of(context)
+                            .textTheme
+                            .caption!
+                            .copyWith(fontSize: 15.0),
                   ),
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -206,7 +213,9 @@ class MessageBubble extends StatelessWidget {
                         time!,
                         style: TextStyle(
                           fontSize: 10.0,
-                          color: isMe! ? kWhiteColor.withOpacity(0.75) : kLightTextColor,
+                          color: isMe!
+                              ? kWhiteColor.withOpacity(0.75)
+                              : kLightTextColor,
                         ),
                       ),
                       // isMe

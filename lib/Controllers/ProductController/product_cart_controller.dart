@@ -1,17 +1,15 @@
-import 'package:bizmodo_emenu/Config/enums.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '/Config/DateTimeFormat.dart';
+import '/Config/enums.dart';
 import '/Config/utils.dart';
 import '/Controllers/ContactController/ContactController.dart';
 import '/Models/ProductsModel/ProductModel.dart';
 import '/Models/ProductsModel/ProductVariationAndModifierModel.dart';
 import '/Models/order_type_model/SellLineModel.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
-
 import '../../Theme/style.dart';
 import '../Tax Controller/TaxController.dart';
 

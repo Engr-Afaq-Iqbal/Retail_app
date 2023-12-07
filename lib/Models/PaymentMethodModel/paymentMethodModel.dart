@@ -4,7 +4,7 @@
 
 // import 'dart:convert';
 
-import 'package:bizmodo_emenu/Config/const.dart';
+import '/Config/const.dart';
 
 // PaymentMethodModel paymentMethodModelFromJson(String str) =>
 //     PaymentMethodModel.fromJson(json.decode(str));

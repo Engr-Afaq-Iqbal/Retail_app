@@ -1,7 +1,7 @@
-import 'package:bizmodo_emenu/Controllers/SalesReturnController/saleReturnController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Controllers/SalesReturnController/saleReturnController.dart';
 import '../../../Components/custom_circular_button.dart';
 import '../../../Components/discountTypeDropDown.dart';
 import '../../../Components/textfield.dart';

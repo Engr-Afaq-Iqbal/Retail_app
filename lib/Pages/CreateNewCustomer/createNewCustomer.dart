@@ -1,10 +1,11 @@
 import 'dart:io';
-import 'package:bizmodo_emenu/Config/utils.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '/Config/utils.dart';
 import '../../Components/custom_circular_button.dart';
 import '../../Components/textfield.dart';
 import '../../Controllers/ContactController/ContactController.dart';

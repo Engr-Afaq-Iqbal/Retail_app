@@ -10,9 +10,9 @@ import flutter_local_notifications
 import geolocator_apple
 import network_info_plus
 import package_info_plus
-import path_provider_macos
+import path_provider_foundation
 import printing
-import shared_preferences_macos
+import shared_preferences_foundation
 import sqflite
 import url_launcher_macos
 

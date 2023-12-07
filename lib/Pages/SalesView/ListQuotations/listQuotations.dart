@@ -1,10 +1,9 @@
-import 'package:bizmodo_emenu/Controllers/AllSalesController/allSalesController.dart';
-import 'package:bizmodo_emenu/Pages/SalesView/ListQuotations/viewQuotationsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '/Pages/SalesView/ListQuotations/viewQuotationsPage.dart';
 import '../../../Config/utils.dart';
 import '../../../Controllers/AllSalesController/quotationController.dart';
-import '../../../Theme/colors.dart';
 import '../SalesViewDetails/AddSalesAndQuotation.dart';
 import 'listQuotationsTile.dart';
 

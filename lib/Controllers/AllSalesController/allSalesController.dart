@@ -145,7 +145,7 @@ class AllSalesController extends GetxController {
   Future<bool?> fetchAllSalesList(
       {int page = 0, String global_search = ''}) async {
     print('========================================');
-    print('Function calling');
+    print('fetchAllSalesList Function calling');
     return await ApiServices.getMethod(
             feedUrl:
                 '${ApiUrls.allOrders}?page=$page&per_page=20&global_search=${global_search}&location_id=${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id}')

@@ -1,7 +1,7 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '/Config/DateTimeFormat.dart';
 import '../../Config/const.dart';
 import '../../Controllers/SalesReturnController/saleReturnController.dart';
 import '../Orders/Components/AmountInfo.dart';

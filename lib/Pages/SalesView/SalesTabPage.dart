@@ -1,9 +1,9 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Controllers/AllSalesController/quotationController.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 
+import '/Config/utils.dart';
+import '/Controllers/AllSalesController/quotationController.dart';
 import '../../Controllers/AllSalesController/allSalesController.dart';
 
 class SalesTabPage extends StatefulWidget {

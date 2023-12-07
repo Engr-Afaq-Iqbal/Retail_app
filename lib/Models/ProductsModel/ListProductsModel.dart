@@ -3,6 +3,7 @@
 //     final listProductsModel = listProductsModelFromJson(jsonString);
 
 import 'dart:convert';
+
 import '../../Models/ProductsModel/Product.dart';
 
 ListProductsModel listProductsModelFromJson(String str) =>
@@ -131,7 +132,9 @@ class Datum {
         parentId: json["parent_id"],
         createdBy: json["created_by"],
         woocommerceCatId: json["woocommerce_cat_id"],
-        categoryType: categoryTypeValues.map[json["category_type"]],
+        categoryType: json["category_type"] != null
+            ? categoryTypeValues.map[json["category_type"]]
+            : null,
         description: json["description"],
         slug: json["slug"],
         deletedAt: json["deleted_at"],

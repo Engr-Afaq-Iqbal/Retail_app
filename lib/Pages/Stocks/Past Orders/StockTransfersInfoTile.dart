@@ -1,8 +1,8 @@
-import 'package:bizmodo_emenu/Config/DateTimeFormat.dart';
-import 'package:bizmodo_emenu/Models/ViewStockTransferModel/viewStockTransferModel.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '/Config/DateTimeFormat.dart';
+import '/Models/ViewStockTransferModel/viewStockTransferModel.dart';
 
 class StockTransfersInfoTile extends StatelessWidget {
   StockTransferData? viewStocksModel;

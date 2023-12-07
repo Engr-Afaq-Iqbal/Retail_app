@@ -1,20 +1,20 @@
-import 'package:bizmodo_emenu/Config/utils.dart';
-import 'package:bizmodo_emenu/Theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../Config/DateTimeFormat.dart';
-import '../../Controllers/DashboardController/dashboardController.dart';
-import '../../Controllers/FundsController/fundsController.dart';
-import '../../Controllers/ProductController/all_products_controller.dart';
-import '../../const/CurvedContainer.dart';
+import '/Config/DateTimeFormat.dart';
+import '/Config/utils.dart';
+import '/Controllers/DashboardController/dashboardController.dart';
+import '/Controllers/FundsController/fundsController.dart';
+import '/Controllers/ProductController/all_products_controller.dart';
+import '/Theme/colors.dart';
+import '/const/CurvedContainer.dart';
 import '../CustomesVisit/newCustomerVisits.dart';
 import '../FundsTransfer/fundsTransfer.dart';
 import '../Orders/View/OrdersTabPage.dart';
+import '../ProductsPage/ItemsPage.dart';
 import '../Receipts/receipts.dart';
 import '../SalesView/SalesViewDetails/SalesView.dart';
 import '../Upload/upload.dart';
-import '../ProductsPage/ItemsPage.dart';
 import '../order_type/search_customer_page.dart';
 
 class HomePageRetail extends StatefulWidget {

@@ -1,20 +1,20 @@
-import '../../Components/custom_circular_button.dart';
-import '../../Config/utils.dart';
-import '../../Pages/CreateOrder/selectionDialogue.dart';
-import '../../Pages/checkout/check_out.dart';
-import '../../Theme/style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../Components/custom_circular_button.dart';
 import '../../Components/p4Headings.dart';
 import '../../Components/textfield.dart';
 import '../../Config/DateTimeFormat.dart';
+import '../../Config/utils.dart';
 import '../../Controllers/ContactController/ContactController.dart';
 import '../../Controllers/ProductController/all_products_controller.dart';
 import '../../Models/order_type_model/SaleOrderModel.dart';
+import '../../Pages/CreateOrder/selectionDialogue.dart';
+import '../../Pages/checkout/check_out.dart';
 import '../../Services/storage_services.dart';
 import '../../Theme/colors.dart';
+import '../../Theme/style.dart';
 import '../../const/dimensions.dart';
 import '../SalesView/discount.dart';
 import '../Tabs/View/TabsPage.dart';
@@ -170,122 +170,129 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                     ),
 
                                     // Unit
-                                    Container(
-                                      // height:
-                                      //     MediaQuery.of(context).size.height *
-                                      //         0.06,
-                                      //width: MediaQuery.of(context).size.width,
-                                      child: DropdownButtonHideUnderline(
-                                        child: DropdownButton2(
-                                          isExpanded: true,
-                                          hint: Align(
-                                              alignment: AlignmentDirectional
-                                                  .centerStart,
-                                              child: Text(
-                                                'Select',
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 10,
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                              )),
-                                          items: allProdCtrlObj.nestedist[
-                                                  index] //unitStatusList()
-                                              .map((String items) {
-                                            return DropdownMenuItem(
-                                              value: items,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
+                                    if (allProdCtrlObj.nestedist.isNotEmpty)
+                                      Container(
+                                        // height:
+                                        //     MediaQuery.of(context).size.height *
+                                        //         0.06,
+                                        //width: MediaQuery.of(context).size.width,
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton2(
+                                            isExpanded: true,
+                                            hint: Align(
+                                                alignment: AlignmentDirectional
+                                                    .centerStart,
                                                 child: Text(
-                                                  items,
-                                                  style:
-                                                      TextStyle(fontSize: 10),
+                                                  'Select',
+                                                  style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 10,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                )),
+                                            items: allProdCtrlObj.nestedist[
+                                                    index] //unitStatusList()
+                                                .map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 10.0),
+                                                  child: Text(
+                                                    items,
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }).toList(),
-                                          value: allProdCtrlObj
-                                              .unitListStatus[index],
-                                          dropdownWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.2,
-                                          dropdownDecoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
-                                          dropdownMaxHeight:
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.7,
-                                          dropdownPadding:
-                                              EdgeInsets.only(left: 5),
-                                          buttonPadding: EdgeInsets.only(
-                                              left: 10, right: 10),
-                                          onChanged: (String? value) {
-                                            setState(() {
-                                              allProdCtrlObj
-                                                      .unitListStatus[index] =
-                                                  value!;
+                                              );
+                                            }).toList(),
+                                            value: allProdCtrlObj
+                                                .unitListStatus[index],
+                                            dropdownWidth:
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.2,
+                                            dropdownDecoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5)),
+                                            dropdownMaxHeight:
+                                                MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.7,
+                                            dropdownPadding:
+                                                EdgeInsets.only(left: 5),
+                                            buttonPadding: EdgeInsets.only(
+                                                left: 10, right: 10),
+                                            onChanged: (String? value) {
+                                              setState(() {
+                                                allProdCtrlObj
+                                                        .unitListStatus[index] =
+                                                    value!;
 
-                                              allProdCtrlObj.unitListStatusIds[
-                                                      index] =
-                                                  allProdCtrlObj
-                                                      .checkSelectedUnitsIds(
-                                                          unitName: value);
+                                                allProdCtrlObj
+                                                            .unitListStatusIds[
+                                                        index] =
+                                                    allProdCtrlObj
+                                                        .checkSelectedUnitsIds(
+                                                            unitName: value);
 
-                                              allProdCtrlObj
-                                                      .totalAmount[index] =
-                                                  '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: value) ?? '1.00')}';
-                                              debugPrint(allProdCtrlObj
-                                                  .totalAmount[index]);
-                                              debugPrint(allProdCtrlObj
-                                                  .unitListStatus[index]);
+                                                allProdCtrlObj
+                                                        .totalAmount[index] =
+                                                    '${double.parse('${allProdCtrlObj.productQuantityCtrl[index].text.isEmpty ? '0.00' : allProdCtrlObj.productQuantityCtrl[index].text}') * double.parse('${allProdCtrlObj.productModelObjs[index].productVariations?.first.variations?.first.sellPriceIncTax}') * double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: value) ?? '1.00')}';
+                                                debugPrint(allProdCtrlObj
+                                                    .totalAmount[index]);
+                                                debugPrint(allProdCtrlObj
+                                                    .unitListStatus[index]);
 
-                                              allProdCtrlObj
-                                                  .calculateFinalAmount();
-                                              allProdCtrlObj.update();
-                                            });
-                                          },
-                                          // buttonHeight: 40,
-                                          buttonWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.27,
-                                          // buttonDecoration: BoxDecoration(
-                                          //     color: kWhiteColor,
-                                          //     border: Border.all(
-                                          //         width: 1,
-                                          //         color: Theme.of(context)
-                                          //             .colorScheme
-                                          //             .primary),
-                                          //     borderRadius:
-                                          //         BorderRadius.circular(15)),
-                                          // itemHeight: 40,
-                                          //icon: SizedBox(),
-                                          itemPadding: EdgeInsets.zero,
-                                          itemHighlightColor: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
+                                                allProdCtrlObj
+                                                    .calculateFinalAmount();
+                                                allProdCtrlObj.update();
+                                              });
+                                            },
+                                            // buttonHeight: 40,
+                                            buttonWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.27,
+                                            // buttonDecoration: BoxDecoration(
+                                            //     color: kWhiteColor,
+                                            //     border: Border.all(
+                                            //         width: 1,
+                                            //         color: Theme.of(context)
+                                            //             .colorScheme
+                                            //             .primary),
+                                            //     borderRadius:
+                                            //         BorderRadius.circular(15)),
+                                            // itemHeight: 40,
+                                            //icon: SizedBox(),
+                                            itemPadding: EdgeInsets.zero,
+                                            itemHighlightColor:
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                          ),
                                         ),
                                       ),
-                                    ),
 
                                     // Stock
                                     Expanded(
                                       flex: 1,
-                                      child: Center(
-                                        child: Text(
-                                          AppFormat.doubleToStringUpTo2(
-                                                '${double.parse(allProdCtrlObj.checkProductStockLocationBasedForOrderCreate(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
-                                              ) ??
-                                              '0.00',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 10),
-                                        ),
-                                      ),
+                                      child: allProdCtrlObj
+                                              .unitListStatus.isNotEmpty
+                                          ? Center(
+                                              child: Text(
+                                                AppFormat.doubleToStringUpTo2(
+                                                      '${double.parse(allProdCtrlObj.checkProductStockLocationBasedForOrderCreate(locationId: AppStorage.getBusinessDetailsData()?.businessData?.locations.first.id, index: index) ?? '0.00') / double.parse(allProdCtrlObj.checkUnitsActualBaseMultiplier(unitName: allProdCtrlObj.unitListStatus[index]))}',
+                                                    ) ??
+                                                    '0.00',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(fontSize: 10),
+                                              ),
+                                            )
+                                          : SizedBox(),
                                     ),
 
                                     //Quantity
