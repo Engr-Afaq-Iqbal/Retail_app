@@ -37,6 +37,7 @@ import 'Controllers/Upload Controller/uploadController.dart';
 import 'Locale/Languages/translation.dart';
 import 'Locale/language_cubit.dart';
 import 'Pages/Orders/Controller/OrderController.dart';
+import 'Pages/Payment_Accounts/Controller/list_Accounts_controller.dart';
 import 'Pages/Tabs/Controllers/BottomNavBarController.dart';
 import 'Routes/routes.dart';
 import 'Theme/style.dart';
@@ -135,6 +136,7 @@ void initializeControllers() {
   Get.put(ReceiptsController());
   Get.put(QuotationController());
   Get.put(UploadController());
+  Get.put(ListAccountsController());
 }
 
 class BizModoEMenu extends StatefulWidget {

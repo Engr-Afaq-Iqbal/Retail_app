@@ -11,7 +11,7 @@ class PaymentAccounts extends StatefulWidget {
 }
 
 class _PaymentAccountsState extends State<PaymentAccounts> {
-  String selectedOption = 'Head';
+  String selectedOption = 'List Accounts';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +32,7 @@ class _PaymentAccountsState extends State<PaymentAccounts> {
                     selectedOption = newValue!;
                   });
                 },
-                items: <String>['Head', 'Torso', 'Legs', 'Arms']
+                items: <String>['List Accounts', 'Torso', 'Legs', 'Arms']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -49,7 +49,7 @@ class _PaymentAccountsState extends State<PaymentAccounts> {
   }
   Widget _getBodyView(String selectedOption) {
     switch (selectedOption) {
-      case 'Head':
+      case 'List Accounts':
         return ListAccountsTabPage();
       case 'Torso':
         return Image.asset(

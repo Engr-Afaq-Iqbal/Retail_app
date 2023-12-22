@@ -187,6 +187,10 @@ class ApiUrls {
   static String openedRegisterRecordsAPI =
       "connector/api/cash-register/close-register";
 
+
   static String updateStockTransferStatusApi =
       "connector/api/stock-transfers/update-status/";
+
+  static String listOfAccountsAPI =
+      "connector/api/payment-accounts";
 }

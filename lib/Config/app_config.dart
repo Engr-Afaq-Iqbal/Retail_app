@@ -21,7 +21,8 @@ class AppConfig {
   static String scope = "";
 
   // api base url
-  static String baseUrl = "https://manage.bizmodo.ae/";
+  // static String baseUrl = "https://manage.bizmodo.ae/";
+  static String baseUrl = "https://bizmodo.dynamictech.ae/";
   // static String socketBaseUrl = "https://manage.bizmodo.ae:8006";
   static String socketBaseUrl = "https://manage.bizmodo.ae:8008";
 

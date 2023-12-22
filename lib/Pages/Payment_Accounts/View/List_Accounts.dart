@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../Controllers/StockTransferController/stockTransferController.dart';
 import '../../../Theme/colors.dart';
+import '../Controller/list_Accounts_controller.dart';
 import '/Pages/Orders/Controller/OrderController.dart';
 
 class ListAccountsTabPage extends StatefulWidget {
@@ -12,20 +13,21 @@ class ListAccountsTabPage extends StatefulWidget {
 }
 
 class _ListAccountsTabPageState extends State<ListAccountsTabPage> {
-  final OrderController _orderCtrlObj = Get.find<OrderController>();
+  final ListAccountsController _listAccountCtrlObj = Get.find<ListAccountsController>();
   @override
   initState() {
-    loadOrdersData();
+    // loadOrdersData();
     super.initState();
   }
 
-  loadOrdersData() async {
-    if (_orderCtrlObj.allSaleOrdersPage == 1) {
-      _orderCtrlObj.isFirstLoadRunning = true;
-      await _orderCtrlObj.fetchSaleOrders(_orderCtrlObj.allSaleOrdersPage);
-      _orderCtrlObj.isFirstLoadRunning = false;
-    }
-  }
+
+  // loadOrdersData() async {
+  //   if (_orderCtrlObj.allSaleOrdersPage == 1) {
+  //     _orderCtrlObj.isFirstLoadRunning = true;
+  //     await _orderCtrlObj.fetchSaleOrders(_orderCtrlObj.allSaleOrdersPage);
+  //     _orderCtrlObj.isFirstLoadRunning = false;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,7 @@ class _ListAccountsTabPageState extends State<ListAccountsTabPage> {
       //   title: Text('stock_transfer'.tr),
       // ),
       body: DefaultTabController(
-        length: StockTransferController.stockTabsList().length,
+        length: ListAccountsController.AccountsTabsList().length,
         child: Padding(
           padding: EdgeInsets.only(top: 0),
           child: Column(
@@ -59,7 +61,7 @@ class _ListAccountsTabPageState extends State<ListAccountsTabPage> {
                   ),
                   automaticIndicatorColorAdjustment: true,
                   tabs:
-                  StockTransferController.stockTabsList().map((_orderTab) {
+                  ListAccountsController.AccountsTabsList().map((_orderTab) {
                     return Tab(text: _orderTab.label);
                   }).toList(),
                 ),
@@ -67,7 +69,7 @@ class _ListAccountsTabPageState extends State<ListAccountsTabPage> {
               Expanded(
 
                 child: TabBarView(
-                  children: StockTransferController.stockTabsList()
+                  children: ListAccountsController.AccountsTabsList()
                       .map(
                         (_orderTab) => _orderTab.page != null
                         ? _orderTab.page!

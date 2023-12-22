@@ -529,6 +529,8 @@ Map<String, String> english() {
     'forget_password_required': 'Forget password required',
     'forget_password_heading': 'Forget Password',
     'payment_account_view': 'Payment Account View',
+    'accounts':'Accounts',
+    'account_types':'Account Types',
     'view': 'View'
   };
 }
