@@ -58,6 +58,8 @@ dependencies:
   esc_pos_utils: ^1.1.0
   smart_bluetooth_pos_printer: ^1.0.1
   ionicons: ^0.2.2
+  package_info_plus: ^3.0.3
+
   #  flutter_usb_printer: ^0.1.0+1
 
 

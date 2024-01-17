@@ -210,6 +210,7 @@ import 'package:get/get.dart';
 
 import '../CreateNewCustomer/createNewCustomer.dart';
 import '../CreateNewCustomer/showCustomerDetails.dart';
+import '../CreateNewCustomer/view_customer.dart';
 import '../CreateOrder/createOrderPage.dart';
 import '../Receipts/receipts.dart';
 import '../Return/return.dart';
@@ -366,12 +367,18 @@ class _CustomerSearchState extends State<CustomerSearch> {
                                         .name ??
                                         '';
                                 if (widget.dashBoardId == 1) {
-                                  Get.to(ShowCustomerDetails(
-                                      contactApi: contactCtrlObj
-                                          .customerContacts!
-                                          .contactDataList[index]
-                                          .id
-                                          .toString()));
+
+                                  // Get.to(ShowCustomerDetails(
+                                  //     contactApi: contactCtrlObj
+                                  //         .customerContacts!
+                                  //         .contactDataList[index]
+                                  //         .id
+                                  //         .toString()));
+                                  Get.to(() => ViewCustomer(id:contactCtrlObj
+                                      .customerContacts!
+                                      .contactDataList[index]
+                                      .id
+                                      .toString()));
                                 } else if (widget.dashBoardId == 2) {
                                   Get.to(CreateOrderPage());
                                 } else if (widget.dashBoardId == 3) {

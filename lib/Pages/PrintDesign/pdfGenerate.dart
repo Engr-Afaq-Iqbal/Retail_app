@@ -33,8 +33,15 @@ class PrintData extends StatelessWidget {
     final pdf = pw.Document();
     final url = AppStorage.getBusinessDetailsData()?.businessData?.logo;
     final response = await http.get(Uri.parse(url ?? ''));
-    final Uint8List imageBytes = response.bodyBytes;
-    final pdfImage = pw.MemoryImage(imageBytes);
+    final Uint8List imageBytes;
+    pw.MemoryImage? pdfImage;
+    try{
+      imageBytes = response.bodyBytes;
+      pdfImage = pw.MemoryImage(imageBytes);
+    }
+    catch (e){
+      print("Image Not Valid");
+    }
 
     pdf.addPage(invoicePrintPage(
       format,

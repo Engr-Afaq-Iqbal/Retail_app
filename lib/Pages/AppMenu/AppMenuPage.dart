@@ -164,6 +164,13 @@ class AppMenuPage extends StatelessWidget {
                       title: 'logout'.tr,
                       iconData: Icons.logout_outlined,
                       context: context),
+                  listTile(
+                      onTap: () async {
+                      },
+                      title: "Version : ${authCtrlObj.version}",
+                      iconData: Icons.info,
+                      context: context),
+
                   // listTile(
                   //     onTap: () async {
                   //       _showMoreBottomSheet(context);

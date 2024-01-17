@@ -71,4 +71,41 @@ class ListAccountsController extends GetxController {
     }
   }
 
+  // createFundsTransfer() async {
+  //   // API Method with url
+  //
+  //   String _url = '${ApiUrls.fundsTransferAPI}';
+  //   Map<String, String> _fields = {};
+  //   Map<String, String> _fieldForFile = {};
+  //
+  //   _fields['from_account'] =
+  //   '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.id}';
+  //
+  //   _fields['to_account'] = '${toStatusValue}';
+  //   _fields['amount'] = '${amountCtrl.text}';
+  //   _fields['operation_date'] = '${dateCtrl.text}';
+  //   _fields['note'] = '${noteCtrl.text}';
+  //   _fieldForFile['document'] = '${image?.path}';
+  //
+  //   logger.i(_fields);
+  //   logger.i(_fieldForFile);
+  //   return await ApiServices.postMultiPartQuery(
+  //       feedUrl: _url, fields: _fields, files: _fieldForFile)
+  //       .then((response) async {
+  //     // logger.i('EndPoint => ${_url}'
+  //     //     '\nStatus Code => {response.statusCode}'
+  //     //     '\nResponse => $response');
+  //
+  //     clearAllFields();
+  //     stopProgress();
+  //     showToast('Funds Transferred Successfully');
+  //     Get.close(1);
+  //   }).onError((error, stackTrace) {
+  //     debugPrint('Error => $error');
+  //     logger.e('StackTrace => $stackTrace');
+  //     return null;
+  //   });
+  // }
+
+
 }

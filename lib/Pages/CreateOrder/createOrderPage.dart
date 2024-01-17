@@ -1,25 +1,23 @@
-import '../../Components/custom_circular_button.dart';
-import '../../Config/utils.dart';
-import '../../Controllers/Tax Controller/TaxController.dart';
-import '../../Pages/CreateOrder/selectionDialogue.dart';
-import '../../Pages/checkout/check_out.dart';
-import '../../Theme/style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../Components/p4Headings.dart';
-import '../../Components/textfield.dart';
-import '../../Config/DateTimeFormat.dart';
-import '../../Controllers/ContactController/ContactController.dart';
-import '../../Controllers/ProductController/all_products_controller.dart';
-import '../../Models/order_type_model/SaleOrderModel.dart';
-import '../../Services/storage_services.dart';
-import '../../Theme/colors.dart';
-import '../../const/dimensions.dart';
+import '/Components/custom_circular_button.dart';
+import '/Components/p4Headings.dart';
+import '/Components/textfield.dart';
+import '/Config/utils.dart';
+import '/Controllers/ContactController/ContactController.dart';
+import '/Controllers/ProductController/all_products_controller.dart';
+import '/Controllers/Tax Controller/TaxController.dart';
+import '/Models/order_type_model/SaleOrderModel.dart';
+import '/Pages/CreateOrder/selectionDialogue.dart';
+import '/Pages/checkout/check_out.dart';
+import '/Services/storage_services.dart';
+import '/Theme/colors.dart';
+import '/Theme/style.dart';
+import '/const/dimensions.dart';
 import '../SalesView/discount.dart';
 import '../Tabs/View/TabsPage.dart';
-import '../checkout/check_out.dart';
 
 class CreateOrderPage extends StatefulWidget {
   final SaleOrderDataModel? salesOrderData;
@@ -120,9 +118,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                     // ),
                   ],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Product4Headings(
                     txt1: 'product_name'.tr,
                     txt2: 'unit'.tr,
@@ -173,110 +169,114 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                         ),
 
                                         // Unit
-                                        Container(
-                                          // height:
-                                          //     MediaQuery.of(context).size.height *
-                                          //         0.06,
-                                          //width: MediaQuery.of(context).size.width,
-                                          child: DropdownButtonHideUnderline(
-                                            child: DropdownButton2(
-                                              isExpanded: true,
-                                              hint: Align(
-                                                  alignment: AlignmentDirectional
-                                                      .centerStart,
-                                                  child: Text(
-                                                    'Select',
-                                                    style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 10,
-                                                        fontWeight:
-                                                        FontWeight.w500),
-                                                  )),
-                                              items: allProdCtrlObj.nestedist[
-                                              index] //unitStatusList()
-                                                  .map((String items) {
-                                                return DropdownMenuItem(
-                                                  value: items,
-                                                  child: Padding(
-                                                    padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
+                                        if (allProdCtrlObj.nestedist.isNotEmpty)
+                                          Container(
+                                            // height:
+                                            //     MediaQuery.of(context).size.height *
+                                            //         0.06,
+                                            //width: MediaQuery.of(context).size.width,
+                                            child: DropdownButtonHideUnderline(
+                                              child: DropdownButton2(
+                                                isExpanded: true,
+                                                hint: Align(
+                                                    alignment: AlignmentDirectional
+                                                        .centerStart,
                                                     child: Text(
-                                                      items,
-                                                      style:
-                                                      TextStyle(fontSize: 10),
+                                                      'Select',
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontSize: 10,
+                                                          fontWeight:
+                                                          FontWeight.w500),
+                                                    )),
+                                                items: allProdCtrlObj.nestedist[
+                                                index] //unitStatusList()
+                                                    .map((String items) {
+                                                  return DropdownMenuItem(
+                                                    value: items,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 10.0),
+                                                      child: Text(
+                                                        items,
+                                                        style:
+                                                        TextStyle(fontSize: 10),
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              value: allProdCtrlObj
-                                                  .unitListStatus[index],
-                                              dropdownWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                                  0.2,
-                                              dropdownDecoration: BoxDecoration(
-                                                  borderRadius:
-                                                  BorderRadius.circular(5)),
-                                              dropdownMaxHeight:
-                                              MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                                  0.7,
-                                              dropdownPadding:
-                                              EdgeInsets.only(left: 5),
-                                              buttonPadding: EdgeInsets.only(
-                                                  left: 10, right: 10),
-                                              onChanged: (String? value) {
-                                                setState(() {
-                                                  allProdCtrlObj
-                                                      .unitListStatus[index] =
-                                                  value!;
+                                                  );
+                                                }).toList(),
+                                                value: allProdCtrlObj
+                                                    .unitListStatus[index],
+                                                dropdownWidth:
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                    0.2,
+                                                dropdownDecoration: BoxDecoration(
+                                                    borderRadius:
+                                                    BorderRadius.circular(5)),
+                                                dropdownMaxHeight:
+                                                MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                    0.7,
+                                                dropdownPadding:
+                                                EdgeInsets.only(left: 5),
+                                                buttonPadding: EdgeInsets.only(
+                                                    left: 10, right: 10),
+                                                onChanged: (String? value) {
+                                                  setState(() {
+                                                    allProdCtrlObj
+                                                        .unitListStatus[index] =
+                                                    value!;
 
-                                                  allProdCtrlObj.unitListStatusIds[
-                                                  index] =
-                                                      allProdCtrlObj
-                                                          .checkSelectedUnitsIds(
-                                                          unitName: value);
+                                                    allProdCtrlObj
+                                                        .unitListStatusIds[
+                                                    index] =
+                                                        allProdCtrlObj
+                                                            .checkSelectedUnitsIds(
+                                                            unitName: value);
 
-                                                  allProdCtrlObj
-                                                      .totalAmount[index] =
-                                                      allProdCtrlObj
-                                                          .calculatingProductAmountForUnit(
-                                                          index: index);
-                                                  // debugPrint(allProdCtrlObj
-                                                  //     .totalAmount[index]);
-                                                  // debugPrint(allProdCtrlObj
-                                                  //     .unitListStatus[index]);
+                                                    allProdCtrlObj
+                                                        .totalAmount[index] =
+                                                        allProdCtrlObj
+                                                            .calculatingProductAmountForUnit(
+                                                            index: index);
+                                                    // debugPrint(allProdCtrlObj
+                                                    //     .totalAmount[index]);
+                                                    // debugPrint(allProdCtrlObj
+                                                    //     .unitListStatus[index]);
 
-                                                  allProdCtrlObj
-                                                      .calculateFinalAmount();
-                                                  allProdCtrlObj.update();
-                                                });
-                                              },
-                                              // buttonHeight: 40,
-                                              buttonWidth: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                                  0.27,
-                                              // buttonDecoration: BoxDecoration(
-                                              //     color: kWhiteColor,
-                                              //     border: Border.all(
-                                              //         width: 1,
-                                              //         color: Theme.of(context)
-                                              //             .colorScheme
-                                              //             .primary),
-                                              //     borderRadius:
-                                              //         BorderRadius.circular(15)),
-                                              // itemHeight: 40,
-                                              //icon: SizedBox(),
-                                              itemPadding: EdgeInsets.zero,
-                                              itemHighlightColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
+                                                    allProdCtrlObj
+                                                        .calculateFinalAmount();
+                                                    allProdCtrlObj.update();
+                                                  });
+                                                },
+                                                // buttonHeight: 40,
+                                                buttonWidth: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                    0.27,
+                                                // buttonDecoration: BoxDecoration(
+                                                //     color: kWhiteColor,
+                                                //     border: Border.all(
+                                                //         width: 1,
+                                                //         color: Theme.of(context)
+                                                //             .colorScheme
+                                                //             .primary),
+                                                //     borderRadius:
+                                                //         BorderRadius.circular(15)),
+                                                // itemHeight: 40,
+                                                //icon: SizedBox(),
+                                                itemPadding: EdgeInsets.zero,
+                                                itemHighlightColor:
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary,
+                                              ),
                                             ),
                                           ),
-                                        ),
 
                                         // Stock
                                         Expanded(
@@ -292,33 +292,65 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                         ),
 
                                         //Quantity
-                                        Expanded(
-                                          flex: 1,
-                                          child: AppFormField(
-                                              controller: allProdCtrlObj
-                                                  .productQuantityCtrl[index],
-                                              padding: EdgeInsets.all(0),
-                                              isOutlineBorder: false,
-                                              isColor: index.isEven
-                                                  ? kWhiteColor
-                                                  : Colors.transparent,
-                                              // onEditingComp: (){
-                                              //
-                                              // },
-                                              onChanged: (value) {
-                                                if (double.parse(allProdCtrlObj
-                                                    .productModelObjs[index]
-                                                    .productVariationsDetails
-                                                    ?.qtyAvailable ??
-                                                    '0.00') <=
-                                                    0.00) {
-                                                  if (AppStorage
-                                                      .getBusinessDetailsData()
-                                                      ?.businessData
-                                                      ?.posSettings
-                                                      ?.allowOverselling ==
-                                                      1) {
-                                                    print('in 1st allow if');
+                                        if (allProdCtrlObj
+                                            .productQuantityCtrl.isNotEmpty)
+                                          Expanded(
+                                            flex: 1,
+                                            child: AppFormField(
+                                                controller: allProdCtrlObj
+                                                    .productQuantityCtrl[index],
+                                                padding: EdgeInsets.all(0),
+                                                isOutlineBorder: false,
+                                                isColor: index.isEven
+                                                    ? kWhiteColor
+                                                    : Colors.transparent,
+                                                // onEditingComp: (){
+                                                //
+                                                // },
+                                                onChanged: (value) {
+                                                  if (double.parse(allProdCtrlObj
+                                                      .productModelObjs[
+                                                  index]
+                                                      .productVariationsDetails
+                                                      ?.qtyAvailable ??
+                                                      '0.00') <=
+                                                      0.00) {
+                                                    if (AppStorage
+                                                        .getBusinessDetailsData()
+                                                        ?.businessData
+                                                        ?.posSettings
+                                                        ?.allowOverselling ==
+                                                        1) {
+                                                      print('in 1st allow if');
+                                                      allProdCtrlObj.finalTotal =
+                                                      0.00;
+                                                      allProdCtrlObj
+                                                          .totalAmount[index] =
+                                                          allProdCtrlObj
+                                                              .calculatingProductAmountForUnit(
+                                                              index:
+                                                              index); // created function to calculate the value Qty * (price * unit)
+                                                      allProdCtrlObj
+                                                          .calculateFinalAmount();
+                                                      debugPrint(
+                                                          'Product Amount After all Calculation --->> ${allProdCtrlObj.totalAmount[index]}');
+                                                    } else {
+                                                      allProdCtrlObj
+                                                          .productQuantityCtrl[
+                                                      index]
+                                                          .text = '';
+
+                                                      showToast(
+                                                          'Stock not available');
+                                                    }
+                                                  } else if (double.parse(allProdCtrlObj
+                                                      .productModelObjs[
+                                                  index]
+                                                      .productVariationsDetails
+                                                      ?.qtyAvailable ??
+                                                      '0.00') >
+                                                      0.00) {
+                                                    print('in third if');
                                                     allProdCtrlObj.finalTotal =
                                                     0.00;
                                                     allProdCtrlObj
@@ -327,41 +359,15 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                                                             .calculatingProductAmountForUnit(
                                                             index:
                                                             index); // created function to calculate the value Qty * (price * unit)
-                                                    allProdCtrlObj
-                                                        .calculateFinalAmount();
+
                                                     debugPrint(
                                                         'Product Amount After all Calculation --->> ${allProdCtrlObj.totalAmount[index]}');
-                                                  } else {
                                                     allProdCtrlObj
-                                                        .productQuantityCtrl[index]
-                                                        .text = '';
-
-                                                    showToast(
-                                                        'Stock not available');
+                                                        .calculateFinalAmount();
                                                   }
-                                                } else if (double.parse(allProdCtrlObj
-                                                    .productModelObjs[index]
-                                                    .productVariationsDetails
-                                                    ?.qtyAvailable ??
-                                                    '0.00') >
-                                                    0.00) {
-                                                  print('in third if');
-                                                  allProdCtrlObj.finalTotal = 0.00;
-                                                  allProdCtrlObj
-                                                      .totalAmount[index] =
-                                                      allProdCtrlObj
-                                                          .calculatingProductAmountForUnit(
-                                                          index:
-                                                          index); // created function to calculate the value Qty * (price * unit)
-
-                                                  debugPrint(
-                                                      'Product Amount After all Calculation --->> ${allProdCtrlObj.totalAmount[index]}');
-                                                  allProdCtrlObj
-                                                      .calculateFinalAmount();
-                                                }
-                                                allProdCtrlObj.update();
-                                              }),
-                                        ),
+                                                  allProdCtrlObj.update();
+                                                }),
+                                          ),
                                       ],
                                     ),
                                   ],
@@ -374,7 +380,7 @@ class _CreateOrderPageState extends State<CreateOrderPage> {
                 Center(
                   child: Text(
                     'total'.tr +
-                        ' (AED) = ${AppFormat.doubleToStringUpTo2('${allProdCtrlObj.finalTotal - allProdCtrlObj.calculatingTotalDiscount()}')}',
+                        ' (AED) = ${allProdCtrlObj.finalTotal - allProdCtrlObj.calculatingTotalDiscount()}',
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

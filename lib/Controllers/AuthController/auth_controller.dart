@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import '/Config/app_config.dart';
 import '/Config/utils.dart';
 import '/Models/business_n_register/BusinessModel.dart';
@@ -16,8 +16,12 @@ class AuthController extends GetxController {
   final TextEditingController passwordCtrl = TextEditingController();
   String token = '';
   String currentColor = 'FF008080';
+  String version = "";
+
 
   initialDataCheck() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version = packageInfo.version;
     await Future.delayed(Duration(seconds: 2));
     if (!AppStorage.isStorageHasUserToken()) {
       return Get.off(() => LoginPage());
