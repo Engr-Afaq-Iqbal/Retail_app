@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart  ';
 import '/Config/app_config.dart';
 import '/Config/utils.dart';
 import '/Models/business_n_register/BusinessModel.dart';

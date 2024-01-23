@@ -1,3 +1,4 @@
+
 import 'dart:io';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _FundsTransferState extends State<FundsTransfer> {
     try {
       //final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       final XFile? image =
-          await ImagePicker().pickImage(source: ImageSource.gallery);
+      await ImagePicker().pickImage(source: ImageSource.gallery);
       // int? fileSizeInBytes = await image?.length();
       // double fileSizeInKB = fileSizeInBytes! / 1024;
       // double fileSizeInMB = fileSizeInKB / 1024;
@@ -96,7 +97,7 @@ class _FundsTransferState extends State<FundsTransfer> {
     );
 
     fundsCtrlObj.dateCtrl.text =
-        '${AppFormat.dateYYYYMMDDHHMM24(dateTime ?? DateTime.now())}';
+    '${AppFormat.dateYYYYMMDDHHMM24(dateTime ?? DateTime.now())}';
     print(dateTime);
   }
 
@@ -105,10 +106,10 @@ class _FundsTransferState extends State<FundsTransfer> {
     // TODO: implement initState
     fundsCtrlObj.clearAllFields();
     fundsCtrlObj.dateCtrl.text =
-        '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
+    '${AppFormat.dateYYYYMMDDHHMM24(DateTime.now())}';
     // fundsCtrlObj.checkingFundsFromLocation();
     fundsCtrlObj.fromStatusCtrl.text =
-        '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.name}';
+    '${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.paymentAccount?.first.account?.name}';
     // print(
     //     'Name : ${AppStorage.getBusinessDetailsData()?.businessData?.locations.first.locationId}');
     print(
@@ -206,62 +207,62 @@ class _FundsTransferState extends State<FundsTransfer> {
                 width: MediaQuery.of(context).size.width,
                 child: GetBuilder<FundsController>(
                     builder: (FundsController fundsCtrl) {
-                  return DropdownButtonHideUnderline(
-                    child: DropdownButton2(
-                      isExpanded: true,
-                      hint: Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Text(
-                            'please_select'.tr,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                          )),
-                      items: fundsCtrl.paymentAccountList().map((String items) {
-                        return DropdownMenuItem(
-                          value: items,
-                          child: Padding(
-                            padding:
+                      return DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          isExpanded: true,
+                          hint: Align(
+                              alignment: AlignmentDirectional.centerStart,
+                              child: Text(
+                                'please_select'.tr,
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              )),
+                          items: fundsCtrl.paymentAccountList().map((String items) {
+                            return DropdownMenuItem(
+                              value: items,
+                              child: Padding(
+                                padding:
                                 const EdgeInsets.symmetric(horizontal: 10.0),
-                            child: Text(items),
-                          ),
-                        );
-                      }).toList(),
-                      value: fundsCtrlObj.toStatus,
-                      dropdownWidth: MediaQuery.of(context).size.width * 0.5,
-                      dropdownDecoration:
+                                child: Text(items),
+                              ),
+                            );
+                          }).toList(),
+                          value: fundsCtrlObj.toStatus,
+                          dropdownWidth: MediaQuery.of(context).size.width * 0.5,
+                          dropdownDecoration:
                           BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                      dropdownMaxHeight:
+                          dropdownMaxHeight:
                           MediaQuery.of(context).size.height * 0.7,
-                      dropdownPadding: EdgeInsets.only(left: 5),
-                      buttonPadding: EdgeInsets.only(left: 10, right: 10),
-                      onChanged: (String? value) {
-                        setState(() {
-                          fundsCtrl.toStatus = value;
-                          fundsCtrl.toStatusValue = fundsCtrl
-                              .paymentAccountModel
-                              ?.data?[fundsCtrl
+                          dropdownPadding: EdgeInsets.only(left: 5),
+                          buttonPadding: EdgeInsets.only(left: 10, right: 10),
+                          onChanged: (String? value) {
+                            setState(() {
+                              fundsCtrl.toStatus = value;
+                              fundsCtrl.toStatusValue = fundsCtrl
+                                  .paymentAccountModel
+                                  ?.data?[fundsCtrl
                                   .paymentAccountList()
                                   .indexOf(value!)]
-                              .id
-                              .toString();
-                          print(fundsCtrl.toStatusValue);
-                          // productCtrlObj.discountType.text = value!;
-                        });
-                      },
-                      buttonDecoration: BoxDecoration(
-                          color: kWhiteColor,
-                          border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).colorScheme.primary),
-                          borderRadius: BorderRadius.circular(15)),
-                      itemHeight: 40,
-                      itemPadding: EdgeInsets.zero,
-                      itemHighlightColor: Theme.of(context).colorScheme.primary,
-                    ),
-                  );
-                }),
+                                  .id
+                                  .toString();
+                              print(fundsCtrl.toStatusValue);
+                              // productCtrlObj.discountType.text = value!;
+                            });
+                          },
+                          buttonDecoration: BoxDecoration(
+                              color: kWhiteColor,
+                              border: Border.all(
+                                  width: 1,
+                                  color: Theme.of(context).colorScheme.primary),
+                              borderRadius: BorderRadius.circular(15)),
+                          itemHeight: 40,
+                          itemPadding: EdgeInsets.zero,
+                          itemHighlightColor: Theme.of(context).colorScheme.primary,
+                        ),
+                      );
+                    }),
               ),
               headings(txt: 'amount'.tr + ':'),
               SizedBox(
@@ -307,17 +308,17 @@ class _FundsTransferState extends State<FundsTransfer> {
                       color: kWhiteColor),
                   child: (fundsCtrlObj.image != null)
                       ? Center(
-                          child: Image.file(
-                            fundsCtrlObj.image!,
-                            fit: BoxFit.contain,
-                          ),
-                        )
+                    child: Image.file(
+                      fundsCtrlObj.image!,
+                      fit: BoxFit.contain,
+                    ),
+                  )
                       : Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 30,
-                          ),
-                        ),
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(

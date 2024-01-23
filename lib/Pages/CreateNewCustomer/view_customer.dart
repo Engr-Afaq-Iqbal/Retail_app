@@ -168,6 +168,7 @@ class _ViewCustomerState extends State<ViewCustomer> {
                                         Get.to(SalesReturn(
                                           id: '${allSalesCtrlObj.allSaleOrders!.saleOrdersData[index].id}',
                                         ));
+                                        
                                       } else {
                                         Get.to(SalesViewDetailsPage(
                                           salesOrderData: allSalesCtrlObj

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../Models/PaymentAccounts/list_accounts_model.dart';
+import '../../../FundsTransfer/fundsTransfer.dart';
 import '../../Controller/list_Accounts_controller.dart';
 
 class Accounts extends StatefulWidget {
@@ -133,8 +134,9 @@ class _AccountsState extends State<Accounts> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Get.bottomSheet(FundTransfer(),
-                                  backgroundColor: Colors.white);
+                              // Get.bottomSheet(FundTransfer(),
+                              //     backgroundColor: Colors.white);
+                              Get.to(FundsTransfer());
                             },
                             child: Icon(
                               Icons.attach_money,
